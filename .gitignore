@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 .venv_scrape/
 respaldo/
+historial.txt
+predicciones.json
