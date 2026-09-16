@@ -17,10 +17,11 @@ from datetime import date, datetime, timedelta
 from math import comb
 
 RUTA = os.path.dirname(os.path.abspath(__file__))
-HIST = os.path.join(RUTA, "historial.txt")
-LOG  = os.path.join(RUTA, "predicciones.json")
+DATOS = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RUTA
+HIST = os.path.join(DATOS, "historial.txt")
+LOG  = os.path.join(DATOS, "predicciones.json")
 HERR = os.path.join(RUTA, "herramientas")
-PUERTO = 8000
+PUERTO = 8000  # local; en Railway se usa PORT
 PAGO = 30
 PAGO_TRIPLETA = 45
 VENTANA = 12
@@ -352,6 +353,11 @@ button.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
 button.link{background:none;color:var(--bad);padding:0;font-size:13px;font-weight:400;text-decoration:underline}
 .msg{font-size:14px;padding:11px 14px;border-radius:8px;margin-bottom:14px}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}.msg.no{background:#ecebe6;color:#55585e}.msg.bad{background:var(--bad-soft);color:var(--bad)}
+select{padding:10px;font-size:14px;border:1px solid #d7d2c8;border-radius:8px;background:#fbfaf7}
+table.hist{width:100%;border-collapse:collapse;font-size:13px}
+table.hist th{text-align:left;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.hist td{padding:6px 8px;border-bottom:1px solid var(--line)}
+table.hist td.ok{color:var(--ok);font-weight:600}table.hist td.no{color:var(--soft)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .kpi{border:1px solid var(--line);border-radius:8px;padding:9px 11px}
 .kpi small{display:block;font-size:11px;color:var(--muted)}
@@ -456,16 +462,21 @@ def html_registro():
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último registro?\')">'
             '<button class="link" type="submit">Deshacer último registro</button></form></section>')
 
-def html_tripleta(e, tri_actual, d, filas, calculando, sin_modelo):
+def html_tripleta(e, tri_actual, d, filas):
     ff, fh = fin_ventana(e["pf"], e["ph"])
     cab = (f'<div class="hh"><h2>Tripleta · paga {PAGO_TRIPLETA}x</h2>'
            f'<span>{esc(fecha_corta(e["pf"]))} {HORAS[e["ph"]]} → {esc(fecha_corta(ff))} {HORAS[fh]}</span></div>')
-    if sin_modelo:
-        cuerpo = '<div class="tip">La tripleta necesita el modelo nuevo (instala numpy y scipy).</div>'
-    elif calculando:
-        cuerpo = '<div class="tip">Calculando las tripletas…</div>'
-    elif tri_actual is None:
-        cuerpo = '<div class="tip">No se pudo calcular la tripleta para esta ventana.</div>'
+    if tri_actual is None:
+        opciones = "".join(f'<option value="{POS[i]}">{POS[i]} · {ANIM[POS[i]].title()}</option>' for i in range(K))
+        campos = "".join(
+            f'<select name="{nom}" required><option value="">Animal {j}</option>{opciones}</select>'
+            for j, nom in enumerate(["a1", "a2", "a3", "b1", "b2", "b3"], 1))
+        cuerpo = (
+            '<div class="tip">Ingresa tú la tripleta (2 grupos de 3 animales) calculada aparte.</div>'
+            f'<form class="reg" method="post" action="/tripleta/registrar" style="flex-wrap:wrap;gap:6px">'
+            f'<input type="hidden" name="pf" value="{esc(e["pf"])}"><input type="hidden" name="ph" value="{e["ph"]}">'
+            f'<input type="hidden" name="n" value="{len(filas)}">{campos}'
+            '<button type="submit">Guardar tripleta</button></form>')
     else:
         cuerpo = ""
         for k, jug in enumerate(tri_actual["jugadas"], 1):
@@ -598,6 +609,26 @@ def html_resumen(e, d, modelo, calculando):
     return ('<section class="card" id="resumen"><div class="hh"><h2>En palabras claras</h2>'
             f"<span>{esc(fecha_corta(e['pf']))} · {HORAS[e['ph']]}</span></div>{''.join(partes)}</section>")
 
+def html_historico(d, limite=100):
+    vistos = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    filas_h = ""
+    for r in reversed(vistos[-limite:]):
+        top3 = " ".join(POS[i] for i in r["top3"])
+        salio = POS[r["salio"]]
+        if r["salio"] == r["top3"][0]: marca, clase = "Top-1", "ok"
+        elif r["salio"] in r["top3"]: marca, clase = "Top-3", "ok"
+        else: marca, clase = "fallo", "no"
+        filas_h += (f'<tr><td>{esc(fecha_corta(r["fecha"]))} {HORAS[r["hora"]]}</td><td>{esc(top3)}</td>'
+                    f'<td>{esc(salio)}</td><td class="{clase}">{marca}</td></tr>')
+    if not filas_h:
+        cuerpo = '<p class="note">Sin predicciones resueltas todavía.</p>'
+    else:
+        nota = (f'<p class="note">Mostrando las últimas {min(limite, len(vistos))} de {len(vistos)}.</p>'
+                if len(vistos) > limite else "")
+        cuerpo = (f'{nota}<table class="hist"><thead><tr><th>Sorteo</th><th>Top-3</th>'
+                  f'<th>Salió</th><th>Resultado</th></tr></thead><tbody>{filas_h}</tbody></table>')
+    return f'<section class="card" id="historico"><div class="hh"><h2>Histórico de predicciones</h2></div>{cuerpo}</section>'
+
 def html_herramientas():
     est = estado_tareas()
     cuerpo = ""
@@ -651,17 +682,9 @@ def render():
             d["registros"].append(pend); cambio = True
 
     tri_actual = None
-    if not calculando and "tripleta" in info:
-        for t in d["tripletas"]:
-            if vigente(t) and (t["inicio_fecha"], t["inicio_hora"]) == (e["pf"], e["ph"]) and t["n_inicio"] == len(filas):
-                tri_actual = t
-        if tri_actual is None and not conocido:
-            pt = info["tripleta"]
-            o = sorted(range(K), key=lambda i: (-pt[i], i))
-            tri_actual = {"inicio_fecha": e["pf"], "inicio_hora": e["ph"], "n_inicio": len(filas),
-                          "jugadas": [o[0:3], o[3:6]], "prob": [round(pt[i], 4) for i in o[:6]],
-                          "estado": "pendiente", "creado": ahora(), "modelo": "tripleta_ventana_A"}
-            d["tripletas"].append(tri_actual); cambio = True
+    for t in d["tripletas"]:
+        if vigente(t) and (t["inicio_fecha"], t["inicio_hora"]) == (e["pf"], e["ph"]) and t["n_inicio"] == len(filas):
+            tri_actual = t
     if cambio:
         log_guardar(d)
 
@@ -684,11 +707,11 @@ def render():
         f'<div class="sub">Último: {esc(fecha_corta(f))} {HORAS[h]} → <b>{POS[v]} {ANIM[POS[v]].title()}</b> · '
         f'{e["n"]:,} sorteos en el histórico</div></div>{estado_pill}</header>'
         '<nav><a href="#resumen">En claro</a><a href="#sorteo">Próximo sorteo</a><a href="#tripleta">Tripleta</a><a href="#registrar">Registrar</a>'
-        '<a href="#marcadores">Marcadores</a><a href="#herramientas">Herramientas</a></nav>'
+        '<a href="#marcadores">Marcadores</a><a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
         f'{aviso}{html_resumen(e, d, modelo, calculando)}<div class="strip">{ultimos}</div>'
         f'<div class="grid"><div>{html_prediccion(e, calculando, pend, aviso_modelo)}<div style="height:14px"></div>{html_registro()}</div>'
-        f'<div>{html_tripleta(e, tri_actual, d, filas, calculando, PRED is None)}</div></div>'
-        f'<div style="height:14px"></div>{html_marcadores(d)}{html_herramientas()}'
+        f'<div>{html_tripleta(e, tri_actual, d, filas)}</div></div>'
+        f'<div style="height:14px"></div>{html_marcadores(d)}{html_historico(d)}{html_herramientas()}'
         '<footer>Azar puro: 2,63% por animal. En prueba ciega (3.122 sorteos) el ensamble acertó Top-1 4,00% '
         '(IC 95%: 3,37–4,75) y Top-3 12,27%; el umbral con pago 30x es 3,33%. Ningún modelo garantiza ganar y el '
         'operador puede cambiar su mecanismo. Tus datos: historial.txt y predicciones.json.</footer></div>')
@@ -719,6 +742,26 @@ def registrar(num):
                   + (f"<b>¡{gan} ganadora{'s' if gan > 1 else ''}!</b>" if gan else "sin acierto"))
         if gan: clase = "ok"
     return texto, clase
+
+def registrar_tripleta(pf, ph, n, codigos):
+    filas = cargar(); e = estado(filas)
+    if (pf, ph) != (e["pf"], e["ph"]) or n != len(filas):
+        return "La ventana cambió, actualiza la página e inténtalo de nuevo.", "bad"
+    for c in codigos:
+        if c not in IDX:
+            return f'«{c or "vacío"}» no es un animal válido.', "bad"
+    if len(set(codigos)) != 6:
+        return "Los 6 animales deben ser distintos.", "bad"
+    d = log_cargar()
+    for t in d["tripletas"]:
+        if vigente(t) and (t["inicio_fecha"], t["inicio_hora"]) == (pf, ph) and t["n_inicio"] == n:
+            return "Ya hay una tripleta guardada para esta ventana.", "bad"
+    o = [IDX[c] for c in codigos]
+    d["tripletas"].append({"inicio_fecha": pf, "inicio_hora": ph, "n_inicio": n,
+                            "jugadas": [o[0:3], o[3:6]], "estado": "pendiente",
+                            "creado": ahora(), "modelo": "manual"})
+    log_guardar(d)
+    return "Tripleta guardada.", "ok"
 
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
@@ -769,6 +812,17 @@ class H(BaseHTTPRequestHandler):
                 texto, clase = registrar(num)
                 AVISO.update(texto=texto, clase=clase)
             return self._volver()
+        if ruta == "/tripleta/registrar":
+            q = parse_qs(datos)
+            pf = (q.get("pf", [""])[0]).strip()
+            try: ph = int(q.get("ph", [""])[0])
+            except ValueError: ph = -1
+            try: n = int(q.get("n", [""])[0])
+            except ValueError: n = -1
+            codigos = [(q.get(k, [""])[0]).strip() for k in ("a1", "a2", "a3", "b1", "b2", "b3")]
+            texto, clase = registrar_tripleta(pf, ph, n, codigos)
+            AVISO.update(texto=esc(texto), clase=clase)
+            return self._volver("#tripleta")
         if ruta.startswith("/herramienta/"):
             partes = ruta.strip("/").split("/")
             if len(partes) == 3 and partes[2] == "detener":
@@ -781,6 +835,13 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, *a): pass
 
 if __name__ == "__main__":
+    if DATOS != RUTA and not os.path.exists(HIST):
+        # Volumen recién creado (vacío): lo sembramos una vez con los datos del repo.
+        import shutil
+        for nombre in ("historial.txt", "predicciones.json"):
+            origen = os.path.join(RUTA, nombre)
+            if os.path.exists(origen):
+                shutil.copy2(origen, os.path.join(DATOS, nombre))
     if not os.path.exists(HIST):
         sys.exit("Falta historial.txt en esta carpeta.")
     PUERTO = int(os.environ.get("PORT", PUERTO))
