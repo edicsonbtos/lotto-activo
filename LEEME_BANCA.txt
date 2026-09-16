@@ -1,0 +1,73 @@
+GESTION DE BANCA — LOTTO ACTIVO
+===============================
+Archivo: gestion_banca.py   (ponlo en la carpeta lotto-activo\lotto-activo)
+
+NO modifica nada. Solo lee predicciones.json. El marcador sigue intacto.
+
+
+QUE CAMBIA RESPECTO A LO QUE HACES HOY
+--------------------------------------
+1. Apuestas los TRES animales del Top-3, no solo el primero.
+   Medido en prueba ciega (3.122 sorteos que el modelo nunca vio):
+     - Solo el #1 : 4,00% de acierto, equilibrio 3,33%  -> margen a 2,1 sigma
+     - Los 3      : 12,27% de acierto, equilibrio 10,0% -> margen a 4,2 sigma
+   El #1 del modelo NO acierta mas que el #2 o el #3 (4,00% contra 4,13%
+   promedio). Concentrar en el #1 es asumir un orden que los datos no respaldan.
+
+2. Apuestas SIEMPRE el mismo porcentaje de la banca, no una cantidad fija.
+   El programa te lo calcula.
+
+3. Tienes tres frenos automaticos:
+   - Abstencion : si el modelo da menos de 11% al Top-3, ese sorteo no se juega.
+   - Freno del dia  : pierdes 6% de la banca, se acabo el dia.
+   - Freno total    : caes 25% desde tu maximo, se para todo y se revisa.
+
+
+COMO SE USA
+-----------
+Abre PowerShell en la carpeta y escribe:
+
+    python gestion_banca.py --banca 1000
+
+(cambia 1000 por tu banca real). Te dice cuanto poner en cada animal.
+
+Si la pagina te muestra la probabilidad del Top-3 de ese sorteo, pasasela:
+
+    python gestion_banca.py --banca 1000 --p3 0.134
+
+Si perdiste algo hoy y quieres que el freno del dia lo sepa:
+
+    python gestion_banca.py --banca 985 --perdi 15
+
+
+LO QUE TIENES QUE ENTENDER ANTES DE JUGAR
+-----------------------------------------
+* Vas a fallar 9 de cada 10 sorteos. Eso es lo NORMAL con este sistema.
+  Rachas de 40 fallos seguidos ocurren unas 16 veces cada 3.000 sorteos.
+  Si no aguantas eso sin cambiar la regla, no juegues.
+
+* Con 1/4 de Kelly (lo que trae configurado), una racha de 40 fallos te
+  baja la banca un 22%. Con Kelly pleno te la baja un 64%. Por eso va en 1/4.
+  NO subas FRAC_KELLY. Es el unico parametro que puede arruinarte solo.
+
+* Kelly se calcula con el limite INFERIOR del intervalo de confianza
+  (11,20%, no 12,27%). Si la ventaja real es menor de lo medido, sigues
+  dimensionado de forma prudente.
+
+* El programa necesita ~1.040 sorteos (unos 86 dias) para confirmar o
+  descartar la ventaja con tu marcador real. Hasta entonces no sabras.
+  Ese es el motivo por el que el tamano de apuesta importa mas que el modelo.
+
+* SEPARA LA BANCA. Que sea dinero que puedes perder entero sin que afecte
+  tu vida ni el negocio de marketplace. Si no esta separado, el freno del
+  25% no significa nada porque siempre vas a poder "meter un poco mas".
+
+
+PARAMETROS (arriba del archivo, si algun dia hace falta)
+-------------------------------------------------------
+PAGO=30          lo que te paga tu banca. Si no es 30, cambialo.
+FRAC_KELLY=0.25  fraccion de Kelly. No subir.
+UMBRAL_ABST=0.11 prob. minima del Top-3 para jugar.
+TOPE_DIARIO=0.06 % de banca que puedes perder en un dia.
+TOPE_TOTAL=0.25  caida desde el maximo que para todo.
+MIN_APUESTA=1.0  minimo que acepta tu banca.

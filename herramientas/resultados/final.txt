@@ -1,0 +1,10 @@
+historial: 12479 sorteos | calentamiento <2000 | desarrollo 2000-9357 | prueba 9357-12479
+== uniforme  (sin fuga, 0.1 s)
+  desarrollo n= 7357  Top1  2.68% [2.33-3.07] p=0.412 ROI -19.7%  |  Top3  7.77% (azar 7.89) p=0.655  |  +0.00 mbits z=+0.00  |  cuartos Top3 [8.7, 8.2, 7.7, 6.6]
+  prueba     n= 3122  Top1  2.53% [2.04-3.14] p=0.653 ROI -24.1%  |  Top3  7.56% (azar 7.89) p=0.765  |  +0.00 mbits z=+0.00  |  cuartos Top3 [7.7, 7.6, 8.2, 6.8]
+== hazard_actual (servidor.py)  (sin fuga, 2.1 s)
+  desarrollo n= 7357  Top1  3.41% [3.02-3.85] p=0.000 ROI +2.4%  |  Top3 10.74% (azar 7.89) p=0.000  |  +47.59 mbits z=+20.09  |  cuartos Top3 [9.2, 10.8, 10.7, 12.2]
+  prueba     n= 3122  Top1  3.59% [2.99-4.30] p=0.001 ROI +7.6%  |  Top3 10.60% (azar 7.89) p=0.000  |  +35.10 mbits z=+11.48  |  cuartos Top3 [10.5, 10.6, 9.9, 11.4]
+== ensamble(intradia_v2+secuencia_v3+haz_v1)  (sin fuga, 38602.5 s)
+  desarrollo n= 7357  Top1  4.53% [4.07-5.03] p=0.000 ROI +35.8%  |  Top3 12.89% (azar 7.89) p=0.000  |  +120.07 mbits z=+31.06  |  cuartos Top3 [12.7, 12.2, 12.9, 13.7]
+  prueba     n= 3122  Top1  4.00% [3.37-4.75] p=0.000 ROI +20.1%  |  Top3 12.27% (azar 7.89) p=0.000  |  +90.15 mbits z=+17.70  |  cuartos Top3 [11.0, 12.9, 12.3, 12.8]

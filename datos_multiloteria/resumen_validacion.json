@@ -1,0 +1,134 @@
+{
+  "lottoactivo": {
+    "canonicos": 1800,
+    "dias": 150,
+    "stats": {
+      "acuerdo_2_fuentes": 1799,
+      "solo_LH": 1
+    },
+    "n_tablero_obs": 37,
+    "rango_obs": [
+      0,
+      36
+    ],
+    "conflictos_nombre": [
+      [
+        0,
+        {
+          "BALLENA": 53,
+          "DELFIN": 47
+        }
+      ]
+    ],
+    "fuente_nombres": "tuazar",
+    "discrepancias": []
+  },
+  "lottoactivordint": {
+    "canonicos": 1800,
+    "dias": 150,
+    "stats": {
+      "solo_LH": 1716,
+      "acuerdo_2_fuentes": 84
+    },
+    "n_tablero_obs": 37,
+    "rango_obs": [
+      0,
+      36
+    ],
+    "conflictos_nombre": [],
+    "fuente_nombres": "tuazar",
+    "discrepancias": []
+  },
+  "lagranjita": {
+    "canonicos": 1800,
+    "dias": 150,
+    "stats": {
+      "acuerdo_2_fuentes": 1800
+    },
+    "n_tablero_obs": 37,
+    "rango_obs": [
+      0,
+      36
+    ],
+    "conflictos_nombre": [
+      [
+        0,
+        {
+          "BALLENA": 39,
+          "DELFIN": 50
+        }
+      ]
+    ],
+    "fuente_nombres": "tuazar",
+    "discrepancias": []
+  },
+  "selvaplus": {
+    "canonicos": 1723,
+    "dias": 143,
+    "stats": {
+      "acuerdo_2_fuentes": 1632,
+      "acuerdo_3_fuentes": 91
+    },
+    "n_tablero_obs": 100,
+    "rango_obs": [
+      0,
+      99
+    ],
+    "conflictos_nombre": [
+      [
+        0,
+        {
+          "BALLENA": 1,
+          "DELFIN": 1
+        }
+      ],
+      [
+        75,
+        {
+          "GUAHCARO": 1,
+          "GUACHARO": 1
+        }
+      ]
+    ],
+    "fuente_nombres": "pareo(LH,arbitro)+tuazar",
+    "discrepancias": []
+  },
+  "guacharoactivo": {
+    "canonicos": 1800,
+    "dias": 150,
+    "stats": {
+      "acuerdo_3_fuentes": 1748,
+      "acuerdo_2_fuentes": 52
+    },
+    "n_tablero_obs": 76,
+    "rango_obs": [
+      0,
+      75
+    ],
+    "conflictos_nombre": [
+      [
+        44,
+        {
+          "CHIGUIRE": 1,
+          "CHUGUIRE": 26
+        }
+      ],
+      [
+        55,
+        {
+          "OSOHORMIGUERO": 1,
+          "HORMIGUERO": 26
+        }
+      ],
+      [
+        0,
+        {
+          "DELFIN": 21,
+          "BALLENA": 22
+        }
+      ]
+    ],
+    "fuente_nombres": "pareo(LH,arbitro)+tuazar",
+    "discrepancias": []
+  }
+}

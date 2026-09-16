@@ -1,0 +1,26 @@
+Histórico: 12490 sorteos, 2023-09-04 a 2026-09-14
+¿La hora influye en qué animal sale? p = 0.493  (p > 0,05 = no)
+
+--- Todo el histórico: 12490 sorteos ---
+Uniformidad (chi2): p = 0.269  (p < 0,01 = algunos animales salen más)
+Probabilidad relativa según sorteos desde que salió (1,00x = azar):
+  1-1: 0.28x  2-3: 0.59x  4-8: 0.75x  9-12: 1.01x  13-20: 1.32x  21-30: 1.23x  31-45: 1.05x  46-59: 0.96x
+Distintos por jornada de 12: 11.29  (azar con repetición: 10,41; sin repetir: 12)
+Tripleta al azar, día natural: 2.16%  (umbral 45x: 2,22%)
+Tripleta al azar, ventana de 12 sorteos: 1.97%
+
+--- Primer tercio: 4163 sorteos ---
+Uniformidad (chi2): p = 1.000  (p < 0,01 = algunos animales salen más)
+Probabilidad relativa según sorteos desde que salió (1,00x = azar):
+  1-1: 0.34x  2-3: 0.59x  4-8: 0.75x  9-12: 0.94x  13-20: 1.22x  21-30: 1.26x  31-45: 1.02x  46-59: 0.91x
+Tripleta al azar, ventana de 12 sorteos: 1.97%
+
+--- Último tercio (lo más reciente): 4163 sorteos ---
+Uniformidad (chi2): p = 1.000  (p < 0,01 = algunos animales salen más)
+Probabilidad relativa según sorteos desde que salió (1,00x = azar):
+  1-1: 0.30x  2-3: 0.60x  4-8: 0.74x  9-12: 1.08x  13-20: 1.33x  21-30: 1.22x  31-45: 1.08x  46-59: 1.05x
+Distintos por jornada de 12: 11.29  (azar con repetición: 10,41; sin repetir: 12)
+Tripleta al azar, día natural: 2.16%  (umbral 45x: 2,22%)
+Tripleta al azar, ventana de 12 sorteos: 1.96%
+
+Lectura: valores de 1-1 muy por debajo de 1,00x y más de 11 distintos por jornada indican que el operador evita repetir animales. Esa es la estructura que usan los modelos.

@@ -1,0 +1,34 @@
+﻿ETL: 22 semanas, 2026-04-13 .. 2026-09-07
+tuazar 2026-04-13: 1286 filas (acum 1286)
+tuazar 2026-04-20: 1358 filas (acum 2644)
+tuazar 2026-04-27: 1370 filas (acum 4014)
+tuazar 2026-05-04: 1370 filas (acum 5384)
+tuazar 2026-05-11: 1370 filas (acum 6754)
+tuazar 2026-05-18: 1370 filas (acum 8124)
+tuazar 2026-05-25: 1370 filas (acum 9494)
+tuazar 2026-06-01: 1370 filas (acum 10864)
+tuazar 2026-06-08: 1370 filas (acum 12234)
+tuazar 2026-06-15: 1370 filas (acum 13604)
+tuazar 2026-06-22: 642 filas (acum 14246)
+tuazar 2026-06-29: 1363 filas (acum 15609)
+tuazar 2026-07-06: 1370 filas (acum 16979)
+tuazar 2026-07-13: 1370 filas (acum 18349)
+tuazar 2026-07-20: 1370 filas (acum 19719)
+tuazar 2026-07-27: 1370 filas (acum 21089)
+tuazar 2026-08-03: 1370 filas (acum 22459)
+tuazar 2026-08-10: 1370 filas (acum 23829)
+tuazar 2026-08-17: 1370 filas (acum 25199)
+tuazar 2026-08-24: 1370 filas (acum 26569)
+tuazar 2026-08-31: 1370 filas (acum 27939)
+tuazar 2026-09-07: 1576 filas (acum 29515)
+LH lottoactivo: 1800 filas
+LH lottoactivordint: 1800 filas
+LH lagranjita: 1800 filas
+LH selvaplus: 1723 filas
+LH guacharoactivo: 1800 filas
+sorteo_dia asignado: lh_guacharoactivo.jsonl 1800
+sorteo_dia asignado: lh_lagranjita.jsonl 1800
+sorteo_dia asignado: lh_lottoactivo.jsonl 1800
+sorteo_dia asignado: lh_lottoactivordint.jsonl 1800
+sorteo_dia asignado: lh_selvaplus.jsonl 1723
+sorteo_dia asignado: tuazar_todas.jsonl 29515

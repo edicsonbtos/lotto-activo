@@ -1,0 +1,47 @@
+logit_c {} | Top1 3.72 Top3 11.13 +82.3 mbits | q [11.0, 10.2, 12.1, 11.1] | 49s
+logit_c {} | Top1 3.71 Top3 11.11 +82.4 mbits | q [11.0, 10.3, 12.1, 11.1] | 10s
+logit_c {'ayerpos': True} | Top1 3.71 Top3 10.85 +80.1 mbits | q [10.0, 10.3, 12.2, 10.9] | 14s
+logit_c {'gxk': True} | Top1 3.72 Top3 11.08 +82.3 mbits | q [11.4, 10.0, 12.2, 10.7] | 13s
+logit_c {'tau': 3000} | Top1 3.81 Top3 10.93 +88.4 mbits | q [11.2, 10.5, 11.6, 10.3] | 14s
+logit_c {'tau': 6000} | Top1 3.59 Top3 11.19 +86.3 mbits | q [11.1, 10.5, 11.9, 11.1] | 9s
+logit_c {'lam': 0.001} | Top1 3.72 Top3 11.09 +80.9 mbits | q [11.1, 10.2, 11.9, 11.3] | 9s
+logit_c {'R': 250} | Top1 3.68 Top3 11.21 +84.7 mbits | q [10.9, 10.5, 12.0, 11.5] | 18s
+logit_c {'ddmax': 6, 'kgrupos': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]} | Top1 3.70 Top3 11.34 +75.0 mbits | q [11.4, 10.3, 12.1, 11.6] | 16s
+logit_c {'ventanas': [], 'g2': False} | Top1 3.74 Top3 10.89 +77.3 mbits | q [10.3, 11.7, 10.7, 10.8] | 6s
+logit_s {} | Top1 3.86 Top3 11.12 +89.6 mbits | q [11.8, 9.7, 11.4, 11.5] | 74s
+logit_s {'s_gap': 0.001, 's_hoy': 0.001, 's_dias': 0.001, 's_g2': 0.001} | Top1 4.05 Top3 11.51 +86.4 mbits | q [12.1, 10.7, 11.9, 11.4] | 72s
+logit_s {'s_gap': 0.1, 's_hoy': 0.1, 's_dias': 0.1, 's_g2': 0.1} | Top1 3.72 Top3 11.02 +81.4 mbits | q [10.5, 10.4, 11.8, 11.4] | 60s
+logit_s {} | Top1 3.86 Top3 11.12 +89.6 mbits | q [11.8, 9.7, 11.4, 11.5] | 18s
+logit_s {'s_gap': 0.003, 's_hoy': 0.003, 's_dias': 0.003, 's_g2': 0.003} | Top1 4.01 Top3 11.55 +88.7 mbits | q [12.4, 10.3, 12.1, 11.4] | 19s
+logit_s {'tau': 4000} | Top1 3.74 Top3 11.36 +95.4 mbits | q [11.9, 9.8, 11.5, 12.3] | 20s
+logit_s {'ddmax': 7} | Top1 3.87 Top3 11.25 +90.0 mbits | q [11.6, 10.1, 11.7, 11.6] | 14s
+logit_s {'G1': 60, 'tramos': [61, 81, 101, 151, 100000]} | Top1 3.91 Top3 11.15 +88.6 mbits | q [12.0, 9.7, 11.6, 11.4] | 13s
+logit_s {'g2': False} | Top1 3.68 Top3 11.31 +87.9 mbits | q [11.6, 10.7, 11.4, 11.6] | 10s
+logit_s {'ventanas': []} | Top1 3.78 Top3 11.28 +88.5 mbits | q [11.7, 10.3, 11.9, 11.3] | 6s
+logit_s {'ventanas': [12, 38, 152]} | Top1 3.89 Top3 10.93 +89.2 mbits | q [11.6, 10.0, 11.1, 11.0] | 10s
+logit_s {} | Top1 3.85 Top3 11.15 +89.1 mbits | q [11.7, 9.7, 11.5, 11.7] | 14s
+logit_s {'tau': 4000} | Top1 3.60 Top3 11.08 +93.4 mbits | q [11.5, 9.4, 11.2, 12.2] | 16s
+logit_s {'rango': True} | Top1 3.87 Top3 11.24 +89.6 mbits | q [11.7, 10.4, 11.2, 11.6] | 15s
+logit_s {'tau': 4000, 'rango': True} | Top1 3.87 Top3 10.98 +94.9 mbits | q [11.2, 9.6, 11.5, 11.6] | 20s
+logit_s {'tau': 2000} | Top1 3.74 Top3 11.00 +93.9 mbits | q [10.5, 9.9, 11.5, 12.1] | 16s
+logit_s {'tau': 3000} | Top1 3.59 Top3 11.11 +93.9 mbits | q [11.2, 9.7, 11.4, 12.1] | 17s
+logit_s {'tau': 6000} | Top1 3.75 Top3 11.06 +92.5 mbits | q [11.6, 9.4, 11.6, 11.7] | 15s
+logit_s {'tau': 3000, 'R': 125} | Top1 3.83 Top3 11.09 +94.7 mbits | q [11.1, 9.6, 11.5, 12.1] | 29s
+logit_s {'tau': 6000, 'tau_r': 1000, 'rho': 30} | Top1 3.52 Top3 10.67 +93.6 mbits | q [10.3, 9.2, 11.4, 11.8] | 33s
+logit_s {'tau': 6000, 'tau_r': 1000, 'rho': 100} | Top1 3.47 Top3 10.83 +94.1 mbits | q [10.9, 9.6, 11.0, 11.8] | 29s
+logit_s {'tau': 6000, 'tau_r': 500, 'rho': 30} | Top1 3.47 Top3 10.55 +91.7 mbits | q [10.1, 9.5, 11.1, 11.5] | 23s
+logit_s {'tau': 3000, 'cuota': True} | Top1 3.89 Top3 11.19 +99.8 mbits | q [11.4, 9.9, 11.3, 12.2] | 21s
+logit_s {'tau': 3000, 'cuota': True} | Top1 3.89 Top3 11.19 +99.8 mbits | q [11.4, 9.9, 11.3, 12.2] | 21s
+logit_s {'tau': 3000, 'cuota': True, 'cuota_kfull': True} | Top1 3.86 Top3 11.70 +96.7 mbits | q [12.0, 10.7, 11.7, 12.5] | 20s
+logit_s {'tau': 3000, 'cuota': True, 'cuota_dd': [1, 2]} | Top1 3.74 Top3 11.05 +99.2 mbits | q [10.7, 10.3, 11.6, 11.6] | 23s
+logit_s {'tau': 3000, 'cuota': True, 'cuota_dd': [1, 2, 3], 'cuota_kfull': True} | Top1 3.74 Top3 11.44 +96.8 mbits | q [11.8, 10.4, 11.8, 11.8] | 28s
+logit_s {'tau': 3000, 'cuota': True, 's_gap': 15, 's_hoy': 15, 's_dias': 15, 's_g2': 15, 's_cuota': 15} | Top1 3.98 Top3 11.58 +103.2 mbits | q [11.8, 10.7, 11.7, 12.1] | 15s
+logit_s {'tau': 3000, 'cuota': True, 's_gap': 150, 's_hoy': 150, 's_dias': 150, 's_g2': 150, 's_cuota': 150} | Top1 4.02 Top3 11.15 +92.7 mbits | q [10.8, 10.2, 11.6, 12.0] | 14s
+logit_s {'tau': 5000, 'cuota': True} | Top1 3.79 Top3 11.20 +98.6 mbits | q [11.6, 9.6, 11.5, 12.1] | 14s
+logit_s {'tau': 2000, 'cuota': True} | Top1 4.12 Top3 11.12 +100.0 mbits | q [10.8, 10.5, 11.1, 12.0] | 14s
+logit_s {'tau': 3000, 'cuota': True, 's_gap': 5, 's_hoy': 5, 's_dias': 5, 's_g2': 5, 's_cuota': 5} | Top1 4.01 Top3 11.32 +101.9 mbits | q [11.4, 10.9, 11.1, 11.9] | 14s
+logit_s {'tau': 3000, 'cuota': True, 's_gap': 15, 's_hoy': 15, 's_dias': 15, 's_g2': 150, 's_cuota': 15, 'ventanas': [12, 38]} | Top1 3.78 Top3 11.39 +103.4 mbits | q [11.4, 10.9, 11.1, 12.1] | 9s
+logit_s {'tau': 3000, 'clases': [1, 2, 3, 4, 6, 10], 's_gap': 15, 's_hoy': 15, 's_dias': 15, 's_g2': 150, 's_cuota': 15, 'ventanas': [12, 38]} | Top1 3.77 Top3 11.11 +100.9 mbits | q [10.3, 11.1, 11.3, 11.7] | 12s
+logit_s {'tau': 3000, 'cuota': True, 'clases': [2, 3, 4, 6, 10], 's_gap': 15, 's_hoy': 15, 's_dias': 15, 's_g2': 150, 's_cuota': 15, 'ventanas': [12, 38]} | Top1 3.86 Top3 11.16 +100.9 mbits | q [10.4, 11.1, 11.3, 11.8] | 13s
+hazard_actual {} | Top1 3.41 Top3 10.74 +47.6 mbits | q [9.2, 10.8, 10.7, 12.2] | 1s
+logit_final {} | Top1 3.78 Top3 11.39 +103.4 mbits | q [11.4, 10.9, 11.1, 12.1] | 12s

@@ -1,0 +1,5 @@
+historial: 12479 sorteos | calentamiento <2000 | desarrollo 2000-9357 | prueba 9357-12479
+== secuencia_v3 (logit_final + bandas de conteo, sin columna)  (sin fuga, 57.2 s)
+  desarrollo n= 7357  Top1  4.27% [3.83-4.75] p=0.000 ROI +28.0%  |  Top3 12.65% (azar 7.89) p=0.000  |  +112.19 mbits z=+30.25  |  cuartos Top3 [12.6, 11.3, 12.3, 14.4]
+== ensamble(intradia_v2+secuencia_v3+haz_v1)  (sin fuga, 317.3 s)
+  desarrollo n= 7357  Top1  4.53% [4.07-5.03] p=0.000 ROI +35.8%  |  Top3 12.89% (azar 7.89) p=0.000  |  +120.07 mbits z=+31.06  |  cuartos Top3 [12.7, 12.2, 12.9, 13.7]

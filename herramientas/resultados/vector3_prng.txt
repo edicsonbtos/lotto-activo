@@ -1,0 +1,112 @@
+==============================================================================
+ VECTOR 3 -- ATAQUE LCG / PRNG      (solo tramo de DESARROLLO)
+==============================================================================
+ historial completo: 12502 sorteos   |  tramo de prueba (>=9357): INTACTO
+ desarrollo analizado: [2000, 9357) = 7357 sorteos, 2024-03-07 .. 2025-12-17
+ alfa = 0.01 con correccion por comparaciones multiples donde aplica
+ permutaciones Monte Carlo por nulo: 1000
+
+------------------------------------------------------------------------------
+ 3.1  LCG DIRECTO mod 38   (hipotesis: s[t+1] = (a*s[t] + c) mod 38)
+------------------------------------------------------------------------------
+ mejor par: a=20 c=31 -> 241/7356 aciertos = 3.276%  (azar 2.632%)
+ z = +3.45   p bruto = 0.0003   p Bonferroni (x1444) = 0.3987
+ VEREDICTO 3.1: RUIDO
+
+ reconstruccion algebraica (a,c desde 3 salidas consecutivas, validada en 1000):
+   300 tripletas probadas, 146 invertibles mod 38 (38=2*19 no es primo)
+   tasa de validacion: media 2.688%  max 3.900%   (azar 2.632%)
+   VEREDICTO: RUIDO -- ninguna reconstruccion sobrevive la validacion
+
+------------------------------------------------------------------------------
+ 3.2  ESTRUCTURA DE RETICULO (LCG truncado: salida = (estado>>k) mod 38)
+------------------------------------------------------------------------------
+ No se puede invertir el truncamiento, pero un LCG truncado deja los pares
+ (s_t, s_t+1) sobre pocas rectas: para cada (u,v) se mira si (u*s_t+v*s_t+1)
+ mod 38 es uniforme. Un reticulo lo rompe con fuerza.
+
+ CUIDADO (defecto corregido en v2): si gcd(u,v,38)>1 la combinacion solo
+ puede caer en 38/g residuos, asi que da chi2 gigante SIEMPRE, hasta con
+ datos perfectamente aleatorios. Esas 344 combinaciones se EXCLUYEN.
+ Ademas el recuento de significativas se calibra contra los dos nulos: la
+ evitacion intradia ya conocida tambien deforma la tabla de pares.
+
+ 1062 combinaciones (u,v) coprimas probadas; umbral Bonferroni = 9.42e-06
+ p minimo observado = 1.01e-19 en (u=5, v=33)
+ significativas con Bonferroni: 36 de 1062
+ calibracion (200 permutaciones):
+   NULO A (azar puro)      : media 0.0  max 0  -> p = 0.0050
+   NULO B (mismo dia)      : media 15.9  max 54  -> p = 0.0950
+ VEREDICTO 3.2: RUIDO -- lo que se ve lo explica el sesgo intradia ya conocido
+
+------------------------------------------------------------------------------
+ 3.3  COMPLEJIDAD LINEAL (Berlekamp-Massey) -- hay un LFSR escondido?
+------------------------------------------------------------------------------
+ paridad (s mod 2)        complejidad lineal =  1999 de 4000 bits (esperado ~2000)  [0.1s]
+ mitad alta (s>=19)       complejidad lineal =  2001 de 4000 bits (esperado ~2000)  [0.1s]
+ s mod 19 sobre GF(19)    complejidad lineal =  1000 de 2000 simbolos (esperado ~1000)  [0.0s]
+ VEREDICTO 3.3: RUIDO -- complejidad maxima, no hay LFSR detectable
+
+------------------------------------------------------------------------------
+ 3.4  PERIODICIDAD (autocorrelacion de largo alcance + FFT)
+------------------------------------------------------------------------------
+ OJO (defecto corregido en v2): PERIODICIDAD significa que la secuencia se
+ REPITE a cierto lag, o sea z POSITIVO. Un z muy negativo es lo contrario:
+ evitacion, que es el sesgo conductual ya conocido. La v1 los mezclaba
+ usando |z| y por eso marcaba SENAL de periodicidad donde no la hay.
+
+ coincidencias s[t]==s[t+lag] para lag=1..2000  (azar 2.632%)
+ PERIODICIDAD (z positivo): z max = +3.34 en lag=18  p bruto=0.0004  p Bonferroni(x2000)=0.8232
+ EVITACION  (z negativo): z min = -10.68 en lag=1  <- sesgo conductual conocido, NO es PRNG
+ lags con z>+3 (repeticion): 7  |  lags con z<-3 (evitacion): 7  (esperados ~2.7 cada uno)
+ lag 12 (mismo sorteo, dia siguiente): z=-1.04 | lag 24: z=+0.22 | lag 84 (1 semana): z=-0.32
+ lags 1-12 mas negativos (evitacion intradia): lag 1 z=-10.7, lag 2 z=-7.2, lag 4 z=-6.7
+ Fisher g-test del periodograma, un test por animal (38 tests):
+   p minimo = 0.0039 (animal 16);  significativos: Bonferroni 0/38, FDR 0/38
+ VEREDICTO 3.4 (periodicidad): RUIDO -- ninguna periodicidad sobrevive la correccion
+ (la evitacion a lag corto NO cuenta aqui: es el vector 2, no el 3)
+
+------------------------------------------------------------------------------
+ 3.5  SEMILLA POR TIMESTAMP  (re-siembra diaria? patron por hora?)
+------------------------------------------------------------------------------
+ primer sorteo del dia: n=636  chi2=24.1 (gl=37) p=0.9496
+ resto de sorteos      : n=6721  chi2=36.1 (gl=37) p=0.5092
+ primero vs resto (homogeneidad 2x38): chi2=18.3 (gl=37) p=0.9957
+   -> si el operador re-sembrara cada dia, el primer sorteo del dia tendria
+      otra distribucion. p=0.9957: no la tiene
+ uniformidad por hora (12 tests): p minimo=0.1658 (hora 9); umbral Bonferroni=0.0008 -> 0 significativas
+ VEREDICTO 3.5: RUIDO
+
+------------------------------------------------------------------------------
+ 3.6  BATERIA DIEHARD SIMPLIFICADA  (contra NULO A y contra NULO B)
+------------------------------------------------------------------------------
+ 1000 permutaciones por nulo, 2 nulos...
+ (12 s)
+
+ estadistico               observado | vs NULO A (azar puro) | vs NULO B (mismo dia)
+ ----------------------------------------------------------------------------
+ monobit (paridad)            0.0022 | p=0.6380 no          | p=1.0000 no         
+ rachas de paridad         3719.0000 | p=0.2980 no          | p=0.6240 no         
+ serial 38x38 (pares)      1498.8059 | p=0.3340 no          | p=0.4860 no         
+ colisiones lag-1            47.0000 | p=0.0010 SIGNIF      | p=0.0010 SIGNIF     
+ distintos por jornada       10.9230 | p=0.0010 SIGNIF      | p=1.0000 no         
+ gaps vs geometrica          47.0727 | p=0.2380 no          | p=0.2920 no         
+
+ Bonferroni dentro de la bateria: umbral = 0.0017
+ vs NULO A (azar puro)           : HAY ESTRUCTURA
+ vs NULO B (orden dentro del dia): HAY ESTRUCTURA DE ORDEN
+
+==============================================================================
+ VEREDICTO VECTOR 3
+==============================================================================
+   3.1 LCG directo mod 38           RUIDO
+   3.2 reticulo / LCG truncado      RUIDO
+   3.3 complejidad lineal (LFSR)    RUIDO
+   3.4 periodicidad FFT/autocorr    RUIDO
+   3.5 semilla por timestamp        RUIDO
+
+ LCG/PRNG DEBIL: RUIDO.
+ Ni reconstruccion algebraica, ni reticulo, ni recurrencia lineal, ni
+ periodicidad sobreviven la correccion por comparaciones multiples.
+ El vector 3 queda ARCHIVADO.
+==============================================================================

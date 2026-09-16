@@ -1,0 +1,90 @@
+LOTTO ACTIVO — TODO EN UNA PÁGINA
+================================
+
+1) Abre PowerShell (tecla Windows, escribe "powershell", Enter).
+
+2) Pega estas dos líneas, una a la vez:
+
+   cd "C:\Users\edics\Downloads\lotto-activo\lotto-activo"
+   python servidor.py
+
+3) Se abre solo el navegador. Si no, entra a:   http://localhost:8000
+
+4) Para detenerlo: vuelve a PowerShell y pulsa Ctrl + C
+   (si cambias el código, detenlo y vuelve a correr python servidor.py)
+
+LA PÁGINA TIENE
+  - Próximo sorteo: Top-3 con su probabilidad.
+  - Tripleta: 2 tripletas para los 12 sorteos que empiezan en el próximo
+    (por ejemplo 2 PM de hoy hasta 1 PM de mañana). Paga 45x.
+  - ¿Qué salió?: escribes el número y pulsas Registrar. Deshacer si te equivocas.
+  - Marcadores: aciertos reales del sorteo y de la tripleta.
+  - Herramientas: botones para validar (diagnóstico, tripleta, sorteo) y ver
+    el resultado ahí mismo, con la explicación de qué mirar.
+
+No hace falta correr prediccion.py ni nada de herramientas/ a mano.
+
+
+MODELO NUEVO (ENSAMBLE) — REQUISITO
+-----------------------------------
+El modelo nuevo necesita dos librerías. Instálalas una sola vez:
+
+   python -m pip install numpy scipy
+
+Sin ellas la página sigue funcionando con el modelo antiguo y lo avisa.
+La primera predicción tarda unos 10 segundos (la página se recarga sola).
+Cada 250 sorteos recalcula los pesos del ensamble en segundo plano (~1-3 min).
+
+
+SI DICE QUE NO ENCUENTRA PYTHON
+-------------------------------
+Prueba con:     py servidor.py
+Si tampoco:     instálalo desde https://www.python.org/downloads/
+                (marca la casilla "Add Python to PATH" al instalar)
+
+Verifica que quedó bien con:   python --version
+
+
+CÓMO SE USA
+-----------
+La página te muestra el Top 3 del próximo sorteo. Cuando salga el resultado,
+lo escribes en la casilla y pulsas Registrar. La página avanza sola al
+siguiente sorteo y el modelo se reentrena con el dato nuevo.
+
+El marcador solo cuenta las predicciones que ya estaban hechas antes de
+conocer el resultado. Así no se puede maquillar a posteriori.
+
+Se guardan dos archivos en esta carpeta:
+  historial.txt      todos los sorteos (12.466 de arranque + los que agregues)
+  predicciones.json  tus pronósticos y si acertaron
+
+Si tu pago no es 30x, abre servidor.py y cambia la línea  PAGO = 30
+
+
+LO QUE ESTE PROGRAMA NO HACE
+----------------------------
+No te dice que vas a ganar. En prueba ciega (3.122 sorteos que ningún modelo
+vio al ajustarse) el ensamble acertó:
+   Top-1  4,00%  (IC 95%: 3,37-4,75)   azar 2,63%   umbral con pago 30x: 3,33%
+   Top-3 12,27%  (IC 95%: 11,2-13,5)   azar 7,89%
+El modelo antiguo daba Top-1 3,59% y Top-3 10,60% en esos mismos sorteos.
+El límite inferior apenas supera el umbral, y el operador puede cambiar su
+mecanismo en cualquier momento. El marcador está para que lo compruebes tú.
+
+Detalles técnicos: herramientas/ (banco de pruebas lotto_eval.py, modelos/,
+resultados/final.txt, tripleta.py). Respaldo de los archivos originales en
+respaldo/2026-09-13_original/.
+
+
+MESA DEL CONSEJO (AUTOMÁTICA)
+-----------------------------
+Hay una tarea programada "LottoMesaConsejo" que corre cada noche 23:30.
+Ejecuta las 5 estrategias del consejo (intradía, Markov, atrasos, ensamble,
+frecuencia reciente) sobre el próximo sorteo y guarda todo en:
+  herramientas/resultados/mesa_consejo.txt
+No hace falta hacer nada; si quieres quitarla: schtasks /delete /tn LottoMesaConsejo /f
+
+Nota 2026-09-14: se probó el submodelo antirep_v1 (penalizar repetición
+inmediata y mismo animal misma hora ayer). La señal existe pero YA está
+capturada por el ensamble: no mejora Top-k ni log-verosimilitud. Descartado
+(queda en herramientas/modelos/ como resultado negativo documentado).
