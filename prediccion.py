@@ -18,8 +18,9 @@ Si numpy/scipy no están instalados, servidor.py sigue con su modelo antiguo.
 import hashlib, json, os, sys, threading, time, traceback
 
 RUTA = os.path.dirname(os.path.abspath(__file__))
+DATOS = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RUTA
 HERR = os.path.join(RUTA, "herramientas")
-PESOS = os.path.join(RUTA, "pesos_ensamble.json")
+PESOS = os.path.join(DATOS, "pesos_ensamble.json")
 MODELO_ENSAMBLE = "ensamble_v2"
 sys.path.insert(0, HERR)
 
