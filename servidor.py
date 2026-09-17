@@ -17,8 +17,10 @@ from datetime import date, datetime, timedelta
 from math import comb
 
 # Jornada y etiquetas deben correr en hora de Caracas (UTC-4, sin DST),
-# no en la hora del contenedor. Sin efecto en Windows (tzset no existe).
-os.environ.setdefault("TZ", "America/Caracas")
+# no en la hora del contenedor. FUERZA el valor: la imagen de Railway ya
+# trae TZ (sfo -> America/Los_Angeles, UTC-8); setdefault quedaba corto.
+# tzdata (requirements.txt) garantiza que la zona exista en imagenes slim.
+os.environ["TZ"] = "America/Caracas"
 try:
     time.tzset()
 except AttributeError:
@@ -909,6 +911,11 @@ if __name__ == "__main__":
     url = f"http://localhost:{PUERTO}"
     print(f"\n  Lotto Activo corriendo en  {url}")
     print("  Modelo:", "ensamble (numpy/scipy OK)" if PRED else f"antiguo ({PRED_ERR})")
+    print("  Hora local:", datetime.now().isoformat(timespec="seconds"),
+          f"({time.tzname[0]}, UTC{time.timezone/-3600:+.0f})")
+    if time.timezone != 4 * 3600:
+        print("  AVISO: la zona horaria no quedo en UTC-4 (Caracas); "
+              "las etiquetas hoy/ayer saldran desplazadas.", file=sys.stderr)
     print("  Para detenerlo: Ctrl + C\n")
     if not EN_NUBE:
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
