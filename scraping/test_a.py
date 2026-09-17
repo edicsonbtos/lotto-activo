@@ -119,9 +119,9 @@ def bh_fdr(resultados):
     m = len(orden)
     prev = 1.0
     for rango, i in reversed(list(enumerate(orden, start=1))):
-        q = min(prev, resultados[i]["p"] * m / rango)
-        resultados[i]["p_fdr"] = q
-        resultados[i]["sig"] = q < 0.05
+        q = min(prev, float(resultados[i]["p"]) * m / rango)
+        resultados[i]["p_fdr"] = float(q)
+        resultados[i]["sig"] = bool(q < 0.05)
         prev = q
 
 
@@ -188,7 +188,7 @@ def main():
                         ("marginal" if r["sig"] else "no")
                 z_txt = r["z"]
             if marca == "SIG":
-                senales.append((r["subtest"], z_txt))
+                senales.append((r["subtest"], z_txt if z_txt != "" else None))
             tabla.append("| %s | %d | %s | %s | %.3g | %.3g | %s |"
                          % (slug, n_tab, r["subtest"], est, r["p"],
                             r["p_fdr"], marca))
@@ -203,14 +203,14 @@ def main():
             c = "SIN SESGO detectable"
         else:
             coinciden = all(s[0] in ("a_evitacion_intradia", "b_bump_13_27") for s in senales)
-            dirs = all((s[1] < 0) == (ref["intradia"]["z"] < 0)
+            dirs = all(((s[1] or 0) < 0) == (ref["intradia"]["z"] < 0)
                        for s in senales if s[0] == "a_evitacion_intradia")
             c = "MISMA FIRMA que el control" if (coinciden and dirs) else \
                 "DISTINTA (senal con signo/patron diferente)"
         clasif[slug] = c
         md.append("## %s — **%s**" % (slug, c))
         for s in senales:
-            md.append("- senal: %s (z=%+.2f)" % s)
+            md.append("- senal: %s (z=%s)" % (s[0], ("%+.2f" % s[1]) if s[1] is not None else "chi2"))
         md.append("")
     md += tabla
     md.append("")
