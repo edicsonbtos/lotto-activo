@@ -16,6 +16,14 @@ from urllib.parse import parse_qs
 from datetime import date, datetime, timedelta
 from math import comb
 
+# Jornada y etiquetas deben correr en hora de Caracas (UTC-4, sin DST),
+# no en la hora del contenedor. Sin efecto en Windows (tzset no existe).
+os.environ.setdefault("TZ", "America/Caracas")
+try:
+    time.tzset()
+except AttributeError:
+    pass
+
 RUTA = os.path.dirname(os.path.abspath(__file__))
 DATOS = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RUTA
 HIST = os.path.join(DATOS, "historial.txt")
@@ -663,6 +671,8 @@ def render():
             if not info.get("pesos_vigentes"):
                 aviso_modelo = ('<div class="tip">Recalculando en segundo plano los pesos del ensamble '
                                 '(1 a 3 min); mientras, se usan los del bloque anterior.</div>')
+        if PRED is not None and PRED.error:
+            aviso_modelo += f'<div class="msg bad">Último error del modelo: {esc(PRED.error[-300:])}</div>'
     elif PRED_ERR:
         aviso_modelo = f'<div class="tip">Modelo antiguo: no se pudo cargar el ensamble ({esc(PRED_ERR)}).</div>'
 
@@ -724,15 +734,37 @@ def render():
 def registrar(num):
     filas = cargar(); e = estado(filas)
     d = log_cargar(); estado_txt = "sin pronóstico previo, no cuenta"; clase = "no"
+    # Cerrar el hueco del sorteo sin pronóstico: si aún no hay «pend» para este
+    # slot pero la predicción ya estaba en caché (calculada en un render previo
+    # a que saliera el resultado), se registra ahora: el pronóstico es anterior
+    # al resultado, sigue siendo honesto. Si no hay caché, no hubo pronóstico.
+    pend = None
     for r in d["registros"]:
         if vigente(r) and r.get("salio") is None and r["fecha"] == e["pf"] and r["hora"] == e["ph"]:
-            r["salio"] = IDX[num]; r["resuelto"] = ahora()
-            if IDX[num] == r["top3"][0]: estado_txt, clase = "¡ACIERTO Top-1!", "ok"
-            elif IDX[num] in r["top3"]: estado_txt, clase = "acierto Top-3", "ok"
-            else: estado_txt = "fallo"
+            pend = r
             break
-    with open(HIST, "a", encoding="utf-8") as fh:
-        fh.write(f"{e['pf']} {e['ph']} {num}\n")
+    if pend is None and PRED is not None and [e["pf"], e["ph"]] not in d["sorteos_conocidos"]:
+        res = PRED.obtener(HIST, e["pf"], e["ph"])
+        if res is not None:
+            p, _info = res
+            sc = [float(x) for x in p]
+            orden = sorted(range(K), key=lambda i: (-sc[i], i))
+            pend = {"fecha": e["pf"], "hora": e["ph"], "top3": orden[:3],
+                    "orden_completo": orden, "salio": None,
+                    "creado": ahora(), "modelo": prediccion.MODELO_ENSAMBLE}
+            d["registros"].append(pend)
+    if pend is not None:
+        pend["salio"] = IDX[num]; pend["resuelto"] = ahora()
+        if IDX[num] == pend["top3"][0]: estado_txt, clase = "¡ACIERTO Top-1!", "ok"
+        elif IDX[num] in pend["top3"]: estado_txt, clase = "acierto Top-3", "ok"
+        else: estado_txt = "fallo"
+    try:
+        with open(HIST, "a", encoding="utf-8") as fh:
+            fh.write(f"{e['pf']} {e['ph']} {num}\n")
+    except OSError as ex:
+        log_guardar(d)
+        return (f"ERROR al guardar en el volumen: {ex}. NO se registró el resultado; "
+                f"reintenta. Si persiste, el contenedor está sin escritura.", "bad")
     _, cerradas = resolver_tripletas(d, cargar())
     log_guardar(d)
     texto = f'{HORAS[e["ph"]]} → <b>{num} {ANIM[num].title()}</b> · {estado_txt}'
@@ -832,13 +864,18 @@ class H(BaseHTTPRequestHandler):
             return self._volver("#herramientas")
         self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
-    def log_message(self, *a): pass
+    def log_message(self, fmt, *a):
+        # Silenciado antes: el servidor corría sordo y un traceback en
+        # /registrar o en el recálculo de pesos dejaba rastro solo en la
+        # consola. Railway captura stderr: ahora queda en los logs.
+        sys.stderr.write("%s %s\n" % (datetime.now().isoformat(timespec="seconds"),
+                                       fmt % a if a else fmt))
 
 if __name__ == "__main__":
     if DATOS != RUTA and not os.path.exists(HIST):
         # Volumen recién creado (vacío): lo sembramos una vez con los datos del repo.
         import shutil
-        for nombre in ("historial.txt", "predicciones.json"):
+        for nombre in ("historial.txt", "predicciones.json", "pesos_ensamble.json"):
             origen = os.path.join(RUTA, nombre)
             if os.path.exists(origen):
                 shutil.copy2(origen, os.path.join(DATOS, nombre))

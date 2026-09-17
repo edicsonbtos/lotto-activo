@@ -54,11 +54,15 @@ class Predictor:
 
     # ------------------------------------------------------------------ pesos
     def _pesos_guardados(self):
-        try:
-            with open(PESOS, encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return None
+        # Primero el volumen (si existe); si falta, la copia del repo.
+        # Así un despliegue con volumen vacío no cae en pesos uniformes.
+        for ruta in (PESOS, os.path.join(RUTA, "pesos_ensamble.json")):
+            try:
+                with open(ruta, encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                continue
+        return None
 
     def _recalcular_pesos(self, hist):
         try:
