@@ -1,0 +1,188 @@
+{
+  "referencia_historial": {
+    "intradia": {
+      "n_esperado": 1607.0365194516,
+      "n_observado": 823.0,
+      "z": -19.82773156594369,
+      "p": 0.0
+    },
+    "bump": {
+      "n_cond": 10601.0,
+      "obs": 4193.0,
+      "esp": 4297.702702702703,
+      "z": -2.071234298620596,
+      "p": 0.03833690579167737
+    },
+    "chi2": {
+      "chi2": 62.0296022201665,
+      "p": 0.00448852379121823,
+      "n": 1081,
+      "top_numero": 0,
+      "top_cuenta": 62
+    }
+  },
+  "resultados": {
+    "lottoactivo": [
+      {
+        "subtest": "a_evitacion_intradia",
+        "n_esperado": 238.56412109976964,
+        "n_observado": 123.0,
+        "z": -7.5852529515637865,
+        "p": 3.3084646133829665e-14,
+        "p_fdr": 1.2406742300186124e-13,
+        "sig": true
+      },
+      {
+        "subtest": "b_bump_13_27",
+        "n_cond": 1527.0,
+        "obs": 594.0,
+        "esp": 619.0540540540541,
+        "z": -1.3058799251831121,
+        "p": 0.1915933943897783,
+        "p_fdr": 0.31932232398296384,
+        "sig": false
+      },
+      {
+        "subtest": "c_chi2_primero",
+        "chi2": 43.88,
+        "p": 0.17213466626940618,
+        "n": 150,
+        "top_numero": 0,
+        "top_cuenta": 8,
+        "p_fdr": 0.31932232398296384,
+        "sig": false
+      }
+    ],
+    "lottoactivordint": [
+      {
+        "subtest": "a_evitacion_intradia",
+        "n_esperado": 241.07064122072288,
+        "n_observado": 70.0,
+        "z": -11.169993833549471,
+        "p": 0.0,
+        "p_fdr": 0.0,
+        "sig": true
+      },
+      {
+        "subtest": "b_bump_13_27",
+        "n_cond": 1580.0,
+        "obs": 640.0,
+        "esp": 640.5405405405406,
+        "z": -0.02769774944156314,
+        "p": 0.9779032187017724,
+        "p_fdr": 0.9943281166828465,
+        "sig": false
+      },
+      {
+        "subtest": "c_chi2_primero",
+        "chi2": 27.6,
+        "p": 0.8411479822029726,
+        "n": 150,
+        "top_numero": 33,
+        "top_cuenta": 9,
+        "p_fdr": 0.9943281166828465,
+        "sig": false
+      }
+    ],
+    "lagranjita": [
+      {
+        "subtest": "a_evitacion_intradia",
+        "n_esperado": 235.21127046760026,
+        "n_observado": 164.0,
+        "z": -4.707271869507095,
+        "p": 2.5105398790969957e-06,
+        "p_fdr": 6.276349697742489e-06,
+        "sig": true
+      },
+      {
+        "subtest": "b_bump_13_27",
+        "n_cond": 1486.0,
+        "obs": 594.0,
+        "esp": 602.4324324324325,
+        "z": -0.44554155818343344,
+        "p": 0.6559284339397184,
+        "p_fdr": 0.8944478644632524,
+        "sig": false
+      },
+      {
+        "subtest": "c_chi2_primero",
+        "chi2": 22.66666666666667,
+        "p": 0.9591565466736098,
+        "n": 150,
+        "top_numero": 0,
+        "top_cuenta": 8,
+        "p_fdr": 0.9943281166828465,
+        "sig": false
+      }
+    ],
+    "selvaplus": [
+      {
+        "subtest": "a_evitacion_intradia",
+        "n_esperado": 90.78713930162847,
+        "n_observado": 85.0,
+        "z": -0.6104276161900414,
+        "p": 0.5415785789964935,
+        "p_fdr": 0.8123678684947404,
+        "sig": false
+      },
+      {
+        "subtest": "b_bump_13_27",
+        "n_cond": 1495.0,
+        "obs": 585.0,
+        "esp": 224.25,
+        "z": 26.129473025949274,
+        "p": 0.0,
+        "p_fdr": 0.0,
+        "sig": true
+      },
+      {
+        "subtest": "c_chi2_primero",
+        "chi2": 296.86013986013995,
+        "p": 1.2255563358956899e-21,
+        "n": 143,
+        "top_numero": 12,
+        "top_cuenta": 7,
+        "p_fdr": 6.127781679478449e-21,
+        "sig": true
+      }
+    ],
+    "guacharoactivo": [
+      {
+        "subtest": "a_evitacion_intradia",
+        "n_esperado": 124.22644394187711,
+        "n_observado": 43.0,
+        "z": -7.336122558947556,
+        "p": 2.19824158875781e-13,
+        "p_fdr": 6.59472476627343e-13,
+        "sig": true
+      },
+      {
+        "subtest": "b_bump_13_27",
+        "n_cond": 1607.0,
+        "obs": 296.0,
+        "esp": 317.17105263157896,
+        "z": -1.3268980586480161,
+        "p": 0.18454240665532762,
+        "p_fdr": 0.31932232398296384,
+        "sig": false
+      },
+      {
+        "subtest": "c_chi2_primero",
+        "chi2": 47.6,
+        "p": 0.9943281166828465,
+        "n": 150,
+        "top_numero": 13,
+        "top_cuenta": 4,
+        "p_fdr": 0.9943281166828465,
+        "sig": false
+      }
+    ]
+  },
+  "clasificacion": {
+    "lottoactivo": "MISMA FIRMA que el control",
+    "lottoactivordint": "MISMA FIRMA que el control",
+    "lagranjita": "MISMA FIRMA que el control",
+    "selvaplus": "DISTINTA (senal con signo/patron diferente)",
+    "guacharoactivo": "MISMA FIRMA que el control"
+  }
+}
