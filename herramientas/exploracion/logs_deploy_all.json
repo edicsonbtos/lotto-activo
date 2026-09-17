@@ -1,0 +1,7 @@
+﻿{"message":"Mounting volume on: /var/lib/containers/railwayapp/bind-mounts/efd79afd-e63b-485e-95d3-6a0304f608ba/vol_tz6iwquj6gcx7z4v","timestamp":"2026-09-16T14:46:42.372244058Z","level":"info"}
+{"level":"info","message":"Starting Container","timestamp":"2026-09-16T14:46:43.417793923Z"}
+{"timestamp":"2026-09-16T14:46:43.919474935Z","level":"info","message":""}
+{"message":"  Lotto Activo corriendo en  http://localhost:8080","level":"info","timestamp":"2026-09-16T14:46:43.919477295Z"}
+{"timestamp":"2026-09-16T14:46:43.919479935Z","level":"info","message":"  Modelo: ensamble (numpy/scipy OK)"}
+{"level":"info","timestamp":"2026-09-16T14:46:43.919482795Z","message":"  Para detenerlo: Ctrl + C"}
+{"timestamp":"2026-09-16T14:46:43.919485365Z","message":"","level":"info"}

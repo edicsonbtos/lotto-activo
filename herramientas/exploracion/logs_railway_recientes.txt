@@ -1,0 +1,7 @@
+﻿Mounting volume on: /var/lib/containers/railwayapp/bind-mounts/efd79afd-e63b-485e-95d3-6a0304f608ba/vol_tz6iwquj6gcx7z4v
+Starting Container
+
+  Lotto Activo corriendo en  http://localhost:8080
+  Modelo: ensamble (numpy/scipy OK)
+  Para detenerlo: Ctrl + C
+

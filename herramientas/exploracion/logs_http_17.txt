@@ -1,0 +1,7 @@
+﻿node.exe : Problem processing request
+En C:\Users\edics\AppData\Roaming\npm\railway.ps1: 24 Carácter: 5
++     & "node$exe"  "$basedir/node_modules/@railway/cli/bin/railway.js" ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Problem processing request:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
