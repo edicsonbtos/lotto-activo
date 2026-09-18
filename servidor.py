@@ -742,11 +742,11 @@ def render():
         f'<div class="sub">Último: {esc(fecha_corta(f))} {HORAS[h]} → <b>{POS[v]} {ANIM[POS[v]].title()}</b> · '
         f'{e["n"]:,} sorteos en el histórico</div></div>{estado_pill}</header>'
         '<nav><a href="#resumen">En claro</a><a href="#sorteo">Próximo sorteo</a><a href="#tripleta">Tripleta</a><a href="#registrar">Registrar</a>'
-        '<a href="#marcadores">Marcadores</a><a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
+        '<a href="#mesa">Mesa</a><a href="#marcadores">Marcadores</a><a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
         f'{aviso}{html_resumen(e, d, modelo, calculando)}<div class="strip">{ultimos}</div>'
         f'<div class="grid"><div>{html_prediccion(e, calculando, pend, aviso_modelo)}<div style="height:14px"></div>{html_registro()}</div>'
         f'<div>{html_tripleta(e, tri_actual, d, filas, calculando, PRED is None)}</div></div>'
-        f'<div style="height:14px"></div>{html_marcadores(d)}{html_historico(d)}{html_herramientas()}'
+        f'<div style="height:14px"></div>{html_mesa()}{html_marcadores(d)}{html_historico(d)}{html_herramientas()}'
         '<footer>Azar puro: 2,63% por animal. En prueba ciega (3.122 sorteos) el ensamble acertó Top-1 4,00% '
         '(IC 95%: 3,37–4,75) y Top-3 12,27%; el umbral con pago 30x es 3,33%. Ningún modelo garantiza ganar y el '
         'operador puede cambiar su mecanismo. Tus datos: historial.txt y predicciones.json.</footer></div>')
@@ -1005,6 +1005,190 @@ def _api(fn, *args):
         import traceback
         traceback.print_exc(file=sys.stderr)
         return {"error": "%s: %s" % (type(ex).__name__, ex)}
+
+def html_mesa():
+    return (
+        '<section class="card" id="mesa">'
+        '<div class="hh"><h2>Mesa de probabilidades</h2>'
+        '<span id="mesa-slot">cargando…</span></div>'
+        '<div class="mesa-bar">'
+        '<div class="mesa-nav"><button type="button" class="sec" id="mesa-prev">←</button>'
+        '<span id="mesa-pos" class="st"></span>'
+        '<button type="button" class="sec" id="mesa-next">→</button></div>'
+        '<div class="mesa-modos">'
+        '<button type="button" class="sec on" data-modo="rango">Por rango</button>'
+        '<button type="button" class="sec" data-modo="rank">Por rank</button>'
+        '<button type="button" class="sec" data-modo="hueco">Por hueco</button>'
+        '</div></div>'
+        '<div id="mesa-aviso"></div>'
+        '<div id="mesa-cuerpo" class="mesa-cuerpo"></div>'
+        '<details style="margin-top:14px"><summary>Dónde cayó el ganador (muestra en vivo)</summary>'
+        '<div id="mesa-stats" class="mesa-stats">cargando…</div>'
+        '<p class="tip" style="margin-top:10px"><b>Muestra en vivo, n pequeño — esto NO es '
+        'validación.</b> Es un termómetro de lo que está pasando ahora, no evidencia. '
+        'Cualquier cambio de apuesta necesita validación walk-forward en desarrollo.</p>'
+        '</details>'
+        '<p class="note">La mesa no mejora la predicción: muestra completa la distribución que el '
+        'modelo ya calculaba. Solo lectura — no altera pronósticos, marcador ni tripletas.</p>'
+        '</section>')
+
+CSS_MESA = """
+.mesa-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.mesa-nav{display:flex;align-items:center;gap:8px}
+.mesa-nav button{padding:6px 13px;font-size:15px;line-height:1}
+.mesa-nav button[disabled]{opacity:.35;cursor:default}
+.mesa-modos{display:flex;gap:6px;flex-wrap:wrap}
+.mesa-modos button{padding:6px 12px;font-size:13px;font-weight:600}
+.mesa-modos button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mesa-cuerpo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:820px){.mesa-cuerpo{grid-template-columns:1fr}}
+.mseg{border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+.mseg h4{margin:0 0 3px;font-size:13px;font-weight:600}
+.mseg .masa{font-size:12px;color:var(--muted);margin:0 0 8px;font-variant-numeric:tabular-nums}
+.mrow{display:grid;grid-template-columns:38px 1fr 46px;align-items:center;gap:8px;padding:3px 0;font-size:13px}
+.mrow .mn{font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums;font-size:15px}
+.mrow .mb{height:15px;background:#f0ede6;border-radius:4px;position:relative;overflow:hidden}
+.mrow .mb i{display:block;height:100%;border-radius:4px;min-width:1px;background:#c9c4b8}
+.mrow .mb span{position:absolute;left:6px;top:0;line-height:15px;font-size:11px;color:var(--ink);white-space:nowrap}
+.mrow .mp{text-align:right;font-variant-numeric:tabular-nums;color:var(--soft);font-size:11px}
+.mrow.t15 .mb i{background:var(--brand)}
+.mrow.gana{background:var(--ok-soft);border-radius:5px}
+.mrow.gana .mn{color:var(--ok)}
+.mrow.gana .mb i{background:var(--ok)}
+.mrow .tag{font-style:normal;color:var(--soft);font-size:10px;margin-left:4px}
+.mesa-stats table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.mesa-stats th{text-align:left;color:var(--muted);font-weight:600;padding:5px 7px;border-bottom:1px solid var(--line)}
+.mesa-stats td{padding:5px 7px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.mesa-stats h4{margin:14px 0 0;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+"""
+
+JS_MESA = """
+<script>
+(function(){
+  var off = 0, modo = 'rango', datos = null;
+  var cuerpo = document.getElementById('mesa-cuerpo');
+  if(!cuerpo) return;
+  var slotEl = document.getElementById('mesa-slot'), posEl = document.getElementById('mesa-pos');
+  var avisoEl = document.getElementById('mesa-aviso');
+  var prev = document.getElementById('mesa-prev'), next = document.getElementById('mesa-next');
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function pct(x){ return (x*100).toFixed(2)+'%'; }
+
+  function fila(a, maxp){
+    var cls = 'mrow' + (a.en_top15 ? ' t15' : '') +
+              (datos.winner !== null && a.idx === datos.winner ? ' gana' : '');
+    var ancho = (a.prob !== null && maxp > 0) ? Math.max(1, a.prob/maxp*100) : 0;
+    var dentro = a.prob !== null ? pct(a.prob) : (a.rank !== null ? 'rank ' + a.rank : '\\u2014');
+    var gap = a.gap_dias === null ? 'nunca' : (a.gap_dias === 0 ? 'hoy' : a.gap_dias + 'd');
+    return '<div class="' + cls + '"><span class="mn">' + esc(a.num) + '</span>' +
+      '<span class="mb"><i style="width:' + ancho.toFixed(1) + '%"></i><span>' + dentro +
+      ' <em class="tag">' + esc(a.nombre) + '</em></span></span>' +
+      '<span class="mp">' + gap + '</span></div>';
+  }
+
+  function bloque(titulo, sub, lista, maxp){
+    var masa = 0, hay = false;
+    lista.forEach(function(a){ if(a.prob !== null){ masa += a.prob; hay = true; } });
+    var orden = lista.slice().sort(function(x, y){
+      if(x.prob !== null && y.prob !== null) return y.prob - x.prob;
+      if(x.rank !== null && y.rank !== null) return x.rank - y.rank;
+      return x.idx - y.idx;
+    });
+    var cab = hay ? ('masa ' + pct(masa) + ' \\u00b7 ' + orden.length + ' animales')
+                  : (orden.length + ' animales');
+    return '<div class="mseg"><h4>' + esc(titulo) + (sub ? ' <em class="tag">' + esc(sub) +
+      '</em>' : '') + '</h4><p class="masa">' + cab + '</p>' +
+      orden.map(function(a){ return fila(a, maxp); }).join('') + '</div>';
+  }
+
+  function pinta(){
+    if(!datos) return;
+    var A = datos.animales, maxp = 0;
+    A.forEach(function(a){ if(a.prob !== null && a.prob > maxp) maxp = a.prob; });
+    var out = '';
+    if(modo === 'rango'){
+      datos.cuadrantes.forEach(function(q){
+        out += bloque(q.clave, q.etiqueta, q.idx.map(function(i){ return A[i]; }), maxp);
+      });
+    } else if(modo === 'rank'){
+      datos.seg_rank.forEach(function(s){
+        var l = A.filter(function(a){ return a.rank !== null && a.rank >= s.desde && a.rank <= s.hasta; });
+        if(l.length) out += bloque('Ranks ' + s.desde + '-' + s.hasta, '', l, maxp);
+      });
+      var sinr = A.filter(function(a){ return a.rank === null; });
+      if(sinr.length) out += bloque('Sin rank guardado', '', sinr, maxp);
+    } else {
+      datos.bins_hueco.forEach(function(b){
+        var l = A.filter(function(a){
+          var g = a.gap_dias === null ? 99999 : a.gap_dias;
+          return g >= b.desde && g <= b.hasta;
+        });
+        if(l.length) out += bloque(b.etiqueta, '', l, maxp);
+      });
+    }
+    cuerpo.innerHTML = out || '<p class="note">Sin datos para este modo.</p>';
+  }
+
+  function carga(){
+    fetch('/api/mesa?offset=' + off).then(function(r){ return r.json(); }).then(function(j){
+      if(j.error){ cuerpo.innerHTML = '<p class="note">' + esc(j.error) + '</p>'; return; }
+      datos = j; off = j.offset;
+      var gan = j.winner !== null
+        ? ' \\u00b7 sali\\u00f3 <b>' + esc(j.winner_num) + ' ' + esc(j.winner_nombre) + '</b>' +
+          (j.winner_rank ? ' (rank ' + j.winner_rank + ')' : '')
+        : ' \\u00b7 pendiente';
+      slotEl.innerHTML = esc(j.fecha_txt) + ' ' + esc(j.hora_txt) + gan;
+      posEl.textContent = (j.offset === 0 ? 'slot actual' : 'hace ' + j.offset) +
+                          ' \\u00b7 ' + (j.offset + 1) + '/' + j.total;
+      prev.disabled = (j.offset >= j.total - 1);
+      next.disabled = (j.offset <= 0);
+      avisoEl.innerHTML = j.vista === 'prob' ? '' :
+        '<div class="tip">' + (j.vista === 'rank'
+          ? 'Registro antiguo: se guard\\u00f3 el orden completo pero no los puntajes. Vista <b>solo rank</b>, sin barras de probabilidad.'
+          : 'Registro antiguo: solo se guard\\u00f3 el Top-3. No hay ranks ni puntajes para los 38.') +
+        '</div>';
+      pinta();
+    }).catch(function(){ cuerpo.innerHTML = '<p class="note">No se pudo cargar la mesa.</p>'; });
+  }
+
+  prev.onclick = function(){ off += 1; carga(); };
+  next.onclick = function(){ if(off > 0){ off -= 1; carga(); } };
+  Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(b){
+    b.onclick = function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(x){
+        x.classList.remove('on'); });
+      b.classList.add('on'); modo = b.getAttribute('data-modo'); pinta();
+    };
+  });
+
+  function tabla(t, titulo, nota){
+    var h = '<h4>' + titulo + '</h4><p class="note">' + nota + ' \\u00b7 n = ' + t.n + '</p>' +
+      '<table><tr><th>segmento</th><th>ganadores</th><th>%</th><th>esperado</th></tr>';
+    t.segmentos.forEach(function(s){
+      h += '<tr><td>' + esc(s.etiqueta) + '</td><td>' + s.n + '</td><td>' +
+           (s.pct === null ? '\\u2014' : s.pct.toFixed(1) + '%') + '</td><td>' +
+           (s.esperado === null ? '\\u2014' : s.esperado.toFixed(1) + '%') + '</td></tr>';
+    });
+    return h + '</table>';
+  }
+  fetch('/api/mesa_stats').then(function(r){ return r.json(); }).then(function(j){
+    var el = document.getElementById('mesa-stats');
+    el.innerHTML =
+      tabla(j.rank, 'Por segmento de rank', 'solo registros con orden completo guardado') +
+      tabla(j.hueco, 'Por bin de hueco', 'esperado = ocupaci\\u00f3n media del bin bajo azar') +
+      '<p class="note">' + j.resueltos + ' sorteos resueltos \\u00b7 ' + j.sin_orden_completo +
+      ' sin orden completo \\u00b7 ' + j.sin_historial + ' sin fila en el historial.</p>';
+  }).catch(function(){});
+
+  carga();
+})();
+</script>
+"""
+
+CSS = CSS + CSS_MESA
+JS = JS + JS_MESA
 
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
