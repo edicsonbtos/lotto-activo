@@ -821,6 +821,191 @@ def registrar_tripleta(pf, ph, n, codigos):
     log_guardar(d)
     return "Tripleta guardada.", "ok"
 
+
+# ============================================================ mesa de probabilidades
+# Bloque ADITIVO (solo lectura sobre la lógica existente). No toca predicción,
+# scoring, registro, tripletas ni marcador: lee lo que el pipeline ya calculó y
+# lo muestra completo (38 animales) en vez de solo el top-3/top-15.
+
+# Cuadrantes de membresía FIJA (no dependen de la probabilidad).
+# El "00" no tiene decena propia: se agrupa con Q4 (30-36) por convención
+# documentada, para que los 4 cuadrantes cubran los 38 códigos sin solapes.
+MESA_CUADRANTES = [
+    ("Q1", "0-9", [IDX[c] for c in ["0"] + [str(i) for i in range(1, 10)]]),
+    ("Q2", "10-19", [IDX[str(i)] for i in range(10, 20)]),
+    ("Q3", "20-29", [IDX[str(i)] for i in range(20, 30)]),
+    ("Q4", "30-36 + 00", [IDX[str(i)] for i in range(30, 37)] + [IDX["00"]]),
+]
+# Segmentos de rank (de 8 en 8; el último queda de 6 porque K=38).
+MESA_SEG_RANK = [(1, 8), (9, 16), (17, 24), (25, 32), (33, 38)]
+# Bins de hueco en DÍAS sin salir. "hoy" = ya salió en esta misma jornada.
+MESA_BINS_HUECO = [(0, 0, "hoy"), (1, 1, "1 día"), (2, 2, "2 días"), (3, 5, "3-5 días"),
+                   (6, 10, "6-10 días"), (11, 20, "11-20 días"), (21, 40, "21-40 días"),
+                   (41, 10**9, "más de 40 días")]
+
+def mesa_seg_rank(rk):
+    for j, (a, b) in enumerate(MESA_SEG_RANK):
+        if a <= rk <= b: return j
+    return len(MESA_SEG_RANK) - 1
+
+def mesa_bin_hueco(g):
+    """g = días sin salir; None (nunca salió) cae en el último bin."""
+    if g is None: return len(MESA_BINS_HUECO) - 1
+    for j, (a, b, _) in enumerate(MESA_BINS_HUECO):
+        if a <= g <= b: return j
+    return len(MESA_BINS_HUECO) - 1
+
+def mesa_huecos(filas, fecha, hora):
+    """Días sin salir por animal ANTES del slot (fecha,hora). None = nunca salió.
+    Usa solo sorteos estrictamente anteriores: no mira el resultado del slot."""
+    ult = {}
+    for f, h, v in filas:
+        if (f, h) >= (fecha, hora): break
+        ult[v] = f
+    base = date.fromisoformat(fecha)
+    return [(base - date.fromisoformat(ult[i])).days if i in ult else None for i in range(K)]
+
+def mesa_slots_hist(d, actual):
+    """Registros navegables (sin el slot actual), del más reciente al más antiguo."""
+    h = [r for r in d["registros"] if vigente(r) and (r["fecha"], r["hora"]) != actual]
+    h.sort(key=lambda r: (r["fecha"], r["hora"]), reverse=True)
+    return h
+
+def mesa_datos(offset=0):
+    """Distribución completa del slot en offset (0 = actual). Solo lectura."""
+    filas = cargar(); e = estado(filas); d = log_cargar()
+    actual = (e["pf"], e["ph"])
+    hist = mesa_slots_hist(d, actual)
+    total = 1 + len(hist)
+    try: offset = int(offset)
+    except (TypeError, ValueError): offset = 0
+    offset = max(0, min(offset, total - 1))
+
+    if offset == 0:
+        fecha, hora = actual
+        winner = None
+        pend = next((r for r in d["registros"]
+                     if vigente(r) and (r["fecha"], r["hora"]) == actual), None)
+        modelo = (pend or {}).get("modelo", "—")
+        scores = (pend or {}).get("scores")
+        orden = (pend or {}).get("orden_completo")
+        top3 = (pend or {}).get("top3") or []
+        if scores is None and PRED is not None:
+            res = PRED.obtener(HIST, fecha, hora)   # mismo cálculo (cacheado) que render()
+            if res is not None:
+                p, _i = res
+                scores = [float(x) for x in p]
+                if modelo == "—": modelo = prediccion.MODELO_ENSAMBLE
+        if scores is None and orden is None:
+            scores = list(e["sc"])
+            if modelo == "—": modelo = "hazard_actual"
+    else:
+        r = hist[offset - 1]
+        fecha, hora = r["fecha"], r["hora"]
+        winner = r.get("salio")
+        modelo = r.get("modelo", "—")
+        scores = r.get("scores")
+        orden = r.get("orden_completo")
+        top3 = r.get("top3") or []
+
+    if orden is None and scores is not None:
+        orden = sorted(range(K), key=lambda i: (-scores[i], i))
+    rank = {}
+    if orden:
+        for pos, i in enumerate(orden, 1): rank[i] = pos
+
+    gaps = mesa_huecos(filas, fecha, hora)
+    probs = None
+    if scores is not None:
+        tot = sum(scores) or 1.0
+        probs = [s / tot for s in scores]
+
+    animales = []
+    for i in range(K):
+        rk = rank.get(i)
+        animales.append({
+            "idx": i, "num": POS[i], "nombre": ANIM[POS[i]].title(),
+            "prob": (probs[i] if probs else None),
+            "rank": rk,
+            "gap_dias": gaps[i],
+            "salio_hoy": gaps[i] == 0,
+            "en_top15": (rk <= 15) if rk is not None else (i in top3),
+            "es_top3": i in top3,
+        })
+    if scores is None and not orden:
+        vista = "top3"       # registro viejo: solo se guardó el top-3
+    elif probs is None:
+        vista = "rank"       # registro viejo: orden completo, sin puntajes
+    else:
+        vista = "prob"
+    return {
+        "offset": offset, "total": total, "fecha": fecha, "hora": hora,
+        "hora_txt": HORAS[hora], "fecha_txt": fecha_corta(fecha),
+        "modelo": modelo, "vista": vista,
+        "winner": winner,
+        "winner_num": (POS[winner] if winner is not None else None),
+        "winner_nombre": (ANIM[POS[winner]].title() if winner is not None else None),
+        "winner_rank": (rank.get(winner) if winner is not None else None),
+        "animales": animales,
+        "cuadrantes": [{"clave": c, "etiqueta": et, "idx": ix} for c, et, ix in MESA_CUADRANTES],
+        "seg_rank": [{"desde": a, "hasta": b} for a, b in MESA_SEG_RANK],
+        "bins_hueco": [{"desde": a, "hasta": b, "etiqueta": t} for a, b, t in MESA_BINS_HUECO],
+    }
+
+def mesa_stats():
+    """Dónde cayó el ganador, sobre TODOS los registros resueltos. Solo lectura.
+    Muestra en vivo y pequeña: NO es validación (para eso, walk-forward en desarrollo)."""
+    filas = cargar(); d = log_cargar()
+    res = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    quiero = {(r["fecha"], r["hora"]) for r in res}
+    snap = {}; ult = {}
+    for f, h, v in filas:
+        if (f, h) in quiero and (f, h) not in snap:
+            base = date.fromisoformat(f)
+            snap[(f, h)] = [(base - date.fromisoformat(ult[i])).days if i in ult else None
+                            for i in range(K)]
+        ult[v] = f
+
+    nr = len(MESA_SEG_RANK); nh = len(MESA_BINS_HUECO)
+    rank_n = 0; rank_seg = [0] * nr
+    hue_n = 0; hue_seg = [0] * nh; hue_ocup = [0.0] * nh
+    sin_orden = 0; sin_hist = 0
+    for r in res:
+        o = r.get("orden_completo")
+        if o and r["salio"] in o:
+            rank_seg[mesa_seg_rank(o.index(r["salio"]) + 1)] += 1; rank_n += 1
+        else:
+            sin_orden += 1
+        g = snap.get((r["fecha"], r["hora"]))
+        if g is None:
+            sin_hist += 1; continue
+        hue_seg[mesa_bin_hueco(g[r["salio"]])] += 1; hue_n += 1
+        for i in range(K): hue_ocup[mesa_bin_hueco(g[i])] += 1
+
+    return {
+        "resueltos": len(res), "sin_orden_completo": sin_orden, "sin_historial": sin_hist,
+        "rank": {"n": rank_n,
+                 "segmentos": [{"etiqueta": "%d-%d" % (a, b), "n": rank_seg[j],
+                                "pct": (rank_seg[j] / rank_n * 100 if rank_n else None),
+                                "esperado": (b - a + 1) / K * 100}
+                               for j, (a, b) in enumerate(MESA_SEG_RANK)]},
+        "hueco": {"n": hue_n,
+                  "segmentos": [{"etiqueta": MESA_BINS_HUECO[j][2], "n": hue_seg[j],
+                                 "pct": (hue_seg[j] / hue_n * 100 if hue_n else None),
+                                 "esperado": (hue_ocup[j] / (hue_n * K) * 100 if hue_n else None)}
+                                for j in range(nh)]},
+    }
+
+def _api(fn, *args):
+    """Envoltorio de las rutas /api/: nunca deja que un fallo de la mesa
+    (funcion puramente de lectura) tumbe el servidor ni la pagina."""
+    try:
+        return fn(*args)
+    except Exception as ex:
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        return {"error": "%s: %s" % (type(ex).__name__, ex)}
+
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
         b = cuerpo.encode("utf-8")
@@ -851,6 +1036,13 @@ class H(BaseHTTPRequestHandler):
                 filas = cargar(); e = estado(filas)
                 listo = PRED.obtener(HIST, e["pf"], e["ph"]) is not None
             self._send(json.dumps({"listo": listo}), "application/json")
+        elif ruta == "/api/mesa":
+            q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
+            self._send(json.dumps(_api(mesa_datos, q.get("offset", ["0"])[0]),
+                                  ensure_ascii=False), "application/json; charset=utf-8")
+        elif ruta == "/api/mesa_stats":
+            self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
+                       "application/json; charset=utf-8")
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
