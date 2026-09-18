@@ -699,6 +699,7 @@ def render():
         if pend is None and not conocido:
             pend = {"fecha": e["pf"], "hora": e["ph"], "top3": e["orden"][:3],
                     "orden_completo": list(e["orden"]), "salio": None,
+                    "scores": [round(float(x), 6) for x in e["sc"]],
                     "creado": ahora(), "modelo": modelo}
             d["registros"].append(pend); cambio = True
 
@@ -775,6 +776,7 @@ def registrar(num):
             orden = sorted(range(K), key=lambda i: (-sc[i], i))
             pend = {"fecha": e["pf"], "hora": e["ph"], "top3": orden[:3],
                     "orden_completo": orden, "salio": None,
+                    "scores": [round(float(x), 6) for x in sc],
                     "creado": ahora(), "modelo": prediccion.MODELO_ENSAMBLE}
             d["registros"].append(pend)
     if pend is not None:
