@@ -1,0 +1,8 @@
+base: baseline_dev_smoke.npz  dev_rows=400  (t in [8957,9357))  base_secs=49.9
+hipotesis: 218
+  50/218  (3s)
+  100/218  (5s)
+  150/218  (8s)
+  200/218  (11s)
+OK -> C:\Users\edics\Downloads\lotto-activo\lotto-activo\investigacion\2026-09-18\a_estadistica\barrido_smoke.json  |  C:\Users\edics\Downloads\lotto-activo\lotto-activo\investigacion\2026-09-18\a_estadistica\tabla_smoke.md
+SENALES: 0 / 218

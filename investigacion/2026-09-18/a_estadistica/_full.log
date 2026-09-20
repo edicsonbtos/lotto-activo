@@ -1,0 +1,10 @@
+base: baseline_dev_full.npz  dev_rows=7357  (t in [2000,9357))  base_secs=45.6
+hipotesis: 308
+  50/308  (19s)
+  100/308  (38s)
+  150/308  (55s)
+  200/308  (77s)
+  250/308  (95s)
+  300/308  (112s)
+OK -> C:\Users\edics\Downloads\lotto-activo\lotto-activo\investigacion\2026-09-18\a_estadistica\barrido_full.json  |  C:\Users\edics\Downloads\lotto-activo\lotto-activo\investigacion\2026-09-18\a_estadistica\tabla_full.md
+SENALES: 0 / 308

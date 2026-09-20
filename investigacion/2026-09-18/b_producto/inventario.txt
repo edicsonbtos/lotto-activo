@@ -1,0 +1,21 @@
+== Inventario de metadata publica (backend oficial api.lotterly.co) ==
+
+Fuente: arbitro_selva-plus.json
+  registros           : 19034
+  CAMPOS por sorteo    : ['date', 'time', 'result']   <-- la superficie publica COMPLETA
+  rango de fechas      : 2022-02-22 .. 2026-09-15
+  slots horarios       : 13 (08:15:00 ... 20:15:00)
+  segundos en 'time'   : {'00': 19034}   <-- sin resolucion de ejecucion
+  resultados 'A'/vacio : 1 (marcador de fallo de la API)
+
+Fuente: arbitro_guacharo-activo.json
+  registros           : 19108
+  CAMPOS por sorteo    : ['date', 'time', 'result']   <-- la superficie publica COMPLETA
+  rango de fechas      : 2022-02-22 .. 2026-09-15
+  slots horarios       : 12 (08:00:00 ... 19:00:00)
+  segundos en 'time'   : {'00': 19108}   <-- sin resolucion de ejecucion
+  resultados 'A'/vacio : 0 (marcador de fallo de la API)
+
+VEREDICTO: el unico timestamp es el SLOT PROGRAMADO (HH:15:00 o HH:00:00),
+no la hora de ejecucion del sorteo. No hay id de sorteo, ni delay, ni
+semilla, ni server-time, ni nonce. Nada correlaciona con el resultado.
