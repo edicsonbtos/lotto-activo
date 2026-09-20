@@ -142,21 +142,105 @@ def fin_ventana(f, h):
 
 # -------------------------------------------------------------- marcadores
 MODELO_MARCADOR = "ensamble_v2"
+TOP_N = 15
+P_AZAR_T15 = TOP_N / K          # 39,47%: un Top-15 al azar ya acierta 2 de cada 5
+
+def resueltas(d):
+    """Pronósticos del modelo en uso, con resultado y sin anular."""
+    return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None
+            and r.get("modelo") == MODELO_MARCADOR]
+
+def puesto_ganador(r):
+    """Puesto (1..38) en que quedó el ganador dentro del orden congelado.
+
+    None cuando el pronóstico se guardó sin `orden_completo` (registros viejos):
+    esos no se pueden puntuar por Top-15 sin inventar el orden, así que quedan
+    fuera del conteo en vez de contarse como fallo.
+    """
+    orden = r.get("orden_completo")
+    if not orden:
+        return None
+    try:
+        return orden.index(r["salio"]) + 1
+    except ValueError:
+        return None
+
+def cola_binomial(k, n, p):
+    """P(X >= k) exacta: probabilidad de sacar k o más aciertos por pura suerte."""
+    if n <= 0 or k <= 0:
+        return 1.0
+    return sum(comb(n, i) * p ** i * (1 - p) ** (n - i) for i in range(k, n + 1))
 
 def marcador(d):
     """Marcador del modelo EN USO. Las predicciones del modelo antiguo
     (hazard, sin campo «modelo») no se mezclan: el factor de Bayes y el SPRT
     tienen que medir el modelo que se está jugando, no una mezcla de dos."""
-    res = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None
-           and r.get("modelo") == MODELO_MARCADOR]
+    res = resueltas(d)
     n = len(res)
-    if n == 0: return dict(n=0)
+    if n == 0: return dict(n=0, n15=0)
     t3 = sum(1 for r in res if r["salio"] in r["top3"])
     t1 = sum(1 for r in res if r["salio"] == r["top3"][0])
     lo = 0.0
     for r in res:
         lo += math.log(P_MOD_T3/P_AZAR_T3) if r["salio"] in r["top3"] else math.log((1-P_MOD_T3)/(1-P_AZAR_T3))
-    return dict(n=n, t3=t3, t1=t1, tasa3=t3/n*100, tasa1=t1/n*100, factor=math.exp(lo))
+    puestos = [p for p in (puesto_ganador(r) for r in res) if p is not None]
+    n15 = len(puestos)
+    t15 = sum(1 for p in puestos if p <= TOP_N)
+    m = dict(n=n, t3=t3, t1=t1, tasa3=t3/n*100, tasa1=t1/n*100, factor=math.exp(lo),
+             n15=n15, t15=t15)
+    if n15:
+        m.update(tasa15=t15/n15*100, puesto_medio=sum(puestos)/n15,
+                 p15=cola_binomial(t15, n15, P_AZAR_T15))
+    return m
+
+# Tramos del Top-15: dónde cae el ganador dentro del orden que el modelo
+# congeló ANTES del sorteo. Si el orden tuviera valor, los tramos de arriba
+# tienen que salir por encima de su cuota de azar (cada puesto vale 1/38).
+TRAMOS = [(1, 1, "1º"), (2, 3, "2º y 3º"), (4, 5, "4º y 5º"), (6, 10, "6º a 10º"),
+          (11, 15, "11º a 15º"), (16, K, "fuera del Top-15")]
+
+def analisis_top15(d, res=None):
+    """Reparto del puesto del ganador, contra lo que daría el azar."""
+    res = resueltas(d) if res is None else res
+    puestos = [p for p in (puesto_ganador(r) for r in res) if p is not None]
+    n = len(puestos)
+    if not n:
+        return dict(n=0, tramos=[])
+    tramos = []
+    for lo, hi, etiqueta in TRAMOS:
+        veces = sum(1 for p in puestos if lo <= p <= hi)
+        azar = (hi - lo + 1) / K
+        tramos.append(dict(etiqueta=etiqueta, veces=veces, tasa=veces/n*100,
+                           azar=azar*100, ventaja=veces/n - azar))
+    return dict(n=n, tramos=tramos, puesto_medio=sum(puestos)/n, puesto_azar=(K + 1) / 2)
+
+def analisis_reciente(d, filas, cuantos=48):
+    """Estado de acierto en los últimos `cuantos` sorteos ya resueltos.
+
+    Ventana corta a propósito: sirve para ver si algo se rompió hace poco, no
+    para concluir que el modelo funciona. Con 48 sorteos el ruido es enorme y
+    el texto lo dice.
+    """
+    ultimos = {(f, h) for f, h, _ in filas[-cuantos:]}
+    res = [r for r in resueltas(d) if (r["fecha"], r["hora"]) in ultimos]
+    n = len(res)
+    if n == 0:
+        return dict(n=0, cuantos=cuantos)
+    t1 = sum(1 for r in res if r["salio"] == r["top3"][0])
+    t3 = sum(1 for r in res if r["salio"] in r["top3"])
+    puestos = [p for p in (puesto_ganador(r) for r in res) if p is not None]
+    n15 = len(puestos); t15 = sum(1 for p in puestos if p <= TOP_N)
+    a = dict(cuantos=cuantos, n=n, t1=t1, t3=t3, n15=n15, t15=t15,
+             tasa1=t1/n*100, tasa3=t3/n*100,
+             esp1=n * P0, esp3=n * P_AZAR_T3,
+             p3=cola_binomial(t3, n, P_AZAR_T3),
+             roi=(PAGO * t3 - 3 * n) / (3 * n) * 100,
+             desde=filas[-cuantos][0] if len(filas) >= cuantos else filas[0][0],
+             analisis=analisis_top15(d, res))
+    if n15:
+        a.update(tasa15=t15/n15*100, esp15=n15 * P_AZAR_T15,
+                 p15=cola_binomial(t15, n15, P_AZAR_T15))
+    return a
 
 def resolver_tripletas(d, filas):
     """Cierra las tripletas cuya ventana de 12 sorteos ya está completa."""
@@ -177,6 +261,37 @@ def resolver_tripletas(d, filas):
             t["estado"] = "resuelta"; t["resuelto"] = ahora()
             cambio = True; cerradas.append(t)
     return cambio, cerradas
+
+# Cadencia de la tripleta automática: 2 tripletas (un par) cada 24 horas, en vez
+# de un par por sorteo. Menos jugadas y mejores: el par se arma con los 6
+# animales de mayor probabilidad en el momento en que toca generarlo.
+TRIPLETA_CADA_H = 24
+
+def tripletas_auto(d):
+    return [t for t in d["tripletas"] if vigente(t)
+            and str(t.get("modelo", "")).startswith("tripleta_ventana")]
+
+def horas_desde(cuando):
+    try:
+        return (datetime.now() - datetime.fromisoformat(cuando)).total_seconds() / 3600
+    except (TypeError, ValueError):
+        return None
+
+def toca_tripleta(d):
+    """(sí/no, horas que faltan). La primera de todas se genera enseguida."""
+    autos = tripletas_auto(d)
+    if not autos:
+        return True, 0.0
+    ultima = max(autos, key=lambda t: t.get("creado") or "")
+    h = horas_desde(ultima.get("creado"))
+    if h is None:                      # fecha ilegible: no bloquear para siempre
+        return True, 0.0
+    return h >= TRIPLETA_CADA_H, max(0.0, TRIPLETA_CADA_H - h)
+
+def tripleta_en_curso(d, filas):
+    """La tripleta automática viva más reciente (la que se está jugando)."""
+    abiertas = [t for t in tripletas_auto(d) if t.get("estado") == "pendiente"]
+    return max(abiertas, key=lambda t: t["n_inicio"]) if abiertas else None
 
 def marcador_tripleta(d):
     res = [t for t in d["tripletas"] if vigente(t) and t.get("estado") == "resuelta"]
@@ -368,6 +483,14 @@ def auto_estado():
 def esc(s):
     return html.escape(str(s))
 
+def num(x, dec=1):
+    """Número con coma decimal, como se escribe en español."""
+    return f"{x:.{dec}f}".replace(".", ",")
+
+def plural(n, singular, plural_):
+    """«1 acierto» / «3 aciertos»: el marcador se lee, no se descifra."""
+    return f"{n} {singular if n == 1 else plural_}"
+
 def chip(i, extra=""):
     return f'<span class="chip {extra}"><b>{POS[i]}</b> {ANIM[POS[i]].title()}</span>'
 
@@ -457,7 +580,9 @@ section[id],div[id]{scroll-margin-top:72px}
 .num{font-size:clamp(28px,1rem + 2vw,34px);font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
 .nm{font-size:16px;font-weight:600;letter-spacing:-.01em}
 .bar{height:7px;background:var(--pista);border-radius:var(--pil);margin-top:6px;position:relative;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--brand);border-radius:var(--pil);transition:width .4s ease}
+/* sin transición: el ancho viene ya calculado del servidor y animar `width`
+   fuerza recálculo de layout en cada cuadro para un efecto que nadie ve */
+.bar i{display:block;height:100%;background:var(--brand);border-radius:var(--pil)}
 .bar em{position:absolute;top:-3px;width:2px;height:13px;background:var(--soft);border-radius:1px}
 .pc{font-size:14.5px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
 .pc small{display:block;font-size:11px;color:var(--soft);font-weight:400}
@@ -520,6 +645,20 @@ table.hist td.ok{color:var(--ok);font-weight:600}table.hist td.no{color:var(--so
 .kpi span{display:block;font-size:11px;color:var(--soft)}
 .pend{font-size:13px;border-top:1px solid var(--line-soft);padding:9px 0}
 .pend b{font-weight:600}
+
+/* ---------- reparto del puesto del ganador ---------- */
+.dist{display:grid;grid-template-columns:92px 1fr 84px;align-items:center;gap:10px;padding:5px 0}
+.dist .dl{font-size:12.5px;color:var(--muted)}
+.dist .db{position:relative;height:16px;background:var(--pista);border-radius:var(--r1);overflow:hidden}
+/* sin min-width: un tramo con 0 veces no debe dejar una raya que parezca algo */
+.dist .db i{display:block;height:100%;background:var(--soft);border-radius:var(--r1)}
+.dist .db em{position:absolute;top:0;width:2px;height:100%;background:var(--ink);opacity:.45}
+.dist .dv{font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.dist .dv small{display:block;font-size:10.5px;color:var(--soft);font-weight:400}
+/* tramo por encima de su cuota de azar: el color lo marca, el número lo dice */
+.dist.alza .db i{background:var(--brand)}
+.dist.alza .dv{color:var(--brand-ink)}
+@media (max-width:560px){.dist{grid-template-columns:76px 1fr 70px;gap:8px}}
 
 /* ---------- herramientas ---------- */
 .tool{border-top:1px solid var(--line-soft);padding:16px 0}
@@ -640,10 +779,16 @@ def html_registro():
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último registro?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
-def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False):
-    ff, fh = fin_ventana(e["pf"], e["ph"])
+def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False, faltan_h=0.0):
+    # La ventana que se rotula es la de la tripleta que se muestra, que ya no
+    # tiene por qué empezar en el próximo sorteo.
+    if tri_actual is not None:
+        vf, vh = tri_actual["inicio_fecha"], tri_actual["inicio_hora"]
+    else:
+        vf, vh = e["pf"], e["ph"]
+    ff, fh = fin_ventana(vf, vh)
     cab = (f'<div class="hh"><h2>Tripleta · paga {PAGO_TRIPLETA}x</h2>'
-           f'<span>{esc(fecha_corta(e["pf"]))} {HORAS[e["ph"]]} → {esc(fecha_corta(ff))} {HORAS[fh]}</span></div>')
+           f'<span>{esc(fecha_corta(vf))} {HORAS[vh]} → {esc(fecha_corta(ff))} {HORAS[fh]}</span></div>')
     # Formulario manual: FALLBACK documentado. Solo se ofrece cuando la vía
     # automática no puede producir la tripleta (modelo caído o cálculo fallido).
     opciones = "".join(f'<option value="{POS[i]}">{POS[i]} · {ANIM[POS[i]].title()}</option>' for i in range(K))
@@ -661,6 +806,10 @@ def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False):
                   + form_manual)
     elif calculando:
         cuerpo = '<div class="tip">Calculando las tripletas para esta ventana…</div>'
+    elif tri_actual is None and faltan_h > 0:
+        cuando = f"{faltan_h:.0f} h" if faltan_h >= 1 else f"{faltan_h*60:.0f} min"
+        cuerpo = (f'<div class="tip">Las 2 tripletas de este ciclo ya cerraron su ventana. La próxima pareja se '
+                  f'genera en <b>{cuando}</b>: se emiten 2 cada {TRIPLETA_CADA_H} horas.</div>')
     elif tri_actual is None:
         cuerpo = ('<div class="tip">No se pudo calcular la tripleta automática para esta ventana '
                   '(error del modelo). <b>Fallback manual</b>:</div>' + form_manual)
@@ -674,8 +823,13 @@ def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False):
             cuerpo += ('<p class="note">Probabilidad de que cada uno salga en esos 12 sorteos: '
                        + ", ".join(f"{POS[i]} {p*100:.0f}%" for i, p in zip(sum(tri_actual['jugadas'], []), probs))
                        + ' (un animal cualquiera: ~30%).</p>')
-    cuerpo += ('<p class="note">Vale para los 12 sorteos que empiezan en el próximo. Una tripleta al azar gana '
-               '~2,2% de las veces y el umbral de 45x es 2,22%. Aún no está demostrada: juégala en papel y mira su marcador.</p>')
+        if faltan_h > 0:
+            cuando = f"{faltan_h:.0f} h" if faltan_h >= 1 else f"{faltan_h*60:.0f} min"
+            cuerpo += (f'<p class="note">Estas 2 son las de hoy. La próxima pareja se genera en <b>{cuando}</b>: '
+                       f'se emiten 2 tripletas cada {TRIPLETA_CADA_H} horas, no una por sorteo.</p>')
+    cuerpo += (f'<p class="note">Cada pareja vale para los 12 sorteos que arrancan cuando se generó. Una tripleta al '
+               'azar gana ~2,2% de las veces y el umbral de 45x es 2,22%. Aún no está demostrada: juégala en papel y '
+               'mira su marcador.</p>')
     # ventanas en curso
     curso = [t for t in d["tripletas"] if vigente(t) and t.get("estado") == "pendiente"
              and t["n_inicio"] < len(filas)][-4:]
@@ -699,9 +853,18 @@ def html_marcadores(d):
         lect = ("evidencia fuerte a favor" if m["factor"] >= 20 else "evidencia moderada a favor" if m["factor"] >= 3
                 else "todavía no distingue" if m["factor"] > 1/3 else "evidencia en contra")
         s1 = (f'<div class="kpis"><div class="kpi"><small>Predicciones</small><b>{m["n"]}</b></div>'
-              f'<div class="kpi"><small>Top-3</small><b>{m["tasa3"]:.1f}%</b><span>{m["t3"]} aciertos · azar 7,9% · modelo 12,3%</span></div>'
-              f'<div class="kpi"><small>Top-1</small><b>{m["tasa1"]:.1f}%</b><span>{m["t1"]} aciertos · umbral 30x 3,33%</span></div>'
-              f'<div class="kpi"><small>Lectura</small><b style="font-size:14px">{lect}</b><span>factor {m["factor"]:.2f} : 1</span></div></div>')
+              f'<div class="kpi"><small>Top-3</small><b>{num(m["tasa3"])}%</b>'
+              f'<span>{plural(m["t3"], "acierto", "aciertos")} · azar 7,9% · modelo 12,3%</span></div>'
+              f'<div class="kpi"><small>Top-1</small><b>{num(m["tasa1"])}%</b>'
+              f'<span>{plural(m["t1"], "acierto", "aciertos")} · umbral 30x 3,33%</span></div>')
+        if m.get("n15"):
+            s1 += (f'<div class="kpi"><small>Top-15</small><b>{num(m["tasa15"])}%</b>'
+                   f'<span>{m["t15"]} de {m["n15"]} · azar 39,5%</span></div>')
+        s1 += (f'<div class="kpi"><small>Lectura</small><b style="font-size:14px">{lect}</b>'
+               f'<span>factor {num(m["factor"], 2)} : 1</span></div></div>')
+        if m.get("n15") and m["n15"] < m["n"]:
+            s1 += (f'<p class="note">El Top-15 solo puede puntuarse en {m["n15"]} de las {m["n"]} predicciones: '
+                   'las más viejas se guardaron sin el orden completo de los 38, y contarlas como fallo sería mentir.</p>')
         if m["n"] < 1000:
             s1 += f'<p class="note">Con {m["n"]} predicciones aún no se puede concluir: hacen falta 1.000 o más.</p>'
     mt = marcador_tripleta(d)
@@ -709,14 +872,83 @@ def html_marcadores(d):
         s2 = '<p class="note">Ninguna ventana de 12 sorteos cerrada todavía.</p>'
     else:
         s2 = (f'<div class="kpis"><div class="kpi"><small>Ventanas cerradas</small><b>{mt["n"]}</b><span>{mt["jugadas"]} tripletas</span></div>'
-              f'<div class="kpi"><small>Aciertos</small><b>{mt["tasa"]:.1f}%</b><span>{mt["aciertos"]} · azar {mt["azar"]:.1f}% · umbral 2,22%</span></div>'
+              f'<div class="kpi"><small>Aciertos</small><b>{num(mt["tasa"])}%</b>'
+              f'<span>{mt["aciertos"]} · azar {num(mt["azar"])}% · umbral 2,22%</span></div>'
               f'<div class="kpi"><small>Resultado a 45x</small><b>{mt["ganancia"]:+d}</b><span>unidades si apostaras 1 por tripleta</span></div></div>')
         if mt["n"] < 300:
             s2 += f'<p class="note">Con {mt["n"]} ventanas es pura suerte: hacen falta varios cientos.</p>'
     return (f'<section class="card" id="marcadores"><div class="grid" style="gap:18px">'
             f'<div><div class="hh"><h2>Marcador sorteo</h2></div>{s1}</div>'
             f'<div><div class="hh"><h2>Marcador tripleta</h2></div>{s2}</div></div>'
+            f'{html_top15_reparto(d)}'
             f'<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p></section>')
+
+def html_top15_reparto(d):
+    """Dónde cae el ganador dentro del Top-15 congelado, contra su cuota de azar."""
+    a = analisis_top15(d)
+    if not a["n"]:
+        return ""
+    filas = ""
+    for k, t in enumerate(a["tramos"]):
+        ancho = min(100, t["tasa"])
+        marca = min(100, t["azar"])
+        # El último tramo es «fuera del Top-15»: ahí superar la cuota de azar es
+        # MALO. Resaltar en el color de acierto lo que es un fallo sería mentir
+        # con el color.
+        fuera = k == len(a["tramos"]) - 1
+        mejor = (t["ventaja"] < 0) if fuera else (t["ventaja"] > 0)
+        filas += (f'<div class="dist{" alza" if mejor else ""}"><span class="dl">{t["etiqueta"]}</span>'
+                  f'<span class="db"><i style="width:{ancho:.1f}%"></i>'
+                  f'<em style="left:{marca:.1f}%" title="cuota de azar"></em></span>'
+                  f'<span class="dv">{t["tasa"]:.0f}%'
+                  f'<small>{t["veces"]} {"vez" if t["veces"] == 1 else "veces"} · '
+                  f'azar {t["azar"]:.0f}%</small></span></div>')
+    lectura = ("El orden completo aporta información: el ganador cae en los primeros puestos más veces "
+               "de lo que daría el azar." if a["puesto_medio"] < a["puesto_azar"] - 1 else
+               "Todavía no se distingue del azar: el ganador cae repartido como si el orden no informara.")
+    return (f'<div style="margin-top:18px"><div class="hh"><h2>Dónde cae el ganador</h2>'
+            f'<span>{a["n"]} sorteos con orden guardado</span></div>{filas}'
+            f'<p class="note">Puesto medio del ganador: <b>{num(a["puesto_medio"])}</b> de 38 '
+            f'(al azar sería {num(a["puesto_azar"])}). La raya marca la cuota de azar de cada tramo. {lectura}</p></div>')
+
+def html_ultimas(d, filas, cuantos=48):
+    """Estado de acierto reciente: sirve para detectar roturas, no para concluir."""
+    a = analisis_reciente(d, filas, cuantos)
+    cab = (f'<div class="hh"><h2>Últimas {cuantos} · estado de acierto</h2>'
+           f'<span>{a["n"]} con pronóstico previo</span></div>')
+    if not a["n"]:
+        return (f'<section class="card" id="ultimas">{cab}'
+                f'<p class="note">Ninguno de los últimos {cuantos} sorteos tenía pronóstico guardado antes '
+                'del resultado, así que no hay nada honesto que medir aquí todavía.</p></section>')
+    kpis = (f'<div class="kpis"><div class="kpi"><small>Top-3</small><b>{num(a["tasa3"])}%</b>'
+            f'<span>{plural(a["t3"], "acierto", "aciertos")} · por azar tocarían {num(a["esp3"])}</span></div>'
+            f'<div class="kpi"><small>Top-1</small><b>{num(a["tasa1"])}%</b>'
+            f'<span>{plural(a["t1"], "acierto", "aciertos")} · por azar {num(a["esp1"])}</span></div>')
+    if a.get("n15"):
+        kpis += (f'<div class="kpi"><small>Top-15</small><b>{num(a["tasa15"])}%</b>'
+                 f'<span>{a["t15"]} de {a["n15"]} · por azar {num(a["esp15"])}</span></div>')
+    kpis += (f'<div class="kpi"><small>Resultado a {PAGO}x</small><b>{a["roi"]:+.0f}%</b>'
+             f'<span>apostando los 3 en cada sorteo</span></div></div>')
+    # p-valor: qué tan fácil sería este resultado por pura suerte.
+    prob = a["p3"] * 100
+    if a["t3"] <= a["esp3"]:
+        veredicto = (f'Por debajo de lo que daría el azar ({plural(a["t3"], "acierto", "aciertos")} '
+                     f'contra {num(a["esp3"])} esperados). '
+                     'Una racha así entra dentro de lo normal, pero si se repite varias ventanas seguidas, '
+                     'es señal de que algo cambió.')
+    elif prob > 20:
+        veredicto = (f'Por encima del azar, pero flojo: una racha así o mejor sale por pura suerte el '
+                     f'<b>{prob:.0f}%</b> de las veces. No prueba nada.')
+    elif prob > 5:
+        veredicto = (f'Por encima del azar: por suerte sola pasaría el <b>{prob:.0f}%</b> de las veces. '
+                     'Es una pista, no una prueba.')
+    else:
+        veredicto = (f'Claramente por encima del azar en esta ventana: por suerte sola pasaría solo el '
+                     f'<b>{prob:.1f}%</b> de las veces. Aun así son {a["n"]} sorteos; el marcador largo manda.')
+    return (f'<section class="card" id="ultimas">{cab}{kpis}'
+            f'<p class="note">Desde {esc(fecha_corta(a["desde"]))}. {veredicto}</p>'
+            f'<p class="note">Esta ventana corta existe para <b>ver si algo se rompió</b>, no para decidir. '
+            f'Con {a["n"]} sorteos, acertar uno más o uno menos mueve el porcentaje varios puntos.</p></section>')
 
 def _leer_consejo():
     """Top-3 del consenso de la mesa nocturna (si el archivo es reciente)."""
@@ -805,15 +1037,20 @@ def html_historico(d, limite=100):
         if r["salio"] == r["top3"][0]: marca, clase = "Top-1", "ok"
         elif r["salio"] in r["top3"]: marca, clase = "Top-3", "ok"
         else: marca, clase = "fallo", "no"
+        p = puesto_ganador(r)
+        # El puesto solo existe si el orden completo se guardó ANTES del sorteo.
+        puesto = (f'<td class="{"ok" if p <= TOP_N else "no"}">{p}º</td>' if p
+                  else '<td class="no">—</td>')
         filas_h += (f'<tr><td>{esc(fecha_corta(r["fecha"]))} {HORAS[r["hora"]]}</td><td>{esc(top3)}</td>'
-                    f'<td>{esc(salio)}</td><td class="{clase}">{marca}</td></tr>')
+                    f'<td>{esc(salio)}</td>{puesto}<td class="{clase}">{marca}</td></tr>')
     if not filas_h:
         cuerpo = '<p class="note">Sin predicciones resueltas todavía.</p>'
     else:
         nota = (f'<p class="note">Mostrando las últimas {min(limite, len(vistos))} de {len(vistos)}.</p>'
                 if len(vistos) > limite else "")
         cuerpo = (f'{nota}<table class="hist"><thead><tr><th>Sorteo</th><th>Top-3</th>'
-                  f'<th>Salió</th><th>Resultado</th></tr></thead><tbody>{filas_h}</tbody></table>')
+                  f'<th>Salió</th><th>Puesto</th><th>Resultado</th></tr></thead>'
+                  f'<tbody>{filas_h}</tbody></table>')
     return f'<section class="card" id="historico"><div class="hh"><h2>Histórico de predicciones</h2></div>{cuerpo}</section>'
 
 def html_herramientas():
@@ -875,19 +1112,25 @@ def render():
     for t in d["tripletas"]:
         if vigente(t) and (t["inicio_fecha"], t["inicio_hora"]) == (e["pf"], e["ph"]) and t["n_inicio"] == len(filas):
             tri_actual = t
-    # Generación automática (diseño original, previo a c23792f): una tripleta
-    # nueva por slot, en cuanto la predicción del modelo está lista. El ingreso
-    # manual queda como fallback (ver html_tripleta), no como sustituto.
-    if tri_actual is None and not calculando and not conocido and "tripleta" in info:
+    # Generación automática: 2 tripletas (un par) cada 24 h, no una por sorteo.
+    # El par sale de los 6 animales con mayor probabilidad de aparecer en la
+    # ventana, en el momento en que toca generarlo. El ingreso manual queda como
+    # fallback (ver html_tripleta), no como sustituto.
+    toca, faltan_h = toca_tripleta(d)
+    if tri_actual is None and toca and not calculando and not conocido and "tripleta" in info:
         pt = info["tripleta"]
         o = sorted(range(K), key=lambda i: (-pt[i], i))
         tri_actual = {"inicio_fecha": e["pf"], "inicio_hora": e["ph"], "n_inicio": len(filas),
                       "jugadas": [o[0:3], o[3:6]], "prob": [round(float(pt[i]), 4) for i in o[:6]],
                       "estado": "pendiente", "creado": ahora(), "modelo": "tripleta_ventana_A"}
         d["tripletas"].append(tri_actual); cambio = True
+        faltan_h = float(TRIPLETA_CADA_H)
         print(f"[tripleta] {ahora()} slot={e['pf']} h{e['ph']} n={len(filas)} "
               f"auto 2 tripletas: {[ [POS[i] for i in jug] for jug in tri_actual['jugadas'] ]}",
               file=sys.stderr, flush=True)
+    # Fuera del momento de generar, la tarjeta muestra el par que se está
+    # jugando (no un hueco ni el formulario manual).
+    tri_mostrada = tri_actual or tripleta_en_curso(d, filas)
     if cambio:
         log_guardar(d)
 
@@ -910,11 +1153,13 @@ def render():
         f'<div class="sub">Último: {esc(fecha_corta(f))} {HORAS[h]} → <b>{POS[v]} {ANIM[POS[v]].title()}</b> · '
         f'{e["n"]:,} sorteos en el histórico</div></div>{estado_pill}</header>'
         '<nav><a href="#resumen">En claro</a><a href="#sorteo">Próximo sorteo</a><a href="#tripleta">Tripleta</a><a href="#registrar">Registrar</a>'
-        '<a href="#mesa">Mesa</a><a href="#marcadores">Marcadores</a><a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
+        '<a href="#mesa">Mesa</a><a href="#marcadores">Marcadores</a><a href="#ultimas">Últimas 48</a>'
+        '<a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
         f'{aviso}{html_resumen(e, d, modelo, calculando)}<div class="strip">{ultimos}</div>'
         f'<div class="grid"><div>{html_prediccion(e, calculando, pend, aviso_modelo)}<div style="height:14px"></div>{html_registro()}</div>'
-        f'<div>{html_tripleta(e, tri_actual, d, filas, calculando, PRED is None)}</div></div>'
-        f'<div style="height:14px"></div>{html_mesa()}{html_marcadores(d)}{html_historico(d)}{html_herramientas()}'
+        f'<div>{html_tripleta(e, tri_mostrada, d, filas, calculando, PRED is None, faltan_h)}</div></div>'
+        f'<div style="height:14px"></div>{html_mesa()}{html_marcadores(d)}{html_ultimas(d, filas)}'
+        f'{html_historico(d)}{html_herramientas()}'
         '<footer>Azar puro: 2,63% por animal. En prueba ciega (3.122 sorteos) el ensamble acertó Top-1 4,00% '
         '(IC 95%: 3,37–4,75) y Top-3 12,27%; el umbral con pago 30x es 3,33%. Ningún modelo garantiza ganar y el '
         'operador puede cambiar su mecanismo. Tus datos: historial.txt y predicciones.json.</footer></div>')
