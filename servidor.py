@@ -302,6 +302,68 @@ def estado_tareas():
         res[clave] = {"estado": est, "segundos": seg, "salida": texto}
     return res
 
+# ------------------------------------------------- auto-registro del resultado
+# El resultado sale publicado ~10 min despues de cada sorteo. Un hilo daemon
+# consulta la fuente y lo anota con el MISMO registrar() del boton manual, asi
+# que el marcador sigue siendo honesto: el pronostico del slot ya estaba
+# guardado como pendiente ANTES de que nadie mirara el resultado.
+#
+# Todo lo que escribe (historial y predicciones) pasa por CERROJO, que tambien
+# toman las peticiones HTTP: el hilo nunca escribe a la vez que un render.
+CERROJO = threading.RLock()
+AUTO_INTERVALO = 5 * 60          # cada cuanto revisa, en horario de sorteo
+AUTO_ACTIVO = os.environ.get("AUTO_RESULTADO", "1") not in ("0", "no", "off")
+AUTO = {"activo": AUTO_ACTIVO, "revisado": None, "anotados": 0, "seq": 0,
+        "mensaje": "aún no se ha revisado", "corriendo": False}
+
+def _auto_hora_util(t=None):
+    """True entre las 8:05 y las 20:30 de Caracas (jornada + margen)."""
+    t = t or datetime.now()
+    return (8, 5) <= (t.hour, t.minute) and t.hour < 21
+
+def auto_pasada():
+    """Una consulta a la fuente. Devuelve cuantos resultados se anotaron."""
+    if AUTO["corriendo"]:
+        return 0
+    AUTO["corriendo"] = True
+    try:
+        from scraping import auto_resultado
+        with CERROJO:
+            n = auto_resultado.una_pasada()
+        AUTO["anotados"] = n
+        AUTO["mensaje"] = (f"{n} resultado{'s' if n != 1 else ''} anotado"
+                           f"{'s' if n != 1 else ''}") if n else "sin novedad"
+        if n:
+            AUTO["seq"] += 1          # dispara la recarga de la página abierta
+    except Exception as ex:  # noqa: BLE001
+        AUTO["mensaje"] = f"no se pudo consultar la fuente ({type(ex).__name__})"
+        print(f"[auto] {ahora()} fallo: {ex!r}", file=sys.stderr, flush=True)
+        n = 0
+    finally:
+        AUTO["revisado"] = ahora()
+        AUTO["corriendo"] = False
+    return n
+
+def auto_bucle():
+    while True:
+        try:
+            if AUTO["activo"] and _auto_hora_util():
+                auto_pasada()
+        except Exception as ex:  # noqa: BLE001
+            print(f"[auto] {ahora()} bucle: {ex!r}", file=sys.stderr, flush=True)
+        time.sleep(AUTO_INTERVALO)
+
+def auto_estado():
+    base = {"seq": AUTO["seq"], "corriendo": AUTO["corriendo"]}
+    hora = AUTO["revisado"][11:16] if AUTO["revisado"] else ""
+    if not AUTO["activo"]:
+        return dict(base, txt="Anotado automático apagado", clase="off")
+    if AUTO["corriendo"]:
+        return dict(base, txt="buscando el resultado…", clase="on")
+    if not hora:
+        return dict(base, txt="automático · primera revisión en marcha", clase="on")
+    return dict(base, txt=f"automático · revisado {hora} · {AUTO['mensaje']}", clase="on")
+
 # ------------------------------------------------------------------ página
 def esc(s):
     return html.escape(str(s))
@@ -485,6 +547,16 @@ JS = """
   function tareas(){
     fetch('/tareas.json').then(r=>r.json()).then(function(t){
       var alguna=false;
+      var a=t._auto;
+      if(a){
+        var el=document.getElementById('auto-est');
+        if(el){ el.textContent=a.txt; el.className='auto '+a.clase; }
+        // Si el resultado acaba de anotarse solo, la página que estás viendo ya
+        // es vieja (hay sorteo nuevo y otra predicción): se recarga sola.
+        if(window.__autoSeq===undefined) window.__autoSeq=a.seq;
+        else if(a.seq>window.__autoSeq){ location.replace('/'); return; }
+        if(a.corriendo) alguna=true;
+      }
       Object.keys(t).forEach(function(k){
         var s=document.getElementById('st-'+k), o=document.getElementById('out-'+k), b=document.getElementById('bt-'+k);
         if(!s) return;
@@ -554,13 +626,19 @@ def html_top15(e, pend=None):
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo</summary>{filas}</details>')
 
 def html_registro():
-    return ('<section class="card" id="registrar"><div class="hh"><h2>¿Qué salió?</h2></div>'
+    a = auto_estado()
+    return ('<section class="card" id="registrar"><div class="hh"><h2>¿Qué salió?</h2>'
+            f'<span class="auto {a["clase"]}" id="auto-est">{esc(a["txt"])}</span></div>'
+            '<p class="note top">No hace falta que lo anotes: el resultado se busca solo '
+            'unos 10 minutos después de cada sorteo. Escríbelo aquí solo si quieres adelantarlo.</p>'
             '<form class="reg" method="post" action="/registrar">'
+            '<label class="sr" for="num">Animal que salió</label>'
             '<input type="text" id="num" name="num" placeholder="0, 00 o 1-36" autocomplete="off" '
-            'inputmode="numeric" autofocus><button type="submit">Registrar</button></form>'
-            '<p class="note">Regístralo solo cuando el sorteo ya haya ocurrido.</p>'
+            'inputmode="numeric"><button type="submit">Anotar</button></form>'
+            '<div class="acciones">'
+            '<form method="post" action="/auto"><button class="sec" type="submit">Buscar resultado ahora</button></form>'
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último registro?\')">'
-            '<button class="link" type="submit">Deshacer último registro</button></form></section>')
+            '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
 def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False):
     ff, fh = fin_ventana(e["pf"], e["ph"])
@@ -1298,12 +1376,24 @@ class H(BaseHTTPRequestHandler):
         except OSError:
             pass
 
+    # CERROJO: el hilo del anotado automático puede estar escribiendo justo
+    # ahora. Serializar aquí evita que un render y una anotación se pisen.
     def do_GET(self):
+        with CERROJO:
+            self._get()
+
+    def do_POST(self):
+        with CERROJO:
+            self._post()
+
+    def _get(self):
         ruta = self.path.split("?")[0]
         if ruta in ("/", "/index.html"):
             self._send(render())
         elif ruta == "/tareas.json":
-            self._send(json.dumps(estado_tareas(), ensure_ascii=False), "application/json; charset=utf-8")
+            est = estado_tareas()
+            est["_auto"] = auto_estado()
+            self._send(json.dumps(est, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/listo.json":
             listo = True
             if PRED is not None:
@@ -1320,10 +1410,19 @@ class H(BaseHTTPRequestHandler):
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
-    def do_POST(self):
+    def _post(self):
         n = int(self.headers.get("Content-Length", 0) or 0)
         datos = self.rfile.read(n).decode("utf-8") if n else ""
         ruta = self.path.split("?")[0]
+        if ruta == "/auto":
+            # En segundo plano: consultar la fuente puede tardar varios segundos
+            # y la página debe volver enseguida.
+            if AUTO["corriendo"]:
+                AVISO.update(texto="Ya se está buscando el resultado.", clase="no")
+            else:
+                threading.Thread(target=auto_pasada, daemon=True).start()
+                AVISO.update(texto="Buscando el resultado en la fuente…", clase="no")
+            return self._volver("#registrar")
         if ruta == "/deshacer":
             texto, ok = deshacer()
             AVISO.update(texto=esc(texto), clase="ok" if ok else "no")
@@ -1379,6 +1478,12 @@ if __name__ == "__main__":
     url = f"http://localhost:{PUERTO}"
     print(f"\n  Lotto Activo corriendo en  {url}")
     print("  Modelo:", "ensamble (numpy/scipy OK)" if PRED else f"antiguo ({PRED_ERR})")
+    if AUTO["activo"]:
+        threading.Thread(target=auto_bucle, daemon=True).start()
+        print(f"  Resultado: se anota solo (revisa cada {AUTO_INTERVALO // 60} min, "
+              "unos 10 min después de cada sorteo)")
+    else:
+        print("  Resultado: anotado automático APAGADO (AUTO_RESULTADO=0)")
     print("  Hora local:", datetime.now().isoformat(timespec="seconds"),
           f"({time.tzname[0]}, UTC{time.timezone/-3600:+.0f})")
     if time.timezone != 4 * 3600:
