@@ -1,0 +1,6 @@
+{
+  "files": ["servidor.py"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

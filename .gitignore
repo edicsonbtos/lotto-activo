@@ -6,3 +6,7 @@ historial.txt
 predicciones.json
 .playwright-mcp/
 investigacion/**/*.npz
+
+# La skill impeccable se reinstala con: npx impeccable install
+.claude/skills/impeccable/scripts/bin/
+.impeccable/live/sessions/
