@@ -800,11 +800,14 @@ def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False, f
         f'<input type="hidden" name="pf" value="{esc(e["pf"])}"><input type="hidden" name="ph" value="{e["ph"]}">'
         f'<input type="hidden" name="n" value="{len(filas)}">{campos}'
         '<button type="submit">Guardar tripleta</button></form>')
-    if sin_modelo:
+    # Orden de los casos: si hay una pareja en curso, se muestra SIEMPRE, aunque
+    # el modelo esté calculando el próximo sorteo. Esa pareja ya está decidida y
+    # jugándose; taparla con un «calculando…» es esconder lo único accionable.
+    if sin_modelo and tri_actual is None:
         cuerpo = ('<div class="tip">La tripleta automática necesita el modelo nuevo (numpy/scipy), que ahora no '
                   'está disponible. <b>Fallback manual</b> (la vía normal es la generación automática):</div>'
                   + form_manual)
-    elif calculando:
+    elif calculando and tri_actual is None:
         cuerpo = '<div class="tip">Calculando las tripletas para esta ventana…</div>'
     elif tri_actual is None and faltan_h > 0:
         cuando = f"{faltan_h:.0f} h" if faltan_h >= 1 else f"{faltan_h*60:.0f} min"
