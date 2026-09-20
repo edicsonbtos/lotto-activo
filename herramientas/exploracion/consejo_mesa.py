@@ -126,20 +126,36 @@ for t in range(N):
     gap[t, ~seen] = 10 ** 6
     last[A[t]] = t
 EDGES = np.array([5, 10, 15, 20, 30, 40, 60, 80, 120, 200])
+NBIN = len(EDGES) + 1
 BURN, ALPHA_HZ, W_FREQ, REFIT = 500, 8000.0, 1500, 25
+# Bins de atraso precalculados una sola vez (int8) y conteos acumulados por fila:
+# en cada refit el hazard se arma restando dos filas de cum_*, en vez de volver a
+# aplanar y digitalizar gap[BURN:t] (eso pedia varios MB por refit y reventaba
+# con MemoryError en equipos con poca RAM libre). Los numeros son identicos.
+BIN = np.empty((N, K), dtype=np.int8)
+cum_nb = np.zeros((N + 1, NBIN), dtype=np.int32)
+cum_cb = np.zeros((N + 1, NBIN), dtype=np.int32)
+for t in range(N):
+    b = np.digitize(gap[t], EDGES)
+    BIN[t] = b
+    cum_nb[t + 1] = cum_nb[t] + np.bincount(b, minlength=NBIN)
+    cum_cb[t + 1] = cum_cb[t] + np.bincount(b[HIT[t]], minlength=NBIN)
+
+def hazard(hasta):
+    """Hazard por bin con las filas [BURN, hasta) del historial (solo pasado)."""
+    nb = (cum_nb[hasta] - cum_nb[BURN]).astype(float)
+    cb = (cum_cb[hasta] - cum_cb[BURN]).astype(float)
+    return (cb + ALPHA_HZ * BASE) / (nb + ALPHA_HZ)
+
 hz_tab, last_refit = None, -10 ** 9
 bolsasC = {m: nueva_bolsa() for m in ("M1_freq", "M2_hazard", "M3_freq_x_hz")}
 for t in range(SEL[0], N):
     if hz_tab is None or t - last_refit >= REFIT:
-        gg = gap[BURN:t].ravel(); hh = HIT[BURN:t].ravel()
-        bb = np.digitize(gg, EDGES)
-        nb = np.bincount(bb, minlength=len(EDGES) + 1).astype(float)
-        cb = np.bincount(bb[hh], minlength=len(EDGES) + 1).astype(float)
-        hz_tab = (cb + ALPHA_HZ * BASE) / (nb + ALPHA_HZ)
+        hz_tab = hazard(t)
         last_refit = t
     a = max(0, t - W_FREQ)
     f = (HIT[a:t].sum(axis=0) + 1.0) / (t - a + K)
-    mult = hz_tab[np.digitize(gap[t], EDGES)] / BASE
+    mult = hz_tab[BIN[t]] / BASE
     apuntar(bolsasC["M1_freq"], t, f / f.sum(), A[t])
     p2 = BASE * mult; apuntar(bolsasC["M2_hazard"], t, p2 / p2.sum(), A[t])
     p3 = f * mult; apuntar(bolsasC["M3_freq_x_hz"], t, p3 / p3.sum(), A[t])
@@ -147,16 +163,11 @@ mejorC = max(bolsasC, key=lambda m: bolsasC[m]["sel"]["ll"])
 for m in bolsasC:
     reporte(f"C-{m}" + ("  <- elegido" if m == mejorC else ""), bolsasC[m])
 # prediccion para el objetivo (t = N)
-gg = gap  # gap con datos completos: calcular atrasos en N
 last = np.full(K, -1, dtype=np.int64)
 for t in range(N):
     last[A[t]] = t
 atrasoN = np.where(last >= 0, N - last, 10 ** 6)
-gg2 = gap[BURN:N].ravel(); hh2 = HIT[BURN:N].ravel()
-bb2 = np.digitize(gg2, EDGES)
-nb2 = np.bincount(bb2, minlength=len(EDGES) + 1).astype(float)
-cb2 = np.bincount(bb2[hh2], minlength=len(EDGES) + 1).astype(float)
-hzN = (cb2 + ALPHA_HZ * BASE) / (nb2 + ALPHA_HZ)
+hzN = hazard(N)
 fN = (HIT[N - W_FREQ:N].sum(axis=0) + 1.0) / (W_FREQ + K)
 multN = hzN[np.digitize(atrasoN, EDGES)] / BASE
 if mejorC == "M1_freq":
