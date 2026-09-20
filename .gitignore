@@ -10,3 +10,6 @@ investigacion/**/*.npz
 # La skill impeccable se reinstala con: npx impeccable install
 .claude/skills/impeccable/scripts/bin/
 .impeccable/live/sessions/
+
+# Cache de matrices walk-forward (se regenera; no va al repo)
+herramientas/exploracion/*.npy
