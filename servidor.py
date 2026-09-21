@@ -761,7 +761,7 @@ def html_top15(e, pend=None):
         p = e["sc"][i]
         filas += (f'<div class="pick"><span class="rk">{r}</span><span class="num">{POS[i]}</span>'
                   f'<div><div class="nm">{ANIM[POS[i]].title()}</div></div>'
-                  f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1}</small></span></div>')
+                  f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo</summary>{filas}</details>')
 
 def html_registro():
