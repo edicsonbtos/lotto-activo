@@ -7,13 +7,19 @@ Honestidad: el pronostico del slot ya quedo guardado como pendiente ANTES de
 que este script mirara el resultado (igual que el registro manual), asi que el
 marcador sigue midiendo pronosticos hechos a ciegas.
 
-Fuentes (tuazar, en este orden):
-  1. Tabla SEMANAL (`.../resultados/anteriores/?d=AAAA-MM-DD`): trae lun-dom con
-     la fecha en cada columna. Es la fuente principal porque permite recuperar
-     dias atrasados sin ambiguedad.
-  2. Portada (`.../resultados/`): solo la jornada de hoy, sin fecha en la
-     casilla. Se usa como respaldo para el sorteo recien salido, por si la
-     tabla semanal va con retraso.
+Fuentes, en este orden:
+  1. OFICIAL: lottoactivo.com, la casa que hace el sorteo (scraping/
+     fuente_oficial.py). Es la primera porque publica antes que nadie y
+     responde por fecha, asi que sirve igual para hoy que para dias atrasados.
+  2. Tuazar, tabla SEMANAL (`.../resultados/anteriores/?d=AAAA-MM-DD`): espejo
+     con lun-dom y la fecha en cada columna. Respaldo si la oficial no
+     contesta.
+  3. Tuazar, portada (`.../resultados/`): solo la jornada de hoy, sin fecha en
+     la casilla. Ultimo recurso para el sorteo recien salido.
+
+Por que la oficial va primera: el 2026-09-20 el sorteo de las 3:00 PM aun no
+estaba en tuazar a las 15:12 y hubo que anotarlo a mano. El espejo siempre
+copia con retraso; el original no.
 
 Orden estricto: los sorteos se anotan del mas viejo al mas nuevo y solo si el
 servidor espera exactamente ese slot; servidor.registrar() siempre llena el
@@ -40,6 +46,8 @@ CARACAS = timezone(timedelta(hours=-4))
 
 RUTA = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, RUTA)
+
+from scraping import fuente_oficial
 
 HORAS = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM",
          "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM"]
@@ -237,11 +245,27 @@ def una_pasada(demo=False):
                              " …" if len(pend) > 4 else ""))
 
     hoy = datetime.now(CARACAS).date().isoformat()
-    cache_semana, portada = {}, None
+    cache_semana, cache_oficial, portada = {}, {}, None
 
     def buscar(f, h):
-        """Resultado del slot, de la tabla semanal o (respaldo) de la portada."""
+        """Resultado del slot: primero la fuente oficial, luego el espejo.
+
+        lottoactivo.com es quien publica el sorteo; tuazar lo copia minutos
+        despues, asi que preguntando primero al original se anota a la primera
+        y solo se cae al espejo si el original no contesta.
+        """
         nonlocal portada
+        if f not in cache_oficial:
+            cache_oficial[f] = fuente_oficial.resultados(f)
+        ofi = cache_oficial[f]
+        if ofi:
+            r = ofi.get((f, h))
+            if r is not None:
+                return r
+        if ofi is None:
+            # la oficial no respondio: se volvera a intentar en la proxima
+            # pasada, pero para este slot se prueba el espejo ya mismo.
+            cache_oficial.pop(f, None)
         sem = lunes(date.fromisoformat(f)).isoformat()
         if sem not in cache_semana:
             html = bajar("https://tuazar.com/loteria/animalitos/resultados/"
