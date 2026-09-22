@@ -578,6 +578,21 @@ HERRAMIENTAS = {
                  "Si el primer número del intervalo [a-b] supera 2,22% y z(bloques) es mayor que +2, hay evidencia "
                  "real. Si «EV 45x» tiene el límite inferior negativo, todavía puede haber pérdida.",
     },
+    "simulacion": {
+        "titulo": "Simular ganancias del Top-5 escalonado", "dura": "30 a 60 s",
+        "cmd": ["simulacion_banca.py", "2000", "1"],
+        "que": "Juega miles de meses imaginarios con banca 2.000 y ficha 1, en tres escenarios.",
+        "mirar": "«mitad de las veces» es lo típico; «1 de cada 10 mal» es un mes malo pero normal. Compara "
+                 "el escenario MEDIDO con el PRUDENTE: la verdad está probablemente entre los dos. El escenario "
+                 "SIN VENTAJA es lo que pasa si el modelo deja de servir: por eso existe el freno del 25 %.",
+    },
+    "estrategia": {
+        "titulo": "Cuántos animales conviene jugar", "dura": "10 a 30 s",
+        "cmd": ["exploracion/estrategia_top5.py"],
+        "que": "Acierto de cada puesto del orden y calibración del modelo, en 7.357 sorteos de desarrollo.",
+        "mirar": "En la tabla 1, cada puesto con «retorno/ficha» negativo pierde plata aunque acierte a veces. "
+                 "En la tabla 3, compara la ganancia por sorteo del Top-5 2-2-2-1-1 con el Top-15 plano.",
+    },
     "sorteo": {
         "titulo": "Validar predicción por sorteo", "dura": "5 a 10 min",
         "cmd": ["lotto_eval.py", "modelos/hazard_actual.py", "modelos/ensamble_v2.py", "--sin-fuga"],
@@ -995,6 +1010,37 @@ def html_top15(e, pend=None):
                   f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo</summary>{filas}</details>')
 
+def html_banca(e, banca=None):
+    """Cuánto poner en cada animal según la banca (misma regla que gestion_banca.py)."""
+    form = ('<form class="reg" method="get" action="/#banca">'
+            '<label class="sr" for="banca">Tu banca</label>'
+            f'<input type="text" id="banca" name="banca" inputmode="decimal" placeholder="Tu banca, p. ej. 2000" '
+            f'value="{esc(f"{banca:g}") if banca else ""}" autocomplete="off"><button type="submit">Calcular</button></form>')
+    cuerpo = ('<p class="note top">Escribe cuánta plata tienes separada para jugar y te digo cuánto poner en cada '
+              'animal. Apuesta ~0,4 % de la banca por sorteo: poco a propósito, para aguantar las rachas.</p>')
+    if banca:
+        import gestion_banca as GB
+        p = GB.plan_sorteo(banca)
+        orden = e.get("orden") or []
+        if p.get("solo_top3") or p["apostar"]:
+            montos = ([p["solo_top3"]] * 3 + [0, 0]) if p.get("solo_top3") else \
+                     [f * p["ficha"] for f in GB.FICHAS]
+            filas = "".join(
+                f'<div class="pick"><span class="rk">{r}</span><span class="num">{POS[i]}</span>'
+                f'<div><div class="nm">{ANIM[POS[i]].title()}</div></div>'
+                f'<span class="pc">{montos[r-1]:g}<small>{"no se juega" if not montos[r-1] else "a este animal"}</small></span></div>'
+                for r, i in enumerate(orden[:5], 1)) if len(orden) >= 5 else ""
+            total = p["total"]
+            cuerpo += (f'<div class="msg ok">{esc(p["motivo"])}</div>{filas}'
+                       f'<p class="note">Total por sorteo: <b>{total:g}</b>. Si sale uno de los 3 primeros ganas '
+                       f'<b>{p["gana_top3"]:+g}</b> neto'
+                       + (f'; si sale el 4º o 5º, <b>{p["gana_45"]:+g}</b>' if p["gana_45"] else "")
+                       + f'; si no sale ninguno pierdes {total:g}. Recalcula con tu banca cada día.</p>')
+        else:
+            cuerpo += f'<div class="msg bad">{esc(p["motivo"])}</div>'
+    return ('<section class="card" id="banca"><div class="hh"><h2>¿Cuánto apuesto?</h2></div>'
+            f'{cuerpo}{form}</section>')
+
 def html_registro():
     a = auto_estado()
     return ('<section class="card" id="registrar"><div class="hh"><h2>¿Qué salió?</h2>'
@@ -1354,9 +1400,10 @@ def html_herramientas():
                    f'<details{" open" if corriendo else ""}><summary>Ver resultado</summary>'
                    f'<pre id="out-{k}">{esc(e["salida"] or "Todavía no se ha ejecutado.")}</pre></details></div>')
     return (f'<section class="card" id="herramientas"><div class="hh"><h2>Herramientas de validación</h2>'
-            f'<span>corren en tu PC, sin tocar tus datos</span></div>{cuerpo}</section>')
+            f'<span>corren en el servidor (en Railway no gastan tu PC), sin tocar tus datos</span></div>'
+            f'{cuerpo}</section>')
 
-def render():
+def render(banca=None):
     filas = cargar(); e = estado(filas)
     d = log_cargar()
     cambio, _ = resolver_tripletas(d, filas)
@@ -1452,7 +1499,8 @@ def render():
         '<a href="#mesa">Mesa</a><a href="#marcadores">Marcadores</a><a href="#ultimas">Últimas 48</a>'
         '<a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
         f'{aviso}{html_resumen(e, d, modelo, calculando)}<div class="strip">{ultimos}</div>'
-        f'<div class="grid"><div>{html_prediccion(e, calculando, pend, aviso_modelo)}<div style="height:14px"></div>{html_registro()}</div>'
+        f'<div class="grid"><div>{html_prediccion(e, calculando, pend, aviso_modelo)}<div style="height:14px"></div>{html_registro()}'
+        f'<div style="height:14px"></div>{html_banca(e, banca)}</div>'
         f'<div>{html_tripleta(e, tri_mostrada, d, filas, calculando, PRED is None, faltan_h)}</div></div>'
         f'<div style="height:14px"></div>{html_mesa()}{html_marcadores(d)}{html_ultimas(d, filas)}'
         f'{html_historico(d)}{html_herramientas()}'
@@ -1932,7 +1980,13 @@ class H(BaseHTTPRequestHandler):
     def _get(self):
         ruta = self.path.split("?")[0]
         if ruta in ("/", "/index.html"):
-            self._send(render())
+            q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
+            try:
+                banca = float(q.get("banca", [""])[0].replace(",", "."))
+                banca = banca if 0 < banca < 1e9 else None
+            except ValueError:
+                banca = None
+            self._send(render(banca))
         elif ruta == "/tareas.json":
             est = estado_tareas()
             est["_auto"] = auto_estado()

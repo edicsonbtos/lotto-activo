@@ -19,7 +19,21 @@ import numpy as np
 AQUI = os.path.dirname(os.path.abspath(__file__))
 PAGO = 30
 
-z = np.load(os.path.join(AQUI, "calor_cache.npz"))
+CACHE = os.path.join(AQUI, "calor_cache.npz")
+if not os.path.exists(CACHE):
+    # La caché no se versiona (se regenera). En un servidor recién desplegado
+    # se calcula aquí, una sola vez: el ensamble walk-forward tarda varios minutos.
+    import sys
+    RAIZ = os.path.dirname(os.path.dirname(AQUI))
+    sys.path.insert(0, os.path.join(RAIZ, "herramientas"))
+    import lotto_eval as LE
+    print("primera vez: calculando el ensamble walk-forward en desarrollo (varios minutos)...", flush=True)
+    datos = LE.cargar(os.path.join(os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RAIZ, "historial.txt"))
+    modelo = LE.cargar_modelo(os.path.join(RAIZ, "herramientas", "modelos", "ensamble_v2.py"))
+    fin = LE.CORTE_FIJO - LE.W                  # solo desarrollo: no toca el tramo de prueba
+    M = modelo.predecir(datos, LE.W)[:fin]
+    np.savez_compressed(CACHE, P=M, y=datos.seq[LE.W:][:fin])
+z = np.load(CACHE)
 P, y = z["P"], z["y"]
 P = P / P.sum(1, keepdims=True)
 n = len(y)
