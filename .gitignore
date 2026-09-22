@@ -13,3 +13,4 @@ investigacion/**/*.npz
 
 # Cache de matrices walk-forward (se regenera; no va al repo)
 herramientas/exploracion/*.npy
+herramientas/exploracion/*.npz
