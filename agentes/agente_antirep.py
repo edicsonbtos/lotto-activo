@@ -44,17 +44,18 @@ DECAIMENTO_HOY = 0.92  # (a) cada salida adicional hoy castiga un poco menos
 SUAV_GLOBAL = 80.0   # pseudo-observaciones del prior global en la frecuencia por hora
 
 
+def _huella(seq, horas, t):
+    """Identidad exacta del prefijo ya consumido (seq y horas caben en un byte)."""
+    return bytes(seq[:t]) + b"|" + bytes(horas[:t])
+
+
 class AgenteAntirep(base.Agente):
     nombre = "antirep"
     descripcion = ("Anti-repeticion intradia: frecuencia por hora x penalizadores "
                    "(salio hoy, salio en el sorteo previo, salio a esta hora ayer)")
 
     def __init__(self):
-        self._t = 0
-        self._gc = [0.0] * K          # conteo global por animal
-        self._hc = [[0.0] * K for _ in range(HORAS)]  # conteo por hora
-        self._hoy = [0.0] * K         # salidas del animal en el dia actual
-        self._hay_hist = False
+        self._reiniciar()
 
     # ------------------------------------------------------------------
     def _puntajes(self, hora_sig):
@@ -78,7 +79,13 @@ class AgenteAntirep(base.Agente):
 
         # Reconstruir estado incrementalmente si se avanzo paso a paso
         # (el evaluador/orquestador llama con seq[:t], seq[:t+1], ...).
-        if t < self._t or t - self._t > 1:
+        #
+        # La longitud NO identifica al historial: tras deshacer y reteclear,
+        # t == self._t con contenido distinto. Sin comprobar la huella, el
+        # estado acumulado de la serie vieja contaminaba la respuesta y
+        # rompia el contrato "mismo historial -> misma salida" de base.py.
+        if (t < self._t or t - self._t > 1
+                or _huella(seq, horas, self._t) != self._huella):
             self._reiniciar()
         # Alimentar los sorteos nuevos (desde self._t hasta t-1)
         while self._t < t:
@@ -91,6 +98,7 @@ class AgenteAntirep(base.Agente):
             self._hoy[a] += 1.0
             self._hay_hist = True
             self._t = i + 1
+        self._huella = _huella(seq, horas, self._t)
 
         hora_sig = 0 if horas[-1] == HORAS - 1 else horas[-1] + 1
         p = self._puntajes(hora_sig)
@@ -103,6 +111,7 @@ class AgenteAntirep(base.Agente):
 
     def _reiniciar(self):
         self._t = 0
+        self._huella = b""
         self._gc = [0.0] * K
         self._hc = [[0.0] * K for _ in range(HORAS)]
         self._hoy = [0.0] * K

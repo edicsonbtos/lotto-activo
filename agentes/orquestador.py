@@ -12,6 +12,7 @@ sorteos resueltos; antes de eso, el consenso: votos ponderados de todos).
 Honestidad: idem que el ensamble — pronostico congelado en predicciones.json
 bajo cada registro, campo "agentes": {nombre: [top15 indices]}.
 """
+import hashlib
 import importlib
 import math
 import os
@@ -32,7 +33,24 @@ AZAR_T3 = 3.0 / K
 
 _cache_lock = threading.Lock()
 _instancias = None
-_cache_pred = {}          # clave (n_sorteos, hora_sig) -> {nombre: [top15]}
+_cache_pred = {}          # clave (huella_historial, hora_sig) -> {nombre: [top15]}
+
+
+def huella_historial(seq, horas, dweek):
+    """sha1 del historial EXACTO que se usa para predecir.
+
+    La longitud no basta como identidad: tras `deshacer()` y volver a teclear,
+    el historial tiene el mismo largo y la misma hora siguiente pero contenido
+    distinto. Con la longitud como clave, la cache devolvia el pronostico
+    calculado para el historial viejo, en silencio.
+    """
+    h = hashlib.sha1()
+    h.update(bytes(seq))
+    h.update(b"|")
+    h.update(bytes(horas))
+    h.update(b"|")
+    h.update(bytes(dweek))
+    return h.hexdigest()
 
 
 def _cargar_instancias():
@@ -60,7 +78,7 @@ def _cargar_instancias():
 
 def top15_agentes(seq, horas, dweek, hora_sig):
     """Ejecuta los 4 agentes y devuelve {nombre: [top15 indices ordenados]}."""
-    clave = (len(seq), hora_sig)
+    clave = (huella_historial(seq, horas, dweek), hora_sig)
     with _cache_lock:
         if clave in _cache_pred:
             return _cache_pred[clave]
