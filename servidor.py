@@ -10,7 +10,7 @@
 
 Sin numpy/scipy funciona con el modelo antiguo (solo librería estándar).
 """
-import os, sys, json, math, webbrowser, threading, subprocess, time, html
+import hashlib, os, sys, json, math, webbrowser, threading, subprocess, time, html
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from datetime import date, datetime, timedelta
@@ -127,6 +127,41 @@ def ahora():
 def vigente(r):
     return not r.get("anulado")
 
+def suspendido(x):
+    return bool(x.get("suspendido"))
+
+def _lineas_bin():
+    with open(HIST, "rb") as f:
+        return [l for l in f.read().splitlines(keepends=True) if l.strip()]
+
+def _huella(lineas_bin, k):
+    return hashlib.sha1(b"".join(lineas_bin[:k])).hexdigest()
+
+def suspender(x, lineas_bin, k):
+    """Deja en espera algo calculado sobre las primeras k líneas del historial.
+
+    Un «deshacer» encadenado quita líneas que ese cálculo usó. Si al volver a
+    anotar el historial queda IDÉNTICO en esas k líneas, el cálculo vuelve a
+    ser válido y se restaura; si cambió, se anula (ver reanudar_suspendidos).
+    Anularlo de entrada dejaba borrar un fallo con dos deshacer seguidos."""
+    if not suspendido(x):
+        x["suspendido"] = {"cuando": ahora(), "requiere_n": k, "requiere_sha1": _huella(lineas_bin, k)}
+
+def reanudar_suspendidos(d):
+    """Tras anotar una línea: restaura o anula lo que esperaba este historial."""
+    lb = _lineas_bin()
+    for x in d["registros"] + d["tripletas"]:
+        if not vigente(x) or not suspendido(x):
+            continue
+        req = x["suspendido"]
+        if len(lb) < req["requiere_n"]:
+            continue                      # aún faltan líneas por volver a anotar
+        if _huella(lb, req["requiere_n"]) == req["requiere_sha1"]:
+            x.setdefault("reanudado", []).append({"cuando": ahora(), "suspendido": req["cuando"]})
+            del x["suspendido"]
+        else:
+            x["anulado"] = {"cuando": ahora(), "motivo": "el dato corregido cambió lo que usó el cálculo"}
+
 def fecha_corta(f):
     d = date.fromisoformat(f)
     hoy = date.today()
@@ -139,6 +174,32 @@ def fin_ventana(f, h):
     for _ in range(VENTANA - 1):
         f, h = siguiente(f, h)
     return f, h
+
+# ------------------------------------------------------ sello del pronóstico
+def modelo_de(info):
+    """Nombre con que se guarda el pronóstico según los pesos que usó (H1).
+
+    Con pesos uniformes (volumen sin pesos, o pesos de un bloque posterior
+    tras un «deshacer») el ensamble es OTRO modelo, no el que se midió en la
+    prueba ciega: se guarda con otro nombre para que el marcador no lo mezcle.
+    """
+    if info.get("frontera_pesos") is None:
+        return prediccion.MODELO_ENSAMBLE + "_sin_pesos"
+    return prediccion.MODELO_ENSAMBLE
+
+def sello(info):
+    """Campos aditivos que dejan comprobar el pronóstico después (H1 y H2).
+
+    hist_sha1/hist_n: huella del historial con que se calculó. El ensamble
+    solo depende de ese contenido; si la huella coincide con las primeras
+    hist_n líneas del historial, el resultado del sorteo NO estaba dentro.
+    pesos_frontera/pesos_vigentes/pesos: qué pesos del ensamble se usaron
+    (no están en el historial, así que se guardan tal cual).
+    """
+    return {k_dst: info.get(k_src) for k_dst, k_src in (
+        ("hist_sha1", "hist_sha1"), ("hist_n", "hist_n"), ("calculado", "calculado"),
+        ("pesos_frontera", "frontera_pesos"), ("pesos_vigentes", "pesos_vigentes"), ("pesos", "pesos"))
+        if info.get(k_src) is not None}
 
 # -------------------------------------------------------------- marcadores
 MODELO_MARCADOR = "ensamble_v2"
@@ -186,12 +247,67 @@ def marcador(d):
     puestos = [p for p in (puesto_ganador(r) for r in res) if p is not None]
     n15 = len(puestos)
     t15 = sum(1 for p in puestos if p <= TOP_N)
+    t5 = sum(1 for p in puestos if p <= 5)
     m = dict(n=n, t3=t3, t1=t1, tasa3=t3/n*100, tasa1=t1/n*100, factor=math.exp(lo),
-             n15=n15, t15=t15)
+             n15=n15, t15=t15, t5=t5)
     if n15:
-        m.update(tasa15=t15/n15*100, puesto_medio=sum(puestos)/n15,
+        m.update(tasa15=t15/n15*100, tasa5=t5/n15*100, puesto_medio=sum(puestos)/n15,
                  p15=cola_binomial(t15, n15, P_AZAR_T15))
     return m
+
+# ------------------------------------------------------------ la jugada
+# Cuántas fichas va a cada puesto del orden congelado. Por qué así
+# (herramientas/resultados/estrategia_top5.md):
+#   * Prueba ciega (3.154 sorteos no vistos): Top-3 12,27 % (equilibrio 10 %),
+#     Top-5 19,50 % (16,7 %), Top-15 49,46 % (50 %). Del 6º al 15º cada puesto
+#     acierta ~3,0 %, por DEBAJO del 3,33 % que pide el pago 30x: pierden plata.
+#   * El 4º y 5º aciertan ~3,6 % cada uno: ganan, pero menos y con menos
+#     seguridad que el 1º-3º (~4,1 %). Kelly para apuestas simultáneas les da
+#     menos de la mitad del monto; 2:1 es la versión redonda.
+# Se juega TODOS los sorteos: elegir sorteos por lo «caliente» que se ve la
+# lista FALLÓ en prueba ciega (hilo 6).
+JUGADA = [(1, 3, 2), (4, 5, 1)]          # (desde, hasta, fichas por animal)
+P_MOD_T5 = 0.1950                         # Top-5 en prueba ciega
+
+def fichas_por_puesto():
+    f = [0] * (K + 1)
+    for a, b, n in JUGADA:
+        for p in range(a, b + 1):
+            f[p] = n
+    return f
+
+ESTRATEGIAS = [("Top-5 escalonado (2-2-2-1-1)", fichas_por_puesto()),
+               ("Top-3 plano", [0] + [1] * 3 + [0] * (K - 3)),
+               ("Top-15 plano", [0] + [1] * 15 + [0] * (K - 15))]
+
+def efecto_correcciones(d):
+    """Pronósticos cuyo resultado se cambió con «deshacer», y cómo quedaría
+    el Top-3 contando el PRIMER valor anotado en vez del corregido."""
+    res = resueltas(d)
+    corr = [r for r in res if r.get("correcciones")]
+    if not corr:
+        return None
+    t3_hoy = sum(1 for r in res if r["salio"] in r["top3"])
+    t3_orig = sum(1 for r in res if (r["correcciones"][0]["salio_anterior"] if r.get("correcciones")
+                                     else r["salio"]) in r["top3"])
+    cambiados = sum(1 for r in corr if r["correcciones"][0]["salio_anterior"] != r["salio"])
+    return dict(n=len(corr), cambiados=cambiados, t3_hoy=t3_hoy, t3_orig=t3_orig, total=len(res))
+
+def economia(d, res=None):
+    """Qué habría dejado cada forma de jugar, con 1 ficha = 1 unidad, sobre
+    los pronósticos puntuables del marcador real (los que tienen orden)."""
+    res = resueltas(d) if res is None else res
+    puestos = [p for p in (puesto_ganador(r) for r in res) if p is not None]
+    n = len(puestos)
+    out = []
+    for nombre, f in ESTRATEGIAS:
+        apostado = sum(f) * n
+        cobrado = sum(PAGO * f[p] for p in puestos)
+        aciertos = sum(1 for p in puestos if f[p] > 0)
+        out.append(dict(nombre=nombre, n=n, aciertos=aciertos, fichas=sum(f),
+                        neto=cobrado - apostado,
+                        roi=(cobrado - apostado) / apostado * 100 if apostado else 0.0))
+    return out
 
 # Tramos del Top-15: dónde cae el ganador dentro del orden que el modelo
 # congeló ANTES del sorteo. Si el orden tuviera valor, los tramos de arriba
@@ -314,7 +430,7 @@ def resolver_tripletas(d, filas):
     """Cierra las tripletas cuya ventana de 12 sorteos ya está completa."""
     cambio = False; cerradas = []
     for t in d["tripletas"]:
-        if not vigente(t) or t.get("estado") != "pendiente":
+        if not vigente(t) or suspendido(t) or t.get("estado") != "pendiente":
             continue
         i = t["n_inicio"]
         if i < len(filas) and (filas[i][0], filas[i][1]) != (t["inicio_fecha"], t["inicio_hora"]):
@@ -358,7 +474,7 @@ def toca_tripleta(d):
 
 def tripleta_en_curso(d, filas):
     """La tripleta automática viva más reciente (la que se está jugando)."""
-    abiertas = [t for t in tripletas_auto(d) if t.get("estado") == "pendiente"]
+    abiertas = [t for t in tripletas_auto(d) if t.get("estado") == "pendiente" and not suspendido(t)]
     return max(abiertas, key=lambda t: t["n_inicio"]) if abiertas else None
 
 def marcador_tripleta(d):
@@ -374,10 +490,15 @@ def marcador_tripleta(d):
 def deshacer():
     """Quita la última línea del historial.
 
-    Registro de solo-añadir: la predicción de ese sorteo NO vuelve a quedar
-    pendiente (su resultado ya se conoce). Se anula conservando lo registrado y
-    deja de contar. También se anulan los pendientes calculados con el dato
-    erróneo y las tripletas cuya ventana contenía ese sorteo."""
+    El pronóstico de ese sorteo se REABRE, no se anula (H3). Se calculó con el
+    historial ANTERIOR a esa línea, que no cambia, así que sigue siendo un
+    pronóstico honesto; lo que estaba mal era el resultado anotado. Anularlo
+    dejaría borrar un fallo del marcador con «deshacer» + volver a anotar el
+    mismo número. El valor anterior queda en `correcciones`, a la vista.
+
+    Sí se anulan los pendientes y las tripletas calculados DESPUÉS del dato
+    erróneo (lo llevaban dentro). Las tripletas anteriores cuya ventana lo
+    contenía se reabren y se vuelven a cerrar con el dato corregido."""
     if not os.path.exists(HIST):
         return "No hay historial.", False
     with open(HIST, encoding="utf-8") as f:
@@ -393,27 +514,51 @@ def deshacer():
     except ValueError:
         return "La última línea no tiene formato válido, no se tocó nada.", False
     idx_quitado = len(cargar()) - 1
+    lb = _lineas_bin()                     # historial ANTES de quitar la línea
     with open(HIST, "w", encoding="utf-8") as f:
         f.writelines(lineas[:-1])
     d = log_cargar()
+    reabierto = False
     for r in d["registros"]:
         if not vigente(r):
             continue
         mismo = r.get("fecha") == fecha and r.get("hora") == hora_idx
-        if r.get("salio") is None or mismo:
-            r["anulado"] = {"cuando": ahora(), "motivo": "deshacer" if mismo else "calculado con el dato deshecho"}
+        if mismo and r.get("salio") is not None:
+            r.setdefault("correcciones", []).append(
+                {"cuando": ahora(), "salio_anterior": r["salio"], "resuelto_anterior": r.get("resuelto")})
+            r["salio"] = None
+            r.pop("resuelto", None)
+            reabierto = True
+        elif r.get("salio") is None and not mismo:
+            # Pendiente del sorteo siguiente: se calculó con el historial
+            # completo de antes de este deshacer.
+            suspender(r, lb, len(lb))
     for t in d["tripletas"]:
         if not vigente(t):
             continue
-        dentro = t["n_inicio"] <= idx_quitado < t["n_inicio"] + VENTANA
-        if t.get("estado") == "pendiente" or dentro:
-            t["anulado"] = {"cuando": ahora(), "motivo": "ventana afectada por deshacer"}
+        if t["n_inicio"] > idx_quitado:
+            # Se generó con esta línea ya en el historial: queda en espera.
+            if t.get("estado") == "resuelta":
+                t.setdefault("correcciones", []).append(
+                    {"cuando": ahora(), "salieron_anterior": t.get("salieron"), "aciertos_anterior": t.get("aciertos")})
+                for k in ("salieron", "aciertos", "base", "resuelto"):
+                    t.pop(k, None)
+                t["estado"] = "pendiente"
+            suspender(t, lb, t["n_inicio"])
+        elif idx_quitado < t["n_inicio"] + VENTANA and t.get("estado") == "resuelta":
+            t.setdefault("correcciones", []).append(
+                {"cuando": ahora(), "salieron_anterior": t.get("salieron"), "aciertos_anterior": t.get("aciertos")})
+            for k in ("salieron", "aciertos", "base", "resuelto"):
+                t.pop(k, None)
+            t["estado"] = "pendiente"
     if [fecha, hora_idx] not in d["sorteos_conocidos"]:
         d["sorteos_conocidos"].append([fecha, hora_idx])
     log_guardar(d)
     hora_leg = HORAS[hora_idx] if 0 <= hora_idx < 12 else hora_txt
-    return (f"Se deshizo {fecha_corta(fecha)} {hora_leg}: {num} {ANIM.get(num, '?')}. Escribe el número correcto. "
-            f"Ese sorteo y las tripletas que lo incluían ya no cuentan en los marcadores."), True
+    extra = (" Su pronóstico sigue en el marcador y se puntuará con el número que anotes ahora."
+             if reabierto else "")
+    return (f"Se deshizo {fecha_corta(fecha)} {hora_leg}: {num} {ANIM.get(num, '?')}. "
+            f"Escribe el número correcto.{extra}"), True
 
 # ------------------------------------------------------------- herramientas
 HERRAMIENTAS = {
@@ -809,20 +954,26 @@ def html_prediccion(e, calculando, pend, aviso_modelo):
         if PRED is not None and PRED.error:
             cuerpo += f'<div class="msg bad">Error: {esc(PRED.error[-400:])}</div>'
         return f'<section class="card" id="sorteo">{cab}{cuerpo}</section>'
-    orden = e["orden"][:3]
+    # El orden que se muestra es el congelado del pronóstico, el que se puntúa.
+    orden = e["orden"]
     if pend is not None:
-        orden = pend["top3"]
+        orden = pend.get("orden_completo") or pend["top3"]
+    fichas = fichas_por_puesto()
     maxp = 0.07
     filas = ""
-    for r, i in enumerate(orden, 1):
+    for r, i in enumerate(orden[:5], 1):
         p = e["sc"][i]
+        fx = fichas[r]
         filas += (f'<div class="pick"><span class="rk">{r}</span><span class="num">{POS[i]}</span>'
-                  f'<div><div class="nm">{ANIM[POS[i]].title()}</div>'
+                  f'<div><div class="nm">{ANIM[POS[i]].title()} '
+                  f'<small>· {fx} ficha{"s" if fx != 1 else ""}</small></div>'
                   f'<div class="bar"><i style="width:{min(100, p/maxp*100):.0f}%"></i>'
                   f'<em style="left:{P0/maxp*100:.0f}%" title="azar"></em></div></div>'
                   f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
-    nota = ('<p class="note">La raya gris marca el azar (2,63%). Top-3 acierta ~12% de las veces: '
-            'es normal fallar 7 de cada 8.</p>')
+    nota = ('<p class="note">La jugada: <b>2 fichas</b> a cada uno de los 3 primeros (la base, ventaja probada) y '
+            '<b>1 ficha</b> al 4º y al 5º (refuerzo: gana en los datos pero sin certeza estadística). 8 fichas; cobra '
+            '~1 de cada 5 sorteos: 60 si sale uno de los 3 primeros, 30 si sale el 4º o el 5º. '
+            'La raya gris marca el azar (2,63%).</p>')
     top15 = html_top15(e, pend)
     return f'<section class="card" id="sorteo">{cab}{filas}{nota}{aviso_modelo}{top15}</section>'
 
@@ -835,7 +986,11 @@ def html_top15(e, pend=None):
     filas = ""
     for r, i in enumerate(orden[:15], 1):
         p = e["sc"][i]
-        filas += (f'<div class="pick"><span class="rk">{r}</span><span class="num">{POS[i]}</span>'
+        if r == 6:
+            filas += ('<p class="note"><b>Del 6º al 15º no se juegan:</b> en prueba ciega cada uno acertó '
+                      '~3,0%, menos del 3,33% que pide el pago 30x. Se muestran solo como referencia.</p>')
+        atenuado = ' style="opacity:.55"' if r > 5 else ""
+        filas += (f'<div class="pick"{atenuado}><span class="rk">{r}</span><span class="num">{POS[i]}</span>'
                   f'<div><div class="nm">{ANIM[POS[i]].title()}</div></div>'
                   f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo</summary>{filas}</details>')
@@ -937,13 +1092,21 @@ def html_marcadores(d):
               f'<div class="kpi"><small>Top-1</small><b>{num(m["tasa1"])}%</b>'
               f'<span>{plural(m["t1"], "acierto", "aciertos")} · umbral 30x 3,33%</span></div>')
         if m.get("n15"):
-            s1 += (f'<div class="kpi"><small>Top-15</small><b>{num(m["tasa15"])}%</b>'
-                   f'<span>{m["t15"]} de {m["n15"]} · azar 39,5%</span></div>')
+            s1 += (f'<div class="kpi"><small>Top-5</small><b>{num(m["tasa5"])}%</b>'
+                   f'<span>{m["t5"]} de {m["n15"]} · azar 13,2% · modelo 19,5%</span></div>'
+                   f'<div class="kpi"><small>Top-15</small><b>{num(m["tasa15"])}%</b>'
+                   f'<span>{m["t15"]} de {m["n15"]} · azar 39,5% · equilibrio 50%</span></div>')
         s1 += (f'<div class="kpi"><small>Lectura</small><b style="font-size:14px">{lect}</b>'
                f'<span>factor {num(m["factor"], 2)} : 1</span></div></div>')
         if m.get("n15") and m["n15"] < m["n"]:
             s1 += (f'<p class="note">El Top-15 solo puede puntuarse en {m["n15"]} de las {m["n"]} predicciones: '
                    'las más viejas se guardaron sin el orden completo de los 38, y contarlas como fallo sería mentir.</p>')
+        ce = efecto_correcciones(d)
+        if ce:
+            s1 += (f'<p class="note"><b>Correcciones:</b> {ce["n"]} resultado{"s" if ce["n"] != 1 else ""} se '
+                   f'deshizo y se volvió a anotar ({ce["cambiados"]} con un número distinto). Con los números '
+                   f'anotados la primera vez el Top-3 sería {ce["t3_orig"]} de {ce["total"]}; ahora es '
+                   f'{ce["t3_hoy"]} de {ce["total"]}.</p>')
         if m["n"] < 1000:
             s1 += f'<p class="note">Con {m["n"]} predicciones aún no se puede concluir: hacen falta 1.000 o más.</p>'
     mt = marcador_tripleta(d)
@@ -959,9 +1122,25 @@ def html_marcadores(d):
     return (f'<section class="card" id="marcadores"><div class="grid" style="gap:18px">'
             f'<div><div class="hh"><h2>Marcador sorteo</h2></div>{s1}</div>'
             f'<div><div class="hh"><h2>Marcador tripleta</h2></div>{s2}</div></div>'
+            f'{html_economia(d)}'
             f'{html_temperatura(d)}'
             f'{html_top15_reparto(d)}'
             f'<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p></section>')
+
+def html_economia(d):
+    """Plata real: qué habría dejado cada forma de jugar en TU marcador."""
+    ec = economia(d)
+    if not ec or not ec[0]["n"]:
+        return ""
+    filas = "".join(
+        f'<div class="dist"><span class="dl">{esc(x["nombre"])}</span>'
+        f'<span class="dv"><b>{x["neto"]:+,} fichas</b> ({x["roi"]:+.1f}%)'
+        f'<small>{x["fichas"]} fichas por sorteo · cobró en {x["aciertos"]} de {x["n"]}</small></span></div>'
+        for x in ec)
+    return ('<div style="margin-top:18px"><div class="hh"><h2>Cada forma de jugar, con plata</h2>'
+            f'<span>{ec[0]["n"]} sorteos con orden guardado</span></div>{filas}'
+            '<p class="note">Lo esperado a largo plazo (prueba ciega, 3.154 sorteos): Top-5 escalonado ≈ +19 % (+10 a +28), '
+            'Top-3 ≈ +23 %, Top-15 ≈ −1 %. Con menos de ~1.000 sorteos estas cifras bailan mucho por pura suerte.</p></div>')
 
 def html_temperatura(d):
     """Temperatura del Top-15: la racha de fallos en curso, contra lo normal.
@@ -1090,14 +1269,15 @@ def html_resumen(e, d, modelo, calculando):
     if calculando:
         partes.append("<p>⏳ Calculando la jugada del próximo sorteo; en unos segundos te la digo en claro.</p>")
     else:
-        orden = e["orden"][:3]
-        trio = ", ".join(f"<b>{POS[i]}</b> {ANIM[POS[i]].title()}" for i in orden)
+        orden = e["orden"][:5]
+        trio = ", ".join(f"<b>{POS[i]}</b> {ANIM[POS[i]].title()}" for i in orden[:3])
+        par = " y ".join(f"<b>{POS[i]}</b> {ANIM[POS[i]].title()}" for i in orden[3:5])
         if modelo != "hazard_actual":
-            s3 = sum(e["sc"][i] for i in orden)
             partes.append(
-                f"<p>🎯 <b>La jugada de ahora:</b> {trio}. Juntos tienen <b>{s3*100:.1f}%</b> de salir: "
-                f"aciertas más o menos <b>1 de cada {max(2, round(1/s3))}</b> sorteos. Si juegas los 3 y sale uno, "
-                f"cobras {PAGO} por 3 jugadas: necesitas acertar más de 1 de cada 10 para no perder plata.</p>")
+                f"<p>🎯 <b>La jugada de ahora:</b> 2 fichas a {trio}; 1 ficha a {par}. Son 8 fichas. "
+                f"Si sale uno de los 3 primeros cobras {2*PAGO}; si sale el 4º o el 5º, {PAGO}. "
+                f"En prueba ciega esto cobró 1 de cada 5 sorteos y dejó ≈ +19% de lo apostado (entre +10% y +28%). "
+                f"Lo probado de verdad es el Top-3; el 4º y 5º son refuerzo.</p>")
         else:
             partes.append(f"<p>🎯 <b>La jugada de ahora:</b> {trio} (modelo antiguo, sin porcentajes calibrados).</p>")
     m = marcador(d)
@@ -1128,9 +1308,9 @@ def html_resumen(e, d, modelo, calculando):
     cons = _leer_consejo()
     if cons:
         partes.append(f"<p>🧠 <b>El consejo de las 5 estrategias</b> (corre solo cada noche) vota: <b>{', '.join(cons)}</b> para el próximo sorteo.</p>")
-    partes.append('<p class="note">Reglas del consejo: apuesta plana en Top-3 · no amplíes a 5-10 (medido en tus propios datos: se pierde) · '
-                  "no subas el monto cuando el porcentaje se vea alto (no acierta más) · registra todos los sorteos y evita «Deshacer» "
-                  "(cada deshacer anula tripletas).</p>")
+    partes.append('<p class="note">Reglas: juega el Top-5 escalonado en TODOS los sorteos · no pases del 5º (del 6º al 15º '
+                  "cada animal pierde plata) · no subas el monto cuando el porcentaje se vea alto ni saltes sorteos que se "
+                  "ven «fríos» (probado en prueba ciega: no acierta más) · el tamaño de la ficha lo dice gestion_banca.py.</p>")
     return ('<section class="card" id="resumen"><div class="hh"><h2>En palabras claras</h2>'
             f"<span>{esc(fecha_corta(e['pf']))} · {HORAS[e['ph']]}</span></div>{''.join(partes)}</section>")
 
@@ -1189,8 +1369,8 @@ def render():
             p, info = res
             e["sc"] = [float(x) for x in p]
             e["orden"] = sorted(range(K), key=lambda i: (-e["sc"][i], i))
-            modelo = prediccion.MODELO_ENSAMBLE
-            if not info.get("pesos_vigentes"):
+            modelo = modelo_de(info)
+            if info.get("frontera_pesos") is not None and not info.get("pesos_vigentes"):
                 aviso_modelo = ('<div class="tip">Recalculando en segundo plano los pesos del ensamble '
                                 '(1 a 3 min); mientras, se usan los del bloque anterior.</div>')
         if PRED is not None and PRED.error:
@@ -1202,7 +1382,7 @@ def render():
     pend = None
     if not calculando:
         for r in d["registros"]:
-            if vigente(r) and r.get("salio") is None:
+            if vigente(r) and not suspendido(r) and r.get("salio") is None:
                 if (r["fecha"], r["hora"]) == (e["pf"], e["ph"]) and pend is None:
                     pend = r
                 else:
@@ -1211,8 +1391,18 @@ def render():
             pend = {"fecha": e["pf"], "hora": e["ph"], "top3": e["orden"][:3],
                     "orden_completo": list(e["orden"]), "salio": None,
                     "scores": [round(float(x), 6) for x in e["sc"]],
-                    "creado": ahora(), "modelo": modelo}
+                    "creado": ahora(), "modelo": modelo, **sello(info)}
             d["registros"].append(pend); cambio = True
+    # Lo que se muestra es SIEMPRE el pronóstico congelado que se puntúa: tras
+    # un deshacer o un reinicio el cálculo del momento puede no coincidir.
+    if pend is not None:
+        if pend.get("scores"):
+            e["sc"] = [float(x) for x in pend["scores"]]
+        if pend.get("orden_completo"):
+            e["orden"] = list(pend["orden_completo"])
+        if str(pend.get("modelo", "")).endswith("_sin_pesos"):
+            aviso_modelo = ('<div class="msg bad">Este pronóstico se hizo con el ensamble SIN pesos (uniformes): '
+                            'no es el modelo medido y NO cuenta en el marcador.</div>' + aviso_modelo)
 
     tri_actual = None
     for t in d["tripletas"]:
@@ -1284,19 +1474,20 @@ def registrar(num):
     # al resultado, sigue siendo honesto. Si no hay caché, no hubo pronóstico.
     pend = None
     for r in d["registros"]:
-        if vigente(r) and r.get("salio") is None and r["fecha"] == e["pf"] and r["hora"] == e["ph"]:
+        if (vigente(r) and not suspendido(r) and r.get("salio") is None
+                and r["fecha"] == e["pf"] and r["hora"] == e["ph"]):
             pend = r
             break
     if pend is None and PRED is not None and [e["pf"], e["ph"]] not in d["sorteos_conocidos"]:
         res = PRED.obtener(HIST, e["pf"], e["ph"])
         if res is not None:
-            p, _info = res
+            p, info = res
             sc = [float(x) for x in p]
             orden = sorted(range(K), key=lambda i: (-sc[i], i))
             pend = {"fecha": e["pf"], "hora": e["ph"], "top3": orden[:3],
                     "orden_completo": orden, "salio": None,
                     "scores": [round(float(x), 6) for x in sc],
-                    "creado": ahora(), "modelo": prediccion.MODELO_ENSAMBLE}
+                    "creado": ahora(), "modelo": modelo_de(info), **sello(info)}
             d["registros"].append(pend)
     if pend is not None:
         pend["salio"] = IDX[num]; pend["resuelto"] = ahora()
@@ -1310,6 +1501,7 @@ def registrar(num):
         log_guardar(d)
         return (f"ERROR al guardar en el volumen: {ex}. NO se registró el resultado; "
                 f"reintenta. Si persiste, el contenedor está sin escritura.", "bad")
+    reanudar_suspendidos(d)
     _, cerradas = resolver_tripletas(d, cargar())
     log_guardar(d)
     texto = f'{HORAS[e["ph"]]} → <b>{num} {ANIM[num].title()}</b> · {estado_txt}'

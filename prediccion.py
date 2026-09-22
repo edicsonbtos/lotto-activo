@@ -131,7 +131,9 @@ class Predictor:
     def obtener(self, hist, fecha_sig, hora_sig):
         """Devuelve (probs, info) o None si todavía se está calculando."""
         with open(hist, "rb") as f:
-            clave = hashlib.sha1(f.read()).hexdigest() + f"|{fecha_sig}|{hora_sig}"
+            crudo = f.read()
+        huella = hashlib.sha1(crudo).hexdigest()
+        clave = huella + f"|{fecha_sig}|{hora_sig}"
         with self._lock:
             if clave in self._cache:
                 return self._cache[clave]
@@ -143,7 +145,19 @@ class Predictor:
             try:
                 t0 = time.time()
                 p, info = self.calcular(hist, fecha_sig, hora_sig)
+                # calcular() vuelve a leer el archivo: si alguien anotó o
+                # deshizo entre medias, lo calculado no corresponde a la huella
+                # y se descarta (el próximo render lo rehace).
+                with open(hist, "rb") as f:
+                    if hashlib.sha1(f.read()).hexdigest() != huella:
+                        return
                 info["segundos"] = round(time.time() - t0, 1)
+                # Huella del historial con que se calculó: el pronóstico solo
+                # depende de ese contenido, así que quien tenga el historial
+                # puede comprobar que el resultado NO estaba dentro (H2).
+                info["hist_sha1"] = huella
+                info["hist_n"] = sum(1 for l in crudo.splitlines() if l.strip())
+                info["calculado"] = time.strftime("%Y-%m-%dT%H:%M:%S")
                 with self._lock:
                     self._cache = {clave: (p, info)}
             except Exception:
