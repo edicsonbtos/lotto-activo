@@ -9,8 +9,10 @@ No necesita numpy ni scipy. Corre con Python puro.
 
 Uso:
     python gestion_banca.py --banca 1000
-    python gestion_banca.py --banca 1000 --p3 0.134     (prob. top-3 del sorteo actual)
-    python gestion_banca.py --config                     (ver/ajustar parametros)
+    python gestion_banca.py --banca 985 --perdi 15       (anotar lo perdido hoy)
+
+La jugada es el TOP-5 ESCALONADO: 2 fichas a cada uno de los puestos 1-3 y
+1 ficha a los puestos 4-5 (8 fichas). Ver herramientas/resultados/estrategia_top5.md.
 """
 import json, os, math, argparse, datetime
 
@@ -20,11 +22,18 @@ ESTADO = os.path.join(AQUI, "estado_banca.json")
 
 # ---------------------------------------------------------------- parametros
 PAGO          = 30      # paga 30x sobre lo apostado a UN animal
-N_JUGADAS     = 3       # apostamos el Top-3 completo, monto igual en cada uno
-P3_MEDIDA     = 0.12268 # acierto Top-3 en prueba ciega (final.txt, n=3122)
-P3_IC_BAJO    = 0.1120  # limite inferior IC95 -> el que usamos para Kelly (conservador)
+FICHAS        = [2, 2, 2, 1, 1]   # fichas por puesto 1..5 (Top-5 escalonado)
+# Los puestos 1-3 son la BASE PROBADA (IC95 entero por encima del equilibrio).
+# Los puestos 4-5 son un REFUERZO no probado: 3,6 % c/u en prueba ciega y en
+# desarrollo (equilibrio 3,33 %), pero z=1,27. Van a media ficha porque eso es
+# lo que da Kelly con la tasa medida; si quieres jugar solo lo probado, pon
+# FICHAS = [1, 1, 1, 0, 0].
+P3_MEDIDA     = 0.12268 # acierto Top-3 en prueba ciega (n=3154)
+P3_IC_BAJO    = 0.1117  # limite inferior IC95 del Top-3 -> Kelly conservador
 FRAC_KELLY    = 0.25    # 1/4 de Kelly. NO subir sin leer la seccion RIESGO del informe.
-UMBRAL_ABST   = 0.1100  # si la suma de prob. del Top-3 baja de esto, NO se apuesta
+# Ya NO hay umbral de abstencion por la probabilidad del Top-3: elegir sorteos
+# por lo "caliente" de la lista FALLO en prueba ciega (hilo 6, 2026-09-22:
+# los sorteos calientes acertaron 10,9 % y los frios 13,0 %). Se juegan todos.
 TOPE_DIARIO   = 0.06    # se para el dia tras perder este % de la banca inicial del dia
 TOPE_TOTAL    = 0.25    # se para TODO tras caer este % desde el maximo historico
 MIN_APUESTA   = 1.0     # unidad minima que acepta tu banca (redondeo)
@@ -51,28 +60,25 @@ VIGILANCIA = {
     "umbral_meses": 3,
 }
 
-BE = N_JUGADAS / PAGO   # punto de equilibrio = 3/30 = 10%
-B  = (PAGO - N_JUGADAS) / N_JUGADAS   # odds netas por unidad apostada = 9
+BE = 3 / PAGO           # equilibrio del Top-3 (para el monitor SPRT) = 10%
+TOTAL_FICHAS = sum(FICHAS)          # 8
 
 
 # ---------------------------------------------------------------- nucleo
-def kelly(p, b=B, frac=FRAC_KELLY):
-    """Fraccion de banca a arriesgar por sorteo. 0 si no hay ventaja."""
-    q = 1.0 - p
-    f = (b * p - q) / b
-    return max(0.0, f * frac)
+def kelly(p=P3_IC_BAJO, frac=FRAC_KELLY):
+    """Fraccion de banca para la BASE (Top-3, apuesta plana). 0 si no hay ventaja.
+
+    El tamano se decide solo con lo probado (limite bajo del IC del Top-3); el
+    refuerzo 4-5 va encima, en la proporcion de FICHAS."""
+    b = (PAGO - 3) / 3
+    return max(0.0, (b * p - (1 - p)) / b * frac)
 
 
-def plan_sorteo(banca, p3=None, banca_inicio_dia=None, perdido_hoy=0.0, maximo=None):
+def plan_sorteo(banca, banca_inicio_dia=None, perdido_hoy=0.0, maximo=None):
     """Devuelve el plan de apuesta para UN sorteo."""
-    # TOPE DE CALIBRACION: la probabilidad que el modelo dice de si mismo no
-    # esta calibrada; si se sobreestima, Kelly sobreapuesta. Se permite que
-    # BAJE el tamano (p3 bajo -> abstencion) pero nunca que lo suba por encima
-    # de la tasa medida en prueba ciega (limite inferior del IC95).
-    p_ref = min(p3, P3_IC_BAJO) if p3 is not None else P3_IC_BAJO
     maximo = maximo or banca
-    r = {"apostar": False, "motivo": "", "p3": p_ref, "por_animal": 0.0,
-         "total": 0.0, "ganancia_si_acierta": 0.0, "ev": 0.0}
+    r = {"apostar": False, "motivo": "", "ficha": 0.0, "total": 0.0,
+         "gana_top3": 0.0, "gana_45": 0.0, "ev": 0.0}
 
     # --- cortacircuitos, en orden de gravedad
     caida = (maximo - banca) / maximo if maximo > 0 else 0.0
@@ -84,30 +90,37 @@ def plan_sorteo(banca, p3=None, banca_inicio_dia=None, perdido_hoy=0.0, maximo=N
         r["motivo"] = ("PARADA DEL DIA: llevas perdido %.2f de %.2f permitidos hoy. "
                        "Vuelve manana." % (perdido_hoy, TOPE_DIARIO * banca_inicio_dia))
         return r
-    if p_ref < UMBRAL_ABST:
-        r["motivo"] = ("ABSTENERSE: el modelo da %.2f%% al Top-3 y el punto de equilibrio "
-                       "es %.2f%%. Sin margen suficiente." % (p_ref * 100, BE * 100))
-        return r
 
-    f = kelly(p_ref)
+    f = kelly()
     if f <= 0:
         r["motivo"] = "ABSTENERSE: sin ventaja a este precio."
         return r
 
-    total = banca * f
-    por = math.floor(total / N_JUGADAS / MIN_APUESTA) * MIN_APUESTA
-    if por < MIN_APUESTA:
-        r["motivo"] = ("Banca insuficiente: Kelly pide %.2f por animal y tu minimo es %.2f. "
+    fichas_base = sum(FICHAS[:3])
+    ficha = math.floor(banca * f / fichas_base / MIN_APUESTA) * MIN_APUESTA
+    if ficha < MIN_APUESTA:
+        # Banca chica: el Top-3 plano solo necesita 3 fichas en vez de 8.
+        por = math.floor(banca * f / 3 / MIN_APUESTA) * MIN_APUESTA
+        if por >= MIN_APUESTA:
+            r.update(apostar=True, ficha=0.0, total=3 * por, solo_top3=por,
+                     gana_top3=por * PAGO - 3 * por, gana_45=0.0,
+                     ev=(P3_MEDIDA * PAGO - 3) * por,
+                     motivo=("Banca chica para el Top-5 (necesitaria ~%.0f). Apostar %.2f a CADA uno "
+                             "de los puestos 1, 2 y 3, nada al 4 y 5." % (MIN_APUESTA * fichas_base / f, por)))
+            return r
+        r["motivo"] = ("Banca insuficiente: Kelly pide una ficha de %.2f y tu minimo es %.2f. "
                        "No apuestes por debajo del minimo, rompe el dimensionamiento."
-                       % (total / N_JUGADAS, MIN_APUESTA))
+                       % (banca * f / fichas_base, MIN_APUESTA))
         return r
 
-    total = por * N_JUGADAS
-    r.update(apostar=True, por_animal=por, total=total,
-             ganancia_si_acierta=por * PAGO - total,
-             ev=(p_ref * por * PAGO) - total,
-             motivo="Apostar %.2f a CADA uno de los 3 animales (%.2f en total, %.2f%% de la banca)."
-                    % (por, total, total / banca * 100))
+    total = ficha * TOTAL_FICHAS
+    ev_ficha = (P3_MEDIDA * FICHAS[0] * PAGO + 0.0723 * FICHAS[3] * PAGO) / TOTAL_FICHAS - 1   # prueba ciega
+    r.update(apostar=True, ficha=ficha, total=total,
+             gana_top3=FICHAS[0] * ficha * PAGO - total, gana_45=FICHAS[3] * ficha * PAGO - total,
+             ev=ev_ficha * total,
+             motivo=("Apostar %.2f a CADA uno de los puestos 1, 2 y 3 (base probada) y %.2f al 4 y "
+                     "al 5 (refuerzo no probado). %.2f en total, %.2f%% de la banca."
+                     % (FICHAS[0] * ficha, FICHAS[3] * ficha, total, total / banca * 100)))
     return r
 
 
@@ -175,17 +188,25 @@ def informe(banca, p3=None):
              % (e["perdido_hoy"], TOPE_DIARIO * e["banca_inicio_dia"]))
     L.append("")
 
-    p = plan_sorteo(banca, p3, e["banca_inicio_dia"], e["perdido_hoy"], e["maximo"])
+    p = plan_sorteo(banca, e["banca_inicio_dia"], e["perdido_hoy"], e["maximo"])
     L.append(" >> " + p["motivo"])
-    if p["apostar"]:
+    if p3 is not None:
+        L.append("    (--p3 ya no se usa: saltar sorteos por su porcentaje fallo en prueba ciega)")
+    if p.get("solo_top3"):
         L.append("")
-        L.append("    Por animal ......... %10.2f" % p["por_animal"])
+        L.append("    Puestos 1-2-3 ...... %10.2f  cada uno" % p["solo_top3"])
+        L.append("    Si acierta gana .... %10.2f  (neto)" % p["gana_top3"])
+        L.append("    Valor esperado ..... %+10.2f  (prueba ciega)" % p["ev"])
+    elif p["apostar"]:
+        L.append("")
+        L.append("    Puestos 1-2-3 ...... %10.2f  cada uno" % (FICHAS[0] * p["ficha"]))
+        L.append("    Puestos 4-5 ........ %10.2f  cada uno" % (FICHAS[3] * p["ficha"]))
         L.append("    Total en riesgo .... %10.2f" % p["total"])
-        L.append("    Si acierta gana .... %10.2f  (neto)" % p["ganancia_si_acierta"])
-        L.append("    Valor esperado ..... %+10.2f  (%+.1f%% de lo apostado)"
+        L.append("    Si sale 1-2-3 gana . %10.2f  (neto)" % p["gana_top3"])
+        L.append("    Si sale 4-5 gana ... %10.2f  (neto)" % p["gana_45"])
+        L.append("    Valor esperado ..... %+10.2f  (%+.1f%% de lo apostado; IC95 aprox. +10%% a +28%%)"
                  % (p["ev"], p["ev"] / p["total"] * 100))
-        L.append("    Prob. de acertar ... %9.2f%%   -> fallaras %.0f de cada 10 sorteos"
-                 % (p["p3"] * 100, (1 - p["p3"]) * 10))
+        L.append("    Cobras en ~1 de cada 5 sorteos (19,5%); fallar 10 seguidos es normal.")
     L.append("")
 
     m = leer_marcador()
