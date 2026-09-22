@@ -185,8 +185,40 @@ no es fuertemente negativo, la anti-repetición se debilitó; (c) tasa de repeti
    bin equivocado. Impacto medido: el "00" está en el top-15 en **43,2 %** de los sorteos de
    desarrollo; todas las tasas de acierto y EV de la Tarea C están **subestimadas** por este
    cupo regalado, y el azar real es 1/37 (2,70 %), no 1/38 (2,63 %).
-4. **Acción (post-SPRT, como se acordó)**: fusión 00→0 en la carga (K=37), reentrenar y
-   reevaluar con `lotto_eval.py` en desarrollo. No se tocó nada del modelo en esta jornada.
+4. ~~**Acción (post-SPRT, como se acordó)**: fusión 00→0 en la carga (K=37), reentrenar y
+   reevaluar con `lotto_eval.py` en desarrollo.~~ **ANULADA — NO EJECUTAR.** Ver D-BIS.
+   No se tocó nada del modelo en esta jornada.
+
+### D-BIS — CORRECCIÓN (2026-09-22): la Tarea D se equivocó, BALLENA (00) es real
+
+La Tarea D concluyó que "00" era un bin fantasma porque confió en el espejo de terceros
+`datos_multiloteria/lottoactivo.csv`. **Ese espejo es el que está mal**: tiene
+`numero='0' / animal='Delfín'` 100 veces, **cero filas de Ballena** y `n_tablero=37`.
+Es el mismo defecto que motivó poner la fuente oficial primero en `auto_resultado.py`:
+el espejo no solo copia tarde, copia mal.
+
+Evidencia a favor de que el tablero tiene 38 figuras y 00 = BALLENA:
+
+| comprobación | resultado |
+|---|---|
+| Feed del operador (`scraping/muestras/oficial_2026-09-03.json`) | `name=Ballena, number='00'`, distinta de Delfín |
+| `historial.txt` vs fuente oficial, 20 slots comparables | **20 coinciden, 0 difieren** |
+| Frecuencia de "00" por mes (2026) | 8–14/mes, lo esperado para 1/38 |
+| "00" en desarrollo [2000, 9357) | 190 obs. vs 193,6 esp., **z = −0,26**, puesto 26/38 |
+
+**Consecuencias:**
+
+1. **La fusión 00→0 (K=37) queda anulada.** Ejecutarla fusionaría dos animales reales y
+   dejaría al modelo incapaz de pronosticar BALLENA para siempre. K=38 es correcto.
+2. **Nada que reentrenar.** El bin 00 está sano y los ~339 sorteos de Delfín NO entrenaron
+   en el bin equivocado: ambos tokens son legítimos y están bien registrados.
+3. **Las tasas y EV de la Tarea C NO están subestimadas.** No hay cupo regalado en el
+   top-15: el 53,07 % es la cifra real, sin margen escondido. El azar de referencia sigue
+   siendo 1/38 (2,63 %), no 1/37.
+4. El "00 en el top-15 el 43,2 % de los sorteos" no es un defecto: es el modelo rankeando
+   un animal real algo por encima de la media (39,5 %).
+
+Verificado con `scraping/muestras/oficial_*.json` (horas 0-based, 0 = 8:00 AM).
 
 ---
 
