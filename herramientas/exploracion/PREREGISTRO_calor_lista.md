@@ -1,7 +1,41 @@
 # PREREGISTRO — Selección de sorteos por el calor de la lista
 
 **Fecha de congelación:** 2026-09-22
-**Escrito ANTES de mirar el tramo de prueba.** `registro_final.jsonl` va por 4 miradas.
+**Escrito ANTES de mirar el tramo de prueba.** `registro_final.jsonl` iba por 4 miradas.
+
+---
+
+> ## ⛔ RESULTADO: **FALLA**. La regla queda descartada (2026-09-22)
+>
+> Prueba ciega sobre `[9357, 12511)`, n = 3.154. Mirada nº 5, registrada.
+>
+> | Top-N | caliente | fría | diferencia | z | p |
+> |---|---|---|---|---|---|
+> | **3 (principal)** | **10,91 %** (119/1091) | **12,99 %** (268/2063) | **−2,08 pp** | **−1,74** | 0,959 |
+> | 5 | 19,93 % | 19,26 % | +0,67 pp | 0,46 | 0,324 |
+> | 15 | 50,79 % | 48,41 % | +2,38 pp | 1,33 | 0,092 |
+>
+> En Top-3 el efecto **se invirtió**: la mitad caliente acertó menos que la fría.
+> No es que el efecto fuera menor de lo medido — es que no existía. Lo de
+> desarrollo era ruido, pese a ser consistente en tres Top-N y pasar Bonferroni.
+>
+> Ninguno de los dos criterios se cumple. **No se reintenta con otro umbral.**
+>
+> ### Hallazgo secundario, no buscado
+>
+> El tramo ciego degrada todo, y al Top-15 lo tumba por debajo del equilibrio:
+>
+> | | desarrollo | prueba ciega | equilibrio |
+> |---|---|---|---|
+> | Top-3 | 12,89 % | 12,27 % | 10,0 % ✔ |
+> | Top-5 | 20,25 % | 19,50 % | 16,7 % ✔ |
+> | Top-15 | 53,07 % | **49,46 %** | 50,0 % ✘ |
+>
+> Es lo que la Tarea C anticipó ("~50,6 % ≈ equilibrio"), un poco peor aún.
+> **El Top-15 no es rentable fuera de muestra.** Top-3 se mantiene, jugando
+> todos los sorteos y sin seleccionar por calor.
+>
+> Lo de abajo queda tal como se escribió, antes de saber nada de esto.
 
 ---
 
