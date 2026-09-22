@@ -214,6 +214,74 @@ def analisis_top15(d, res=None):
                            azar=azar*100, ventaja=veces/n - azar))
     return dict(n=n, tramos=tramos, puesto_medio=sum(puestos)/n, puesto_azar=(K + 1) / 2)
 
+P_MOD_T15 = 0.5307   # Top-15 del ensamble_v2 medido walk-forward en desarrollo
+
+def prob_racha(k, n, p=P_MOD_T15):
+    """P(ver una racha de >= k fallos EN ALGÚN punto de n sorteos) si el modelo
+    está sano.
+
+    La corrección por «en algún punto» es el corazón del asunto. Una racha de
+    3 fallos seguidos tiene por sí sola un 10 % de probabilidad, pero en 78
+    sorteos hay decenas de sitios donde puede empezar una, así que verla es
+    casi seguro. Avisar por la racha suelta sería gritar en falso una y otra
+    vez; por eso el umbral sube con el número de sorteos jugados.
+
+    Número esperado de rachas de longitud >= k: q^k * (1 + (n-k) * p), porque
+    una racha o empieza en el primer sorteo o empieza justo después de un
+    acierto. De ahí P ≈ 1 - exp(-esperadas) (aproximación de Poisson, verificada
+    contra simulación: n=18, k=9 da 0,0064 por las dos vías).
+    """
+    if k <= 0 or n <= 0:
+        return 1.0
+    q = 1.0 - p
+    esperadas = q ** k * (1 + max(0, n - k) * p)
+    return 1.0 - math.exp(-esperadas)
+
+def temperatura_top15(d):
+    """Racha actual de fallos del Top-15, puesta en escala contra lo normal.
+
+    Devuelve None si aún no hay pronósticos puntuables por Top-15.
+    """
+    puestos = [p for p in (puesto_ganador(r) for r in resueltas(d)) if p is not None]
+    n = len(puestos)
+    if not n:
+        return None
+    racha = 0
+    for p in reversed(puestos):
+        if p > TOP_N:
+            racha += 1
+        else:
+            break
+    prob = prob_racha(racha, n) if racha else 1.0
+    # Umbrales dinámicos: la racha más corta que ya sería rara (<10 %) y la que
+    # sería francamente improbable (<1 %) con los sorteos jugados hasta hoy.
+    ojo = alerta = None
+    for k in range(1, n + 2):
+        pk = prob_racha(k, n)
+        if ojo is None and pk < 0.10:
+            ojo = k
+        if pk < 0.01:
+            alerta = k
+            break
+    if racha == 0:
+        nivel, etiqueta = "ok", "NORMAL"
+    elif alerta is not None and racha >= alerta:
+        nivel, etiqueta = "alerta", "ALERTA"
+    elif ojo is not None and racha >= ojo:
+        nivel, etiqueta = "ojo", "INUSUAL"
+    else:
+        nivel, etiqueta = "ok", "NORMAL"
+    # 5 puntos: cuanto más improbable la racha, más encendidos.
+    for i, corte in enumerate((0.50, 0.10, 0.05, 0.01)):
+        if prob >= corte:
+            puntos = i + 1
+            break
+    else:
+        puntos = 5
+    return dict(racha=racha, n=n, prob=prob, ojo=ojo, alerta=alerta,
+                nivel=nivel, etiqueta=etiqueta, puntos=puntos,
+                sola=(1 - P_MOD_T15) ** racha if racha else 1.0)
+
 def analisis_reciente(d, filas, cuantos=48):
     """Estado de acierto en los últimos `cuantos` sorteos ya resueltos.
 
@@ -636,6 +704,14 @@ table.hist th{text-align:left;color:var(--muted);font-weight:600;padding:7px 9px
 table.hist td{padding:7px 9px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums}
 table.hist tr:last-child td{border-bottom:none}
 table.hist td.ok{color:var(--ok);font-weight:600}table.hist td.no{color:var(--soft)}
+.temp{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:var(--gap);
+  padding:13px 15px;border:1px solid var(--line);border-radius:var(--r2);background:var(--card)}
+.temp .pts{display:flex;gap:5px;flex:none}
+.temp .pt{width:10px;height:10px;border-radius:50%;background:var(--pista)}
+.temp .pt.on{background:currentColor}
+.temp b{font-size:14px;letter-spacing:.05em;flex:none}
+.temp .txt{flex:1;min-width:190px;font-size:13px;line-height:1.45;color:var(--muted)}
+.temp.ok{color:var(--ok)}.temp.ojo{color:var(--brand)}.temp.alerta{color:var(--bad)}
 
 /* ---------- indicadores ---------- */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
@@ -883,8 +959,35 @@ def html_marcadores(d):
     return (f'<section class="card" id="marcadores"><div class="grid" style="gap:18px">'
             f'<div><div class="hh"><h2>Marcador sorteo</h2></div>{s1}</div>'
             f'<div><div class="hh"><h2>Marcador tripleta</h2></div>{s2}</div></div>'
+            f'{html_temperatura(d)}'
             f'{html_top15_reparto(d)}'
             f'<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p></section>')
+
+def html_temperatura(d):
+    """Temperatura del Top-15: la racha de fallos en curso, contra lo normal.
+
+    El texto dice siempre las dos cifras: lo que vale la racha por sí sola (que
+    es lo que uno siente) y si es normal con los sorteos que llevas (que es lo
+    que decide). Sin la segunda, tres fallos seguidos parecen una avería.
+    """
+    t = temperatura_top15(d)
+    if not t:
+        return ""
+    pts = "".join(f'<span class="pt{" on" if i < t["puntos"] else ""}"></span>'
+                  for i in range(5))
+    if t["racha"] == 0:
+        txt = "El último sorteo puntuable entró en el Top-15. Sin racha de fallos en curso."
+    else:
+        veces = max(2, round(1 / t["sola"]))
+        lectura = {"ok": "es lo normal", "ojo": "empieza a ser raro",
+                   "alerta": "ya no cuadra con el modelo"}[t["nivel"]]
+        txt = (f'{plural(t["racha"], "fallo seguido", "fallos seguidos")} del Top-15. '
+               f'Una racha así, por sí sola, pasa 1 de cada {veces} veces; '
+               f'con {t["n"]} sorteos puntuados {lectura}.')
+        if t["alerta"] and t["nivel"] != "alerta":
+            txt += f' Saltaría la alerta a partir de {t["alerta"]} seguidos.'
+    return (f'<div class="temp {t["nivel"]}"><span class="pts">{pts}</span>'
+            f'<b>{t["etiqueta"]}</b><span class="txt">{txt}</span></div>')
 
 def html_top15_reparto(d):
     """Dónde cae el ganador dentro del Top-15 congelado, contra su cuota de azar."""
