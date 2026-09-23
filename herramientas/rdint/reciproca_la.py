@@ -22,6 +22,7 @@ import sonda_inversa as SI
 FIN = "2026-09-22"
 CACHE = os.path.join(AQUI, "_la_ensamble_todo.npz")
 SALIDA_MD = os.path.join(HERR, "resultados", "hilo7_h4b_reciproca.md")
+HIST = os.path.join(os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or os.path.dirname(HERR), "historial.txt")
 VENTANAS = [("PRINCIPAL", "2025-12-17", "2026-09-23"),
             ("  sub: tramo test de RD", "2025-12-17", "2026-04-13"),
             ("  sub: réplica", "2026-04-13", "2026-09-23"),
@@ -48,7 +49,7 @@ def ensamble(la):
 
 
 def main():
-    la = LE.cargar()
+    la = LE.cargar(HIST)
     n = int(np.searchsorted(np.array(la.fecha), FIN, side="right"))
     la = la.prefijo(n)
     P = ensamble(la)
