@@ -599,6 +599,13 @@ HERRAMIENTAS = {
         "mirar": "En la tabla 1, cada puesto con «retorno/ficha» negativo pierde plata aunque acierte a veces. "
                  "En la tabla 3, compara la ganancia por sorteo del Top-5 2-2-2-1-1 con el Top-15 plano.",
     },
+    "reciproca": {
+        "titulo": "¿RD Internacional ayuda a Lotto Activo? (H4b)", "dura": "5 a 15 min",
+        "cmd": ["rdint/reciproca_la.py"],
+        "que": "Recalcula el ensamble de LA y mide si saber lo que salió en RD 30 min antes mejora el pronóstico.",
+        "mirar": "La fila PRINCIPAL: pasa si Δ mbits ≥ +5 con el IC95 entero sobre 0. Para dinero, el Top-5 "
+                 "escalonado «+RD» tiene que superar al del ensamble solo.",
+    },
 }
 TAREAS = {}
 
