@@ -267,16 +267,21 @@ def marcador(d):
 # Se juega TODOS los sorteos: elegir sorteos por lo «caliente» que se ve la
 # lista FALLÓ en prueba ciega (hilo 6).
 JUGADA = [(1, 3, 2), (4, 5, 1)]          # (desde, hasta, fichas por animal)
+# Alternativa para quien quiere cobrar la mitad de los sorteos: el mismo Top-15
+# pero con más fichas donde el modelo acierta más. Cada acierto deja ganancia
+# (+67 / +37 / +7 con 23 fichas). Prueba ciega: ≈ +6 % frente a −1 % del plano.
+PONDERADO = [(1, 3, 3), (4, 5, 2), (6, 15, 1)]
 P_MOD_T5 = 0.1950                         # Top-5 en prueba ciega
 
-def fichas_por_puesto():
+def fichas_por_puesto(plan=None):
     f = [0] * (K + 1)
-    for a, b, n in JUGADA:
+    for a, b, n in (plan or JUGADA):
         for p in range(a, b + 1):
             f[p] = n
     return f
 
 ESTRATEGIAS = [("Top-5 escalonado (2-2-2-1-1)", fichas_por_puesto()),
+               ("Top-15 ponderado (3-2-1)", fichas_por_puesto(PONDERADO)),
                ("Top-3 plano", [0] + [1] * 3 + [0] * (K - 3)),
                ("Top-15 plano", [0] + [1] * 15 + [0] * (K - 15))]
 
@@ -585,6 +590,14 @@ HERRAMIENTAS = {
         "mirar": "«mitad de las veces» es lo típico; «1 de cada 10 mal» es un mes malo pero normal. Compara "
                  "el escenario MEDIDO con el PRUDENTE: la verdad está probablemente entre los dos. El escenario "
                  "SIN VENTAJA es lo que pasa si el modelo deja de servir: por eso existe el freno del 25 %.",
+    },
+    "escenario": {
+        "titulo": "Escenario: cada forma de jugar, mes a mes, con 300 $", "dura": "10 s (la 1ª vez, varios min)",
+        "cmd": ["escenario_gestion.py"],
+        "que": "Repite 21 meses REALES (sorteos y pronósticos de desarrollo) jugando desde 300 $ con 5 políticas.",
+        "mirar": "«final típico» es lo que pasa la mitad de los meses; «mes malo», 1 de cada 10. Mira el DIARIO: "
+                 "incluso el mes típico puede bajar mucho antes de subir. Es algo optimista: en prueba ciega el "
+                 "modelo rindió unos 5 puntos menos, y el Top-15 plano ahí perdió.",
     },
     "estrategia": {
         "titulo": "Cuántos animales conviene jugar", "dura": "10 a 30 s",
@@ -999,16 +1012,20 @@ def html_top15(e, pend=None):
     if pend is not None and pend.get("orden_completo"):
         orden = pend["orden_completo"]
     filas = ""
+    pond = fichas_por_puesto(PONDERADO)
     for r, i in enumerate(orden[:15], 1):
         p = e["sc"][i]
         if r == 6:
-            filas += ('<p class="note"><b>Del 6º al 15º no se juegan:</b> en prueba ciega cada uno acertó '
-                      '~3,0%, menos del 3,33% que pide el pago 30x. Se muestran solo como referencia.</p>')
+            filas += ('<p class="note"><b>Del 6º al 15º:</b> cada uno acierta ~3,0%, menos del 3,33% que pide el pago 30x. '
+                      'Solo entran en el Top-15 ponderado, a 1 ficha, para que cobres la mitad de los sorteos.</p>')
         atenuado = ' style="opacity:.55"' if r > 5 else ""
         filas += (f'<div class="pick"{atenuado}><span class="rk">{r}</span><span class="num">{POS[i]}</span>'
-                  f'<div><div class="nm">{ANIM[POS[i]].title()}</div></div>'
+                  f'<div><div class="nm">{ANIM[POS[i]].title()} <small>· ponderado: {pond[r]} ficha{"s" if pond[r] != 1 else ""}</small></div></div>'
                   f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
-    return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo</summary>{filas}</details>')
+    nota = ('<p class="note"><b>Top-15 ponderado</b> (alternativa): 3 fichas del 1º al 3º, 2 al 4º y 5º, 1 del 6º '
+            'al 15º = 23 fichas. Cobra ~1 de cada 2 sorteos y cada acierto deja ganancia: +67, +37 o +7. '
+            'Prueba ciega ≈ +6% (el Top-15 plano, −1%).</p>')
+    return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
 
 def html_banca(e, banca=None):
     """Cuánto poner en cada animal según la banca (misma regla que gestion_banca.py)."""
@@ -1186,7 +1203,7 @@ def html_economia(d):
     return ('<div style="margin-top:18px"><div class="hh"><h2>Cada forma de jugar, con plata</h2>'
             f'<span>{ec[0]["n"]} sorteos con orden guardado</span></div>{filas}'
             '<p class="note">Lo esperado a largo plazo (prueba ciega, 3.154 sorteos): Top-5 escalonado ≈ +19 % (+10 a +28), '
-            'Top-3 ≈ +23 %, Top-15 ≈ −1 %. Con menos de ~1.000 sorteos estas cifras bailan mucho por pura suerte.</p></div>')
+            'Top-15 ponderado ≈ +6 %, Top-3 ≈ +23 %, Top-15 plano ≈ −1 %. Con menos de ~1.000 sorteos estas cifras bailan mucho por pura suerte.</p></div>')
 
 def html_temperatura(d):
     """Temperatura del Top-15: la racha de fallos en curso, contra lo normal.
