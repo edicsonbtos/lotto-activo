@@ -14,3 +14,8 @@ investigacion/**/*.npz
 # Cache de matrices walk-forward (se regenera; no va al repo)
 herramientas/exploracion/*.npy
 herramientas/exploracion/*.npz
+
+# Hilo 7: datos vivos de RD Int (en Railway viven en /data) y caches
+rdint_historial.txt
+rdint_predicciones.json
+herramientas/rdint/*.npz

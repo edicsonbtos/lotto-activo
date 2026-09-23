@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """La jugada del próximo sorteo, en plata, leída de la web en vivo (Railway).
 
-Uso: python jugada.py [banca]
-Solo lee /api/mesa (el pronóstico congelado que se puntúa). No escribe nada.
+Uso: python jugada.py [banca] [--rd]
+Solo lee /api/mesa (Lotto Activo) y /api/rdint (RD Internacional, h:30). No escribe nada.
 Usa curl porque el Python del PC del usuario falla verificando certificados.
 """
 import json, subprocess, sys
@@ -19,7 +19,35 @@ def leer(ruta):
     return json.loads(out)
 
 
+def rd():
+    """Jugada de RD Internacional (h:30), leída de /api/rdint."""
+    try:
+        m = leer("/api/rdint")
+    except ValueError:
+        print("
+RD Internacional: la web aún no publica /api/rdint (¿desplegado?).")
+        return
+    p = m.get("pronostico")
+    print(f"
+RD Internacional · {m['sorteo']['fecha']} {m['sorteo']['hora']}")
+    if not p:
+        print("  Calculando (1-2 min tras cada resultado).")
+        return
+    print("  " + ("Incluye Lotto Activo de la misma hora." if p.get("con_la_h")
+                  else "OJO: aún sin Lotto Activo de la misma hora; se actualiza sola al salir. Espéralo."))
+    for k, c in enumerate(p["orden"][:15], 1):
+        fx = (ESCALONADO + [0] * 10)[k - 1]
+        print(f"  {k:>2}. {c:>2} {p['prob'].get(c, 0)*100:5.2f} %  Top-5: {fx or '·'}  Top-15 ponderado: {PONDERADO[k-1]}")
+    mk = m.get("marcador", {})
+    if mk.get("n"):
+        print(f"  Marcador RD en vivo: {mk['n']} sorteos, Top-3 {mk['top3']}, Top-15 {mk['top15']}")
+
+
 def main():
+    if "--rd" in sys.argv:
+        sys.argv.remove("--rd")
+        rd()
+        return
     banca = float(sys.argv[1]) if len(sys.argv) > 1 else None
     m = leer("/api/mesa?offset=0")
     if m.get("vista") != "prob" or not any(a["rank"] for a in m["animales"]):

@@ -740,191 +740,211 @@ def chip(i, extra=""):
     return f'<span class="chip {extra}"><b>{POS[i]}</b> {ANIM[POS[i]].title()}</span>'
 
 CSS = """
-/* Sistema visual: tokens -> componentes. Un solo lugar donde cambiar color,
-   radio, sombra o ritmo. Claro y oscuro con el MISMO contraste de lectura
-   (texto secundario >= 4.5:1 sobre su fondo). */
+/* Sistema visual: tokens -> componentes. Claro y oscuro con el MISMO
+   contraste de lectura (texto secundario >= 4.5:1 sobre su fondo).
+   Estructura: cabecera fija con 2 pestañas; en cada pestaña la jugada y el
+   registro arriba, y lo demás en desplegables (details.sec). */
 :root{
   color-scheme:light dark;
-  --bg:#f4f2ed; --bg-2:#ebe8e0; --card:#fff; --velo:rgba(244,242,237,.82);
-  --line:#e3dfd6; --line-soft:#f0ede6; --pista:#efece4;
-  --ink:#17191d; --muted:#5f6268; --soft:#73767d;
-  --brand:#b5621b; --brand-ink:#8a4a13; --brand-soft:#fbf0e3;
+  --bg:#f4f2ed; --bg-2:#ebe8e0; --card:#fff;
+  --line:#e3dfd6; --line-soft:#efece5; --pista:#efece4;
+  --ink:#17191d; --muted:#5b5e64; --soft:#6d7077;
+  --brand:#b5621b; --brand-ink:#8a4a13; --brand-soft:#fbf0e3; --brand-line:#efd3b4;
   --ok:#1c6a49; --ok-soft:#e4f2ec; --bad:#96382a; --bad-soft:#f8e9e5;
-  --r1:8px; --r2:12px; --r3:16px; --pil:999px;
+  --r1:8px; --r2:14px; --pil:999px;
   --sh1:0 1px 2px rgba(23,25,29,.05);
-  --sh2:0 2px 4px rgba(23,25,29,.05),0 8px 24px rgba(23,25,29,.06);
-  --gap:14px;
+  --sh2:0 1px 2px rgba(23,25,29,.04),0 6px 18px rgba(23,25,29,.06);
+  --gap:14px; --cab:64px;
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --bg:#131419; --bg-2:#1a1c22; --card:#1b1d23; --velo:rgba(19,20,25,.82);
+    --bg:#131419; --bg-2:#1b1d23; --card:#1b1d23;
     --line:#2c2f38; --line-soft:#24272f; --pista:#262932;
-    --ink:#ecebe7; --muted:#a3a7af; --soft:#8b8f98;
-    --brand:#e08b3f; --brand-ink:#f0a75f; --brand-soft:#2c2118;
+    --ink:#ecebe7; --muted:#a8acb4; --soft:#959aa3;
+    --brand:#e08b3f; --brand-ink:#f0a75f; --brand-soft:#2c2118; --brand-line:#5a3a1e;
     --ok:#5fc39a; --ok-soft:#16261f; --bad:#e78a76; --bad-soft:#2b1b17;
     --sh1:0 1px 2px rgba(0,0,0,.3);
-    --sh2:0 2px 4px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    --sh2:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35);
   }
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--cab) + 12px);accent-color:var(--brand);
+  scrollbar-color:var(--line) transparent}
 body{margin:0;background:var(--bg);color:var(--ink);
-  font:16px/1.55 "Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-.w{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
-:where(a,button,input,select,summary):focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+  font:16px/1.5 "Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+::selection{background:var(--brand-soft);color:var(--ink)}
+input{caret-color:var(--brand)}
+:where(a,button,input,select,summary):focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:6px}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+[hidden]{display:none !important}
+.w{max-width:1040px;margin:0 auto;padding:16px 16px 40px}
 
-/* ---------- cabecera y navegación ---------- */
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:14px}
-h1{font-size:clamp(22px,1.1rem + 1.4vw,30px);margin:0;font-weight:700;letter-spacing:-.02em}
-.sub{color:var(--muted);font-size:13.5px}
-.sub b{color:var(--ink)}
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 12px;border-radius:var(--pil);
-  background:var(--ok-soft);color:var(--ok);font-weight:600;line-height:1.2}
+/* ---------- cabecera fija con pestañas ---------- */
+.cab{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
+.cab-in{max-width:1040px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:14px}
+.marca{font-weight:700;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.marca small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.tabs{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg-2);
+  border-radius:12px;max-width:460px;margin-left:auto}
+.tabs a{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:5px 12px;border-radius:9px;
+  text-decoration:none;color:var(--muted);line-height:1.2;transition:background .2s,color .2s,box-shadow .2s}
+.tabs a b{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.tabs a small{font-size:11.5px;font-variant-numeric:tabular-nums}
+.tabs a:hover{color:var(--ink)}
+.tabs a[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:var(--sh2)}
+.tabs a[aria-selected=true] small{color:var(--brand-ink)}
+@media (max-width:640px){.marca{display:none}.tabs{max-width:none;margin:0}}
+
+/* ---------- tarjetas ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px;
+  box-shadow:var(--sh1);min-width:0;overflow-wrap:break-word}
+.duo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:var(--gap);align-items:start;
+  margin-bottom:var(--gap)}
+.duo>*{min-width:0}
+.duo .reg{position:sticky;top:calc(var(--cab) + 14px)}
+@media (max-width:820px){.duo{grid-template-columns:1fr}.duo .reg{position:static}}
+.pila{display:grid;gap:10px}
+
+/* ---------- la jugada ---------- */
+.jh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
+.jh h2{margin:0;font-size:clamp(21px,1rem + 1.2vw,26px);line-height:1.15;letter-spacing:-.02em;font-weight:750}
+.jh h2 span{color:var(--brand-ink);white-space:nowrap}
+.ult{margin:0 0 14px;font-size:13.5px;color:var(--muted)}
+.ult b{color:var(--ink);font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:12px;padding:5px 11px;border-radius:var(--pil);
+  background:var(--ok-soft);color:var(--ok);font-weight:650;line-height:1.2;white-space:nowrap}
 .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
 .pill.warn{background:var(--brand-soft);color:var(--brand-ink)}
-nav{position:sticky;top:0;z-index:20;display:flex;gap:6px;flex-wrap:wrap;margin:0 -16px var(--gap);padding:10px 16px;
-  background:var(--velo);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent}
-nav a{display:inline-flex;align-items:center;min-height:36px;font-size:13.5px;color:var(--muted);text-decoration:none;
-  padding:6px 13px;border:1px solid var(--line);border-radius:var(--pil);background:var(--card);transition:color .15s,border-color .15s}
-nav a:hover{color:var(--ink);border-color:var(--soft)}
-section[id],div[id]{scroll-margin-top:72px}
-/* en el telefono la navegacion cabe en una sola tira deslizable en vez de
-   comerse tres lineas de alto */
-@media (max-width:560px){nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-  nav::-webkit-scrollbar{display:none} nav a{flex:0 0 auto}}
+.pill.warn::before{animation:late 1.4s ease-in-out infinite}
+.pill.gris{background:var(--bg-2);color:var(--muted)}
+@keyframes late{50%{opacity:.25}}
+.jug{list-style:none;margin:0;padding:0}
+.jug li{display:grid;grid-template-columns:18px 50px minmax(0,1fr) 38px 38px;align-items:center;gap:8px;
+  padding:8px 0;border-top:1px solid var(--line-soft)}
+@media (max-width:640px){.jug li{padding:6px 0}.jug .n{font-size:25px}.jh h2{font-size:20px}.card{padding:16px}
+  .leyenda{margin-top:10px}}
+.jug li.cols{border-top:none;padding:0 0 6px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.jug li.cols span:nth-child(n+4){text-align:center;line-height:1.15}
+.jug .rk{font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums;text-align:right}
+.jug .n{font-size:28px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
+.jug .nm{font-size:16px;font-weight:600;letter-spacing:-.01em;min-width:0}
+.jug .nm small{display:block;font-size:12px;font-weight:400;color:var(--muted);font-variant-numeric:tabular-nums}
+.fx{justify-self:center;display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 6px;border-radius:8px;
+  font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.fx.a{background:var(--brand);color:#fff}
+@media (prefers-color-scheme:dark){.fx.a{color:#1b1206}}
+.fx.b{background:var(--bg-2);color:var(--ink)}
+.fx.z{color:var(--soft);font-weight:400}
+.jug.resto li{grid-template-columns:18px 50px minmax(0,1fr) 38px 38px}
+.jug.resto .n{font-size:22px;color:var(--muted)}
+.jug.resto .nm{font-size:15px;font-weight:500}
+details.mas{margin-top:2px;border-top:1px solid var(--line-soft)}
+details.mas>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:44px;
+  font-size:13.5px;font-weight:600;color:var(--brand-ink)}
+details.mas>summary::-webkit-details-marker{display:none}
+details.mas[open]>summary{border-bottom:1px solid var(--line-soft)}
+.leyenda{margin:14px 0 0;display:grid;gap:6px;font-size:13px;color:var(--muted)}
+.leyenda p{margin:0}
+.leyenda b{color:var(--ink)}
+.leyenda i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+.leyenda i.a{background:var(--brand)}.leyenda i.b{background:var(--bg-2);box-shadow:inset 0 0 0 1px var(--line)}
 
-/* ---------- últimos resultados ---------- */
-.strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:var(--gap);
-  scroll-snap-type:x proximity;scrollbar-width:thin}
-.res{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r1);
-  padding:7px 11px;text-align:center;min-width:84px;scroll-snap-align:start;box-shadow:var(--sh1)}
-.res small{display:block;color:var(--soft);font-size:11px}
-.res b{font-size:18px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.res span{display:block;font-size:11px;color:var(--muted)}
-.res:first-child{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand)}
+/* ---------- chevron (dibujado, no un glifo) ---------- */
+.chev{flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:translateY(-2px) rotate(45deg);transition:transform .25s cubic-bezier(.22,1,.36,1)}
+details[open]>summary .chev{transform:translateY(2px) rotate(-135deg)}
 
-/* ---------- rejilla y tarjetas ---------- */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:1fr}}
-/* sin esto, un hijo ancho (fichas, cabecera larga) estira la columna y saca
-   barra horizontal en el telefono: los items de grid no encogen por defecto */
-.grid>*,.grid .card{min-width:0}
-.card{min-width:0;overflow-wrap:break-word}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:20px;margin-bottom:var(--gap);box-shadow:var(--sh1)}
-.grid .card{margin-bottom:0}
-.hh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-.hh h2{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:700}
-.hh span{font-size:13.5px;color:var(--ink);font-weight:600}
-
-/* ---------- predicción ---------- */
-.pick{display:grid;grid-template-columns:20px 68px 1fr auto;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-soft)}
-.pick:last-of-type{border-bottom:none}
-.rk{font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums}
-.num{font-size:clamp(28px,1rem + 2vw,34px);font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
-.nm{font-size:16px;font-weight:600;letter-spacing:-.01em}
-.bar{height:7px;background:var(--pista);border-radius:var(--pil);margin-top:6px;position:relative;overflow:hidden}
-/* sin transición: el ancho viene ya calculado del servidor y animar `width`
-   fuerza recálculo de layout en cada cuadro para un efecto que nadie ve */
-.bar i{display:block;height:100%;background:var(--brand);border-radius:var(--pil)}
-.bar em{position:absolute;top:-3px;width:2px;height:13px;background:var(--soft);border-radius:1px}
-.pc{font-size:14.5px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
-.pc small{display:block;font-size:11px;color:var(--soft);font-weight:400}
-
-/* ---------- textos de apoyo ---------- */
-.note{font-size:12.5px;color:var(--soft);margin:12px 0 0}
-.note.top{margin:0 0 14px}
-.tip{font-size:13.5px;color:var(--brand-ink);background:var(--brand-soft);padding:11px 13px;border-radius:var(--r1);margin-top:12px;
-  border:1px solid transparent}
-@media (prefers-color-scheme:dark){.tip{border-color:var(--line)}}
-
-/* ---------- tripleta y fichas ---------- */
-.tri{border:1px solid var(--line);border-radius:var(--r1);padding:12px 14px;margin-bottom:10px}
-.tri h3{margin:0 0 9px;font-size:12.5px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{display:inline-flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:var(--pil);background:var(--brand-soft);font-size:14px;color:var(--ink)}
-.chip b{color:var(--brand-ink);font-size:16px;font-variant-numeric:tabular-nums}
-.chip.si{background:var(--ok-soft)}.chip.si b{color:var(--ok)}
-.chip small{color:var(--soft);font-size:11px}
-
-/* ---------- formularios ---------- */
-form.reg{display:flex;gap:9px}
-input[type=text]{flex:1;min-width:0;padding:13px 15px;font-size:18px;color:var(--ink);border:1px solid var(--line);
-  border-radius:var(--r1);background:var(--bg-2);font-variant-numeric:tabular-nums}
-input[type=text]::placeholder{color:var(--soft)}
-button{min-height:44px;padding:11px 19px;font-size:15px;font-weight:600;border:1px solid transparent;border-radius:var(--r1);
-  background:var(--ink);color:var(--card);cursor:pointer;transition:opacity .15s,background .15s}
-button:hover{opacity:.87}
+/* ---------- registrar ---------- */
+.reg h2{margin:0;font-size:17px;letter-spacing:-.01em}
+.reg .rh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.reg p{margin:0 0 12px;font-size:13px;color:var(--muted)}
+form.anotar{display:flex;gap:8px}
+input[type=text]{flex:1;min-width:0;padding:12px 14px;font-size:20px;font-weight:600;color:var(--ink);border:1px solid var(--line);
+  border-radius:var(--r1);background:var(--bg-2);font-variant-numeric:tabular-nums;font-family:inherit}
+input[type=text]::placeholder{color:var(--soft);font-weight:400;font-size:16px}
+input[type=text]:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
+button{min-height:44px;padding:10px 18px;font:inherit;font-size:15px;font-weight:650;border:1px solid transparent;border-radius:var(--r1);
+  background:var(--ink);color:var(--card);cursor:pointer;transition:opacity .15s,background .15s,border-color .15s}
+button:hover{opacity:.88}
 button:active{transform:translateY(1px)}
 button.sec{background:var(--card);color:var(--ink);border-color:var(--line)}
 button.sec:hover{border-color:var(--soft);opacity:1}
-button.link{min-height:36px;background:none;color:var(--bad);padding:8px 0;font-size:13px;font-weight:500;text-decoration:underline;border:none}
-.acciones{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:14px}
+button.link{min-height:44px;background:none;color:var(--bad);padding:8px 2px;font-size:13.5px;font-weight:500;
+  text-decoration:underline;text-underline-offset:3px;border:none}
+.acciones{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin-top:12px}
 .acciones form{margin:0}
-select{min-height:44px;padding:10px 12px;font-size:14px;color:var(--ink);border:1px solid var(--line);border-radius:var(--r1);background:var(--bg-2)}
+.auto{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ok);
+  background:var(--ok-soft);padding:5px 10px;border-radius:var(--pil);line-height:1.25}
+.auto::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.auto.off{color:var(--muted);background:var(--bg-2)}
 
-/* ---------- avisos y estado del anotado automático ---------- */
-.msg{font-size:14px;padding:12px 15px;border-radius:var(--r1);margin-bottom:var(--gap);border:1px solid transparent}
+/* ---------- avisos ---------- */
+.msg{font-size:14px;padding:12px 15px;border-radius:var(--r1);margin:0 0 var(--gap);border:1px solid transparent}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}
 .msg.no{background:var(--bg-2);color:var(--muted)}
 .msg.bad{background:var(--bad-soft);color:var(--bad)}
-.auto,.hh span.auto{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ok);
-  background:var(--ok-soft);padding:5px 11px;border-radius:var(--pil);line-height:1.2}
-.auto::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
-.auto.off,.hh span.auto.off{color:var(--soft);background:var(--bg-2)}
+.jugada .msg{margin:12px 0 0}
+.tip{font-size:13.5px;color:var(--brand-ink);background:var(--brand-soft);padding:11px 13px;border-radius:var(--r1);margin:12px 0 0}
+.note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
 
-/* ---------- tablas ---------- */
-table.hist{width:100%;border-collapse:collapse;font-size:13.5px}
-table.hist th{text-align:left;color:var(--muted);font-weight:600;padding:7px 9px;border-bottom:1px solid var(--line);
-  position:sticky;top:0;background:var(--card)}
-table.hist td{padding:7px 9px;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums}
-table.hist tr:last-child td{border-bottom:none}
-table.hist td.ok{color:var(--ok);font-weight:600}table.hist td.no{color:var(--soft)}
-.temp{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:var(--gap);
-  padding:13px 15px;border:1px solid var(--line);border-radius:var(--r2);background:var(--card)}
-.temp .pts{display:flex;gap:5px;flex:none}
-.temp .pt{width:10px;height:10px;border-radius:50%;background:var(--pista)}
-.temp .pt.on{background:currentColor}
-.temp b{font-size:14px;letter-spacing:.05em;flex:none}
-.temp .txt{flex:1;min-width:190px;font-size:13px;line-height:1.45;color:var(--muted)}
-.temp.ok{color:var(--ok)}.temp.ojo{color:var(--brand)}.temp.alerta{color:var(--bad)}
+/* ---------- desplegables ---------- */
+details.sec{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--sh1);
+  margin-bottom:10px;min-width:0}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 18px;min-height:60px;
+  border-radius:var(--r2)}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary:hover .st{color:var(--ink)}
+details.sec>summary .st{flex:1;min-width:0}
+details.sec>summary h2{margin:0;font-size:16px;letter-spacing:-.01em;font-weight:650}
+details.sec>summary .meta{display:block;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:1px}
+details.sec>summary .chev{color:var(--muted)}
+details.sec[open]>summary{border-bottom:1px solid var(--line-soft);border-radius:var(--r2) var(--r2) 0 0}
+.cuerpo{padding:16px 18px 18px}
+details[open]>.cuerpo{animation:abre .28s cubic-bezier(.22,1,.36,1)}
+@keyframes abre{from{opacity:0;transform:translateY(-4px)}}
 
-/* ---------- indicadores ---------- */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.kpi{border:1px solid var(--line);border-radius:var(--r1);padding:11px 13px;background:var(--card)}
-.kpi small{display:block;font-size:11px;color:var(--muted)}
-.kpi b{font-size:21px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.kpi span{display:block;font-size:11px;color:var(--soft)}
-.pend{font-size:13px;border-top:1px solid var(--line-soft);padding:9px 0}
-.pend b{font-weight:600}
+/* ---------- resultados y puestos ---------- */
+.lista{width:100%;border-collapse:collapse;font-size:14px}
+.lista th,.lista td{padding:8px 6px;text-align:left;font-variant-numeric:tabular-nums}
+.lista thead th{font-size:11.5px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line)}
+.lista tbody th{font-size:12px;color:var(--brand-ink);font-weight:700;letter-spacing:.02em;padding-top:16px;
+  border-bottom:1px solid var(--line)}
+.lista tbody tr:first-child th{padding-top:8px}
+.lista td{border-bottom:1px solid var(--line-soft)}
+.lista td.h{color:var(--muted);white-space:nowrap;width:1%}
+.lista td.s b{font-size:16px;margin-right:6px}
+.lista td.p{text-align:right;width:1%;white-space:nowrap}
+.lista .t3{color:var(--muted);font-size:12.5px}
+.puesto{display:inline-grid;place-items:center;min-width:44px;height:28px;padding:0 8px;border-radius:var(--pil);
+  font-weight:700;font-size:13.5px}
+.puesto.p5{background:var(--brand);color:#fff}
+@media (prefers-color-scheme:dark){.puesto.p5{color:#1b1206}}
+.puesto.p15{background:var(--brand-soft);color:var(--brand-ink);box-shadow:inset 0 0 0 1px var(--brand-line)}
+.puesto.fuera{background:var(--bg-2);color:var(--muted)}
+.clave{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 10px;font-size:12.5px;color:var(--muted)}
+.clave .puesto{min-width:0;height:22px;font-size:11.5px;margin-right:4px}
 
-/* ---------- reparto del puesto del ganador ---------- */
-.dist{display:grid;grid-template-columns:92px 1fr 84px;align-items:center;gap:10px;padding:5px 0}
-.dist .dl{font-size:12.5px;color:var(--muted)}
-.dist .db{position:relative;height:16px;background:var(--pista);border-radius:var(--r1);overflow:hidden}
-/* sin min-width: un tramo con 0 veces no debe dejar una raya que parezca algo */
-.dist .db i{display:block;height:100%;background:var(--soft);border-radius:var(--r1)}
-.dist .db em{position:absolute;top:0;width:2px;height:100%;background:var(--ink);opacity:.45}
-.dist .dv{font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
-.dist .dv small{display:block;font-size:10.5px;color:var(--soft);font-weight:400}
-/* tramo por encima de su cuota de azar: el color lo marca, el número lo dice */
-.dist.alza .db i{background:var(--brand)}
-.dist.alza .dv{color:var(--brand-ink)}
-@media (max-width:560px){.dist{grid-template-columns:76px 1fr 70px;gap:8px}}
+/* ---------- piezas compartidas (RD) ---------- */
+.chip{display:inline-flex;align-items:baseline;gap:6px;padding:6px 11px;border-radius:var(--pil);background:var(--bg-2);
+  font-size:14px;color:var(--ink)}
+.chip b{color:var(--brand-ink);font-size:15.5px;font-variant-numeric:tabular-nums}
+.chip small{color:var(--muted);font-size:11.5px}
+.tira{display:flex;flex-wrap:wrap;gap:6px}
+.cuerpo h3{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:650}
+.cuerpo h3~h3{margin-top:16px}
+.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:0 0 14px}
+.cifras div{background:var(--bg-2);border-radius:var(--r1);padding:9px 12px}
+.cifras small{display:block;font-size:11.5px;color:var(--muted)}
+.cifras b{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.tabla{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+.tabla th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;padding:6px 6px;border-bottom:1px solid var(--line)}
+.tabla td{padding:7px 6px;border-bottom:1px solid var(--line-soft)}
+.tabla td.ok{color:var(--ok);font-weight:650}.tabla td.bad{color:var(--bad);font-weight:650}
+.desliza{overflow-x:auto;max-width:100%}
+.cuerpo p{font-size:14px;margin:0 0 10px;max-width:70ch}
 
-/* ---------- herramientas ---------- */
-.tool{border-top:1px solid var(--line-soft);padding:16px 0}
-.tool:first-of-type{border-top:none;padding-top:0}
-.tool-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
-.tool h3{margin:0;font-size:16px;letter-spacing:-.01em}
-.tool p{margin:5px 0;font-size:13px;color:var(--muted)}
-.tool .mirar{color:var(--ink);background:var(--bg-2);border-radius:var(--r1);padding:10px 12px}
-.st{font-size:12px;font-weight:600;color:var(--muted)}
-.st.corriendo{color:var(--brand-ink)}
-pre{background:#15171c;color:#e7e4dc;font-size:12px;line-height:1.5;padding:13px;border-radius:var(--r1);overflow-x:auto;max-height:420px;white-space:pre}
-details summary{cursor:pointer;font-size:13px;color:var(--muted);margin-top:8px;min-height:24px}
-footer{font-size:12px;color:var(--muted);line-height:1.65;margin-top:10px}
+footer{font-size:12.5px;color:var(--muted);margin-top:18px;text-align:center}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
@@ -946,7 +966,7 @@ JS = """
         // Si el resultado acaba de anotarse solo, la página que estás viendo ya
         // es vieja (hay sorteo nuevo y otra predicción): se recarga sola.
         if(window.__autoSeq===undefined) window.__autoSeq=a.seq;
-        else if(a.seq>window.__autoSeq){ location.replace('/'); return; }
+        else if(a.seq>window.__autoSeq){ location.replace(location.pathname + location.search); return; }
         if(a.corriendo) alguna=true;
       }
       Object.keys(t).forEach(function(k){
@@ -964,11 +984,47 @@ JS = """
     }).catch(function(){setTimeout(tareas,8000);});
   }
   tareas();
+  // Pestañas: ?tab=la|rd manda; si no viene, la última que abriste.
+  var tabs = [].slice.call(document.querySelectorAll('.tabs [role=tab]'));
+  function ver(t, guardar){
+    if(t !== 'la' && t !== 'rd') return;
+    tabs.forEach(function(a){
+      var on = a.getAttribute('data-tab') === t;
+      a.setAttribute('aria-selected', on ? 'true' : 'false');
+      a.tabIndex = on ? 0 : -1;
+      var p = document.getElementById(a.getAttribute('aria-controls'));
+      if(p) p.hidden = !on;
+    });
+    if(guardar){
+      try{ localStorage.setItem('lotto.tab', t); }catch(e){}
+      try{ var u = new URL(location.href); u.searchParams.set('tab', t);
+           history.replaceState(null, '', u.pathname + u.search + u.hash); }catch(e){}
+    }
+  }
+  tabs.forEach(function(a, i){
+    a.addEventListener('click', function(ev){ ev.preventDefault(); ver(a.getAttribute('data-tab'), true); });
+    a.addEventListener('keydown', function(ev){
+      if(ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+      ev.preventDefault();
+      var n = tabs[(i + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      n.focus(); ver(n.getAttribute('data-tab'), true);
+    });
+  });
+  var qtab = null;
+  try{ qtab = new URLSearchParams(location.search).get('tab'); }catch(e){}
+  if(qtab){ try{ localStorage.setItem('lotto.tab', qtab); }catch(e){} }
+  else { var s = null; try{ s = localStorage.getItem('lotto.tab'); }catch(e){} if(s) ver(s, false); }
+  // Desplegables: recuerda cuáles dejaste abiertos.
+  [].forEach.call(document.querySelectorAll('details[data-rec]'), function(d){
+    var k = 'lotto.sec.' + d.id;
+    try{ var v = localStorage.getItem(k); if(v === '1') d.open = true; else if(v === '0') d.open = false; }catch(e){}
+    d.addEventListener('toggle', function(){ try{ localStorage.setItem(k, d.open ? '1' : '0'); }catch(e){} });
+  });
   if(calc){
     (function listo(){
       fetch('/listo.json').then(r=>r.json()).then(function(j){
         var inp=document.getElementById('num');
-        if(j.listo && !(inp && inp.value)) location.replace('/');
+        if(j.listo && !(inp && inp.value)) location.replace(location.pathname + location.search);
         else setTimeout(listo, 2500);
       }).catch(function(){setTimeout(listo,4000);});
     })();
@@ -1062,20 +1118,139 @@ def html_banca(e, banca=None):
     return ('<section class="card" id="banca"><div class="hh"><h2>¿Cuánto apuesto?</h2></div>'
             f'{cuerpo}{form}</section>')
 
-def html_registro():
+def html_registro(e=None):
     a = auto_estado()
-    return ('<section class="card" id="registrar"><div class="hh"><h2>¿Qué salió?</h2>'
+    cuando = f' de las {HORAS[e["ph"]]}' if e else ""
+    return ('<section class="card reg" id="registrar" aria-labelledby="reg-t">'
+            f'<div class="rh"><h2 id="reg-t">¿Qué salió{cuando}?</h2>'
             f'<span class="auto {a["clase"]}" id="auto-est">{esc(a["txt"])}</span></div>'
-            '<p class="note top">No hace falta que lo anotes: el resultado se busca solo '
-            'unos 10 minutos después de cada sorteo. Escríbelo aquí solo si quieres adelantarlo.</p>'
-            '<form class="reg" method="post" action="/registrar">'
-            '<label class="sr" for="num">Animal que salió</label>'
+            '<p>Se anota solo unos 10 min después del sorteo. Escríbelo aquí solo para adelantarlo.</p>'
+            '<form class="anotar" method="post" action="/registrar">'
+            '<label class="sr" for="num">Número del animal que salió</label>'
             '<input type="text" id="num" name="num" placeholder="0, 00 o 1-36" autocomplete="off" '
-            'inputmode="numeric"><button type="submit">Anotar</button></form>'
+            'inputmode="numeric" enterkeyhint="send"><button type="submit">Anotar</button></form>'
             '<div class="acciones">'
-            '<form method="post" action="/auto"><button class="sec" type="submit">Buscar resultado ahora</button></form>'
-            '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último registro?\')">'
+            '<form method="post" action="/auto"><button class="sec" type="submit">Buscar ahora</button></form>'
+            '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último resultado anotado?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
+
+def _fx(n, clase):
+    """Casilla de fichas: número relleno si se juega, raya tenue si no."""
+    if not n:
+        return '<span class="fx z" aria-label="sin fichas">–</span>'
+    return f'<span class="fx {clase}" aria-label="{n} ficha{"s" if n != 1 else ""}">{n}</span>'
+
+def fila_jugada(r, num_, nombre, sub, f5, fp):
+    return (f'<li><span class="rk">{r}</span><span class="n">{esc(num_)}</span>'
+            f'<span class="nm">{esc(nombre)}<small>{sub}</small></span>'
+            f'{_fx(f5, "a")}{_fx(fp, "b")}</li>')
+
+COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
+               '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
+
+def html_jugada(e, calculando, pend, aviso_modelo, modelo):
+    """La jugada del próximo sorteo: Top-5 a la vista y del 6º al 15º plegado.
+
+    El orden es SIEMPRE el congelado que se puntúa (pend), como antes."""
+    fecha, hora = fecha_corta(e["pf"]), HORAS[e["ph"]]
+    f, h, v = e["ult"]
+    if calculando:
+        pill = '<span class="pill warn">calculando…</span>'
+    elif modelo == "hazard_actual":
+        pill = '<span class="pill warn">modelo antiguo</span>'
+    elif pend is not None:
+        pill = '<span class="pill" title="guardado antes del sorteo: es el que se puntúa">congelado</span>'
+    else:
+        pill = '<span class="pill gris">listo</span>'
+    cab = (f'<div class="jh"><h2 id="jug-t">Próximo sorteo · <span>{hora}</span></h2>{pill}</div>'
+           f'<p class="ult">{esc(fecha.capitalize())} · último: '
+           f'{"" if f == e["pf"] else esc(fecha_corta(f)) + " "}{HORAS[h]} → '
+           f'<b>{POS[v]} {ANIM[POS[v]].title()}</b></p>')
+    if calculando:
+        cuerpo = ('<div class="tip">Calculando el pronóstico con el ensamble (de 10 segundos a 2 minutos). '
+                  'La página se actualiza sola.</div>')
+        if PRED is not None and PRED.error:
+            cuerpo += f'<div class="msg bad">Error: {esc(PRED.error[-400:])}</div>'
+        return f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">{cab}{cuerpo}</section>'
+    orden = e["orden"]
+    if pend is not None:
+        orden = pend.get("orden_completo") or pend["top3"]
+    esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
+    def fila(r, i):
+        return fila_jugada(r, POS[i], ANIM[POS[i]].title(),
+                           f'{num(e["sc"][i] * 100, 2)} % · hace {e["gaps"][i] + 1} sorteos',
+                           esc5[r], pond[r])
+    top5 = "".join(fila(r, i) for r, i in enumerate(orden[:5], 1))
+    resto = "".join(fila(r, i) for r, i in enumerate(orden[5:15], 6))
+    mas = (f'<details class="mas" id="la-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+           f'Del 6º al 15º · solo para el ponderado</summary>'
+           f'<ol class="jug resto" start="6">{resto}</ol>'
+           '<p class="note">Del 6º al 15º cada uno acierta ~3,0 %, menos del 3,33 % que pide el pago 30x: '
+           'solo entran a 1 ficha en el ponderado, para cobrar más seguido.</p></details>') if resto else ""
+    leyenda = ('<div class="leyenda">'
+               '<p><i class="a"></i><b>Top-5 escalonado</b> (recomendada): 8 fichas, cobra ~1 de cada 5 '
+               '(60 si sale del 1º al 3º, 30 si sale 4º o 5º).</p>'
+               '<p><i class="b"></i><b>Top-15 ponderado</b> (alternativa): 23 fichas, cobra ~1 de cada 2 '
+               '(+67, +37 o +7).</p></div>')
+    return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">{cab}'
+            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{mas}{leyenda}{aviso_modelo}</section>')
+
+def _clase_puesto(p):
+    if p is None: return "fuera"
+    return "p5" if p <= 5 else "p15" if p <= TOP_N else "fuera"
+
+def resumen_resultados(d, ultimos=48):
+    """Línea corta para el desplegable: último puesto y Top-15 reciente."""
+    vistos = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    if not vistos:
+        return "aún no hay resultados con pronóstico"
+    p = puesto_ganador(vistos[-1])
+    partes = [f"último: {p}º" if p else "último: sin puesto"]
+    puestos = [x for x in (puesto_ganador(r) for r in vistos[-ultimos:]) if x is not None]
+    if puestos:
+        partes.append(f"Top-5 en {sum(1 for x in puestos if x <= 5)} y Top-15 en "
+                      f"{sum(1 for x in puestos if x <= TOP_N)} de los últimos {len(puestos)}")
+    return " · ".join(partes)
+
+def html_resultados(d, limite=100):
+    """Una sola lista: cada resultado y en qué puesto del Top quedó el ganador.
+
+    Sustituye en la página al histórico en tabla y a «Últimas 48» (que era
+    un resumen del mismo dato); el resumen corto va en la línea del desplegable."""
+    vistos = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    if not vistos:
+        return '<p class="note">Todavía no hay resultados con pronóstico guardado antes del sorteo.</p>'
+    cuerpo = ""; dia = None
+    for r in reversed(vistos[-limite:]):
+        if r["fecha"] != dia:
+            dia = r["fecha"]
+            cuerpo += f'<tr><th colspan="3" scope="rowgroup">{esc(fecha_corta(dia).capitalize())}</th></tr>'
+        s = POS[r["salio"]]
+        p = puesto_ganador(r)
+        if p:
+            tramo = "del Top-5" if p <= 5 else "del Top-15" if p <= TOP_N else "fuera del Top-15"
+            badge = f'<span class="puesto {_clase_puesto(p)}" title="{tramo}">{p}º<span class="sr"> {tramo}</span></span>'
+        else:
+            marca = "Top-3" if r["salio"] in r["top3"] else "fuera del Top-3"
+            badge = f'<span class="puesto {"p5" if r["salio"] in r["top3"] else "fuera"}" title="{marca}">{marca}</span>'
+        cuerpo += (f'<tr><td class="h">{HORAS[r["hora"]]}</td>'
+                   f'<td class="s"><b>{esc(s)}</b>{esc(ANIM[s].title())}</td>'
+                   f'<td class="p">{badge}</td></tr>')
+    nota = (f'<p class="note">Se muestran los últimos {limite} de {len(vistos)}.</p>'
+            if len(vistos) > limite else "")
+    clave = ('<p class="clave"><span><span class="puesto p5">1º-5º</span>dentro de la jugada</span>'
+             '<span><span class="puesto p15">6º-15º</span>solo ponderado</span>'
+             '<span><span class="puesto fuera">16º+</span>fuera del Top-15</span></p>')
+    return (f'{clave}<table class="lista"><thead><tr><th scope="col">Hora</th><th scope="col">Salió</th>'
+            f'<th scope="col" style="text-align:right">Puesto</th></tr></thead><tbody>{cuerpo}</tbody></table>{nota}'
+            '<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p>')
+
+def sec(id_, titulo, meta, cuerpo, abierto=False):
+    """Desplegable de la página (se recuerda abierto/cerrado en el navegador)."""
+    return (f'<details class="sec" id="{id_}" data-rec{" open" if abierto else ""}>'
+            f'<summary><span class="st"><h2>{titulo}</h2><span class="meta">{meta}</span></span>'
+            f'<span class="chev" aria-hidden="true"></span></summary>'
+            f'<div class="cuerpo">{cuerpo}</div></details>')
 
 def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False, faltan_h=0.0):
     # La ventana que se rotula es la de la tripleta que se muestra, que ya no
@@ -1429,44 +1604,61 @@ def preparar():
                 modelo=modelo, pend=pend, tri_mostrada=tri_mostrada, faltan_h=faltan_h)
 
 
-def render(banca=None):
+def html_rd():
+    """Fragmento de la pestaña RD Internacional. Si el módulo falla, la
+    pestaña lo dice y Lotto Activo sigue funcionando."""
+    try:
+        import rdint_vivo
+        return rdint_vivo.html()
+    except Exception as ex:  # noqa: BLE001
+        print(f"[rdint] {ahora()} html: {ex!r}", file=sys.stderr, flush=True)
+        return '<div class="card"><p>RD Internacional se está preparando…</p></div>'
+
+
+def render(banca=None, tab="la"):
     x = preparar()
     filas, e, d = x["filas"], x["e"], x["d"]
     calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
-    pend, tri_mostrada, faltan_h = x["pend"], x["tri_mostrada"], x["faltan_h"]
+    pend = x["pend"]
+    tab = "rd" if tab == "rd" else "la"
 
-    f, h, v = e["ult"]
-    ultimos = "".join(f'<div class="res"><small>{esc(fecha_corta(fl))} {HORAS[hl]}</small><b>{POS[vl]}</b>'
-                      f'<span>{ANIM[POS[vl]].title()}</span></div>' for fl, hl, vl in reversed(filas[-12:]))
-    if calculando:
-        estado_pill = '<span class="pill warn">calculando…</span>'
-    elif modelo == "hazard_actual":
-        estado_pill = '<span class="pill warn">modelo antiguo</span>'
-    else:
-        estado_pill = '<span class="pill">ensamble activo</span>'
     aviso = ""
     if AVISO["texto"]:
-        aviso = f'<div class="msg {AVISO["clase"]}">{AVISO["texto"]}</div>'
+        aviso = f'<div class="msg {AVISO["clase"]}" role="status">{AVISO["texto"]}</div>'
         AVISO["texto"] = ""
 
+    n_mesa = sum(1 for r in d["registros"] if vigente(r))
+    panel_la = (
+        f'{aviso}<div class="duo">{html_jugada(e, calculando, pend, aviso_modelo, modelo)}'
+        f'{html_registro(e)}</div>'
+        + sec("sec-mesa", "Historial de cuadrantes",
+              f"los 38 animales por cuadrante, puesto o días sin salir · "
+              f"{format(n_mesa, ',').replace(',', '.')} sorteos guardados",
+              html_mesa())
+        + sec("historico", "Resultados y puestos en el Top", esc(resumen_resultados(d)), html_resultados(d)))
+
+    def pestana(clave, nombre, sub):
+        on = clave == tab
+        return (f'<a role="tab" id="t-{clave}" data-tab="{clave}" href="/?tab={clave}" aria-controls="p-{clave}" '
+                f'aria-selected="{"true" if on else "false"}" tabindex="{0 if on else -1}">'
+                f'<b>{nombre}</b><small>{sub}</small></a>')
+    cab = ('<header class="cab"><div class="cab-in"><div class="marca">Lotto Activo<small>pronóstico y registro</small></div>'
+           '<nav class="tabs" role="tablist" aria-label="Lotería">'
+           + pestana("la", "Lotto Activo", f"próximo {HORAS[e['ph']]}")
+           + pestana("rd", "RD Internacional", "sorteos a las y media")
+           + '</nav></div></header>')
     cuerpo = (
-        f'<div class="w"><header><div><h1>Lotto Activo</h1>'
-        f'<div class="sub">Último: {esc(fecha_corta(f))} {HORAS[h]} → <b>{POS[v]} {ANIM[POS[v]].title()}</b> · '
-        f'{e["n"]:,} sorteos en el histórico</div></div>{estado_pill}</header>'
-        '<nav><a href="#resumen">En claro</a><a href="#sorteo">Próximo sorteo</a><a href="#tripleta">Tripleta</a><a href="#registrar">Registrar</a>'
-        '<a href="#mesa">Mesa</a><a href="#marcadores">Marcadores</a><a href="#ultimas">Últimas 48</a>'
-        '<a href="#historico">Histórico</a><a href="#herramientas">Herramientas</a></nav>'
-        f'{aviso}{html_resumen(e, d, modelo, calculando)}<div class="strip">{ultimos}</div>'
-        f'<div class="grid"><div>{html_prediccion(e, calculando, pend, aviso_modelo)}<div style="height:14px"></div>{html_registro()}'
-        f'<div style="height:14px"></div>{html_banca(e, banca)}</div>'
-        f'<div>{html_tripleta(e, tri_mostrada, d, filas, calculando, PRED is None, faltan_h)}</div></div>'
-        f'<div style="height:14px"></div>{html_mesa()}{html_marcadores(d)}{html_ultimas(d, filas)}'
-        f'{html_historico(d)}{html_herramientas()}'
-        '<footer>Azar puro: 2,63% por animal y el pago 30x pide 3,33%. En prueba ciega (3.154 sorteos no vistos) '
-        'el Top-3 acertó 12,27% y el Top-5 19,50%; del 6º al 15º, 3,0% cada uno. Ningún modelo garantiza ganar y '
-        'el operador puede cambiar su mecanismo.</footer></div>')
+        f'{cab}<main class="w"><h1 class="sr">Lotto Activo</h1>'
+        f'<section class="panel" id="p-la" role="tabpanel" aria-labelledby="t-la"{"" if tab == "la" else " hidden"}>'
+        f'{panel_la}</section>'
+        f'<section class="panel" id="p-rd" role="tabpanel" aria-labelledby="t-rd"{"" if tab == "rd" else " hidden"}>'
+        f'{html_rd()}</section>'
+        '<footer>Es un juego de azar: ningún modelo garantiza ganar. Juega solo lo que puedas perder.</footer></main>')
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            '<meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)">'
+            '<meta name="theme-color" content="#131419" media="(prefers-color-scheme: dark)">'
+            '<link rel="icon" href="data:,">'
             f'<title>Lotto Activo</title><style>{CSS}</style></head><body>{cuerpo}'
             f'{JS.replace("%CALC%", "true" if calculando else "false")}</body></html>')
 
@@ -1725,38 +1917,46 @@ def _api(fn, *args):
 
 def html_mesa():
     return (
-        '<section class="card" id="mesa">'
-        '<div class="hh"><h2>Mesa de probabilidades</h2>'
-        '<span id="mesa-slot">cargando…</span></div>'
+        '<div id="mesa">'
+        '<p class="mesa-slot" id="mesa-slot" aria-live="polite">cargando…</p>'
         '<div class="mesa-bar">'
-        '<div class="mesa-nav"><button type="button" class="sec" id="mesa-prev">←</button>'
-        '<span id="mesa-pos" class="st"></span>'
-        '<button type="button" class="sec" id="mesa-next">→</button></div>'
-        '<div class="mesa-modos">'
-        '<button type="button" class="sec on" data-modo="rango">Por rango</button>'
-        '<button type="button" class="sec" data-modo="rank">Por rank</button>'
-        '<button type="button" class="sec" data-modo="hueco">Por hueco</button>'
+        '<div class="mesa-nav"><button type="button" class="sec" id="mesa-prev" aria-label="Sorteo anterior">'
+        '<span class="flecha izq" aria-hidden="true"></span></button>'
+        '<span id="mesa-pos" class="mesa-pos"></span>'
+        '<button type="button" class="sec" id="mesa-next" aria-label="Sorteo siguiente">'
+        '<span class="flecha der" aria-hidden="true"></span></button></div>'
+        '<div class="mesa-modos" role="group" aria-label="Agrupar por">'
+        '<button type="button" class="sec on" aria-pressed="true" data-modo="rango">Cuadrantes</button>'
+        '<button type="button" class="sec" aria-pressed="false" data-modo="rank">Puesto</button>'
+        '<button type="button" class="sec" aria-pressed="false" data-modo="hueco">Días sin salir</button>'
         '</div></div>'
         '<div id="mesa-aviso"></div>'
         '<div id="mesa-cuerpo" class="mesa-cuerpo"></div>'
-        '<details style="margin-top:14px"><summary>Dónde cayó el ganador (muestra en vivo)</summary>'
+        '<details class="mas" id="mesa-dist" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+        'Dónde cayó el ganador (muestra en vivo)</summary>'
         '<div id="mesa-stats" class="mesa-stats">cargando…</div>'
-        '<p class="tip" style="margin-top:10px"><b>Muestra en vivo, n pequeño — esto NO es '
-        'validación.</b> Es un termómetro de lo que está pasando ahora, no evidencia. '
-        'Cualquier cambio de apuesta necesita validación walk-forward en desarrollo.</p>'
+        '<p class="tip"><b>Muestra en vivo, n pequeño: esto NO es validación.</b> Es un termómetro '
+        'de lo que pasa ahora, no evidencia. Cualquier cambio de apuesta necesita validación '
+        'walk-forward en desarrollo.</p>'
         '</details>'
         '<p class="note">La mesa no mejora la predicción: muestra completa la distribución que el '
-        'modelo ya calculaba. Solo lectura — no altera pronósticos, marcador ni tripletas.</p>'
-        '</section>')
+        'modelo ya calculaba. Solo lectura.</p>'
+        '</div>')
 
 CSS_MESA = """
+.mesa-slot{margin:0 0 12px;font-size:14px;color:var(--muted)}
+.mesa-slot b{color:var(--ink)}
 .mesa-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .mesa-nav{display:flex;align-items:center;gap:8px}
-.mesa-nav button{padding:6px 13px;font-size:15px;line-height:1}
+.mesa-nav button{width:44px;padding:0;display:inline-grid;place-items:center}
 .mesa-nav button[disabled]{opacity:.35;cursor:default}
-.mesa-modos{display:flex;gap:6px;flex-wrap:wrap}
-.mesa-modos button{padding:6px 12px;font-size:13px;font-weight:600}
-.mesa-modos button.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.mesa-pos{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:9ch;text-align:center}
+.flecha{width:9px;height:9px;border-left:2px solid currentColor;border-bottom:2px solid currentColor}
+.flecha.izq{transform:translateX(2px) rotate(45deg)}.flecha.der{transform:translateX(-2px) rotate(-135deg)}
+.mesa-modos{display:flex;gap:4px;flex-wrap:wrap;padding:3px;background:var(--bg-2);border-radius:10px}
+.mesa-modos button{flex:1 1 auto;min-height:38px;padding:6px 10px;font-size:13px;font-weight:600;background:transparent;border-color:transparent;color:var(--muted)}
+.mesa-modos button.on{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:var(--sh1)}
+#mesa details.mas{margin-top:14px}
 .mesa-cuerpo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:820px){.mesa-cuerpo{grid-template-columns:1fr}}
 .mseg{border:1px solid var(--line);border-radius:9px;padding:10px 12px}
@@ -1875,8 +2075,8 @@ JS_MESA = """
   Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(b){
     b.onclick = function(){
       Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(x){
-        x.classList.remove('on'); });
-      b.classList.add('on'); modo = b.getAttribute('data-modo'); pinta();
+        x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('on'); b.setAttribute('aria-pressed', 'true'); modo = b.getAttribute('data-modo'); pinta();
     };
   });
 
@@ -1944,7 +2144,8 @@ class H(BaseHTTPRequestHandler):
                 banca = banca if 0 < banca < 1e9 else None
             except ValueError:
                 banca = None
-            self._send(render(banca))
+            tab = (q.get("tab", ["la"])[0] or "la").strip().lower()
+            self._send(render(banca, tab))
         elif ruta == "/tareas.json":
             est = estado_tareas()
             est["_auto"] = auto_estado()
@@ -1959,6 +2160,13 @@ class H(BaseHTTPRequestHandler):
             q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
             self._send(json.dumps(_api(mesa_datos, q.get("offset", ["0"])[0]),
                                   ensure_ascii=False), "application/json; charset=utf-8")
+        elif ruta == "/api/rdint":
+            try:
+                import rdint_vivo
+                cuerpo = rdint_vivo.api()
+            except Exception as ex:  # noqa: BLE001
+                cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
+            self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
                        "application/json; charset=utf-8")
@@ -2034,6 +2242,12 @@ if __name__ == "__main__":
     print(f"\n  Lotto Activo corriendo en  {url}")
     print("  Modelo:", "ensamble (numpy/scipy OK)" if PRED else f"antiguo ({PRED_ERR})")
     threading.Thread(target=pronostico_bucle, daemon=True).start()
+    try:                                  # RD Internacional (h:30): anotado + congelado propios
+        import rdint_vivo
+        rdint_vivo.iniciar()
+        print("  RD Internacional: anotado y pronóstico automáticos activos")
+    except Exception as ex:  # noqa: BLE001
+        print(f"  RD Internacional desactivado: {ex!r}", file=sys.stderr)
     if AUTO["activo"]:
         threading.Thread(target=auto_bucle, daemon=True).start()
         print(f"  Resultado: se anota solo (revisa cada {AUTO_INTERVALO // 60} min, "
