@@ -1,0 +1,4 @@
+{"b": [-1.571, -0.479, 0.15],
+ "features": ["LA h:00 == i", "LA (h-1):00 == i", "salio hoy en LA sin h ni h-1"],
+ "origen": "modelo.cruzado(R=250, minimo=500, lam=1) sobre B0=secuencia_v3, ultimo bloque de la prueba ciega (datos hasta 2026-04-12); herramientas/resultados/hilo7_prueba_ciega.md",
+ "congelado": "2026-09-23"}
