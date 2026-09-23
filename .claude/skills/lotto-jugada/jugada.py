@@ -54,6 +54,26 @@ def main():
         return
     orden = sorted((a for a in m["animales"] if a["rank"]), key=lambda a: a["rank"])
     print(f"Sorteo: {m['fecha_txt']} {m['hora_txt']} · modelo {m['modelo']}")
+    # Regla de cambio (hilo 7, adoptada sin confirmar 2026-09-23): si el animal de RD de las
+    # (h−1):30 está en el Top-5, se intercambia con el 6º. Igual que la web.
+    if m["hora"] > 0:
+        try:
+            rdu = {(f, h): c for f, h, c in leer("/api/rdint").get("ultimos", [])}
+        except ValueError:
+            rdu = {}
+        c = rdu.get((m["fecha"], m["hora"] - 1))
+        if c is None:
+            print("OJO: RD de la media hora anterior aún no está anotado; vuelve a pedir la jugada cuando salga.")
+        else:
+            k = next((i for i, a in enumerate(orden[:5]) if a["num"] == c), None)
+            if k is not None and len(orden) > 5:
+                print(f"Cambio por RD: {c} {orden[k]['nombre']} salió en RD media hora antes -> "
+                      f"baja al 6º y sube {orden[5]['num']} {orden[5]['nombre']}.")
+                orden[k], orden[5] = orden[5], orden[k]
+                for r, a in enumerate(orden, 1):
+                    a["rank"] = r
+            else:
+                print(f"RD media hora antes: {c}, no está en el Top-5 (sin cambio).")
     if str(m["modelo"]).endswith("_sin_pesos"):
         print("AVISO: pronóstico hecho SIN pesos del ensamble: no es el modelo medido. Mejor no jugar este.")
     # ficha: base Top-3 con 1/4 de Kelly sobre el límite bajo (0,33 % de la banca en el Top-3)

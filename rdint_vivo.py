@@ -343,6 +343,7 @@ def api():
         return {"error": "sin historial RD"}
     f, h = x["sig"]
     return {"sorteo": {"fecha": f, "hora": HORAS_RD[h]}, "pronostico": x["pend"],
+            "ultimos": [list(r) for r in x["filas"][-24:]],   # [fecha, h, código]: regla de cambio en LA
             "marcador": marcador(x["d"]), "estado": ESTADO}
 
 
@@ -387,6 +388,36 @@ def _sec(id_, titulo, meta, cuerpo):
 
 _COLS = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
          '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
+
+
+def _resultados(d, limite=100):
+    """Lista de resultados RD con el puesto que tenía el ganador en el Top congelado (como en Lotto Activo)."""
+    vistos = [r for r in d["registros"] if r.get("salio") and r.get("puesto")]
+    if not vistos:
+        return '<p class="note">Todavía no hay resultados RD con pronóstico guardado antes del sorteo.</p>', "aún vacío"
+    filas = ""; dia = None
+    for r in reversed(vistos[-limite:]):
+        if r["fecha"] != dia:
+            dia = r["fecha"]
+            filas += '<tr><th colspan="3" scope="rowgroup">%s</th></tr>' % _e(_fecha(dia).capitalize())
+        p = r["puesto"]
+        clase = "p5" if p <= 5 else "p15" if p <= 15 else "fuera"
+        tramo = "del Top-5" if p <= 5 else "del Top-15" if p <= 15 else "fuera del Top-15"
+        filas += ('<tr><td class="h">%s</td><td class="s"><b>%s</b>%s</td>'
+                  '<td class="p"><span class="puesto %s" title="%s">%dº<span class="sr"> %s</span></span></td></tr>'
+                  % (HORAS_RD[r["hora"]], _e(r["salio"]), _e(NOMBRE[r["salio"]]), clase, tramo, p, tramo))
+    ult = [r["puesto"] for r in vistos[-48:]]
+    meta = "último: %dº · Top-5 en %d y Top-15 en %d de los últimos %d" % (
+        vistos[-1]["puesto"], sum(x <= 5 for x in ult), sum(x <= 15 for x in ult), len(ult))
+    nota = ('<p class="note">Se muestran los últimos %d de %d.</p>' % (limite, len(vistos))
+            if len(vistos) > limite else "")
+    clave = ('<p class="clave"><span><span class="puesto p5">1º-5º</span>dentro de la jugada</span>'
+             '<span><span class="puesto p15">6º-15º</span>solo ponderado</span>'
+             '<span><span class="puesto fuera">16º+</span>fuera del Top-15</span></p>')
+    return ('%s<table class="lista"><thead><tr><th scope="col">Hora</th><th scope="col">Salió</th>'
+            '<th scope="col" style="text-align:right">Puesto</th></tr></thead><tbody>%s</tbody></table>%s'
+            '<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p>'
+            % (clave, filas, nota)), meta
 
 
 def html():
@@ -435,6 +466,9 @@ def html():
                   '<p class="ult">%s</p>%s</section>'
                   % (_e(HORAS_RD[h]), pill, linea, cuerpo))
     partes.append('<div style="height:14px"></div>')
+    # --- resultados con su puesto en el Top (misma lista que Lotto Activo)
+    cuerpo_r, meta_r = _resultados(d)
+    partes.append(_sec("rd-historico", "Resultados y puestos en el Top", meta_r, cuerpo_r))
     # --- hoy
     tira = "".join('<span class="chip"><small>%s</small> <b>%s</b> %s</span>' % (HORAS_RD[hh], cod, _e(NOMBRE[cod]))
                    for _, hh, cod in hoy) or '<span class="note">Aún no hay sorteos RD hoy.</span>'

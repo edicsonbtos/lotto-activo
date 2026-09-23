@@ -1101,6 +1101,41 @@ def html_top15(e, pend=None):
             'Prueba ciega ≈ +6% (el Top-15 plano, −1%).</p>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
 
+def cambio_rd(orden, pf, ph):
+    """Regla de cambio (PREREGISTRO_cambio_rd_top5.md, adoptada sin confirmar el 2026-09-23).
+
+    Si el animal que salió en RD Internacional a las (h−1):30 está en el Top-5 de LA h:00, se
+    intercambia con el 6º. Solo cambia lo que se MUESTRA para jugar: el congelado que se puntúa
+    no se toca. Devuelve (orden, info); info es None en el sorteo de 8:00 o si falla RD."""
+    if ph <= 0 or len(orden) < 6:
+        return orden, None
+    try:
+        import rdint_vivo
+        cod = next((c for f, h, c in rdint_vivo.cargar_rd() if f == pf and h == ph - 1), None)
+        info = {"hora_rd": rdint_vivo.HORAS_RD[ph - 1], "rd": cod}
+    except Exception:  # noqa: BLE001 — RD no debe tumbar la jugada de LA
+        return orden, None
+    if cod is None or IDX[cod] not in orden[:5]:
+        return orden, info
+    orden = list(orden); k = orden.index(IDX[cod])
+    orden[k], orden[5] = orden[5], orden[k]
+    info.update(sale=cod, entra=POS[orden[k]], puesto=k + 1)
+    return orden, info
+
+def nota_cambio_rd(info):
+    if info is None:
+        return ""
+    if info["rd"] is None:
+        return (f'<p class="note">RD de las {info["hora_rd"]} aún no está anotado: si el animal que salga ahí '
+                'está en este Top-5, se cambia por el 6º al recargar.</p>')
+    if "sale" not in info:
+        return (f'<p class="note">RD de las {info["hora_rd"]}: '
+                f'<b>{esc(info["rd"])} {esc(ANIM[info["rd"]].title())}</b> — no está en el Top-5, sin cambio.</p>')
+    return (f'<div class="tip"><b>Cambio por RD:</b> {esc(info["sale"])} {esc(ANIM[info["sale"]].title())} '
+            f'salió en RD a las {info["hora_rd"]} → baja del {info["puesto"]}º al 6º y sube '
+            f'<b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b>. Lotto Activo casi nunca repite lo '
+            'que RD sacó media hora antes (prueba 2026-09-23: +1,4 puntos por ficha, sin confirmar aún).</div>')
+
 def html_banca(e, banca=None):
     """Cuánto poner en cada animal según la banca (misma regla que gestion_banca.py)."""
     form = ('<form class="reg" method="get" action="/#banca">'
@@ -1113,6 +1148,7 @@ def html_banca(e, banca=None):
         import gestion_banca as GB
         p = GB.plan_sorteo(banca)
         orden = e.get("orden") or []
+        orden, _ = cambio_rd(orden, e["pf"], e["ph"])
         if p.get("solo_top3") or p["apostar"]:
             montos = ([p["solo_top3"]] * 3 + [0, 0]) if p.get("solo_top3") else \
                      [f * p["ficha"] for f in GB.FICHAS]
@@ -1189,6 +1225,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo):
     orden = e["orden"]
     if pend is not None:
         orden = pend.get("orden_completo") or pend["top3"]
+    orden, info_rd = cambio_rd(orden, e["pf"], e["ph"])
     esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
     def fila(r, i):
         return fila_jugada(r, POS[i], ANIM[POS[i]].title(),
@@ -1207,7 +1244,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo):
                '<p><i class="b"></i><b>Top-15 ponderado</b> (alternativa): 23 fichas, cobra ~1 de cada 2 '
                '(+67, +37 o +7).</p></div>')
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">{cab}'
-            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{mas}{leyenda}{aviso_modelo}</section>')
+            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{leyenda}{aviso_modelo}</section>')
 
 def _clase_puesto(p):
     if p is None: return "fuera"
