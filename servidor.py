@@ -1115,12 +1115,54 @@ def cambio_rd(orden, pf, ph):
         info = {"hora_rd": rdint_vivo.HORAS_RD[ph - 1], "rd": cod}
     except Exception:  # noqa: BLE001 — RD no debe tumbar la jugada de LA
         return orden, None
-    if cod is None or IDX[cod] not in orden[:5]:
+    nuevo = _cambiar(orden, cod) if cod is not None else orden
+    if nuevo is orden:
         return orden, info
-    orden = list(orden); k = orden.index(IDX[cod])
-    orden[k], orden[5] = orden[5], orden[k]
-    info.update(sale=cod, entra=POS[orden[k]], puesto=k + 1)
-    return orden, info
+    k = orden.index(IDX[cod])
+    info.update(sale=cod, entra=POS[nuevo[k]], puesto=k + 1)
+    return nuevo, info
+
+def _cambiar(orden, cod):
+    """El orden con el animal `cod` intercambiado con el 6º si está en el Top-5;
+    el MISMO objeto `orden` si no hay cambio."""
+    if len(orden) < 6 or IDX[cod] not in orden[:5]:
+        return orden
+    nuevo = list(orden); k = nuevo.index(IDX[cod])
+    nuevo[k], nuevo[5] = nuevo[5], nuevo[k]
+    return nuevo
+
+# Marcador en vivo de la regla: cuenta desde el día en que se adoptó, que la
+# prueba (hasta 2026-09-22) nunca vio. RD de las (h−1):30 siempre sale antes
+# de LA h:00, así que aplicarla al congelado después no usa nada del futuro.
+CAMBIO_RD_DESDE = "2026-09-23"
+
+def marcador_cambio_rd(d):
+    """Top-5 escalonado con y sin la regla de cambio, sobre el mismo congelado."""
+    try:
+        import rdint_vivo
+        rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
+    except Exception:  # noqa: BLE001
+        return None
+    f = fichas_por_puesto()
+    m = dict(desde=CAMBIO_RD_DESDE, n=0, cambios=0, gano_rd=0, gano_6=0, sin=0, con=0)
+    for r in resueltas(d):
+        orden = r.get("orden_completo")
+        if not orden or r["fecha"] < CAMBIO_RD_DESDE or r["hora"] <= 0 or r["salio"] not in orden:
+            continue
+        cod = rd.get((r["fecha"], r["hora"] - 1))
+        if cod is None:
+            continue
+        m["n"] += 1
+        p = orden.index(r["salio"]) + 1
+        m["sin"] += PAGO * f[p] - sum(f)
+        nuevo = _cambiar(orden, cod)
+        if nuevo is not orden:
+            m["cambios"] += 1
+            m["gano_rd"] += r["salio"] == IDX[cod]
+            m["gano_6"] += r["salio"] == orden[5]
+        m["con"] += PAGO * f[nuevo.index(r["salio"]) + 1] - sum(f)
+    m["dif"] = m["con"] - m["sin"]
+    return m
 
 def nota_cambio_rd(info):
     if info is None:
@@ -1424,8 +1466,16 @@ def html_economia(d):
         f'<span class="dv"><b>{x["neto"]:+,} fichas</b> ({x["roi"]:+.1f}%)'
         f'<small>{x["fichas"]} fichas por sorteo · cobró en {x["aciertos"]} de {x["n"]}</small></span></div>'
         for x in ec)
+    c = marcador_cambio_rd(d)
+    if c and c["n"]:
+        filas += (f'<div class="dist"><span class="dl">Regla de cambio RD (Top-5 escalonado)</span>'
+                  f'<span class="dv"><b>{c["dif"]:+,} fichas</b> frente a no cambiar'
+                  f'<small>desde {esc(fecha_corta(c["desde"]))}: {c["n"]} sorteos, cambió en {c["cambios"]} · '
+                  f'ganó el de RD {c["gano_rd"]}, el 6º que entró {c["gano_6"]}</small></span></div>')
     return ('<div style="margin-top:18px"><div class="hh"><h2>Cada forma de jugar, con plata</h2>'
             f'<span>{ec[0]["n"]} sorteos con orden guardado</span></div>{filas}'
+            '<p class="note">Regla de cambio RD: en la prueba (377 cambios) ganó el de RD 6 veces y el 6º 14. '
+            'Hacen falta cientos de cambios en vivo para confirmarla.</p>'
             '<p class="note">Lo esperado a largo plazo (prueba ciega, 3.154 sorteos): Top-5 escalonado ≈ +19 % (+10 a +28), '
             'Top-15 ponderado ≈ +6 %, Top-3 ≈ +23 %, Top-15 plano ≈ −1 %. Con menos de ~1.000 sorteos estas cifras bailan mucho por pura suerte.</p></div>')
 
@@ -2218,6 +2268,9 @@ class H(BaseHTTPRequestHandler):
             except Exception as ex:  # noqa: BLE001
                 cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
+        elif ruta == "/api/cambio_rd":
+            self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
+                       "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
                        "application/json; charset=utf-8")

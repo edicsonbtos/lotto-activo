@@ -79,6 +79,15 @@ def main():
         ap = sum(f) * n
         neto = sum(PAGO * f[p] for p in puestos) - ap
         print(f"  {nombre:<28} neto {neto:+6.0f} $  ({neto/ap*100:+5.1f} %)  · esperado a largo plazo {esperado*100:+.0f} %")
+    try:
+        c = leer("/api/cambio_rd")
+    except ValueError:
+        c = None
+    if c and c.get("n"):
+        print(f"\nRegla de cambio RD (desde {c['desde']}): {c['n']} sorteos, cambió en {c['cambios']}; "
+              f"ganó el de RD {c['gano_rd']}, el 6º que entró {c['gano_6']}. "
+              f"Top-5 escalonado con cambio {c['con']:+.0f} $ vs sin cambio {c['sin']:+.0f} $ "
+              f"({c['dif']:+.0f} $). En la prueba: RD 6 vs 6º 14 en 377 cambios.")
     print(f"\nCon {n} sorteos el ruido es enorme (el Top-3 se mueve ±{1.96*math.sqrt(.12*.88/n)*100:.0f} puntos)."
           " Hacen falta ~1.000 para concluir.")
 
