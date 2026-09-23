@@ -606,6 +606,13 @@ HERRAMIENTAS = {
         "mirar": "La fila PRINCIPAL: pasa si Δ mbits ≥ +5 con el IC95 entero sobre 0. Para dinero, el Top-5 "
                  "escalonado «+RD» tiene que superar al del ensamble solo.",
     },
+    "cambio_rd": {
+        "titulo": "¿Sacar del Top-5 de LA el animal que salió en RD? (regla de cambio)", "dura": "10 a 15 min",
+        "cmd": ["rdint/cambio_top5.py"],
+        "que": "Si el animal de RD de las (h−1):30 está en el Top-5 de LA h:00, lo saca y sube al #6; mide la plata.",
+        "mirar": "La fila PRINCIPAL: diferencia por ficha > 0 con IC95 sobre 0 = confirmada; > 0 = se adopta "
+                 "sin confirmar; ≤ 0 = se descarta.",
+    },
 }
 TAREAS = {}
 
