@@ -24,12 +24,10 @@ def rd():
     try:
         m = leer("/api/rdint")
     except ValueError:
-        print("
-RD Internacional: la web aún no publica /api/rdint (¿desplegado?).")
+        print("\nRD Internacional: la web aún no publica /api/rdint (¿desplegado?).")
         return
     p = m.get("pronostico")
-    print(f"
-RD Internacional · {m['sorteo']['fecha']} {m['sorteo']['hora']}")
+    print(f"\nRD Internacional · {m['sorteo']['fecha']} {m['sorteo']['hora']}")
     if not p:
         print("  Calculando (1-2 min tras cada resultado).")
         return

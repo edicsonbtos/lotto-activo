@@ -14,6 +14,9 @@ Estas ideas ya se probaron y quedaron cerradas. No se repiten sin una razón nue
 - La calibración ya está bien (dice 3,5 % → sale 3,51 %). Recalibrar es ajustar ruido.
 - Seguir un animal todo el día (elegido al abrir): +10-15 % en desarrollo, pero renovar el #1 en cada sorteo da +36 %. Es peor que la jugada actual.
 
+- **Hilo 7, memoria cruzada (2026-09-23), CONFIRMADO y en producción:** RD Internacional (h:30) evita el animal de Lotto Activo de h:00. Pasó la prueba ciega (Top-3 12,05 %). Su tramo de prueba (2025-07-01..2026-04-12) YA SE USÓ; la réplica 2026-04-13..09-13 también se miró (Top-15). Para ideas nuevas sobre RD: desarrollo 2024-03-01..2025-06-30, y la confirmación viene del marcador en vivo de RD. La dirección inversa (Lotto Activo usando RD) FALLÓ a ciegas.
+- Pista sin explorar: la API oficial trae "Lotto Activo República Dominicana" (id 3, h:00).
+
 La única estructura real conocida: el operador **evita repetir el animal el mismo día** y **recicla con 1 a 2,5 días de hueco**. El ensamble ya la captura.
 
 ## Cómo medir

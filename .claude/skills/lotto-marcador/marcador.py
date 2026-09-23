@@ -4,7 +4,7 @@
 Uso: python marcador.py
 Solo lee /api/mesa?offset=N (un pronóstico congelado por sorteo). No escribe nada.
 """
-import json, math, subprocess
+import json, math, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
 
 URL = "https://lotto-activo-production.up.railway.app"
@@ -33,7 +33,32 @@ ESTRATEGIAS = [
 ]
 
 
+def rd():
+    """Marcador en vivo de RD Internacional (h:30), leído de /api/rdint."""
+    try:
+        m = leer("/api/rdint")["marcador"]
+    except (ValueError, KeyError):
+        print("\nRD Internacional: sin /api/rdint (¿desplegado?).")
+        return
+    n = m["n"]
+    print(f"\nRD Internacional (en vivo desde 2026-09-23): {n} sorteos puntuados")
+    if not n:
+        return
+    print(f"Del más reciente al más viejo, puesto del ganador: {m['puestos']}")
+    for t, k, azar, equil in ((3, m["top3"], 3 / 38, .10), (5, m["top5"], 5 / 38, 5 / 30), (15, m["top15"], 15 / 38, .5)):
+        tasa = k / n; e = 1.96 * math.sqrt(max(tasa * (1 - tasa), 1e-9) / n)
+        print(f"Top-{t:<2}: {k}/{n} = {tasa*100:.1f} % (IC95 {max(0,tasa-e)*100:.1f}-{(tasa+e)*100:.1f})"
+              f" · azar {azar*100:.1f} % · equilibrio {equil*100:.1f} %")
+    for p in m["planes"]:
+        print(f"  {p['plan']:<28} neto {p['neto']:+6.0f} $  ({p['retorno']*100:+5.1f} %)")
+    print("  Esperado (prueba ciega / réplica): Top-3 +20/+14 %, Top-5 esc. +20/+9 %, "
+          "Top-15 pond. +12/+5 %, Top-15 plano +7/+2 %.")
+
+
 def main():
+    if "--rd" in sys.argv:
+        rd()
+        return
     total = leer("/api/mesa?offset=0")["total"]
     with ThreadPoolExecutor(8) as ex:
         regs = list(ex.map(lambda o: leer(f"/api/mesa?offset={o}"), range(1, total)))

@@ -13,14 +13,16 @@ LOTTO ACTIVO — TODO EN UNA PÁGINA
 4) Para detenerlo: vuelve a PowerShell y pulsa Ctrl + C
    (si cambias el código, detenlo y vuelve a correr python servidor.py)
 
-LA PÁGINA TIENE
-  - Próximo sorteo: Top-3 con su probabilidad.
-  - Tripleta: 2 tripletas para los 12 sorteos que empiezan en el próximo
-    (por ejemplo 2 PM de hoy hasta 1 PM de mañana). Paga 45x.
-  - ¿Qué salió?: escribes el número y pulsas Registrar. Deshacer si te equivocas.
-  - Marcadores: aciertos reales del sorteo y de la tripleta.
-  - Herramientas: botones para validar (diagnóstico, tripleta, sorteo) y ver
-    el resultado ahí mismo, con la explicación de qué mirar.
+LA PÁGINA TIENE (desde 2026-09-23)
+  Arriba, dos pestañas:
+  - Lotto Activo (sorteos h:00): la jugada del próximo sorteo (Top-5
+    escalonado 2-2-2-1-1 y Top-15 ponderado 3-2-1), el recuadro para anotar el
+    resultado (se anota solo; Deshacer si hay error), y dos desplegables:
+    "Historial de cuadrantes" y "Resultados y puestos en el Top".
+  - RD Internacional (sorteos h:30): su jugada, los resultados de hoy de las
+    dos loterías, el marcador de RD y por qué funciona. Todo automático.
+    Juega RD DESPUÉS de que salga Lotto Activo de la misma hora (la web lo
+    marca en verde): RD casi nunca repite ese animal.
 
 No hace falta correr prediccion.py ni nada de herramientas/ a mano.
 
@@ -88,3 +90,16 @@ Nota 2026-09-14: se probó el submodelo antirep_v1 (penalizar repetición
 inmediata y mismo animal misma hora ayer). La señal existe pero YA está
 capturada por el ensamble: no mejora Top-k ni log-verosimilitud. Descartado
 (queda en herramientas/modelos/ como resultado negativo documentado).
+
+
+RD INTERNACIONAL (HILO 7, 2026-09-23)
+-------------------------------------
+Qué es: RD Internacional casi nunca repite el animal que Lotto Activo acaba de
+sacar (5 veces menos de lo normal) ni los que ya salieron hoy en RD.
+Prueba ciega (3.237 sorteos no vistos): Top-3 12,05 %, Top-5 escalonado
++20 % por ficha. Réplica abr-sep 2026: Top-3 +13,9 %, Top-15 ponderado +4,7 %.
+En RD el Top-15 da positivo (en Lotto Activo no).
+Detalle: herramientas/resultados/hilo7_*.md y
+herramientas/exploracion/PREREGISTRO_rdint_cruzado.md.
+Código: rdint_vivo.py (en vivo), herramientas/rdint/ (datos, modelo, pruebas).
+API: /api/rdint.
