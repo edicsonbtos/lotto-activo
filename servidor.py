@@ -709,6 +709,24 @@ def auto_bucle():
             print(f"[auto] {ahora()} bucle: {ex!r}", file=sys.stderr, flush=True)
         time.sleep(AUTO_INTERVALO)
 
+PRONOSTICO_INTERVALO = 60        # segundos
+
+def pronostico_bucle():
+    """Cada minuto deja congelado el pronóstico del próximo sorteo.
+
+    El primer llamado lanza el cálculo (asíncrono, ~10 s a 2 min); el
+    siguiente lo encuentra hecho y lo guarda. Tras cada resultado, el
+    pronóstico del sorteo siguiente queda guardado en 1-3 min, mucho antes
+    de que se juegue."""
+    while True:
+        try:
+            if PRED is not None:
+                with CERROJO:
+                    preparar()
+        except Exception as ex:  # noqa: BLE001
+            print(f"[pronostico] {ahora()} bucle: {ex!r}", file=sys.stderr, flush=True)
+        time.sleep(PRONOSTICO_INTERVALO)
+
 def auto_estado():
     base = {"seq": AUTO["seq"], "corriendo": AUTO["corriendo"]}
     hora = AUTO["revisado"][11:16] if AUTO["revisado"] else ""
@@ -1420,7 +1438,13 @@ def html_herramientas():
             f'<span>corren en el servidor (en Railway no gastan tu PC), sin tocar tus datos</span></div>'
             f'{cuerpo}</section>')
 
-def render(banca=None):
+def preparar():
+    """Congela el pronóstico del próximo sorteo (y la tripleta si toca).
+
+    Lo llaman render() y el hilo pronostico_bucle: así el pronóstico queda
+    guardado ANTES del sorteo aunque nadie abra la página. Antes solo se
+    guardaba al visitar la web, y los sorteos sin visita quedaban sin puntuar.
+    """
     filas = cargar(); e = estado(filas)
     d = log_cargar()
     cambio, _ = resolver_tripletas(d, filas)
@@ -1493,6 +1517,15 @@ def render(banca=None):
     tri_mostrada = tri_actual or tripleta_en_curso(d, filas)
     if cambio:
         log_guardar(d)
+    return dict(filas=filas, e=e, d=d, calculando=calculando, aviso_modelo=aviso_modelo,
+                modelo=modelo, pend=pend, tri_mostrada=tri_mostrada, faltan_h=faltan_h)
+
+
+def render(banca=None):
+    x = preparar()
+    filas, e, d = x["filas"], x["e"], x["d"]
+    calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
+    pend, tri_mostrada, faltan_h = x["pend"], x["tri_mostrada"], x["faltan_h"]
 
     f, h, v = e["ult"]
     ultimos = "".join(f'<div class="res"><small>{esc(fecha_corta(fl))} {HORAS[hl]}</small><b>{POS[vl]}</b>'
@@ -2092,6 +2125,7 @@ if __name__ == "__main__":
     url = f"http://localhost:{PUERTO}"
     print(f"\n  Lotto Activo corriendo en  {url}")
     print("  Modelo:", "ensamble (numpy/scipy OK)" if PRED else f"antiguo ({PRED_ERR})")
+    threading.Thread(target=pronostico_bucle, daemon=True).start()
     if AUTO["activo"]:
         threading.Thread(target=auto_bucle, daemon=True).start()
         print(f"  Resultado: se anota solo (revisa cada {AUTO_INTERVALO // 60} min, "
