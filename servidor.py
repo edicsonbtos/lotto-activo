@@ -425,7 +425,8 @@ def analisis_reciente(d, filas, cuantos=48):
              p3=cola_binomial(t3, n, P_AZAR_T3),
              roi=(PAGO * t3 - 3 * n) / (3 * n) * 100,
              desde=filas[-cuantos][0] if len(filas) >= cuantos else filas[0][0],
-             analisis=analisis_top15(d, res))
+             analisis=analisis_top15(d, res), eco=economia(d, res)[0],
+             t5=sum(1 for p in puestos if p <= 5))
     if n15:
         a.update(tasa15=t15/n15*100, esp15=n15 * P_AZAR_T15,
                  p15=cola_binomial(t15, n15, P_AZAR_T15))
@@ -567,14 +568,6 @@ def deshacer():
 
 # ------------------------------------------------------------- herramientas
 HERRAMIENTAS = {
-    "diagnostico": {
-        "titulo": "Diagnóstico de aleatoriedad", "dura": "segundos",
-        "cmd": ["diagnostico.py"],
-        "que": "Comprueba si el sorteo es azar puro o tiene patrones.",
-        "mirar": "En «1-1» un valor muy por debajo de 1,00x y más de 11 animales distintos por jornada "
-                 "significan que el operador evita repetir. Compara el primer y el último tercio: si cambian "
-                 "mucho, el mecanismo del operador cambió.",
-    },
     "tripleta": {
         "titulo": "Validar tripleta de 12 sorteos", "dura": "1 a 3 min",
         "cmd": ["tripleta_ventana.py"],
@@ -605,13 +598,6 @@ HERRAMIENTAS = {
         "que": "Acierto de cada puesto del orden y calibración del modelo, en 7.357 sorteos de desarrollo.",
         "mirar": "En la tabla 1, cada puesto con «retorno/ficha» negativo pierde plata aunque acierte a veces. "
                  "En la tabla 3, compara la ganancia por sorteo del Top-5 2-2-2-1-1 con el Top-15 plano.",
-    },
-    "sorteo": {
-        "titulo": "Validar predicción por sorteo", "dura": "5 a 10 min",
-        "cmd": ["lotto_eval.py", "modelos/hazard_actual.py", "modelos/ensamble_v2.py", "--sin-fuga"],
-        "que": "Compara el modelo antiguo con el ensamble en 7.357 sorteos de desarrollo.",
-        "mirar": "El ensamble debe superar al antiguo en Top1, Top3 y mbits, y en los 4 «cuartos». "
-                 "Top1 por encima de 3,33% es el umbral con pago 30x; mira el primer número del intervalo [a-b].",
     },
 }
 TAREAS = {}
@@ -1169,9 +1155,7 @@ def html_marcadores(d):
                 else "todavía no distingue" if m["factor"] > 1/3 else "evidencia en contra")
         s1 = (f'<div class="kpis"><div class="kpi"><small>Predicciones</small><b>{m["n"]}</b></div>'
               f'<div class="kpi"><small>Top-3</small><b>{num(m["tasa3"])}%</b>'
-              f'<span>{plural(m["t3"], "acierto", "aciertos")} · azar 7,9% · modelo 12,3%</span></div>'
-              f'<div class="kpi"><small>Top-1</small><b>{num(m["tasa1"])}%</b>'
-              f'<span>{plural(m["t1"], "acierto", "aciertos")} · umbral 30x 3,33%</span></div>')
+              f'<span>{plural(m["t3"], "acierto", "aciertos")} · azar 7,9% · modelo 12,3%</span></div>')
         if m.get("n15"):
             s1 += (f'<div class="kpi"><small>Top-5</small><b>{num(m["tasa5"])}%</b>'
                    f'<span>{m["t5"]} de {m["n15"]} · azar 13,2% · modelo 19,5%</span></div>'
@@ -1179,9 +1163,6 @@ def html_marcadores(d):
                    f'<span>{m["t15"]} de {m["n15"]} · azar 39,5% · equilibrio 50%</span></div>')
         s1 += (f'<div class="kpi"><small>Lectura</small><b style="font-size:14px">{lect}</b>'
                f'<span>factor {num(m["factor"], 2)} : 1</span></div></div>')
-        if m.get("n15") and m["n15"] < m["n"]:
-            s1 += (f'<p class="note">El Top-15 solo puede puntuarse en {m["n15"]} de las {m["n"]} predicciones: '
-                   'las más viejas se guardaron sin el orden completo de los 38, y contarlas como fallo sería mentir.</p>')
         ce = efecto_correcciones(d)
         if ce:
             s1 += (f'<p class="note"><b>Correcciones:</b> {ce["n"]} resultado{"s" if ce["n"] != 1 else ""} se '
@@ -1205,7 +1186,6 @@ def html_marcadores(d):
             f'<div><div class="hh"><h2>Marcador tripleta</h2></div>{s2}</div></div>'
             f'{html_economia(d)}'
             f'{html_temperatura(d)}'
-            f'{html_top15_reparto(d)}'
             f'<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p></section>')
 
 def html_economia(d):
@@ -1249,34 +1229,6 @@ def html_temperatura(d):
     return (f'<div class="temp {t["nivel"]}"><span class="pts">{pts}</span>'
             f'<b>{t["etiqueta"]}</b><span class="txt">{txt}</span></div>')
 
-def html_top15_reparto(d):
-    """Dónde cae el ganador dentro del Top-15 congelado, contra su cuota de azar."""
-    a = analisis_top15(d)
-    if not a["n"]:
-        return ""
-    filas = ""
-    for k, t in enumerate(a["tramos"]):
-        ancho = min(100, t["tasa"])
-        marca = min(100, t["azar"])
-        # El último tramo es «fuera del Top-15»: ahí superar la cuota de azar es
-        # MALO. Resaltar en el color de acierto lo que es un fallo sería mentir
-        # con el color.
-        fuera = k == len(a["tramos"]) - 1
-        mejor = (t["ventaja"] < 0) if fuera else (t["ventaja"] > 0)
-        filas += (f'<div class="dist{" alza" if mejor else ""}"><span class="dl">{t["etiqueta"]}</span>'
-                  f'<span class="db"><i style="width:{ancho:.1f}%"></i>'
-                  f'<em style="left:{marca:.1f}%" title="cuota de azar"></em></span>'
-                  f'<span class="dv">{t["tasa"]:.0f}%'
-                  f'<small>{t["veces"]} {"vez" if t["veces"] == 1 else "veces"} · '
-                  f'azar {t["azar"]:.0f}%</small></span></div>')
-    lectura = ("El orden completo aporta información: el ganador cae en los primeros puestos más veces "
-               "de lo que daría el azar." if a["puesto_medio"] < a["puesto_azar"] - 1 else
-               "Todavía no se distingue del azar: el ganador cae repartido como si el orden no informara.")
-    return (f'<div style="margin-top:18px"><div class="hh"><h2>Dónde cae el ganador</h2>'
-            f'<span>{a["n"]} sorteos con orden guardado</span></div>{filas}'
-            f'<p class="note">Puesto medio del ganador: <b>{num(a["puesto_medio"])}</b> de 38 '
-            f'(al azar sería {num(a["puesto_azar"])}). La raya marca la cuota de azar de cada tramo. {lectura}</p></div>')
-
 def html_ultimas(d, filas, cuantos=48):
     """Estado de acierto reciente: sirve para detectar roturas, no para concluir."""
     a = analisis_reciente(d, filas, cuantos)
@@ -1287,14 +1239,15 @@ def html_ultimas(d, filas, cuantos=48):
                 f'<p class="note">Ninguno de los últimos {cuantos} sorteos tenía pronóstico guardado antes '
                 'del resultado, así que no hay nada honesto que medir aquí todavía.</p></section>')
     kpis = (f'<div class="kpis"><div class="kpi"><small>Top-3</small><b>{num(a["tasa3"])}%</b>'
-            f'<span>{plural(a["t3"], "acierto", "aciertos")} · por azar tocarían {num(a["esp3"])}</span></div>'
-            f'<div class="kpi"><small>Top-1</small><b>{num(a["tasa1"])}%</b>'
-            f'<span>{plural(a["t1"], "acierto", "aciertos")} · por azar {num(a["esp1"])}</span></div>')
+            f'<span>{plural(a["t3"], "acierto", "aciertos")} · por azar tocarían {num(a["esp3"])}</span></div>')
     if a.get("n15"):
+        kpis += (f'<div class="kpi"><small>Top-5</small><b>{num(a["t5"] / a["n15"] * 100)}%</b>'
+                 f'<span>{a["t5"]} de {a["n15"]} · por azar {num(a["n15"] * 5 / K)}</span></div>')
         kpis += (f'<div class="kpi"><small>Top-15</small><b>{num(a["tasa15"])}%</b>'
                  f'<span>{a["t15"]} de {a["n15"]} · por azar {num(a["esp15"])}</span></div>')
-    kpis += (f'<div class="kpi"><small>Resultado a {PAGO}x</small><b>{a["roi"]:+.0f}%</b>'
-             f'<span>apostando los 3 en cada sorteo</span></div></div>')
+    ec = a["eco"]
+    kpis += (f'<div class="kpi"><small>Top-5 escalonado</small><b>{ec["neto"]:+,}</b>'
+             f'<span>fichas ({ec["roi"]:+.0f}%) con 8 fichas por sorteo</span></div></div>')
     # p-valor: qué tan fácil sería este resultado por pura suerte.
     prob = a["p3"] * 100
     if a["t3"] <= a["esp3"]:
@@ -1316,68 +1269,25 @@ def html_ultimas(d, filas, cuantos=48):
             f'<p class="note">Esta ventana corta existe para <b>ver si algo se rompió</b>, no para decidir. '
             f'Con {a["n"]} sorteos, acertar uno más o uno menos mueve el porcentaje varios puntos.</p></section>')
 
-def _leer_consejo():
-    """Top-3 del consenso de la mesa nocturna (si el archivo es reciente)."""
-    ruta = os.path.join(HERR, "resultados", "mesa_consejo.txt")
-    try:
-        if time.time() - os.path.getmtime(ruta) > 36 * 3600:
-            return None
-        raw = open(ruta, "rb").read()
-        for enc in ("utf-8", "utf-16"):
-            try:
-                txt = raw.decode(enc)
-                break
-            except UnicodeDecodeError:
-                continue
-        else:
-            return None
-        if "CONSENSO" not in txt:
-            return None
-        picks = []
-        for ln in txt.splitlines():
-            p = ln.split()
-            if len(p) >= 3 and p[0] == "#" and p[1].isdigit():
-                picks.append(p[2])
-            if len(picks) == 3:
-                break
-        return picks or None
-    except OSError:
-        return None
-
 def html_resumen(e, d, modelo, calculando):
     """Panel 'En palabras claras': qué jugar, cómo vas y qué hacer, sin tecnicismos."""
     partes = []
     if calculando:
-        partes.append("<p>⏳ Calculando la jugada del próximo sorteo; en unos segundos te la digo en claro.</p>")
+        partes.append("<p>⏳ Calculando la jugada del próximo sorteo; aparece en unos segundos.</p>")
+    elif modelo != "hazard_actual":
+        partes.append("<p>🎯 <b>La jugada</b> está abajo, en «Próximo sorteo»: 5 animales con sus fichas. "
+                      "Cuánto vale cada ficha te lo dice «¿Cuánto apuesto?».</p>")
+    ec = economia(d)
+    if not ec or not ec[0]["n"]:
+        partes.append("<p>📊 <b>Cómo vas:</b> todavía no hay pronósticos resueltos.</p>")
     else:
-        orden = e["orden"][:5]
-        trio = ", ".join(f"<b>{POS[i]}</b> {ANIM[POS[i]].title()}" for i in orden[:3])
-        par = " y ".join(f"<b>{POS[i]}</b> {ANIM[POS[i]].title()}" for i in orden[3:5])
-        if modelo != "hazard_actual":
-            partes.append(
-                f"<p>🎯 <b>La jugada de ahora:</b> 2 fichas a {trio}; 1 ficha a {par}. Son 8 fichas. "
-                f"Si sale uno de los 3 primeros cobras {2*PAGO}; si sale el 4º o el 5º, {PAGO}. "
-                f"En prueba ciega esto cobró 1 de cada 5 sorteos y dejó ≈ +19% de lo apostado (entre +10% y +28%). "
-                f"Lo probado de verdad es el Top-3; el 4º y 5º son refuerzo.</p>")
-        else:
-            partes.append(f"<p>🎯 <b>La jugada de ahora:</b> {trio} (modelo antiguo, sin porcentajes calibrados).</p>")
-    m = marcador(d)
-    if m["n"] == 0:
-        partes.append("<p>📊 <b>Cómo vas:</b> todavía no hay predicciones resueltas. Registra cada resultado y aquí te diré si vas ganando o si es espejismo.</p>")
-    else:
-        roi = (PAGO * m["t3"] - 3 * m["n"]) / (3 * m["n"]) * 100
-        equi = 3 / PAGO * 100
-        if roi >= 0 and m["factor"] >= 3:
-            cara = "✅ Vas en <b>positivo</b> y la evidencia empieza a favorecer al modelo."
-        elif roi >= 0:
-            cara = "🟡 Vas en <b>positivo</b>, pero todavía puede ser suerte."
-        else:
-            cara = "🔴 Vas en <b>negativo</b>: con estos números estarías perdiendo plata."
+        x = ec[0]
+        cara = ("🟢 en positivo, pero con tan pocos sorteos todavía puede ser suerte" if x["neto"] >= 0
+                else "🔴 en negativo; con tan pocos sorteos todavía puede ser mala racha")
         partes.append(
-            f"<p>📊 <b>Cómo vas (sorteo):</b> {m['t3']} aciertos Top-3 en {m['n']} sorteos ({m['tasa3']:.1f}%). "
-            f"El azar da 7,9%, el punto de equilibrio es {equi:.1f}% y el modelo promete ~12,3%. "
-            f"Si hubieras jugado el Top-3 plano: <b>{roi:+.0f}%</b>. {cara} "
-            f"Para jurarlo de verdad hacen falta ~1.000 sorteos; llevas {m['n']}.</p>")
+            f"<p>📊 <b>Cómo vas:</b> jugando el Top-5 escalonado a 1 ficha llevarías <b>{x['neto']:+,} fichas</b> "
+            f"({x['roi']:+.0f}%) en {x['n']} sorteos: {cara}. Lo esperado a largo plazo es ≈ +19%; "
+            f"hacen falta ~1.000 sorteos para saberlo.</p>")
     mt = marcador_tripleta(d)
     pend = sum(1 for t in d["tripletas"] if vigente(t) and t.get("estado") == "pendiente")
     if mt["n"] == 0:
@@ -1386,12 +1296,10 @@ def html_resumen(e, d, modelo, calculando):
         partes.append(
             f"<p>🎲 <b>Tripleta:</b> {mt['aciertos']} de {mt['jugadas']} ganadoras ({mt['tasa']:.1f}%; necesitas más de 2,22%). "
             f"A 45x habrías sacado <b>{mt['ganancia']:+d}</b> unidades. Con {mt['n']} ventanas cerradas aún es pura suerte.</p>")
-    cons = _leer_consejo()
-    if cons:
-        partes.append(f"<p>🧠 <b>El consejo de las 5 estrategias</b> (corre solo cada noche) vota: <b>{', '.join(cons)}</b> para el próximo sorteo.</p>")
     partes.append('<p class="note">Reglas: juega el Top-5 escalonado en TODOS los sorteos · no pases del 5º (del 6º al 15º '
                   "cada animal pierde plata) · no subas el monto cuando el porcentaje se vea alto ni saltes sorteos que se "
-                  "ven «fríos» (probado en prueba ciega: no acierta más) · el tamaño de la ficha lo dice gestion_banca.py.</p>")
+                  "ven «fríos» (probado en prueba ciega: no acierta más) · las rachas de fallos no se pueden predecir: se aguantan "
+                  "con una ficha pequeña (≤ 3 % de la banca por sorteo).</p>")
     return ('<section class="card" id="resumen"><div class="hh"><h2>En palabras claras</h2>'
             f"<span>{esc(fecha_corta(e['pf']))} · {HORAS[e['ph']]}</span></div>{''.join(partes)}</section>")
 
@@ -1554,9 +1462,9 @@ def render(banca=None):
         f'<div>{html_tripleta(e, tri_mostrada, d, filas, calculando, PRED is None, faltan_h)}</div></div>'
         f'<div style="height:14px"></div>{html_mesa()}{html_marcadores(d)}{html_ultimas(d, filas)}'
         f'{html_historico(d)}{html_herramientas()}'
-        '<footer>Azar puro: 2,63% por animal. En prueba ciega (3.122 sorteos) el ensamble acertó Top-1 4,00% '
-        '(IC 95%: 3,37–4,75) y Top-3 12,27%; el umbral con pago 30x es 3,33%. Ningún modelo garantiza ganar y el '
-        'operador puede cambiar su mecanismo. Tus datos: historial.txt y predicciones.json.</footer></div>')
+        '<footer>Azar puro: 2,63% por animal y el pago 30x pide 3,33%. En prueba ciega (3.154 sorteos no vistos) '
+        'el Top-3 acertó 12,27% y el Top-5 19,50%; del 6º al 15º, 3,0% cada uno. Ningún modelo garantiza ganar y '
+        'el operador puede cambiar su mecanismo.</footer></div>')
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>Lotto Activo</title><style>{CSS}</style></head><body>{cuerpo}'
