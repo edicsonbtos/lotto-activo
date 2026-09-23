@@ -354,6 +354,41 @@ def _chip(cod, extra=""):
     return '<span class="chip %s"><b>%s</b> %s</span>' % (extra, _e(cod), _e(NOMBRE[cod]))
 
 
+# --- solo presentación: mismo sistema visual que la pestaña Lotto Activo (servidor.py)
+_DIAS = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
+
+
+def _fecha(f):
+    d = date.fromisoformat(f); hoy = date.today()
+    if d == hoy:
+        return "hoy"
+    if d == hoy + timedelta(days=1):
+        return "mañana"
+    return "%s %d/%d" % (_DIAS[d.weekday()], d.day, d.month)
+
+
+def _fx(n, clase):
+    if not n:
+        return '<span class="fx z" aria-label="sin fichas">–</span>'
+    return '<span class="fx %s" aria-label="%d ficha%s">%d</span>' % (clase, n, "s" if n != 1 else "", n)
+
+
+def _fila(k, cod, pct):
+    return ('<li><span class="rk">%d</span><span class="n">%s</span><span class="nm">%s<small>%s %%</small></span>%s%s</li>'
+            % (k, _e(cod), _e(NOMBRE[cod]), ("%.2f" % pct).replace(".", ","),
+               _fx(PLANES[0][1][k - 1], "a"), _fx(PLANES[1][1][k - 1], "b")))
+
+
+def _sec(id_, titulo, meta, cuerpo):
+    return ('<details class="sec" id="%s" data-rec><summary><span class="st"><h2>%s</h2><span class="meta">%s</span>'
+            '</span><span class="chev" aria-hidden="true"></span></summary><div class="cuerpo">%s</div></details>'
+            % (id_, titulo, _e(meta), cuerpo))
+
+
+_COLS = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
+         '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
+
+
 def html():
     with CERROJO:
         x = preparar()
@@ -363,72 +398,76 @@ def html():
     hoy = [r for r in x["filas"] if r[0] == f]
     la = la_del_dia(f)
     partes = []
-    # --- jugada
+    # --- jugada (abierta, arriba)
+    jugado = datetime.now() >= hora_sorteo(f, h)
     if pend is None:
-        cuerpo = ('<p class="muted">Calculando el pronóstico (tarda 1-2 min tras cada resultado)…</p>'
-                  if datetime.now() < hora_sorteo(f, h) else
-                  '<p class="muted">El servidor no llegó a congelar este sorteo a tiempo; no se puntúa.</p>')
+        pill = ('<span class="pill warn">calculando…</span>' if not jugado
+                else '<span class="pill gris">sin pronóstico</span>')
+        linea = "%s · RD Internacional" % _fecha(f).capitalize()
+        cuerpo = ('<div class="tip">Calculando el pronóstico (tarda 1-2 min tras cada resultado). Se actualiza sola.</div>'
+                  if not jugado else
+                  '<div class="tip">El servidor no llegó a congelar este sorteo a tiempo; no se puntúa.</div>')
     else:
         o = pend["orden"]; pr = pend.get("prob", {})
-        if datetime.now() >= hora_sorteo(f, h):
-            nota = '<span class="pill">jugado · esperando el resultado de RD</span>'
+        if jugado:
+            pill = '<span class="pill gris">jugado</span>'
+            estado = "esperando el resultado de RD"
         elif pend.get("con_la_h"):
-            nota = ('<span class="pill ok">con Lotto Activo de las %s: %s</span>'
-                    % (HORAS_LA[h], _e(NOMBRE[pend["la_h"]]) if pend.get("la_h") else "—"))
+            pill = '<span class="pill">listo</span>'
+            estado = ("incluye Lotto Activo de las %s: <b>%s</b>"
+                      % (HORAS_LA[h], _e(NOMBRE[pend["la_h"]]) if pend.get("la_h") else "—"))
         else:
-            nota = ('<span class="pill warn">esperando Lotto Activo de las %s · se actualiza sola</span>'
-                    % HORAS_LA[h])
-        filas_j = []
-        for k, cod in enumerate(o[:15], 1):
-            f5 = PLANES[0][1][k - 1]; f15 = PLANES[1][1][k - 1]
-            filas_j.append('<li class="%s"><span class="rk">%d</span>%s<span class="muted">%.1f %%</span>'
-                           '<span class="fx">%s</span><span class="fx muted">%d</span></li>'
-                           % ("top5" if k <= 5 else "", k, _chip(cod), 100 * pr.get(cod, 0),
-                              ("%d" % f5) if f5 else "·", f15))
-        cuerpo = ('<div class="kpis"><div class="kpi"><small>Sorteo</small><b>%s</b></div>'
-                  '<div class="kpi"><small>Estado</small>%s</div></div>'
-                  '<ol class="jugada"><li class="cab"><span class="rk">#</span><span>Animal</span>'
-                  '<span class="muted">Prob.</span><span class="fx">Top-5</span><span class="fx muted">Top-15</span></li>%s</ol>'
-                  '<p class="muted">Fichas: <b>Top-5 escalonado</b> (2-2-2-1-1) o <b>Top-15 ponderado</b> (3-2-1). '
-                  'Casi descartados: los que ya salieron hoy en RD y el de Lotto Activo de la misma hora. '
-                  'Juega DESPUÉS de ver Lotto Activo de las %s y antes de las %s.</p>'
-                  % (_e(HORAS_RD[h]), nota, "".join(filas_j), HORAS_LA[h], HORAS_RD[h]))
-    partes.append('<section class="card" id="rd-jugada"><h2 class="card-h">Jugada RD Internacional · %s %s</h2>%s</section>'
-                  % (_e(f), _e(HORAS_RD[h]), cuerpo))
+            pill = '<span class="pill warn">esperando LA</span>'
+            estado = "esperando Lotto Activo de las %s · se actualiza sola" % HORAS_LA[h]
+        linea = "%s · %s" % (_fecha(f).capitalize(), estado)
+        top5 = "".join(_fila(k, cod, 100 * pr.get(cod, 0)) for k, cod in enumerate(o[:5], 1))
+        resto = "".join(_fila(k, cod, 100 * pr.get(cod, 0)) for k, cod in enumerate(o[5:15], 6))
+        cuerpo = ('<ol class="jug">%s%s</ol>'
+                  '<details class="mas" id="rd-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+                  'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">%s</ol></details>'
+                  '<div class="leyenda"><p><i class="a"></i><b>Top-5 escalonado</b> (2-2-2-1-1) o '
+                  '<i class="b" style="margin-left:4px"></i><b>Top-15 ponderado</b> (3-2-1).</p>'
+                  '<p>Casi descartados: los que ya salieron hoy en RD y el de Lotto Activo de la misma hora. '
+                  'Juega <b>después</b> de ver Lotto Activo de las %s y antes de las %s.</p></div>'
+                  % (_COLS, top5, resto, HORAS_LA[h], HORAS_RD[h]))
+    partes.append('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">'
+                  '<div class="jh"><h2 id="rd-t">Próximo RD · <span>%s</span></h2>%s</div>'
+                  '<p class="ult">%s</p>%s</section>'
+                  % (_e(HORAS_RD[h]), pill, linea, cuerpo))
+    partes.append('<div style="height:14px"></div>')
     # --- hoy
     tira = "".join('<span class="chip"><small>%s</small> <b>%s</b> %s</span>' % (HORAS_RD[hh], cod, _e(NOMBRE[cod]))
-                   for _, hh, cod in hoy) or '<span class="muted">Aún no hay sorteos RD hoy.</span>'
+                   for _, hh, cod in hoy) or '<span class="note">Aún no hay sorteos RD hoy.</span>'
     tira_la = "".join('<span class="chip"><small>%s</small> <b>%s</b> %s</span>' % (HORAS_LA[hh], cod, _e(NOMBRE[cod]))
-                      for hh, cod in sorted(la.items())) or '<span class="muted">—</span>'
-    partes.append('<details class="sec" id="rd-hoy"><summary>Resultados de hoy · RD %d · Lotto Activo %d</summary>'
-                  '<div class="card"><h3 class="card-h">RD Internacional</h3><div class="tira">%s</div>'
-                  '<h3 class="card-h">Lotto Activo</h3><div class="tira">%s</div></div></details>'
-                  % (len(hoy), len(la), tira, tira_la))
+                      for hh, cod in sorted(la.items())) or '<span class="note">—</span>'
+    partes.append(_sec("rd-hoy", "Resultados de hoy", "RD %d · Lotto Activo %d" % (len(hoy), len(la)),
+                       '<h3>RD Internacional</h3><div class="tira">%s</div>'
+                       '<h3>Lotto Activo</h3><div class="tira">%s</div>' % (tira, tira_la)))
     # --- marcador
     m = marcador(d)
     if m["n"]:
-        filas_m = "".join('<tr><td>%s</td><td>%d</td><td class="%s">%+d</td><td>%+.1f %%</td></tr>'
+        filas_m = "".join('<tr><td>%s</td><td>%d</td><td class="%s">%+d</td><td>%s %%</td></tr>'
                           % (_e(p["plan"]), p["apostado"], "ok" if p["neto"] >= 0 else "bad", p["neto"],
-                             100 * p["retorno"]) for p in m["planes"])
-        cuerpo_m = ('<div class="kpis"><div class="kpi"><small>Sorteos</small><b>%d</b></div>'
-                    '<div class="kpi"><small>Top-3</small><b>%d</b></div><div class="kpi"><small>Top-5</small><b>%d</b></div>'
-                    '<div class="kpi"><small>Top-15</small><b>%d</b></div></div>'
-                    '<table class="tabla"><tr><th>Plan (1 ficha = 1 $)</th><th>Apostado</th><th>Neto</th><th>Retorno</th></tr>%s</table>'
-                    '<p class="muted">Puesto del ganador, del más reciente al más viejo: %s</p>'
+                             ("%+.1f" % (100 * p["retorno"])).replace(".", ",")) for p in m["planes"])
+        cuerpo_m = ('<div class="cifras"><div><small>Sorteos</small><b>%d</b></div>'
+                    '<div><small>Top-3</small><b>%d</b></div><div><small>Top-5</small><b>%d</b></div>'
+                    '<div><small>Top-15</small><b>%d</b></div></div>'
+                    '<div class="desliza"><table class="tabla"><thead><tr><th>Plan (1 ficha = 1 $)</th><th>Apostado</th>'
+                    '<th>Neto</th><th>Retorno</th></tr></thead><tbody>%s</tbody></table></div>'
+                    '<p class="note">Puesto del ganador, del más reciente al más viejo: %s</p>'
                     % (m["n"], m["top3"], m["top5"], m["top15"], filas_m, ", ".join(map(str, m["puestos"]))))
     else:
-        cuerpo_m = '<p class="muted">Todavía no hay sorteos RD puntuados en vivo.</p>'
-    resumen = ("Marcador RD · %d sorteos · Top-3 %d · Top-15 %d" % (m["n"], m["top3"], m["top15"])
-               if m["n"] else "Marcador RD · aún vacío")
-    partes.append('<details class="sec" id="rd-marcador"><summary>%s</summary><div class="card">%s</div></details>'
-                  % (_e(resumen), cuerpo_m))
+        cuerpo_m = '<p class="note">Todavía no hay sorteos RD puntuados en vivo.</p>'
+    resumen = ("%d sorteos · Top-3 %d · Top-15 %d" % (m["n"], m["top3"], m["top15"])
+               if m["n"] else "aún vacío")
+    partes.append(_sec("rd-marcador", "Marcador RD", resumen, cuerpo_m))
     # --- evidencia
-    partes.append(
-        '<details class="sec" id="rd-evidencia"><summary>Por qué funciona · prueba ciega</summary><div class="card">'
+    partes.append(_sec(
+        "rd-evidencia", "Por qué funciona", "prueba ciega · 3.237 sorteos no vistos",
         '<p>RD Internacional casi nunca repite el animal que Lotto Activo acaba de sacar (5 veces menos de lo normal) '
         'ni los que ya salieron hoy en RD. En la prueba ciega (3.237 sorteos no vistos, jul-2025 a abr-2026) el Top-3 '
         'acertó 12,05 %% (equilibrio 10 %%) y el Top-5 escalonado ganó +20 %% por ficha. Es una sola prueba: '
         'confírmalo en este marcador antes de subir la apuesta.</p>'
-        '<p class="muted">Anotado automático: %s%s.</p></div></details>'
-        % (_e(ESTADO["mensaje"]), (" · error: " + _e(ESTADO["error"])) if ESTADO["error"] else ""))
+        '<p class="note">Anotado automático: %s%s.</p>'
+        % (_e(ESTADO["mensaje"]), (" · error: " + _e(ESTADO["error"])) if ESTADO["error"] else "")))
     return "".join(partes)
