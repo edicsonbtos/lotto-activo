@@ -21,6 +21,8 @@ import lotto_eval as LE
 
 RD_CSV = os.path.join(RAIZ, "datos_multiloteria", "rdint_hist.csv")
 LA_CSV = os.path.join(RAIZ, "datos_multiloteria", "lottoactivo.csv")   # cola posterior a historial.txt
+# En Railway el historial vivo está en el volumen, no en /app
+LA_HIST = os.path.join(os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RAIZ, "historial.txt")
 
 ANIMALES = {
     "DELFIN": "0", "BALLENA": "00", "CARNERO": "1", "TORO": "2", "CIEMPIES": "3",
@@ -52,7 +54,7 @@ def tramo_de(f):
 def _la_por_fecha():
     """{fecha: {h: idx}} de Lotto Activo: historial.txt + cola de lottoactivo.csv."""
     d = {}
-    la = LE.cargar()
+    la = LE.cargar(LA_HIST)
     for f, h, s in zip(la.fecha, la.hora, la.seq):
         d.setdefault(f, {})[int(h)] = int(s)
     if os.path.exists(LA_CSV):
