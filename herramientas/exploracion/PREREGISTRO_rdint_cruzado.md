@@ -59,3 +59,28 @@ proporcionales a (30p−1)/29 redondeadas a 1-3.
   alineación de fechas, huecos de días sin sorteo).
 - Prueba ciega: se corre UNA vez con el modelo y el plan congelados. Éxito = Top-3 de B1 > 10 % y
   Δ mbits B1−B0 con IC95 > 0. Si falla, el hilo 7 se cierra como el hilo 6.
+
+---
+## ENMIENDA 2026-09-23 (después del desarrollo, ANTES de la prueba ciega)
+Motivo: la auditoría (revisor-sesgo + revisor Python) marcó grados de libertad no anotados. Se congelan así:
+- **B0** = `secuencia_v3` corrido solo con RD Int, walk-forward desde la fila 2000 (elegido en dev frente a
+  intradia_v2: +108 contra +105 mbits).
+- **B1** = `herramientas/rdint/modelo.py` tal cual: features [LA h:00 == i], [LA (h−1):00 == i],
+  [salió hoy en LA hasta h:00, binario, sin contar h ni h−1]; `cruzado(R=250, minimo=500, lam=1)`.
+- **H3 / E2**: se usa la lectura LITERAL de la regla, **1 ficha plana** a cada animal con p·30 ≥ 1,10 (la
+  reescala "el mejor lleva 3 fichas" se eligió mirando dev y se descarta). Cuenta como una comparación más.
+- **H4** (dirección inversa), definida así: features para LA h:00 = [RD (h−1):30 == i] y [salió hoy en RD
+  antes de h:00, sin contar (h−1):30]; walk-forward con `modelo.cruzado(R=250, minimo=500, lam=1)` sobre el
+  logit congelado de ensamble_v2 (`calor_cache.npz`). Es el esquema principal; el ajuste por cuartos
+  queda como sensibilidad. En dev pasó (+12,6 mbits), en contra de lo esperado.
+- Resultado del desarrollo: H1 PASA (+19,9 mbits [+14,6, +24,8]), H2 PASA por la estimación puntual
+  (Top-3 10,93 %; casi todo viene de B0), H3 frágil, H4 PASA.
+
+### Prueba ciega (una sola corrida, `herramientas/rdint/prueba_ciega.py`)
+- RD Int: filas del tramo test (2025-07-01 .. 2026-04-12), con los datos truncados al primer sorteo 'desc'.
+  Éxito E1 = Top-3 de B1 > 10 % Y Δ mbits B1−B0 con IC95 > 0. Se reportan también el retorno del Top-3
+  plano, el del Top-5 escalonado y el de E2 literal (informativos).
+- H4: filas de Lotto Activo con fecha en [2025-07-01, 2025-12-17). Son las únicas del tramo test de RD que
+  están en `calor_cache.npz`; OJO: son filas de DESARROLLO de LA, así que el ensamble no es ciego ahí; lo
+  ciego es la parte RD, con coeficientes walk-forward. Éxito H4 = Δ mbits con IC95 > 0.
+- Se anota en `herramientas/registro_final.jsonl`.
