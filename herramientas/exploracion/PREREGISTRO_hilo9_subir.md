@@ -44,3 +44,16 @@ mirada una vez para Top-15: contaminación declarada). Nada se lleva a la jugada
 ## Si nada pasa
 Se documenta el techo: con lo conocido, los porcentajes actuales son el máximo demostrable, y se deja
 todo reproducible (scripts + caches + este archivo) para verificación independiente.
+
+## ANEXO 2026-09-23 (después de los pasos 1 y 2, ANTES de correr esto) — M: prueba de techo
+Resultado de pasos 1-2: L3 y R4 son reales en residuo pero aportan +1,4 y +0,3 mbits: no pasan.
+Se añade UNA prueba más (no estaba en la batería; cuenta como comparación nueva):
+- **M-A (techo flexible):** modelo de elección condicional (softmax sobre 38) con ~100 variables en
+  tramos (hueco en sorteos × franja horaria, segundo hueco, conteos en 36 y 120 sorteos, veces hoy ×
+  franja, días desde la última, RD (h−1):30, RD (h−2):30, RD hoy, RD ayer), L2, walk-forward
+  (reajuste cada 500 filas, sólo filas pasadas), SIN el ensamble. Pregunta: ¿un modelo flexible con
+  todo junto supera al ensamble?
+- **M-B (apilado):** lo mismo + log P del ensamble como variable. Pregunta: ¿queda algo sin capturar?
+- Tramo: LA dev (filas 2000..9357, fecha < 2025-12-15, con RD). Las primeras 1500 filas sólo entrenan.
+- Pasa si Δ mbits contra el ensamble ≥ +5 con IC95 > 0 en ambas mitades evaluadas. Si M-B no pasa,
+  queda documentado que con estos datos no hay estructura capturable por encima del ensamble.
