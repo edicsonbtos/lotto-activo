@@ -613,6 +613,13 @@ HERRAMIENTAS = {
         "mirar": "La fila PRINCIPAL: diferencia por ficha > 0 con IC95 sobre 0 = confirmada; > 0 = se adopta "
                  "sin confirmar; ≤ 0 = se descarta.",
     },
+    "cambio_noche": {
+        "titulo": "¿RD de las 7:30 PM afecta a LA de las 8:00 del día siguiente?", "dura": "10 a 15 min",
+        "cmd": ["rdint/cambio_noche.py"],
+        "que": "Extiende la regla de cambio a las 8:00 con el RD de las 19:30 de la víspera y mide señal y plata.",
+        "mirar": "La fila PRINCIPAL (PREREGISTRO_cambio_rd_noche.md): diferencia > 0 con IC95 sobre 0 y p < 0,05 "
+                 "= confirmada; > 0 aquí y en desarrollo = se adopta sin confirmar; si no, se descarta.",
+    },
 }
 TAREAS = {}
 
