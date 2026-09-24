@@ -20,6 +20,13 @@ import datos as DT
 SALIDA = os.path.join(HERR, "resultados", "hilo9_residuos.md")
 ALFA = 0.05 / 9
 LA_FIN = "2025-12-15"          # se excluyen las fechas corridas del historial (ver hilo 8)
+# Verificación independiente: HILO9_DATOS=verificacion/hilo9/datos lee la copia congelada.
+DATOS = os.environ.get("HILO9_DATOS")
+
+
+def ruta(*partes):
+    """Ruta de un dato: la copia congelada si HILO9_DATOS está puesto, si no la del proyecto."""
+    return os.path.join(DATOS, partes[-1]) if DATOS else os.path.join(*partes)
 
 
 def dia_menos(f, k):
@@ -51,7 +58,7 @@ def main():
          "| hipótesis | sorteos marcados | O | E | O/E | z | p | pasa | O/E por hora |",
          "|---|---|---|---|---|---|---|---|---|"]
     # ---- datos
-    la = LE.cargar(os.path.join(RAIZ, "historial.txt"))
+    la = LE.cargar(ruta(RAIZ, "historial.txt"))
     la_d = defaultdict(dict)
     for f, h, s in zip(la.fecha, la.hora, la.seq):
         la_d[f][int(h)] = int(s)
@@ -61,7 +68,7 @@ def main():
         rd_d[f][int(h)] = int(s)
 
     # ---- RD (P1 = B1) tramo dev
-    T = np.load(os.path.join(HERR, "rdint", "cache_todo.npz"))
+    T = np.load(ruta(HERR, "rdint", "cache_todo.npz"))
     s = T["tramo"] == "dev"
     P1 = T["P1"][s].astype(float); y = T["y"][s]; hr = T["hora"][s]; fe = T["fecha"][s]
     P1 = P1 / P1.sum(1, keepdims=True)
@@ -82,7 +89,7 @@ def main():
     L.append(prueba("R4 RD ← RD hoy (auto-evitación)", P1, y, hr, rd_hoy))
 
     # ---- LA (ensamble_v2) filas 2000..9357, fecha < LA_FIN
-    C = np.load(os.path.join(HERR, "exploracion", "calor_cache.npz"))
+    C = np.load(ruta(HERR, "exploracion", "calor_cache.npz"))
     PL = C["P"]; yl = C["y"]
     fl = np.array(la.fecha[LE.W:LE.W + len(yl)]); hl = np.asarray(la.hora)[LE.W:LE.W + len(yl)]
     m = fl < LA_FIN
@@ -97,8 +104,8 @@ def main():
         len(y), fe[0], fe[-1], len(yl), fl[0], fl[-1]))
 
     # ---- E1: mezcla log-lineal de B1 con intradia_v2 de RD, peso walk-forward (bloques de 250)
-    I = np.load(os.path.join(HERR, "rdint", "_b0_intradia_v2.npz"))
-    D = np.load(os.path.join(HERR, "rdint", "cache_dev.npz"))
+    I = np.load(ruta(HERR, "rdint", "_b0_intradia_v2.npz"))
+    D = np.load(ruta(HERR, "rdint", "cache_dev.npz"))
     fila = D["fila"]; Pi_all = I["P"].astype(float); desde = int(I["desde"])
     Pi = Pi_all[fila - desde]; Pi = Pi / Pi.sum(1, keepdims=True)
     Pb = D["P1"].astype(float); Pb = Pb / Pb.sum(1, keepdims=True); yd = D["y"]; dd = D["dia"]

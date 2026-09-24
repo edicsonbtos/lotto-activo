@@ -81,7 +81,7 @@ def tasas(P, y):
 
 
 def main():
-    la = LE.cargar(os.path.join(RAIZ, "historial.txt"))
+    la = LE.cargar(RS.ruta(RAIZ, "historial.txt"))
     la_d = defaultdict(dict)
     for f, h, s in zip(la.fecha, la.hora, la.seq):
         la_d[f][int(h)] = int(s)
@@ -92,7 +92,7 @@ def main():
     out = ["# Hilo 9 — paso 2: R4 y L3 como término del modelo (sólo desarrollo, walk-forward)\n"]
 
     # ---------------- R4 (RD)
-    T = np.load(os.path.join(HERR, "rdint", "cache_todo.npz")); s = T["tramo"] == "dev"
+    T = np.load(RS.ruta(HERR, "rdint", "cache_todo.npz")); s = T["tramo"] == "dev"
     P1 = T["P1"][s].astype(float); P1 /= P1.sum(1, keepdims=True)
     y = T["y"][s]; hr = T["hora"][s]; fe = T["fecha"][s]; dia = T["dia"][s]
     X = np.zeros_like(P1)
@@ -109,7 +109,7 @@ def main():
                 "Tasas: B1 %s | B1+R4 %s" % (tasas(P1, y), tasas(Pn, y)), "**R4 paso 2: %s**" % ("PASA" if ok_r4 else "NO PASA")]
 
     # ---------------- L3 (LA)
-    C = np.load(os.path.join(HERR, "exploracion", "calor_cache.npz")); PL = C["P"]; yl = C["y"]
+    C = np.load(RS.ruta(HERR, "exploracion", "calor_cache.npz")); PL = C["P"]; yl = C["y"]
     fl = np.array(la.fecha[LE.W:LE.W + len(yl)]); hl = np.asarray(la.hora)[LE.W:LE.W + len(yl)]
     dl = np.asarray(la.dia)[LE.W:LE.W + len(yl)]
     m = (fl < RS.LA_FIN) & np.array([f in rd_d for f in fl])
