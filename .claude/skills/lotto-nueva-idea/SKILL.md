@@ -15,6 +15,7 @@ Estas ideas ya se probaron y quedaron cerradas. No se repiten sin una razón nue
 - Seguir un animal todo el día (elegido al abrir): +10-15 % en desarrollo, pero renovar el #1 en cada sorteo da +36 %. Es peor que la jugada actual.
 
 - **Hilo 7, memoria cruzada (2026-09-23), CONFIRMADO y en producción:** RD Internacional (h:30) evita el animal de Lotto Activo de h:00. Pasó la prueba ciega (Top-3 12,05 %). Su tramo de prueba (2025-07-01..2026-04-12) YA SE USÓ; la réplica 2026-04-13..09-13 también se miró (Top-15). Para ideas nuevas sobre RD: desarrollo 2024-03-01..2025-06-30, y la confirmación viene del marcador en vivo de RD. La dirección inversa (Lotto Activo usando RD) FALLÓ a ciegas.
+- **Regla de cambio RD (h−1):30 → Top-5 de LA h:00** (2026-09-23): se adopta sin confirmar, en vivo (quitar y subir, el 6º entra 5º). **Extenderla a las 8:00 con RD 19:30 de la víspera: DESCARTADA** (hilo7_cambio_noche.md). La noche corta el "no repetir el anterior": en desarrollo LA 8:00 repitió ese RD más que lo esperado (16 contra 9,3).
 - Pista sin explorar: la API oficial trae "Lotto Activo República Dominicana" (id 3, h:00).
 
 La única estructura real conocida: el operador **evita repetir el animal el mismo día** y **recicla con 1 a 2,5 días de hueco**. El ensamble ya la captura.
