@@ -91,3 +91,30 @@ también entre los dos juegos.
 - En 12 sorteos, cada juego: Top-5 ≈ 2 aciertos (80 %: 1 a 4), Top-15 ≈ 6 (4 a 8).
   Otro día en 0 Top-5: 7,4 % LA, 9,7 % RD. Top-5 escalonado LA: +18 fichas de media en el día,
   pero de −66 a +114 (80 %); 47 % de los días cierran en pérdida.
+
+## Rachas desde el inicio del vivo (2026-09-15 a 09-23, 98 sorteos LA con orden congelado)
+
+| Día | Top-5 | Top-15 | Escalonado (8 f/sorteo) | Ponderado (23 f) | Acum. escalonado | Acum. ponderado |
+|---|---|---|---|---|---|---|
+| 09-15 | 3/10 | 6/10 | +40 | +70 | +40 | +70 |
+| 09-16 | 0/11 | 1/11 | −88 | −223 | −48 | −153 |
+| 09-17 | 0/11 | 4/11 | −88 | −133 | −136 | −286 |
+| 09-18 | 3/11 | 5/11 | +62 | +47 | −74 | −239 |
+| 09-19 | 2/10 | 5/10 | +10 | +10 | −64 | −229 |
+| 09-20 | 1/11 | 6/11 | −28 | −13 | −92 | −242 |
+| 09-21 | 3/11 | 6/11 | +32 | +47 | −60 | −195 |
+| 09-22 | 4/11 | 7/11 | +92 | +137 | +32 | −58 |
+| 09-23 | 0/12 | 4/12 | −96 | −156 | −64 | −214 |
+
+- **Top-5:** 16/98 = 16,3 % (esperado 19,5 %). Rachas de fallos, en orden:
+  5, 1, **29**, 1, 2, 3, 10, 4, 3, 2, 7, 1, 1, 1, **12 (abierta)**. La de 29 (del 15 noche al 18
+  mañana) es la más larga; con el modelo sano, la más larga típica en 98 sorteos es 15 y una de 29 o
+  más sale el 3 % de las veces. Esos días ya se auditaron (REPORTE_JORNADA_2026-09-17.md): los
+  pronósticos eran correctos, no fue el servidor.
+- **Top-15:** 44/98 = 44,9 % (esperado 49,5 %; P(≤44) ≈ 21 %). Rachas de fallos: la más larga 9
+  (típica 6; P ≈ 10 %). Rachas de aciertos: 6, 4, 4, 3.
+- **Las rachas no se contagian:** Top-5 acierta el 12 % tras un acierto y el 17 % tras un fallo;
+  Top-15, el 43 % y el 47 %. Nada de "calentarse" o "enfriarse", igual que en racha_favorito.md.
+- **Por tramos:** 15-17: Top-5 3/32 (9 %); 18-22: 13/54 (24 %); 23: 0/12. Media 16 %.
+- Vigilar: 3 días en 0 Top-5 de 9 y la racha de 29. Todavía compatible con un modelo sano
+  (el total va dentro del margen), pero si el total baja de ~14 % con 300 sorteos, hay que revisar.
