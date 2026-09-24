@@ -335,7 +335,7 @@ def analisis_top15(d, res=None):
                            azar=azar*100, ventaja=veces/n - azar))
     return dict(n=n, tramos=tramos, puesto_medio=sum(puestos)/n, puesto_azar=(K + 1) / 2)
 
-P_MOD_T15 = 0.5307   # Top-15 del ensamble_v2 medido walk-forward en desarrollo
+P_MOD_T15 = 0.4946   # Top-15 del ensamble_v2 en la prueba ciega (estrategia_top5.md), como T3 y T5
 
 def prob_racha(k, n, p=P_MOD_T15):
     """P(ver una racha de >= k fallos EN ALGÚN punto de n sorteos) si el modelo
@@ -1118,18 +1118,17 @@ def cambio_rd(orden, pf, ph):
     nuevo = _cambiar(orden, cod) if cod is not None else orden
     if nuevo is orden:
         return orden, info
-    k = orden.index(IDX[cod])
-    info.update(sale=cod, entra=POS[nuevo[k]], puesto=k + 1)
+    info.update(sale=cod, entra=POS[orden[5]], puesto=orden.index(IDX[cod]) + 1)
     return nuevo, info
 
 def _cambiar(orden, cod):
-    """El orden con el animal `cod` intercambiado con el 6º si está en el Top-5;
-    el MISMO objeto `orden` si no hay cambio."""
-    if len(orden) < 6 or IDX[cod] not in orden[:5]:
+    """Igual que herramientas/rdint/cambio_top5.py (lo validado): se quita del
+    Top-5 el animal `cod`, los de abajo suben un puesto y el 6º entra 5º; `cod`
+    pasa al 6º. Devuelve el MISMO objeto `orden` si no hay cambio."""
+    r = IDX[cod]
+    if len(orden) < 6 or r not in orden[:5]:
         return orden
-    nuevo = list(orden); k = nuevo.index(IDX[cod])
-    nuevo[k], nuevo[5] = nuevo[5], nuevo[k]
-    return nuevo
+    return [x for x in orden[:5] if x != r] + [orden[5], r] + list(orden[6:])
 
 # Marcador en vivo de la regla: cuenta desde el día en que se adoptó, que la
 # prueba (hasta 2026-09-22) nunca vio. RD de las (h−1):30 siempre sale antes
@@ -1174,8 +1173,8 @@ def nota_cambio_rd(info):
         return (f'<p class="note">RD de las {info["hora_rd"]}: '
                 f'<b>{esc(info["rd"])} {esc(ANIM[info["rd"]].title())}</b> — no está en el Top-5, sin cambio.</p>')
     return (f'<div class="tip"><b>Cambio por RD:</b> {esc(info["sale"])} {esc(ANIM[info["sale"]].title())} '
-            f'salió en RD a las {info["hora_rd"]} → baja del {info["puesto"]}º al 6º y sube '
-            f'<b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b>. Lotto Activo casi nunca repite lo '
+            f'salió en RD a las {info["hora_rd"]} → sale del {info["puesto"]}º, los de abajo suben un puesto y entra '
+            f'<b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b> de 5º. Lotto Activo casi nunca repite lo '
             'que RD sacó media hora antes (prueba 2026-09-23: +1,4 puntos por ficha, sin confirmar aún).</div>')
 
 def html_banca(e, banca=None):

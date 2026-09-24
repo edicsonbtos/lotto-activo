@@ -55,7 +55,8 @@ def main():
     orden = sorted((a for a in m["animales"] if a["rank"]), key=lambda a: a["rank"])
     print(f"Sorteo: {m['fecha_txt']} {m['hora_txt']} · modelo {m['modelo']}")
     # Regla de cambio (hilo 7, adoptada sin confirmar 2026-09-23): si el animal de RD de las
-    # (h−1):30 está en el Top-5, se intercambia con el 6º. Igual que la web.
+    # (h−1):30 está en el Top-5, sale, los de abajo suben y el 6º entra 5º. Igual que la web
+    # y que lo validado (herramientas/rdint/cambio_top5.py).
     if m["hora"] > 0:
         try:
             rdu = {(f, h): c for f, h, c in leer("/api/rdint").get("ultimos", [])}
@@ -68,8 +69,8 @@ def main():
             k = next((i for i, a in enumerate(orden[:5]) if a["num"] == c), None)
             if k is not None and len(orden) > 5:
                 print(f"Cambio por RD: {c} {orden[k]['nombre']} salió en RD media hora antes -> "
-                      f"baja al 6º y sube {orden[5]['num']} {orden[5]['nombre']}.")
-                orden[k], orden[5] = orden[5], orden[k]
+                      f"sale del {k + 1}º, los de abajo suben y entra {orden[5]['num']} {orden[5]['nombre']} de 5º.")
+                orden = orden[:k] + orden[k + 1:6] + [orden[k]] + orden[6:]
                 for r, a in enumerate(orden, 1):
                     a["rank"] = r
             else:

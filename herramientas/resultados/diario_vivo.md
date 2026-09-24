@@ -69,3 +69,25 @@ No ganó ninguno de los cuatro. Diferencia: 0 fichas.
 ningún animal se repitió de un sorteo al siguiente (el azar daría ~0,6). Salieron 21 animales
 distintos de 24; el azar da ~18. Coincide con lo descubierto: el operador evita repetir
 también entre los dos juegos.
+
+### Auditoría en enjambre (2026-09-23, 4 auditores, solo lectura)
+- **Top-5 "pegado": no es un bug.** Se recalcula en cada sorteo (caché por huella del
+  historial + sorteo). Los bloques vienen de `intradia_v2.py:29` (HGRUPOS: 8:00 | 9-11 |
+  12-15 | 16-19 × salió ayer/anteayer). Hoy el Top-5 cambió MÁS que otros días: 2,64 animales
+  en común entre sorteos seguidos, contra 3,16 de media.
+- **Circuito RD ↔ LA: bien.** `b1()` es idéntico a lo validado (×0,208 / ×0,62 / ×1,16), sin
+  look-ahead y con las horas alineadas.
+- **Corregido:** la regla de cambio en vivo *intercambiaba* el animal de RD con el 6º; lo validado
+  lo *quita*, sube a los de abajo y mete al 6º como 5º. Ya están iguales la web, jugada.py y el marcador.
+- **Corregido:** `P_MOD_T15` usaba 53,07 % (desarrollo); ahora 49,46 % (prueba ciega). La alarma
+  de rachas del Top-15 saltaba de más.
+- Calibración en vivo de LA (59 con prob): Top-5 dice 19,7 %, salió 20,3 %. Bien.
+- Riesgos menores sin tocar: si LA h:00 se anota después de h:30, RD de esa hora queda sin LA;
+  corregir un LA ya usado no recalcula RD.
+
+### Qué esperar el 2026-09-24
+- LA 8:00: 9, 8, 7, 15, 18 (los ganadores del 22). A las 8:00 no aplica la regla de cambio.
+- RD 8:30: 3, 12, 11, 29, 7; se actualiza solo al salir LA 8:00 (con_la_h=true antes de 8:30).
+- En 12 sorteos, cada juego: Top-5 ≈ 2 aciertos (80 %: 1 a 4), Top-15 ≈ 6 (4 a 8).
+  Otro día en 0 Top-5: 7,4 % LA, 9,7 % RD. Top-5 escalonado LA: +18 fichas de media en el día,
+  pero de −66 a +114 (80 %); 47 % de los días cierran en pérdida.
