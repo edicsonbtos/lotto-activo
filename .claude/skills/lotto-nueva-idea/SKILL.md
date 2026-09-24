@@ -16,7 +16,7 @@ Estas ideas ya se probaron y quedaron cerradas. No se repiten sin una razón nue
 
 - **Hilo 7, memoria cruzada (2026-09-23), CONFIRMADO y en producción:** RD Internacional (h:30) evita el animal de Lotto Activo de h:00. Pasó la prueba ciega (Top-3 12,05 %). Su tramo de prueba (2025-07-01..2026-04-12) YA SE USÓ; la réplica 2026-04-13..09-13 también se miró (Top-15). Para ideas nuevas sobre RD: desarrollo 2024-03-01..2025-06-30, y la confirmación viene del marcador en vivo de RD. La dirección inversa (Lotto Activo usando RD) FALLÓ a ciegas.
 - **Regla de cambio RD (h−1):30 → Top-5 de LA h:00** (2026-09-23): se adopta sin confirmar, en vivo (quitar y subir, el 6º entra 5º). **Extenderla a las 8:00 con RD 19:30 de la víspera: DESCARTADA** (hilo7_cambio_noche.md). La noche corta el "no repetir el anterior": en desarrollo LA 8:00 repitió ese RD más que lo esperado (16 contra 9,3).
-- Pista sin explorar: la API oficial trae "Lotto Activo República Dominicana" (id 3, h:00).
+- **Hilo 8, "Lotto Activo República Dominicana" (LARD, API id 3, 14 sorteos h:00 de 8 a 21) como tercer juego cruzado (2026-09-23): DESCARTADO en desarrollo.** Ratios de repetición 0,99-1,09 con LA y RD en los 4 pares; los controles LA↔RD salen fuertes en los mismos datos. LARD es independiente. Su prueba ciega (2026-02-01..09-22) sigue SIN mirar. Datos: `datos_multiloteria/oficial_multi.csv` (API oficial desde 2025-07-01, juegos 1, 2 y 3; descargador `herramientas/lard/descargar.py`).
 
 La única estructura real conocida: el operador **evita repetir el animal el mismo día** y **recicla con 1 a 2,5 días de hueco**. El ensamble ya la captura.
 
