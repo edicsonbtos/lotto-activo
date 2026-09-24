@@ -7,6 +7,8 @@ Usa curl porque el Python del PC del usuario falla verificando certificados.
 """
 import json, subprocess, sys
 
+sys.stdout.reconfigure(encoding="utf-8")              # la consola de Windows (cp1252) no imprime ≈ ni −
+
 URL = "https://lotto-activo-production.up.railway.app"
 PAGO = 30
 ESCALONADO = [2, 2, 2, 1, 1]                          # puestos 1..5
