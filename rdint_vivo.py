@@ -380,6 +380,14 @@ def _fila(k, cod, pct):
                _fx(PLANES[0][1][k - 1], "a"), _fx(PLANES[1][1][k - 1], "b")))
 
 
+def _compartir(titulo, animales):
+    """Igual que html_compartir de servidor.py (el JS vive allí)."""
+    return ('<div class="compartir" data-t="%s" data-a="%s"><select aria-label="Cuántos animales">'
+            '<option value="5">Top 5</option><option value="15">Top 15</option></select>'
+            '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
+            '<button type="button" class="sec">Compartir</button></div>' % (_e(titulo), _e("|".join(animales))))
+
+
 def _sec(id_, titulo, meta, cuerpo):
     return ('<details class="sec" id="%s" data-rec><summary><span class="st"><h2>%s</h2><span class="meta">%s</span>'
             '</span><span class="chev" aria-hidden="true"></span></summary><div class="cuerpo">%s</div></details>'
@@ -456,11 +464,13 @@ def html():
         cuerpo = ('<ol class="jug">%s%s</ol>'
                   '<details class="mas" id="rd-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
                   'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">%s</ol></details>'
-                  '<div class="leyenda"><p><i class="a"></i><b>Top-5 escalonado</b> (2-2-2-1-1) o '
+                  '%s<div class="leyenda"><p><i class="a"></i><b>Top-5 escalonado</b> (2-2-2-1-1) o '
                   '<i class="b" style="margin-left:4px"></i><b>Top-15 ponderado</b> (3-2-1).</p>'
                   '<p>Casi descartados: los que ya salieron hoy en RD y el de Lotto Activo de la misma hora. '
                   'Juega <b>después</b> de ver Lotto Activo de las %s y antes de las %s.</p></div>'
-                  % (_COLS, top5, resto, HORAS_LA[h], HORAS_RD[h]))
+                  % (_COLS, top5, resto, _compartir("RD Internacional %s %s" % (_fecha(f), HORAS_RD[h]),
+                                                    ["%s %s" % (c, NOMBRE[c]) for c in o[:15]]),
+                     HORAS_LA[h], HORAS_RD[h]))
     partes.append('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">'
                   '<div class="jh"><h2 id="rd-t">Próximo RD · <span>%s</span></h2>%s</div>'
                   '<p class="ult">%s</p>%s</section>'

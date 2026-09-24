@@ -871,6 +871,11 @@ details.mas[open]>summary{border-bottom:1px solid var(--line-soft)}
 .leyenda i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
 .leyenda i.a{background:var(--brand)}.leyenda i.b{background:var(--bg-2);box-shadow:inset 0 0 0 1px var(--line)}
 
+.compartir{display:flex;gap:8px;margin-top:12px}
+.compartir select{padding:0 10px;font:inherit;font-size:15px;color:var(--ink);background:var(--bg-2);
+  border:1px solid var(--line);border-radius:var(--r1)}
+.compartir input[type=text]{font-size:16px;padding:10px 12px}
+
 /* ---------- chevron (dibujado, no un glifo) ---------- */
 .chev{flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
   transform:translateY(-2px) rotate(45deg);transition:transform .25s cubic-bezier(.22,1,.36,1)}
@@ -1246,6 +1251,13 @@ def fila_jugada(r, num_, nombre, sub, f5, fp):
 COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
                '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
 
+def html_compartir(titulo, animales):
+    """Compartir la jugada como texto: Top 5 o Top 15, monto fijo por animal."""
+    return (f'<div class="compartir" data-t="{esc(titulo)}" data-a="{esc("|".join(animales[:15]))}">'
+            '<select aria-label="Cuántos animales"><option value="5">Top 5</option><option value="15">Top 15</option></select>'
+            '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
+            '<button type="button" class="sec">Compartir</button></div>')
+
 def html_jugada(e, calculando, pend, aviso_modelo, modelo):
     """La jugada del próximo sorteo: Top-5 a la vista y del 6º al 15º plegado.
 
@@ -1292,7 +1304,9 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo):
                '<p><i class="b"></i><b>Top-15 ponderado</b> (alternativa): 23 fichas, cobra ~1 de cada 2 '
                '(+67, +37 o +7).</p></div>')
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">{cab}'
-            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{leyenda}{aviso_modelo}</section>')
+            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}'
+            f'{html_compartir(f"Lotto Activo {fecha} {hora}", [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
+            f'{leyenda}{aviso_modelo}</section>')
 
 def _clase_puesto(p):
     if p is None: return "fuera"
@@ -2212,7 +2226,23 @@ JS_MESA = """
 """
 
 CSS = CSS + CSS_MESA
-JS = JS + JS_MESA
+JS_COMPARTIR = r"""
+<script>
+document.addEventListener('click', function(ev){
+  var b = ev.target.closest('.compartir button'); if(!b) return;
+  var c = b.parentNode, n = +c.querySelector('select').value;
+  var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
+  var a = c.dataset.a.split('|').slice(0, n);
+  var t = c.dataset.t + ' - Top ' + n + (m ? ' - $' + m + ' por animal' : '') + '\n'
+        + a.map(function(x, k){ return (k + 1) + '. ' + x + (m ? ' - $' + m : ''); }).join('\n')
+        + (m ? '\nTotal: $' + (m * a.length) : '');
+  if(navigator.share) navigator.share({text: t}).catch(function(){});
+  else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });
+});
+</script>
+"""
+
+JS = JS + JS_MESA + JS_COMPARTIR
 
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
