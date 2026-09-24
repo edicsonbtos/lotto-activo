@@ -55,6 +55,36 @@ def rd():
           "Top-15 pond. +12/+5 %, Top-15 plano +7/+2 %.")
 
 
+def validar(regs):
+    """Señal (mbits del ganador frente al azar) y calibración (lo que el modelo esperaba vs lo que salió).
+
+    Solo usa registros con la probabilidad de los 38 animales congelada.
+    """
+    mb, esp, pue = [], [], []
+    for r in regs:
+        if r.get("modelo") != "ensamble_v2" or not r.get("winner_rank"):
+            continue
+        ps = {a["num"]: a.get("prob") for a in r.get("animales", [])}
+        if len(ps) != 38 or not all(ps.values()) or r.get("winner_num") not in ps:
+            continue
+        s = sum(ps.values())
+        mb.append(1000 * math.log2(ps[r["winner_num"]] / s * 38))
+        esp.append(sorted((p / s for p in ps.values()), reverse=True))
+        pue.append(r["winner_rank"])
+    n = len(mb)
+    if n < 2:
+        return
+    m = sum(mb) / n
+    e = 1.96 * math.sqrt(sum((x - m) ** 2 for x in mb) / (n - 1) / n)
+    print(f"\nValidación ({n} sorteos con las 38 probabilidades guardadas):")
+    print(f"  Señal: {m:+.0f} mbits por sorteo (IC95 {m-e:+.0f} a {m+e:+.0f}) · azar 0 · prueba ciega +90")
+    for t in (3, 5, 15, 23):
+        ex = sum(sum(p[:t]) for p in esp) / n
+        ob = sum(k <= t for k in pue) / n
+        print(f"  Calibración Top-{t:<2}: el modelo esperaba {ex*100:4.1f} % · salió {ob*100:4.1f} %"
+              f" · equilibrio {t/30*100:4.1f} %")
+
+
 def main():
     if "--rd" in sys.argv:
         rd()
@@ -88,6 +118,7 @@ def main():
               f"ganó el de RD {c['gano_rd']}, el 6º que entró {c['gano_6']}. "
               f"Top-5 escalonado con cambio {c['con']:+.0f} $ vs sin cambio {c['sin']:+.0f} $ "
               f"({c['dif']:+.0f} $). En la prueba: RD 6 vs 6º 14 en 377 cambios.")
+    validar(regs)
     print(f"\nCon {n} sorteos el ruido es enorme (el Top-3 se mueve ±{1.96*math.sqrt(.12*.88/n)*100:.0f} puntos)."
           " Hacen falta ~1.000 para concluir.")
 

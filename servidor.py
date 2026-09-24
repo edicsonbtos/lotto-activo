@@ -599,6 +599,13 @@ HERRAMIENTAS = {
         "mirar": "En la tabla 1, cada puesto con «retorno/ficha» negativo pierde plata aunque acierte a veces. "
                  "En la tabla 3, compara la ganancia por sorteo del Top-5 2-2-2-1-1 con el Top-15 plano.",
     },
+    "top_grande": {
+        "titulo": "¿Rinde jugar Top-15 a Top-23 a 10 $ por animal?", "dura": "30 a 90 s (la 1ª vez, varios min)",
+        "cmd": ["exploracion/top_n_grande.py"],
+        "que": "Mide en 7.357 sorteos de desarrollo la ganancia por sorteo de cada Top-N y un mes con 300 $ al Top-23.",
+        "mirar": "«acierta» tiene que superar a «necesita» (N/30) para ganar. «gana/sorteo» con el IC95 entero "
+                 "bajo 0 = pierde plata seguro. Desarrollo es optimista: en prueba ciega rinde algo menos.",
+    },
     "reciproca": {
         "titulo": "¿RD Internacional ayuda a Lotto Activo? (H4b)", "dura": "5 a 15 min",
         "cmd": ["rdint/reciproca_la.py"],
