@@ -117,4 +117,4 @@ también entre los dos juegos.
   Top-15, el 43 % y el 47 %. Nada de "calentarse" o "enfriarse", igual que en racha_favorito.md.
 - **Por tramos:** 15-17: Top-5 3/32 (9 %); 18-22: 13/54 (24 %); 23: 0/12. Media 16 %.
 - Vigilar: 3 días en 0 Top-5 de 9 y la racha de 29. Todavía compatible con un modelo sano
-  (el total va dentro del margen), pero si el total baja de ~14 % con 300 sorteos, hay que revisar.
+  (el total va dentro del margen), pero si con 300 sorteos el total sigue por debajo de ~15 % (límite del IC95 de 19,5 %), hay que revisar.
