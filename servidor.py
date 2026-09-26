@@ -1183,39 +1183,53 @@ def marcador_cambio_rd(d):
     return m
 
 # ------------------------------------------------ pronósticos en sombra (motor_nuevo)
-# ag12 (pares consecutivos recientes) y ag12 + RD se guardan junto al congelado
-# del ensamble, pero NO se muestran ni se puntúan en el marcador principal: solo
-# sirven para medirlos con sorteos futuros (motor_nuevo/RETOMAR.md).
+# ag12 (pares consecutivos recientes) se guarda junto al congelado del ensamble,
+# pero NO se muestra ni se puntúa en el marcador principal: solo sirve para medirlo
+# con sorteos futuros (motor_nuevo/RETOMAR.md). ag12_rd NO se congela: RD (h−1):30
+# sale ~25 min después del congelado, así que la regla de RD se aplica al PUNTUAR
+# sobre la sombra ag12, igual que marcador_cambio_rd (RD (h−1):30 y (h−2):30 salen antes de LA h:00).
 SOMBRA_DESDE = "2026-09-26"
-SOMBRA_MODELOS = ("ag12", "ag12_rd")
+SOMBRA_RD_MULT = {1: 0.50, 2: 0.75}     # r2_a03_rd_produccion (VB)
+_RUTA_AG12 = os.path.join(HERR, "modelos", "ag12")
 
 def sombra_de(filas, pf, ph, sc):
-    """{modelo: 38 probabilidades} o None. Nunca tumba el pronóstico principal."""
+    """{"ag12": 38 probabilidades} o None. Nunca tumba el pronóstico principal."""
     try:
-        sys.path.insert(0, os.path.join(HERR, "modelos", "ag12"))
+        if _RUTA_AG12 not in sys.path:
+            sys.path.insert(0, _RUTA_AG12)
         import sombra
-        try:
-            import rdint_vivo
-            rd = {(f, h): IDX[c] for f, h, c in rdint_vivo.cargar_rd() if c in IDX}
-        except Exception:  # noqa: BLE001
-            rd = None
-        out = sombra.corregir(filas, pf, ph, sc, rd)
-        return {k: v for k, v in out.items() if v is not None}
+        return {"ag12": sombra.corregir(filas, pf, ph, sc)["ag12"]}
     except Exception as ex:  # noqa: BLE001
         print(f"[sombra] {ahora()} fallo: {ex!r}", file=sys.stderr, flush=True)
         return None
 
+def _con_rd(p, rd, f, h):
+    """ag12 × 0,50 al animal de RD (h−1):30 y × 0,75 al de (h−2):30, si ya salieron."""
+    q = list(p); usado = False
+    for k, mult in SOMBRA_RD_MULT.items():
+        c = rd.get((f, h - k)) if h - k >= 0 else None
+        if c in IDX:
+            q[IDX[c]] *= mult; usado = True
+    return q, usado
+
 def marcador_sombra(d):
-    """Ensamble contra los modelos en sombra, sobre los MISMOS sorteos resueltos."""
+    """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE)."""
+    try:
+        import rdint_vivo
+        rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
+    except Exception:  # noqa: BLE001
+        rd = {}
     fichas = fichas_por_puesto()
-    nombres = ("ensamble",) + SOMBRA_MODELOS
+    nombres = ("ensamble", "ag12", "ag12_rd")
     m = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nombres}
+    con_rd = 0
     for r in resueltas(d):
         s = r.get("sombra")
-        if not s or r["fecha"] < SOMBRA_DESDE or not r.get("scores") or not all(k in s for k in SOMBRA_MODELOS):
+        if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not r.get("scores"):
             continue
-        for k in nombres:
-            p = r["scores"] if k == "ensamble" else s[k]
+        q, usado = _con_rd(s["ag12"], rd, r["fecha"], r["hora"])
+        con_rd += usado
+        for k, p in (("ensamble", r["scores"]), ("ag12", s["ag12"]), ("ag12_rd", q)):
             tot = sum(p)
             orden = sorted(range(K), key=lambda i: (-p[i], i))
             pos = orden.index(r["salio"]) + 1
@@ -1228,7 +1242,7 @@ def marcador_sombra(d):
             for c in ("top3", "top5", "top15"):
                 x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
             x["mbits"] = round(x["mbits"] / x["n"], 1)
-    return {"desde": SOMBRA_DESDE, "marcador": m}
+    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m}
 
 def nota_cambio_rd(info):
     if info is None:

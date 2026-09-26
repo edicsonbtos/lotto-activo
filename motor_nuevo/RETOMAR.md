@@ -83,6 +83,40 @@ Datos: 15.166 sorteos, 1.471 días, 2019-01-07..2023-09-03 (días de 10-11), sha
 - Única vía honesta que queda para ag12: medirlo HACIA ADELANTE en el marcador en vivo (en sombra, sin cambiar la jugada),
   con prerregistro. Requiere el OK del usuario (toca producción).
 
+## 2.ª PRUEBA CIEGA — ÉPOCA RECIENTE (2026-09-26, UNA vez, commit prerregistro 941e18d) — PASA
+Filas [9357, 12511) = 2025-12-17..2026-09-16, 3.055 puntuadas (sin los días de fecha corrida). Bonferroni k=4 (IC 98,75 %).
+- ensamble: +90,7 mbits, Top-5 19,67 %, Top-15 49,53 %, Top-5 escalonado +20,2 %/ficha.
+- **ag12 V1: Δ +19,43 [+8,91 ; +29,89] PASA.** Top-3 12,73 %, Top-5 21,15 %, **Top-15 51,75 %**, Δ ret T5 +6,9 pp [−1,0 ; +14,8].
+- **ag12 V0: Δ +12,47 [+5,64 ; +19,12] PASA.** Top-15 51,82 %, Top-5 20,36 %.
+- Lectura: el mecanismo vive en la época actual (y en 2022-2025); no en 2019-2021. Top-15 +2,2 pp, lejos del 60 %.
+- Siguiente: llevar ag12 V1 a producción EN SOMBRA o como jugada → requiere OK del usuario (toca Railway).
+
+## Ronda 2 (2026-09-26 madrugada)
+Workflow wf_6bf40460-c40: 8 agentes buscan señal SOBRE ag12 V1 en desarrollo (carpetas r2_a01..r2_a08), con reproducción
++ revisor-sesgo. Diario: ~/.claude/projects/C--Users-edics-Downloads-lotto-activo-lotto-activo/2b72a97d-70ae-4f77-9b5c-14f849185c59/subagents/workflows/wf_6bf40460-c40/journal.jsonl
+Lo que pase aquí solo se confirma con sorteos FUTUROS (no queda tramo ciego histórico).
+Energía: se desactivó la suspensión (AC y batería) y el apagado de pantalla en AC para trabajar de noche.
+Valores anteriores en `motor_nuevo/energia_antes.txt` → restaurarlos cuando el usuario lo pida.
+
+### Resultados ronda 2 (terminada)
+- r2_a03_rd_produccion: PASA y se verificó (reproducción y revisor-sesgo OK). ag12 + L1 (×0,50 al animal de RD (h−1):30) +
+  L3 (×0,75 a RD (h−2):30): +10,5 cross-fit, **+7,6 forward** (la cifra honesta), Top-15 54,78 → 55,6 %. No es nuevo (H4/H4b);
+  desarrollo reutilizado → solo se confirma con sorteos futuros. En 2023-09 (primeras 300 filas con RD) L1 no aparecía.
+- r2_a04_top15_optimo: **el Top-15 por probabilidad ya es el óptimo** (sale un solo animal por sorteo: P(acierto) = suma
+  de las 15 probabilidades). ag12 V1 está calibrado: Top-15 esperado 54,95 % contra observado 54,78 %; chi² p = 0,70.
+- r2_a01 (forma de la transición), a02 (pares no adyacentes, +1,6), a05 (anti-patrón numérico), a06 (régimen intradía),
+  a07 (memoria larga), a08 (pares RD en la secuencia): NO pasan. Esa zona está agotada.
+
+## Modo sombra (rama motor-nuevo, commit 76539cc, NO desplegado)
+- `herramientas/modelos/ag12/sombra.py` (reproduce el congelado con una diferencia de 5e-7; 0,03 s) + servidor.py:
+  `sombra_de`, `marcador_sombra`, ruta `/api/sombra`. Guarda pend["sombra"] = {ag12, ag12_rd}; no cambia la jugada.
+- Auditoría revisor-sesgo: ag12 OK (equivalencia 5e-7, sin look-ahead, no cambia jugada ni marcador). ag12_rd NO OK tal
+  como estaba (se congelaba ~25 min antes de RD (h−1):30 y perdía el ×0,50) → ARREGLADO en el commit siguiente: solo se
+  congela ag12; la regla RD se aplica AL PUNTUAR en marcador_sombra (como marcador_cambio_rd). Menor pendiente: los
+  pendientes creados por registrar() no llevan sombra (n algo menor, comparación igual de justa).
+- Para desplegar (con el OK del usuario): merge de lo necesario a master (servidor.py + herramientas/modelos/ag12/)
+  → push → Railway despliega solo. Luego skill lotto-estado-web. Medir con /api/sombra.
+
 ## Siguientes pasos (en orden)
 1. Esperar veredictos de la verificación. Anotar aquí cuáles sobreviven.
 2. Medir el **Top-15** de cada sobreviviente y de su combinación (apilado ag02+ag10+ag01, cross-fit) en desarrollo.
