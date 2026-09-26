@@ -1,0 +1,494 @@
+[2026-09-25 22:31:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-01-07/2019-01-13/> (referer: https://www.google.com/)
+2019-01-07 70
+[2026-09-25 22:31:54] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-01-14/2019-01-20/> (referer: https://www.google.com/)
+2019-01-14 70
+[2026-09-25 22:31:56] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-01-21/2019-01-27/> (referer: https://www.google.com/)
+2019-01-21 67
+[2026-09-25 22:32:03] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-01-28/2019-02-03/> (referer: https://www.google.com/)
+2019-01-28 24
+[2026-09-25 22:32:04] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-02-04/2019-02-10/> (referer: https://www.google.com/)
+2019-02-04 0
+[2026-09-25 22:32:07] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-02-11/2019-02-17/> (referer: https://www.google.com/)
+2019-02-11 20
+[2026-09-25 22:32:12] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-02-18/2019-02-24/> (referer: https://www.google.com/)
+2019-02-18 70
+[2026-09-25 22:32:24] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-02-25/2019-03-03/> (referer: https://www.google.com/)
+2019-02-25 55
+[2026-09-25 22:32:27] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-03-04/2019-03-10/> (referer: https://www.google.com/)
+2019-03-04 41
+[2026-09-25 22:32:45] WARNING: Attempt 1 failed: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-09-25 22:32:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-03-11/2019-03-17/> (referer: https://www.google.com/)
+2019-03-11 70
+[2026-09-25 22:32:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-03-18/2019-03-24/> (referer: https://www.google.com/)
+2019-03-18 70
+[2026-09-25 22:32:55] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-03-25/2019-03-31/> (referer: https://www.google.com/)
+2019-03-25 65
+[2026-09-25 22:32:57] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-04-01/2019-04-07/> (referer: https://www.google.com/)
+2019-04-01 70
+[2026-09-25 22:33:00] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-04-08/2019-04-14/> (referer: https://www.google.com/)
+2019-04-08 70
+[2026-09-25 22:33:03] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-04-15/2019-04-21/> (referer: https://www.google.com/)
+2019-04-15 40
+[2026-09-25 22:33:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-04-22/2019-04-28/> (referer: https://www.google.com/)
+2019-04-22 70
+[2026-09-25 22:33:07] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-04-29/2019-05-05/> (referer: https://www.google.com/)
+2019-04-29 60
+[2026-09-25 22:33:09] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-05-06/2019-05-12/> (referer: https://www.google.com/)
+2019-05-06 69
+[2026-09-25 22:33:12] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-05-13/2019-05-19/> (referer: https://www.google.com/)
+2019-05-13 70
+[2026-09-25 22:33:14] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-05-20/2019-05-26/> (referer: https://www.google.com/)
+2019-05-20 70
+[2026-09-25 22:33:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-05-27/2019-06-02/> (referer: https://www.google.com/)
+2019-05-27 70
+[2026-09-25 22:33:20] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-06-03/2019-06-09/> (referer: https://www.google.com/)
+2019-06-03 70
+[2026-09-25 22:33:22] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-06-10/2019-06-16/> (referer: https://www.google.com/)
+2019-06-10 70
+[2026-09-25 22:33:24] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-06-17/2019-06-23/> (referer: https://www.google.com/)
+2019-06-17 70
+[2026-09-25 22:33:26] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-06-24/2019-06-30/> (referer: https://www.google.com/)
+2019-06-24 70
+[2026-09-25 22:33:29] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-07-01/2019-07-07/> (referer: https://www.google.com/)
+2019-07-01 70
+[2026-09-25 22:33:31] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-07-08/2019-07-14/> (referer: https://www.google.com/)
+2019-07-08 70
+[2026-09-25 22:33:34] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-07-15/2019-07-21/> (referer: https://www.google.com/)
+2019-07-15 70
+[2026-09-25 22:33:36] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-07-22/2019-07-28/> (referer: https://www.google.com/)
+2019-07-22 70
+[2026-09-25 22:33:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-07-29/2019-08-04/> (referer: https://www.google.com/)
+2019-07-29 70
+[2026-09-25 22:33:41] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-08-05/2019-08-11/> (referer: https://www.google.com/)
+2019-08-05 70
+[2026-09-25 22:33:46] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-08-12/2019-08-18/> (referer: https://www.google.com/)
+2019-08-12 70
+[2026-09-25 22:33:47] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-08-19/2019-08-25/> (referer: https://www.google.com/)
+2019-08-19 70
+[2026-09-25 22:34:02] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-08-26/2019-09-01/> (referer: https://www.google.com/)
+2019-08-26 70
+[2026-09-25 22:34:07] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-09-02/2019-09-08/> (referer: https://www.google.com/)
+2019-09-02 70
+[2026-09-25 22:34:08] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-09-09/2019-09-15/> (referer: https://www.google.com/)
+2019-09-09 70
+[2026-09-25 22:34:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-09-16/2019-09-22/> (referer: https://www.google.com/)
+2019-09-16 70
+[2026-09-25 22:34:13] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-09-23/2019-09-29/> (referer: https://www.google.com/)
+2019-09-23 70
+[2026-09-25 22:34:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-09-30/2019-10-06/> (referer: https://www.google.com/)
+2019-09-30 70
+[2026-09-25 22:34:17] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-10-07/2019-10-13/> (referer: https://www.google.com/)
+2019-10-07 70
+[2026-09-25 22:34:20] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-10-14/2019-10-20/> (referer: https://www.google.com/)
+2019-10-14 70
+[2026-09-25 22:34:22] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-10-21/2019-10-27/> (referer: https://www.google.com/)
+2019-10-21 70
+[2026-09-25 22:34:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-10-28/2019-11-03/> (referer: https://www.google.com/)
+2019-10-28 70
+[2026-09-25 22:34:27] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-11-04/2019-11-10/> (referer: https://www.google.com/)
+2019-11-04 70
+[2026-09-25 22:34:48] WARNING: Attempt 1 failed: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-09-25 22:34:51] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-11-11/2019-11-17/> (referer: https://www.google.com/)
+2019-11-11 70
+[2026-09-25 22:34:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-11-18/2019-11-24/> (referer: https://www.google.com/)
+2019-11-18 70
+[2026-09-25 22:34:58] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-11-25/2019-12-01/> (referer: https://www.google.com/)
+2019-11-25 70
+[2026-09-25 22:34:59] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-12-02/2019-12-08/> (referer: https://www.google.com/)
+2019-12-02 70
+[2026-09-25 22:35:01] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-12-09/2019-12-15/> (referer: https://www.google.com/)
+2019-12-09 70
+[2026-09-25 22:35:03] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-12-16/2019-12-22/> (referer: https://www.google.com/)
+2019-12-16 70
+[2026-09-25 22:35:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-12-23/2019-12-29/> (referer: https://www.google.com/)
+2019-12-23 55
+[2026-09-25 22:35:08] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2019-12-30/2020-01-05/> (referer: https://www.google.com/)
+2019-12-30 15
+[2026-09-25 22:35:10] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-01-06/2020-01-12/> (referer: https://www.google.com/)
+2020-01-06 70
+[2026-09-25 22:35:13] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-01-13/2020-01-19/> (referer: https://www.google.com/)
+2020-01-13 70
+[2026-09-25 22:35:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-01-20/2020-01-26/> (referer: https://www.google.com/)
+2020-01-20 70
+[2026-09-25 22:35:18] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-01-27/2020-02-02/> (referer: https://www.google.com/)
+2020-01-27 70
+[2026-09-25 22:35:20] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-02-03/2020-02-09/> (referer: https://www.google.com/)
+2020-02-03 70
+[2026-09-25 22:35:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-02-10/2020-02-16/> (referer: https://www.google.com/)
+2020-02-10 70
+[2026-09-25 22:35:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-02-17/2020-02-23/> (referer: https://www.google.com/)
+2020-02-17 70
+[2026-09-25 22:35:27] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-02-24/2020-03-01/> (referer: https://www.google.com/)
+2020-02-24 50
+[2026-09-25 22:35:30] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-03-02/2020-03-08/> (referer: https://www.google.com/)
+2020-03-02 70
+[2026-09-25 22:35:32] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-03-09/2020-03-15/> (referer: https://www.google.com/)
+2020-03-09 70
+[2026-09-25 22:35:35] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-03-16/2020-03-22/> (referer: https://www.google.com/)
+2020-03-16 52
+[2026-09-25 22:35:37] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-03-23/2020-03-29/> (referer: https://www.google.com/)
+2020-03-23 0
+[2026-09-25 22:35:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-03-30/2020-04-05/> (referer: https://www.google.com/)
+2020-03-30 0
+[2026-09-25 22:35:42] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-04-06/2020-04-12/> (referer: https://www.google.com/)
+2020-04-06 0
+[2026-09-25 22:35:45] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-04-13/2020-04-19/> (referer: https://www.google.com/)
+2020-04-13 0
+[2026-09-25 22:35:46] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-04-20/2020-04-26/> (referer: https://www.google.com/)
+2020-04-20 0
+[2026-09-25 22:35:49] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-04-27/2020-05-03/> (referer: https://www.google.com/)
+2020-04-27 0
+[2026-09-25 22:35:51] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-05-04/2020-05-10/> (referer: https://www.google.com/)
+2020-05-04 0
+[2026-09-25 22:35:56] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-05-11/2020-05-17/> (referer: https://www.google.com/)
+2020-05-11 0
+[2026-09-25 22:35:57] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-05-18/2020-05-24/> (referer: https://www.google.com/)
+2020-05-18 0
+[2026-09-25 22:36:01] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-05-25/2020-05-31/> (referer: https://www.google.com/)
+2020-05-25 0
+[2026-09-25 22:36:02] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-06-01/2020-06-07/> (referer: https://www.google.com/)
+2020-06-01 0
+[2026-09-25 22:36:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-06-08/2020-06-14/> (referer: https://www.google.com/)
+2020-06-08 0
+[2026-09-25 22:36:07] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-06-15/2020-06-21/> (referer: https://www.google.com/)
+2020-06-15 0
+[2026-09-25 22:36:10] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-06-22/2020-06-28/> (referer: https://www.google.com/)
+2020-06-22 0
+[2026-09-25 22:36:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-06-29/2020-07-05/> (referer: https://www.google.com/)
+2020-06-29 0
+[2026-09-25 22:36:17] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-07-06/2020-07-12/> (referer: https://www.google.com/)
+2020-07-06 0
+[2026-09-25 22:36:17] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-07-13/2020-07-19/> (referer: https://www.google.com/)
+2020-07-13 0
+[2026-09-25 22:36:19] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-07-20/2020-07-26/> (referer: https://www.google.com/)
+2020-07-20 0
+[2026-09-25 22:36:22] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-07-27/2020-08-02/> (referer: https://www.google.com/)
+2020-07-27 0
+[2026-09-25 22:36:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-08-03/2020-08-09/> (referer: https://www.google.com/)
+2020-08-03 0
+[2026-09-25 22:36:27] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-08-10/2020-08-16/> (referer: https://www.google.com/)
+2020-08-10 0
+[2026-09-25 22:36:30] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-08-17/2020-08-23/> (referer: https://www.google.com/)
+2020-08-17 0
+[2026-09-25 22:36:32] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-08-24/2020-08-30/> (referer: https://www.google.com/)
+2020-08-24 0
+[2026-09-25 22:36:35] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-08-31/2020-09-06/> (referer: https://www.google.com/)
+2020-08-31 0
+[2026-09-25 22:36:36] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-09-07/2020-09-13/> (referer: https://www.google.com/)
+2020-09-07 18
+[2026-09-25 22:36:39] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-09-14/2020-09-20/> (referer: https://www.google.com/)
+2020-09-14 31
+[2026-09-25 22:36:41] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-09-21/2020-09-27/> (referer: https://www.google.com/)
+2020-09-21 35
+[2026-09-25 22:36:44] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-09-28/2020-10-04/> (referer: https://www.google.com/)
+2020-09-28 60
+[2026-09-25 22:36:46] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-10-05/2020-10-11/> (referer: https://www.google.com/)
+2020-10-05 70
+[2026-09-25 22:36:49] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-10-12/2020-10-18/> (referer: https://www.google.com/)
+2020-10-12 70
+[2026-09-25 22:36:51] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-10-19/2020-10-25/> (referer: https://www.google.com/)
+2020-10-19 70
+[2026-09-25 22:36:54] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-10-26/2020-11-01/> (referer: https://www.google.com/)
+2020-10-26 70
+[2026-09-25 22:36:56] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-11-02/2020-11-08/> (referer: https://www.google.com/)
+2020-11-02 70
+[2026-09-25 22:36:58] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-11-09/2020-11-15/> (referer: https://www.google.com/)
+2020-11-09 67
+[2026-09-25 22:37:01] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-11-16/2020-11-22/> (referer: https://www.google.com/)
+2020-11-16 70
+[2026-09-25 22:37:03] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-11-23/2020-11-29/> (referer: https://www.google.com/)
+2020-11-23 70
+[2026-09-25 22:37:05] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-11-30/2020-12-06/> (referer: https://www.google.com/)
+2020-11-30 70
+[2026-09-25 22:37:10] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-12-07/2020-12-13/> (referer: https://www.google.com/)
+2020-12-07 70
+[2026-09-25 22:37:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-12-14/2020-12-20/> (referer: https://www.google.com/)
+2020-12-14 70
+[2026-09-25 22:37:13] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-12-21/2020-12-27/> (referer: https://www.google.com/)
+2020-12-21 60
+[2026-09-25 22:37:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2020-12-28/2021-01-03/> (referer: https://www.google.com/)
+2020-12-28 60
+[2026-09-25 22:37:20] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-01-04/2021-01-10/> (referer: https://www.google.com/)
+2021-01-04 70
+[2026-09-25 22:37:22] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-01-11/2021-01-17/> (referer: https://www.google.com/)
+2021-01-11 70
+[2026-09-25 22:37:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-01-18/2021-01-24/> (referer: https://www.google.com/)
+2021-01-18 70
+[2026-09-25 22:37:26] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-01-25/2021-01-31/> (referer: https://www.google.com/)
+2021-01-25 70
+[2026-09-25 22:37:28] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-02-01/2021-02-07/> (referer: https://www.google.com/)
+2021-02-01 70
+[2026-09-25 22:37:30] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-02-08/2021-02-14/> (referer: https://www.google.com/)
+2021-02-08 70
+[2026-09-25 22:37:33] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-02-15/2021-02-21/> (referer: https://www.google.com/)
+2021-02-15 70
+[2026-09-25 22:37:35] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-02-22/2021-02-28/> (referer: https://www.google.com/)
+2021-02-22 70
+[2026-09-25 22:37:39] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-03-01/2021-03-07/> (referer: https://www.google.com/)
+2021-03-01 70
+[2026-09-25 22:37:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-03-08/2021-03-14/> (referer: https://www.google.com/)
+2021-03-08 70
+[2026-09-25 22:37:42] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-03-15/2021-03-21/> (referer: https://www.google.com/)
+2021-03-15 67
+[2026-09-25 22:37:45] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-03-22/2021-03-28/> (referer: https://www.google.com/)
+2021-03-22 70
+[2026-09-25 22:37:47] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-03-29/2021-04-04/> (referer: https://www.google.com/)
+2021-03-29 50
+[2026-09-25 22:37:50] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-04-05/2021-04-11/> (referer: https://www.google.com/)
+2021-04-05 70
+[2026-09-25 22:37:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-04-12/2021-04-18/> (referer: https://www.google.com/)
+2021-04-12 70
+[2026-09-25 22:37:55] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-04-19/2021-04-25/> (referer: https://www.google.com/)
+2021-04-19 70
+[2026-09-25 22:37:57] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-04-26/2021-05-02/> (referer: https://www.google.com/)
+2021-04-26 70
+[2026-09-25 22:37:59] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-05-03/2021-05-09/> (referer: https://www.google.com/)
+2021-05-03 70
+[2026-09-25 22:38:02] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-05-10/2021-05-16/> (referer: https://www.google.com/)
+2021-05-10 70
+[2026-09-25 22:38:05] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-05-17/2021-05-23/> (referer: https://www.google.com/)
+2021-05-17 70
+[2026-09-25 22:38:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-05-24/2021-05-30/> (referer: https://www.google.com/)
+2021-05-24 70
+[2026-09-25 22:38:09] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-05-31/2021-06-06/> (referer: https://www.google.com/)
+2021-05-31 70
+[2026-09-25 22:38:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-06-07/2021-06-13/> (referer: https://www.google.com/)
+2021-06-07 70
+[2026-09-25 22:38:14] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-06-14/2021-06-20/> (referer: https://www.google.com/)
+2021-06-14 63
+[2026-09-25 22:38:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-06-21/2021-06-27/> (referer: https://www.google.com/)
+2021-06-21 70
+[2026-09-25 22:38:19] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-06-28/2021-07-04/> (referer: https://www.google.com/)
+2021-06-28 70
+[2026-09-25 22:38:21] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-07-05/2021-07-11/> (referer: https://www.google.com/)
+2021-07-05 70
+[2026-09-25 22:38:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-07-12/2021-07-18/> (referer: https://www.google.com/)
+2021-07-12 70
+[2026-09-25 22:38:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-07-19/2021-07-25/> (referer: https://www.google.com/)
+2021-07-19 70
+[2026-09-25 22:38:28] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-07-26/2021-08-01/> (referer: https://www.google.com/)
+2021-07-26 70
+[2026-09-25 22:38:30] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-08-02/2021-08-08/> (referer: https://www.google.com/)
+2021-08-02 70
+[2026-09-25 22:38:33] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-08-09/2021-08-15/> (referer: https://www.google.com/)
+2021-08-09 70
+[2026-09-25 22:38:35] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-08-16/2021-08-22/> (referer: https://www.google.com/)
+2021-08-16 70
+[2026-09-25 22:38:38] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-08-23/2021-08-29/> (referer: https://www.google.com/)
+2021-08-23 70
+[2026-09-25 22:38:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-08-30/2021-09-05/> (referer: https://www.google.com/)
+2021-08-30 70
+[2026-09-25 22:38:43] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-09-06/2021-09-12/> (referer: https://www.google.com/)
+2021-09-06 70
+[2026-09-25 22:38:45] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-09-13/2021-09-19/> (referer: https://www.google.com/)
+2021-09-13 68
+[2026-09-25 22:38:47] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-09-20/2021-09-26/> (referer: https://www.google.com/)
+2021-09-20 70
+[2026-09-25 22:38:50] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-09-27/2021-10-03/> (referer: https://www.google.com/)
+2021-09-27 72
+[2026-09-25 22:38:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-10-04/2021-10-10/> (referer: https://www.google.com/)
+2021-10-04 71
+[2026-09-25 22:38:54] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-10-11/2021-10-17/> (referer: https://www.google.com/)
+2021-10-11 72
+[2026-09-25 22:38:57] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-10-18/2021-10-24/> (referer: https://www.google.com/)
+2021-10-18 66
+[2026-09-25 22:38:59] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-10-25/2021-10-31/> (referer: https://www.google.com/)
+2021-10-25 66
+[2026-09-25 22:39:02] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-11-01/2021-11-07/> (referer: https://www.google.com/)
+2021-11-01 77
+[2026-09-25 22:39:05] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-11-08/2021-11-14/> (referer: https://www.google.com/)
+2021-11-08 77
+[2026-09-25 22:39:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-11-15/2021-11-21/> (referer: https://www.google.com/)
+2021-11-15 66
+[2026-09-25 22:39:09] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-11-22/2021-11-28/> (referer: https://www.google.com/)
+2021-11-22 77
+[2026-09-25 22:39:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-11-29/2021-12-05/> (referer: https://www.google.com/)
+2021-11-29 77
+[2026-09-25 22:39:14] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-12-06/2021-12-12/> (referer: https://www.google.com/)
+2021-12-06 77
+[2026-09-25 22:39:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-12-13/2021-12-19/> (referer: https://www.google.com/)
+2021-12-13 77
+[2026-09-25 22:39:19] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-12-20/2021-12-26/> (referer: https://www.google.com/)
+2021-12-20 49
+[2026-09-25 22:39:21] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2021-12-27/2022-01-02/> (referer: https://www.google.com/)
+2021-12-27 49
+[2026-09-25 22:39:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-01-03/2022-01-09/> (referer: https://www.google.com/)
+2022-01-03 77
+[2026-09-25 22:39:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-01-10/2022-01-16/> (referer: https://www.google.com/)
+2022-01-10 77
+[2026-09-25 22:39:28] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-01-17/2022-01-23/> (referer: https://www.google.com/)
+2022-01-17 71
+[2026-09-25 22:39:31] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-01-24/2022-01-30/> (referer: https://www.google.com/)
+2022-01-24 77
+[2026-09-25 22:39:33] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-01-31/2022-02-06/> (referer: https://www.google.com/)
+2022-01-31 77
+[2026-09-25 22:39:35] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-02-07/2022-02-13/> (referer: https://www.google.com/)
+2022-02-07 77
+[2026-09-25 22:39:38] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-02-14/2022-02-20/> (referer: https://www.google.com/)
+2022-02-14 77
+[2026-09-25 22:39:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-02-21/2022-02-27/> (referer: https://www.google.com/)
+2022-02-21 77
+[2026-09-25 22:39:43] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-02-28/2022-03-06/> (referer: https://www.google.com/)
+2022-02-28 77
+[2026-09-25 22:39:45] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-03-07/2022-03-13/> (referer: https://www.google.com/)
+2022-03-07 77
+[2026-09-25 22:39:48] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-03-14/2022-03-20/> (referer: https://www.google.com/)
+2022-03-14 77
+[2026-09-25 22:39:50] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-03-21/2022-03-27/> (referer: https://www.google.com/)
+2022-03-21 77
+[2026-09-25 22:39:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-03-28/2022-04-03/> (referer: https://www.google.com/)
+2022-03-28 77
+[2026-09-25 22:39:55] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-04-04/2022-04-10/> (referer: https://www.google.com/)
+2022-04-04 77
+[2026-09-25 22:39:57] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-04-11/2022-04-17/> (referer: https://www.google.com/)
+2022-04-11 66
+[2026-09-25 22:39:59] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-04-18/2022-04-24/> (referer: https://www.google.com/)
+2022-04-18 77
+[2026-09-25 22:40:02] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-04-25/2022-05-01/> (referer: https://www.google.com/)
+2022-04-25 77
+[2026-09-25 22:40:04] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-05-02/2022-05-08/> (referer: https://www.google.com/)
+2022-05-02 77
+[2026-09-25 22:40:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-05-09/2022-05-15/> (referer: https://www.google.com/)
+2022-05-09 77
+[2026-09-25 22:40:09] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-05-16/2022-05-22/> (referer: https://www.google.com/)
+2022-05-16 77
+[2026-09-25 22:40:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-05-23/2022-05-29/> (referer: https://www.google.com/)
+2022-05-23 77
+[2026-09-25 22:40:14] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-05-30/2022-06-05/> (referer: https://www.google.com/)
+2022-05-30 77
+[2026-09-25 22:40:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-06-06/2022-06-12/> (referer: https://www.google.com/)
+2022-06-06 77
+[2026-09-25 22:40:19] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-06-13/2022-06-19/> (referer: https://www.google.com/)
+2022-06-13 77
+[2026-09-25 22:40:22] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-06-20/2022-06-26/> (referer: https://www.google.com/)
+2022-06-20 77
+[2026-09-25 22:40:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-06-27/2022-07-03/> (referer: https://www.google.com/)
+2022-06-27 77
+[2026-09-25 22:40:26] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-07-04/2022-07-10/> (referer: https://www.google.com/)
+2022-07-04 77
+[2026-09-25 22:40:28] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-07-11/2022-07-17/> (referer: https://www.google.com/)
+2022-07-11 77
+[2026-09-25 22:40:31] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-07-18/2022-07-24/> (referer: https://www.google.com/)
+2022-07-18 77
+[2026-09-25 22:40:33] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-07-25/2022-07-31/> (referer: https://www.google.com/)
+2022-07-25 77
+[2026-09-25 22:40:35] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-08-01/2022-08-07/> (referer: https://www.google.com/)
+2022-08-01 77
+[2026-09-25 22:40:38] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-08-08/2022-08-14/> (referer: https://www.google.com/)
+2022-08-08 77
+[2026-09-25 22:42:08] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
+[2026-09-25 22:42:09] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
+[2026-09-25 22:42:10] ERROR: Failed after 3 attempts: Failed to perform, curl: (7) Failed to connect to www.loteriadehoy.com:443 after 0 ms: Could not connect to server. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-09-25 22:42:15] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-08-15/2022-08-21/> (referer: https://www.google.com/)
+2022-08-15 77
+[2026-09-25 22:42:24] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-08-22/2022-08-28/> (referer: https://www.google.com/)
+2022-08-22 77
+[2026-09-25 22:42:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-08-29/2022-09-04/> (referer: https://www.google.com/)
+2022-08-29 77
+[2026-09-25 22:42:32] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-09-05/2022-09-11/> (referer: https://www.google.com/)
+2022-09-05 77
+[2026-09-25 22:42:33] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-09-12/2022-09-18/> (referer: https://www.google.com/)
+2022-09-12 77
+[2026-09-25 22:42:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-09-19/2022-09-25/> (referer: https://www.google.com/)
+2022-09-19 77
+[2026-09-25 22:42:46] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-09-26/2022-10-02/> (referer: https://www.google.com/)
+2022-09-26 77
+[2026-09-25 22:42:48] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-10-03/2022-10-09/> (referer: https://www.google.com/)
+2022-10-03 77
+[2026-09-25 22:42:54] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-10-10/2022-10-16/> (referer: https://www.google.com/)
+2022-10-10 77
+[2026-09-25 22:42:57] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-10-17/2022-10-23/> (referer: https://www.google.com/)
+2022-10-17 77
+[2026-09-25 22:43:03] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-10-24/2022-10-30/> (referer: https://www.google.com/)
+2022-10-24 76
+[2026-09-25 22:43:09] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-10-31/2022-11-06/> (referer: https://www.google.com/)
+2022-10-31 77
+[2026-09-25 22:43:10] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-11-07/2022-11-13/> (referer: https://www.google.com/)
+2022-11-07 77
+[2026-09-25 22:43:12] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-11-14/2022-11-20/> (referer: https://www.google.com/)
+2022-11-14 77
+[2026-09-25 22:43:15] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-11-21/2022-11-27/> (referer: https://www.google.com/)
+2022-11-21 77
+[2026-09-25 22:43:18] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-11-28/2022-12-04/> (referer: https://www.google.com/)
+2022-11-28 77
+[2026-09-25 22:43:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-12-05/2022-12-11/> (referer: https://www.google.com/)
+2022-12-05 77
+[2026-09-25 22:43:32] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-12-12/2022-12-18/> (referer: https://www.google.com/)
+2022-12-12 77
+[2026-09-25 22:43:37] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-12-19/2022-12-25/> (referer: https://www.google.com/)
+2022-12-19 66
+[2026-09-25 22:43:39] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2022-12-26/2023-01-01/> (referer: https://www.google.com/)
+2022-12-26 66
+[2026-09-25 22:44:09] WARNING: Attempt 1 failed: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-09-25 22:44:13] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-01-02/2023-01-08/> (referer: https://www.google.com/)
+2023-01-02 77
+[2026-09-25 22:44:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-01-09/2023-01-15/> (referer: https://www.google.com/)
+2023-01-09 77
+[2026-09-25 22:44:17] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-01-16/2023-01-22/> (referer: https://www.google.com/)
+2023-01-16 77
+[2026-09-25 22:44:20] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-01-23/2023-01-29/> (referer: https://www.google.com/)
+2023-01-23 77
+[2026-09-25 22:44:25] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-01-30/2023-02-05/> (referer: https://www.google.com/)
+2023-01-30 77
+[2026-09-25 22:44:26] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-02-06/2023-02-12/> (referer: https://www.google.com/)
+2023-02-06 77
+[2026-09-25 22:44:36] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-02-13/2023-02-19/> (referer: https://www.google.com/)
+2023-02-13 77
+[2026-09-25 22:44:41] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-02-20/2023-02-26/> (referer: https://www.google.com/)
+2023-02-20 77
+[2026-09-25 22:44:48] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-02-27/2023-03-05/> (referer: https://www.google.com/)
+2023-02-27 77
+[2026-09-25 22:44:50] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-03-06/2023-03-12/> (referer: https://www.google.com/)
+2023-03-06 77
+[2026-09-25 22:44:53] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-03-13/2023-03-19/> (referer: https://www.google.com/)
+2023-03-13 77
+[2026-09-25 22:44:54] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-03-20/2023-03-26/> (referer: https://www.google.com/)
+2023-03-20 77
+[2026-09-25 22:44:56] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-03-27/2023-04-02/> (referer: https://www.google.com/)
+2023-03-27 77
+[2026-09-25 22:44:59] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-04-03/2023-04-09/> (referer: https://www.google.com/)
+2023-04-03 66
+[2026-09-25 22:45:01] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-04-10/2023-04-16/> (referer: https://www.google.com/)
+2023-04-10 77
+[2026-09-25 22:45:04] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-04-17/2023-04-23/> (referer: https://www.google.com/)
+2023-04-17 77
+[2026-09-25 22:45:06] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-04-24/2023-04-30/> (referer: https://www.google.com/)
+2023-04-24 77
+[2026-09-25 22:45:11] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-05-01/2023-05-07/> (referer: https://www.google.com/)
+2023-05-01 77
+[2026-09-25 22:45:12] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-05-08/2023-05-14/> (referer: https://www.google.com/)
+2023-05-08 52
+[2026-09-25 22:45:15] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-05-15/2023-05-21/> (referer: https://www.google.com/)
+2023-05-15 44
+[2026-09-25 22:45:16] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-05-22/2023-05-28/> (referer: https://www.google.com/)
+2023-05-22 0
+[2026-09-25 22:45:22] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-05-29/2023-06-04/> (referer: https://www.google.com/)
+2023-05-29 55
+[2026-09-25 22:45:23] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-06-05/2023-06-11/> (referer: https://www.google.com/)
+2023-06-05 77
+[2026-09-25 22:45:26] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-06-12/2023-06-18/> (referer: https://www.google.com/)
+2023-06-12 77
+[2026-09-25 22:45:29] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-06-19/2023-06-25/> (referer: https://www.google.com/)
+2023-06-19 77
+[2026-09-25 22:45:30] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-06-26/2023-07-02/> (referer: https://www.google.com/)
+2023-06-26 77
+[2026-09-25 22:45:33] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-07-03/2023-07-09/> (referer: https://www.google.com/)
+2023-07-03 77
+[2026-09-25 22:45:36] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-07-10/2023-07-16/> (referer: https://www.google.com/)
+2023-07-10 77
+[2026-09-25 22:45:38] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-07-17/2023-07-23/> (referer: https://www.google.com/)
+2023-07-17 77
+[2026-09-25 22:45:40] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-07-24/2023-07-30/> (referer: https://www.google.com/)
+2023-07-24 77
+[2026-09-25 22:45:42] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-07-31/2023-08-06/> (referer: https://www.google.com/)
+2023-07-31 77
+[2026-09-25 22:45:45] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-08-07/2023-08-13/> (referer: https://www.google.com/)
+2023-08-07 77
+[2026-09-25 22:45:48] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-08-14/2023-08-20/> (referer: https://www.google.com/)
+2023-08-14 77
+[2026-09-25 22:45:51] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-08-21/2023-08-27/> (referer: https://www.google.com/)
+2023-08-21 77
+[2026-09-25 22:45:52] INFO: Fetched (200) <POST https://loteriadehoy.com/animalito/lottoactivo/historico/2023-08-28/2023-09-03/> (referer: https://www.google.com/)
+2023-08-28 77
+total 15166 sorteos, 1471 días; sorteos/día: [(10, 760), (11, 669), (5, 21), (3, 9), (7, 3)]
+descartados: []

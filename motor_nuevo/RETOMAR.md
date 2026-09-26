@@ -65,6 +65,23 @@ ag02 (27 var) + 6 de transiciones (T1-3, R1-3), λ=30, prerregistrado. Resultado
 - `sellado/prueba.py` + `sellado/candidatos.json` (ag12_V1, ag12_V0; Bonferroni k=2). Se niega a correr dos veces (registro_sellado.jsonl).
 - Ensayo en seco OK con SELLADO_ENSAYO=<archivo> (no registra nada).
 - Orden: auditoría OK → commit en motor-nuevo (congela) → descargar → prueba.py UNA vez.
+- **Auditoría ag12: OK** (sin look-ahead; s1→i 2-7 d se reproduce en [300,2000) con O/E 0,60, z −3,2; las inversas
+  i→s1 y la ventana 8-30 NO se reproducen → esperar que el efecto encoja a ~60 %). Pidió arreglar el registro del
+  ensayo (hecho: archivado en sellado/ensayo_2026-09-25, prueba.py corregido + control de integridad + hash de caché).
+- **CONGELADO: commit c4a2b17** (rama motor-nuevo, local, sin push). Reglas: `sellado/PREREGISTRO_SELLADO.md`.
+- Descarga lanzada 2026-09-25 ~22:45 → `sellado/descarga.log`, `sellado/sellado_la.txt`. Si se corta: volver a correr
+  descargar.py (usa caché por semana). Luego: `python motor_nuevo/sellado/prueba.py` (UNA vez).
+
+## RESULTADO DE LA PRUEBA SELLADA (2026-09-25, UNA vez, registro_sellado.jsonl) — NO PASA
+Datos: 15.166 sorteos, 1.471 días, 2019-01-07..2023-09-03 (días de 10-11), sha256 cf9a96e7..., 0 duplicados.
+- ensamble: +60,4 mbits (la MITAD que en desarrollo), Top-15 48,51 %, Top-5 escalonado +9,6 %/ficha.
+- ag12 V1: Δ −1,17 [−6,02 ; +3,85] → NO. Top-15 49,23 %.
+- ag12 V0: Δ +1,08 [−1,97 ; +4,08] → NO. Top-15 49,38 %. (Secundaria: Top-5 escalonado +3,1 pp [+0,7 ; +5,6].)
+- Diagnóstico POSTERIOR (`sellado/diagnostico_post.py`, no cambia el veredicto): s1→i 2-7 d frente al ensamble por año:
+  2019 0,93 · 2020 0,97 · 2021 0,86 · **2022 0,75 (z −3,2) · 2023 0,74 (z −2,7)**. El mecanismo parece nacer hacia 2022
+  (cambio de política del operador). Hipótesis, no evidencia: el tramo sellado ya está gastado.
+- Única vía honesta que queda para ag12: medirlo HACIA ADELANTE en el marcador en vivo (en sombra, sin cambiar la jugada),
+  con prerregistro. Requiere el OK del usuario (toca producción).
 
 ## Siguientes pasos (en orden)
 1. Esperar veredictos de la verificación. Anotar aquí cuáles sobreviven.
