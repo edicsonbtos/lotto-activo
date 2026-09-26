@@ -1,0 +1,27 @@
+filas 7357, días 636, filas por bloque [1400, 1397, 1515, 1524, 1521]
+== V_dinero (desarrollo n=7357) ==
+mbits: cand +59.6 · ensamble +120.1
+Delta mbits -60.48 [-69.44, -51.47] · mitad1 -49.06 [-63.29, -36.04] · mitad2 -71.90 [-84.29, -59.31]
+Top-3 12.74% vs 12.89% · Top-5 19.48% vs 20.25% · Top-15 52.07% vs 53.07%
+Top-5 escalonado por ficha: +20.80% vs +24.27% · delta -0.03 [-0.09, +0.03]
+PASA BARRA DEV: False
+  w medio: {'s1_vec1': -0.506, 's1_digito': -1.185, 's1_col': -0.135, 'sucesor_s1': -0.892, 'predecesor_s1': -0.721, 'ult_ayer': -0.14, 'ayer_misma_hora': -0.643, 'hueco_12_23': 2.061, 'hueco_24_35': -0.27}  c: [0.243, 0.242, 0.234, 0.236, 0.218]
+  (2 s)
+== V_logloss (desarrollo n=7357) ==
+mbits: cand +129.6 · ensamble +120.1
+Delta mbits +9.51 [+5.60, +13.28] · mitad1 +10.39 [+5.26, +15.26] · mitad2 +8.64 [+2.93, +14.37]
+Top-3 13.36% vs 12.89% · Top-5 21.34% vs 20.25% · Top-15 53.87% vs 53.07%
+Top-5 escalonado por ficha: +30.13% vs +24.27% · delta +0.06 [+0.02, +0.10]
+PASA BARRA DEV: True
+  w medio: {'s1_vec1': -0.21, 's1_digito': -0.201, 's1_col': -0.142, 'sucesor_s1': -0.483, 'predecesor_s1': -0.258, 'ult_ayer': 0.118, 'ayer_misma_hora': -0.021, 'hueco_12_23': 0.004, 'hueco_24_35': -0.068}  c: [1.0, 1.0, 1.0, 1.0, 1.0]
+  (3 s)
+== V_dinero_tau0.1 (desarrollo n=7357) ==
+mbits: cand +80.8 · ensamble +120.1
+Delta mbits -39.31 [-47.19, -31.55] · mitad1 -31.30 [-43.26, -19.53] · mitad2 -47.31 [-57.71, -36.43]
+Top-3 12.75% vs 12.89% · Top-5 19.42% vs 20.25% · Top-15 52.59% vs 53.07%
+Top-5 escalonado por ficha: +20.65% vs +24.27% · delta -0.04 [-0.09, +0.02]
+PASA BARRA DEV: False
+  w medio: {'s1_vec1': -0.444, 's1_digito': -0.599, 's1_col': -0.145, 'sucesor_s1': -0.733, 'predecesor_s1': -0.52, 'ult_ayer': -0.2, 'ayer_misma_hora': -0.338, 'hueco_12_23': 1.254, 'hueco_24_35': 0.027}  c: [0.409, 0.39, 0.373, 0.381, 0.362]
+  (6 s)
+congelado V_dinero: {'s1_vec1': -0.671, 's1_digito': -1.196, 's1_col': -0.139, 'sucesor_s1': -0.913, 'predecesor_s1': -0.675, 'ult_ayer': -0.137, 'ayer_misma_hora': -0.653, 'hueco_12_23': 2.064, 'hueco_24_35': -0.267} c 0.234
+total 7 s

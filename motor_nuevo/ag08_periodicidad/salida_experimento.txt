@@ -1,0 +1,13 @@
+== ag08 primario: desfases 12/24/36/38/76/84 + misma hora 1 y 7 días (desarrollo n=7357) ==
+mbits: cand +119.6 · ensamble +120.1
+Delta mbits -0.45 [-1.89, +1.00] · mitad1 -0.32 [-2.51, +1.87] · mitad2 -0.57 [-2.61, +1.44]
+Top-3 12.70% vs 12.89% · Top-5 20.05% vs 20.25% · Top-15 52.85% vs 53.07%
+Top-5 escalonado por ficha: +22.79% vs +24.27% · delta -0.01 [-0.04, +0.01]
+PASA BARRA DEV: False
+theta por bloque: [[0.201, -0.078, 0.025, 0.175, -0.008, -0.058, -0.155, -0.052], [0.101, -0.111, 0.1, 0.17, 0.022, -0.063, -0.054, -0.155], [0.117, -0.021, -0.048, 0.199, 0.042, -0.005, -0.098, -0.046], [0.158, -0.094, 0.127, 0.209, 0.009, -0.062, -0.089, -0.048], [0.13, -0.08, 0.019, 0.122, 0.043, -0.081, -0.1, -0.107]]
+== ag08 variante 2 (exploratoria): familia F4 calendario x hueco, 236 variables, ridge 30 (desarrollo n=7357) ==
+mbits: cand +118.3 · ensamble +120.1
+Delta mbits -1.74 [-6.31, +2.97] · mitad1 -3.76 [-10.16, +2.69] · mitad2 +0.29 [-6.43, +7.16]
+Top-3 12.87% vs 12.89% · Top-5 20.40% vs 20.25% · Top-15 53.07% vs 53.07%
+Top-5 escalonado por ficha: +24.78% vs +24.27% · delta +0.01 [-0.04, +0.05]
+PASA BARRA DEV: False

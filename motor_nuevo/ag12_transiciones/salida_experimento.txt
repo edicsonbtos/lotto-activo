@@ -1,0 +1,28 @@
+== V1_33var_crossfit (desarrollo n=7357) ==
+mbits: cand +141.8 · ensamble +120.1
+Delta mbits +21.71 [+16.39, +27.10] · mitad1 +22.65 [+15.19, +30.04] · mitad2 +20.77 [+12.60, +28.77]
+Top-3 13.85% vs 12.89% · Top-5 22.13% vs 20.25% · Top-15 54.78% vs 53.07%
+Top-5 escalonado por ficha: +34.92% vs +24.27% · delta +0.11 [+0.06, +0.16]
+PASA BARRA DEV: True
+
+== V1_forward_informativo (desarrollo n=7357) ==
+mbits: cand +136.1 · ensamble +120.1
+Delta mbits +16.04 [+11.32, +20.96] · mitad1 +12.59 [+7.35, +18.12] · mitad2 +19.50 [+11.20, +27.40]
+Top-3 13.71% vs 12.89% · Top-5 21.71% vs 20.25% · Top-15 54.37% vs 53.07%
+Top-5 escalonado por ficha: +32.83% vs +24.27% · delta +0.09 [+0.04, +0.13]
+PASA BARRA DEV: True
+
+== V0_solo_6_transiciones (desarrollo n=7357) ==
+mbits: cand +133.9 · ensamble +120.1
+Delta mbits +13.80 [+10.32, +17.27] · mitad1 +14.31 [+9.60, +18.65] · mitad2 +13.29 [+8.01, +18.48]
+Top-3 13.78% vs 12.89% · Top-5 21.61% vs 20.25% · Top-15 54.17% vs 53.07%
+Top-5 escalonado por ficha: +32.73% vs +24.27% · delta +0.08 [+0.05, +0.12]
+PASA BARRA DEV: True
+
+== ag02_27var_referencia (desarrollo n=7357) ==
+mbits: cand +132.2 · ensamble +120.1
+Delta mbits +12.15 [+7.64, +16.75] · mitad1 +12.56 [+6.16, +19.18] · mitad2 +11.74 [+5.17, +17.98]
+Top-3 13.59% vs 12.89% · Top-5 21.56% vs 20.25% · Top-15 54.11% vs 53.07%
+Top-5 escalonado por ficha: +31.81% vs +24.27% · delta +0.08 [+0.03, +0.12]
+PASA BARRA DEV: True
+V1 - ag02: (9.559094046008843, 6.438758837626665, 12.612113287796708)

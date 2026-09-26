@@ -1,0 +1,40 @@
+V1 cross-fit
+  bloque 0: λ=300.0 (CV [-21316.5, -21197.3, -21153.1, -21145.7])
+  bloque 1: λ=300.0 (CV [-21324.2, -21204.7, -21165.9, -21161.9])
+  bloque 2: λ=300.0 (CV [-20889.9, -20758.3, -20724.9, -20722.3])
+  bloque 3: λ=300.0 (CV [-20950.8, -20818.5, -20763.8, -20752.7])
+  bloque 4: λ=300.0 (CV [-20939.9, -20841.8, -20811.1, -20808.9])
+== V1 multi-escala sobre ensamble (cross-fit 5 bloques) (desarrollo n=7357) ==
+mbits: cand +120.9 · ensamble +120.1
+Delta mbits +0.84 [-0.80, +2.51] · mitad1 -0.01 [-2.30, +2.39] · mitad2 +1.69 [-0.76, +4.21]
+Top-3 12.89% vs 12.89% · Top-5 20.27% vs 20.25% · Top-15 52.68% vs 53.07%
+Top-5 escalonado por ficha: +24.32% vs +24.27% · delta +0.00 [-0.02, +0.03]
+PASA BARRA DEV: False
+V1f forward-chaining
+== V1f multi-escala sobre ensamble (forward-chaining 10 bloques) (desarrollo n=7357) ==
+mbits: cand +120.1 · ensamble +120.1
+Delta mbits -0.02 [-1.59, +1.54] · mitad1 -0.79 [-2.88, +1.32] · mitad2 +0.76 [-1.55, +3.32]
+Top-3 12.60% vs 12.89% · Top-5 20.33% vs 20.25% · Top-15 52.62% vs 53.07%
+Top-5 escalonado por ficha: +23.50% vs +24.27% · delta -0.01 [-0.03, +0.02]
+PASA BARRA DEV: False
+V2 sin ensamble
+  bloque 0: λ=30.0 (CV [-21483.0, -21375.1, -21352.7, -21371.8])
+  bloque 1: λ=30.0 (CV [-21510.4, -21399.3, -21376.2, -21393.7])
+  bloque 2: λ=30.0 (CV [-21082.7, -20959.0, -20937.0, -20953.0])
+  bloque 3: λ=30.0 (CV [-21140.4, -21016.3, -20972.3, -20975.2])
+  bloque 4: λ=30.0 (CV [-21082.7, -20989.7, -20971.7, -20994.4])
+== V2 multi-escala SOLA (sin ensamble, cross-fit) (desarrollo n=7357) ==
+mbits: cand +72.6 · ensamble +120.1
+Delta mbits -47.48 [-56.35, -38.66] · mitad1 -39.99 [-53.29, -27.07] · mitad2 -54.97 [-68.18, -42.66]
+Top-3 11.53% vs 12.89% · Top-5 18.74% vs 20.25% · Top-15 48.62% vs 53.07%
+Top-5 escalonado por ficha: +13.51% vs +24.27% · delta -0.11 [-0.18, -0.04]
+PASA BARRA DEV: False
+  w[gap]: rango [-0.196, +0.118]
+  w[sup1]: rango [-0.034, +0.055]
+  w[sup2]: rango [-0.024, +0.087]
+  w[gd]: rango [-0.036, +0.037]
+  w[c3]: rango [-0.040, +0.069]
+  w[hoy]: rango [-0.036, -0.036]
+  w[animal]: rango [-0.087, +0.059]
+congelado λ=300.0
+tiempo 600 s

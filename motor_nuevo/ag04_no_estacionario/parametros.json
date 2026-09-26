@@ -1,0 +1,7 @@
+{
+ "descripcion": "V1 Kalman sobre pesos del ensamble_v2. q elegido en desarrollo [2000,9357) (modal del cross-fit y mejor global en filas < 9357).",
+ "base": ["intradia_v2", "secuencia_v3", "haz_v1"],
+ "q": 1e-05,
+ "s0": 0.1,
+ "arranque": 1000
+}

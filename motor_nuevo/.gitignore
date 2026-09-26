@@ -1,0 +1,6 @@
+__pycache__/
+*.npy
+*.npz
+!ag03_red_secuencial/parametros.npz
+sellado/sellado_la.txt
+sellado/P_*.npy*

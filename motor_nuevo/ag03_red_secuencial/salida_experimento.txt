@@ -1,0 +1,20 @@
+== ag03 V_apilado (primaria) (desarrollo n=7357) ==
+mbits: cand +122.1 · ensamble +120.1
+Delta mbits +2.05 [-0.30, +4.50] · mitad1 +1.11 [-2.12, +4.38] · mitad2 +3.00 [-0.40, +6.44]
+Top-3 13.31% vs 12.89% · Top-5 20.88% vs 20.25% · Top-15 53.05% vs 53.07%
+Top-5 escalonado por ficha: +28.19% vs +24.27% · delta +0.04 [+0.01, +0.07]
+PASA BARRA DEV: False
+
+== ag03 V_solo (desarrollo n=7357) ==
+mbits: cand +70.0 · ensamble +120.1
+Delta mbits -50.04 [-59.63, -40.35] · mitad1 -39.26 [-52.93, -25.77] · mitad2 -60.82 [-74.69, -47.34]
+Top-3 10.52% vs 12.89% · Top-5 17.67% vs 20.25% · Top-15 50.01% vs 53.07%
+Top-5 escalonado por ficha: +5.72% vs +24.27% · delta -0.19 [-0.25, -0.12]
+PASA BARRA DEV: False
+
+== ag03 V_apilado forward-chaining (informativa) (desarrollo n=7357) ==
+mbits: cand +119.1 · ensamble +120.1
+Delta mbits -0.99 [-4.24, +2.38] · mitad1 -0.94 [-4.91, +2.84] · mitad2 -1.04 [-6.18, +4.17]
+Top-3 12.71% vs 12.89% · Top-5 19.95% vs 20.25% · Top-15 53.13% vs 53.07%
+Top-5 escalonado por ficha: +22.49% vs +24.27% · delta -0.02 [-0.06, +0.02]
+PASA BARRA DEV: False

@@ -1,0 +1,8 @@
+V1 (True, None, 0.0) 16 s
+V0 (True, None, 0.0) 14 s
+== V1 congelado DENTRO de muestra (optimista, solo coherencia) (desarrollo n=7357) ==
+mbits: cand +147.0 · ensamble +120.1
+Delta mbits +26.90 [+21.61, +32.29] · mitad1 +27.40 [+19.92, +34.82] · mitad2 +26.41 [+18.21, +34.16]
+Top-3 14.34% vs 12.89% · Top-5 22.43% vs 20.25% · Top-15 55.54% vs 53.07%
+Top-5 escalonado por ficha: +37.88% vs +24.27% · delta +0.14 [+0.09, +0.18]
+PASA BARRA DEV: True

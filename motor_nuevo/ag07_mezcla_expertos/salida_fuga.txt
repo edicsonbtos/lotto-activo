@@ -1,0 +1,1 @@
+prueba_fuga prefijo(2600) desde 2000: (True, None, 0.0)

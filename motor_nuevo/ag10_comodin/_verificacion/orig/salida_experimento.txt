@@ -1,0 +1,37 @@
+variables listas en 1s; medias: {'ayer_cooc': 0.449, 'sem_cooc': 2.57, 'mes_cooc': 9.199, 'trans1_30': 0.243, 'trans2_30': 0.243, 'orden_30': 6.104, 'ayer_x_S': 1.532, 'nsem_x_S': 9.062, 'nmes_x_S': 34.783}
+== V1 composición del día, cross-fit 5 bloques, λ=30 (PRIMARIA) (desarrollo n=7357) ==
+mbits: cand +128.6 · ensamble +120.1
+Delta mbits +8.54 [+5.03, +12.17] · mitad1 +10.22 [+5.41, +14.60] · mitad2 +6.87 [+1.61, +12.16]
+Top-3 13.46% vs 12.89% · Top-5 20.99% vs 20.25% · Top-15 53.57% vs 53.07%
+Top-5 escalonado por ficha: +29.16% vs +24.27% · delta +0.05 [+0.01, +0.09]
+PASA BARRA DEV: True
+pesos por bloque (unidad cruda):
+  ayer_cooc  [-0.0864, -0.0552, -0.0587, -0.0552, -0.0591]
+  sem_cooc   [-0.0192, -0.0158, -0.0192, -0.0095, -0.0192]
+  mes_cooc   [0.0068, 0.0066, 0.0053, 0.0048, 0.0065]
+  trans1_30  [-0.2169, -0.2194, -0.2255, -0.2345, -0.251]
+  trans2_30  [0.0006, -0.0157, -0.0211, -0.0247, -0.0257]
+  orden_30   [-0.0081, -0.0054, -0.0092, -0.0116, -0.0072]
+  ayer_x_S   [0.0246, 0.0126, 0.0141, 0.0154, 0.0177]
+  nsem_x_S   [0.0048, 0.0034, 0.0046, 0.0036, 0.0058]
+  nmes_x_S   [-0.0012, -0.0014, -0.0002, -0.0001, -0.0007]
+== V1 forward-chaining (informativo; bloque 0 = ensamble) (desarrollo n=7357) ==
+mbits: cand +126.1 · ensamble +120.1
+Delta mbits +6.05 [+2.46, +10.00] · mitad1 +5.75 [+1.28, +10.12] · mitad2 +6.35 [+0.61, +12.15]
+Top-3 13.38% vs 12.89% · Top-5 20.93% vs 20.25% · Top-15 53.49% vs 53.07%
+Top-5 escalonado por ficha: +28.65% vs +24.27% · delta +0.04 [+0.01, +0.08]
+PASA BARRA DEV: True
+== informativo: ag02 (27 var) re-ajustado aquí (desarrollo n=7357) ==
+mbits: cand +131.8 · ensamble +120.1
+Delta mbits +11.68 [+6.55, +16.90] · mitad1 +11.02 [+3.36, +18.73] · mitad2 +12.35 [+5.13, +19.15]
+Top-3 13.52% vs 12.89% · Top-5 21.64% vs 20.25% · Top-15 54.33% vs 53.07%
+Top-5 escalonado por ficha: +31.86% vs +24.27% · delta +0.08 [+0.03, +0.12]
+PASA BARRA DEV: True
+== informativo: ag02 + ag10 (36 var) (desarrollo n=7357) ==
+mbits: cand +137.1 · ensamble +120.1
+Delta mbits +17.04 [+11.02, +23.06] · mitad1 +17.97 [+9.68, +26.31] · mitad2 +16.11 [+7.42, +24.54]
+Top-3 13.96% vs 12.89% · Top-5 22.18% vs 20.25% · Top-15 55.00% vs 53.07%
+Top-5 escalonado por ficha: +35.53% vs +24.27% · delta +0.11 [+0.06, +0.17]
+PASA BARRA DEV: True
+INCREMENTO ag10 sobre ag02: Delta mbits +5.36 [+2.27, +8.62] · mitad1 +6.95 [+2.77, +10.89] · mitad2 +3.77 [-0.88, +8.57] · delta ret T5 +0.04 [+0.00, +0.07]
+listo en 11s

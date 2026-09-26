@@ -1,0 +1,72 @@
+variables: (7357, 38, 15) en 0s
+  [A_solo] bloque 0: 1400 filas, entreno 5935, árboles 147, 8s
+  [A_solo] bloque 1: 1397 filas, entreno 5916, árboles 129, 7s
+  [A_solo] bloque 2: 1515 filas, entreno 5796, árboles 174, 8s
+  [A_solo] bloque 3: 1524 filas, entreno 5785, árboles 122, 5s
+  [A_solo] bloque 4: 1521 filas, entreno 5812, árboles 222, 9s
+== ag01 A_solo (desarrollo n=7357) ==
+mbits: cand +98.2 · ensamble +120.1
+Delta mbits -21.85 [-29.63, -13.93] · mitad1 -15.01 [-27.17, -3.49] · mitad2 -28.68 [-39.85, -18.01]
+Top-3 11.50% vs 12.89% · Top-5 18.78% vs 20.25% · Top-15 50.22% vs 53.07%
+Top-5 escalonado por ficha: +13.57% vs +24.27% · delta -0.11 [-0.17, -0.04]
+PASA BARRA DEV: False
+  [B_apilado] bloque 0: 1400 filas, entreno 5935, árboles 44, 3s
+  [B_apilado] bloque 1: 1397 filas, entreno 5916, árboles 92, 5s
+  [B_apilado] bloque 2: 1515 filas, entreno 5796, árboles 96, 5s
+  [B_apilado] bloque 3: 1524 filas, entreno 5785, árboles 56, 4s
+  [B_apilado] bloque 4: 1521 filas, entreno 5812, árboles 60, 4s
+== ag01 B_apilado (desarrollo n=7357) ==
+mbits: cand +125.9 · ensamble +120.1
+Delta mbits +5.87 [+2.95, +8.78] · mitad1 +6.27 [+2.03, +10.55] · mitad2 +5.47 [+1.44, +9.52]
+Top-3 12.83% vs 12.89% · Top-5 20.63% vs 20.25% · Top-15 53.13% vs 53.07%
+Top-5 escalonado por ficha: +25.49% vs +24.27% · delta +0.01 [-0.02, +0.04]
+PASA BARRA DEV: True
+  [B_forward] bloque 1: árboles 4
+  [B_forward] bloque 2: árboles 19
+  [B_forward] bloque 3: árboles 57
+  [B_forward] bloque 4: árboles 60
+== ag01 diag B forward-chaining (bloque 0 = ensamble) (desarrollo n=7357) ==
+mbits: cand +123.4 · ensamble +120.1
+Delta mbits +3.37 [+1.54, +5.21] · mitad1 +0.86 [-0.28, +2.04] · mitad2 +5.88 [+2.34, +9.38]
+Top-3 12.83% vs 12.89% · Top-5 20.50% vs 20.25% · Top-15 52.90% vs 53.07%
+Top-5 escalonado por ficha: +24.98% vs +24.27% · delta +0.01 [-0.01, +0.03]
+PASA BARRA DEV: True
+  [C_recal] bloque 0: 1400 filas, entreno 5935, árboles 14, 1s
+  [C_recal] bloque 1: 1397 filas, entreno 5916, árboles 13, 2s
+  [C_recal] bloque 2: 1515 filas, entreno 5796, árboles 30, 2s
+  [C_recal] bloque 3: 1524 filas, entreno 5785, árboles 8, 1s
+  [C_recal] bloque 4: 1521 filas, entreno 5812, árboles 3, 1s
+== ag01 diag recalibración (sólo log P_ens y rango) (desarrollo n=7357) ==
+mbits: cand +120.1 · ensamble +120.1
+Delta mbits +0.03 [-1.01, +1.05] · mitad1 +0.59 [-0.96, +2.21] · mitad2 -0.52 [-1.84, +0.67]
+Top-3 12.76% vs 12.89% · Top-5 20.33% vs 20.25% · Top-15 53.04% vs 53.07%
+Top-5 escalonado por ficha: +24.12% vs +24.27% · delta -0.00 [-0.01, +0.01]
+PASA BARRA DEV: False
+== ag01 A_solo (desarrollo n=7357) ==
+mbits: cand +98.2 · ensamble +120.1
+Delta mbits -21.85 [-29.63, -13.93] · mitad1 -15.01 [-27.17, -3.49] · mitad2 -28.68 [-39.85, -18.01]
+Top-3 11.50% vs 12.89% · Top-5 18.78% vs 20.25% · Top-15 50.22% vs 53.07%
+Top-5 escalonado por ficha: +13.57% vs +24.27% · delta -0.11 [-0.17, -0.04]
+PASA BARRA DEV: False
+
+== ag01 B_apilado (desarrollo n=7357) ==
+mbits: cand +125.9 · ensamble +120.1
+Delta mbits +5.87 [+2.95, +8.78] · mitad1 +6.27 [+2.03, +10.55] · mitad2 +5.47 [+1.44, +9.52]
+Top-3 12.83% vs 12.89% · Top-5 20.63% vs 20.25% · Top-15 53.13% vs 53.07%
+Top-5 escalonado por ficha: +25.49% vs +24.27% · delta +0.01 [-0.02, +0.04]
+PASA BARRA DEV: True
+
+== ag01 diag B forward-chaining (bloque 0 = ensamble) (desarrollo n=7357) ==
+mbits: cand +123.4 · ensamble +120.1
+Delta mbits +3.37 [+1.54, +5.21] · mitad1 +0.86 [-0.28, +2.04] · mitad2 +5.88 [+2.34, +9.38]
+Top-3 12.83% vs 12.89% · Top-5 20.50% vs 20.25% · Top-15 52.90% vs 53.07%
+Top-5 escalonado por ficha: +24.98% vs +24.27% · delta +0.01 [-0.01, +0.03]
+PASA BARRA DEV: True
+
+== ag01 diag recalibración (sólo log P_ens y rango) (desarrollo n=7357) ==
+mbits: cand +120.1 · ensamble +120.1
+Delta mbits +0.03 [-1.01, +1.05] · mitad1 +0.59 [-0.96, +2.21] · mitad2 -0.52 [-1.84, +0.67]
+Top-3 12.76% vs 12.89% · Top-5 20.33% vs 20.25% · Top-15 53.04% vs 53.07%
+Top-5 escalonado por ficha: +24.12% vs +24.27% · delta -0.00 [-0.01, +0.01]
+PASA BARRA DEV: False
+total 76s

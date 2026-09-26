@@ -1,0 +1,25 @@
+
+Pruebas: 1936 · supervivientes BH(q=0,05) en mitad 1: 1 · confirmados en mitad 2: 0
+   ['gh', 6, 7] F4 m1 {'O': 64.0, 'E': 37.5829, 'z': np.float64(4.6433), 'p': 0.0} m2 {'O': 40.0, 'E': 33.0408, 'z': np.float64(1.2968), 'p': 0.1947} no
+  F1: 168 pruebas · p mín m1 4.69e-03 · n(p<0,05) 7 (esperado 8.4)
+  F1b: 7 pruebas · p mín m1 1.67e-01 · n(p<0,05) 0 (esperado 0.4)
+  F2: 228 pruebas · p mín m1 1.14e-04 · n(p<0,05) 11 (esperado 11.4)
+  F3a: 228 pruebas · p mín m1 2.90e-03 · n(p<0,05) 7 (esperado 11.4)
+  F3b: 199 pruebas · p mín m1 2.44e-03 · n(p<0,05) 16 (esperado 10.0)
+  F4: 236 pruebas · p mín m1 3.43e-06 · n(p<0,05) 25 (esperado 11.8)
+  F5: 722 pruebas · p mín m1 6.02e-03 · n(p<0,05) 34 (esperado 36.1)
+  F6: 148 pruebas · p mín m1 6.04e-04 · n(p<0,05) 12 (esperado 7.4)
+  Desfases objetivo (F1), z m1 / z m2:
+    L=12: +1.37 / +0.19
+    L=24: -0.90 / -0.61
+    L=36: +0.73 / +0.18
+    L=38: +2.01 / +1.77
+    L=76: +0.35 / +0.14
+    L=84: -0.46 / -1.42
+    misma hora hace 1 días: -0.36 / +0.19
+    misma hora hace 2 días: -0.95 / -0.76
+    misma hora hace 3 días: +1.04 / +0.43
+    misma hora hace 4 días: -1.14 / +0.76
+    misma hora hace 5 días: +1.38 / -0.26
+    misma hora hace 6 días: -0.91 / +0.48
+    misma hora hace 7 días: -0.33 / -1.74
