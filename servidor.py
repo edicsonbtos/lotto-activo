@@ -1182,6 +1182,68 @@ def marcador_cambio_rd(d):
     m["dif"] = m["con"] - m["sin"]
     return m
 
+# ------------------------------------------------ pronósticos en sombra (motor_nuevo)
+# ag12 (pares consecutivos recientes) se guarda junto al congelado del ensamble,
+# pero NO se muestra ni se puntúa en el marcador principal: solo sirve para medirlo
+# con sorteos futuros (motor_nuevo/RETOMAR.md). ag12_rd NO se congela: RD (h−1):30
+# sale ~25 min después del congelado, así que la regla de RD se aplica al PUNTUAR
+# sobre la sombra ag12, igual que marcador_cambio_rd (RD (h−1):30 y (h−2):30 salen antes de LA h:00).
+SOMBRA_DESDE = "2026-09-26"
+SOMBRA_RD_MULT = {1: 0.50, 2: 0.75}     # r2_a03_rd_produccion (VB)
+_RUTA_AG12 = os.path.join(HERR, "modelos", "ag12")
+
+def sombra_de(filas, pf, ph, sc):
+    """{"ag12": 38 probabilidades} o None. Nunca tumba el pronóstico principal."""
+    try:
+        if _RUTA_AG12 not in sys.path:
+            sys.path.insert(0, _RUTA_AG12)
+        import sombra
+        return {"ag12": sombra.corregir(filas, pf, ph, sc)["ag12"]}
+    except Exception as ex:  # noqa: BLE001
+        print(f"[sombra] {ahora()} fallo: {ex!r}", file=sys.stderr, flush=True)
+        return None
+
+def _con_rd(p, rd, f, h):
+    """ag12 × 0,50 al animal de RD (h−1):30 y × 0,75 al de (h−2):30, si ya salieron."""
+    q = list(p); usado = False
+    for k, mult in SOMBRA_RD_MULT.items():
+        c = rd.get((f, h - k)) if h - k >= 0 else None
+        if c in IDX:
+            q[IDX[c]] *= mult; usado = True
+    return q, usado
+
+def marcador_sombra(d):
+    """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE)."""
+    try:
+        import rdint_vivo
+        rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
+    except Exception:  # noqa: BLE001
+        rd = {}
+    fichas = fichas_por_puesto()
+    nombres = ("ensamble", "ag12", "ag12_rd")
+    m = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nombres}
+    con_rd = 0
+    for r in resueltas(d):
+        s = r.get("sombra")
+        if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not r.get("scores"):
+            continue
+        q, usado = _con_rd(s["ag12"], rd, r["fecha"], r["hora"])
+        con_rd += usado
+        for k, p in (("ensamble", r["scores"]), ("ag12", s["ag12"]), ("ag12_rd", q)):
+            tot = sum(p)
+            orden = sorted(range(K), key=lambda i: (-p[i], i))
+            pos = orden.index(r["salio"]) + 1
+            x = m[k]; x["n"] += 1
+            x["top3"] += pos <= 3; x["top5"] += pos <= 5; x["top15"] += pos <= 15
+            x["mbits"] += 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
+            x["t5_neto"] += PAGO * fichas[pos] - sum(fichas)
+    for x in m.values():
+        if x["n"]:
+            for c in ("top3", "top5", "top15"):
+                x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
+            x["mbits"] = round(x["mbits"] / x["n"], 1)
+    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m}
+
 def nota_cambio_rd(info):
     if info is None:
         return ""
@@ -1691,6 +1753,10 @@ def preparar():
                     "orden_completo": list(e["orden"]), "salio": None,
                     "scores": [round(float(x), 6) for x in e["sc"]],
                     "creado": ahora(), "modelo": modelo, **sello(info)}
+            if modelo == MODELO_MARCADOR:
+                sombra = sombra_de(filas, e["pf"], e["ph"], e["sc"])
+                if sombra:
+                    pend["sombra"] = sombra
             d["registros"].append(pend); cambio = True
     # Lo que se muestra es SIEMPRE el pronóstico congelado que se puntúa: tras
     # un deshacer o un reinicio el cálculo del momento puede no coincidir.
@@ -2313,6 +2379,9 @@ class H(BaseHTTPRequestHandler):
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/cambio_rd":
             self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
+                       "application/json; charset=utf-8")
+        elif ruta == "/api/sombra":
+            self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),
                        "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
