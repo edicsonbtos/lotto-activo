@@ -1182,6 +1182,54 @@ def marcador_cambio_rd(d):
     m["dif"] = m["con"] - m["sin"]
     return m
 
+# ------------------------------------------------ pronósticos en sombra (motor_nuevo)
+# ag12 (pares consecutivos recientes) y ag12 + RD se guardan junto al congelado
+# del ensamble, pero NO se muestran ni se puntúan en el marcador principal: solo
+# sirven para medirlos con sorteos futuros (motor_nuevo/RETOMAR.md).
+SOMBRA_DESDE = "2026-09-26"
+SOMBRA_MODELOS = ("ag12", "ag12_rd")
+
+def sombra_de(filas, pf, ph, sc):
+    """{modelo: 38 probabilidades} o None. Nunca tumba el pronóstico principal."""
+    try:
+        sys.path.insert(0, os.path.join(HERR, "modelos", "ag12"))
+        import sombra
+        try:
+            import rdint_vivo
+            rd = {(f, h): IDX[c] for f, h, c in rdint_vivo.cargar_rd() if c in IDX}
+        except Exception:  # noqa: BLE001
+            rd = None
+        out = sombra.corregir(filas, pf, ph, sc, rd)
+        return {k: v for k, v in out.items() if v is not None}
+    except Exception as ex:  # noqa: BLE001
+        print(f"[sombra] {ahora()} fallo: {ex!r}", file=sys.stderr, flush=True)
+        return None
+
+def marcador_sombra(d):
+    """Ensamble contra los modelos en sombra, sobre los MISMOS sorteos resueltos."""
+    fichas = fichas_por_puesto()
+    nombres = ("ensamble",) + SOMBRA_MODELOS
+    m = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nombres}
+    for r in resueltas(d):
+        s = r.get("sombra")
+        if not s or r["fecha"] < SOMBRA_DESDE or not r.get("scores") or not all(k in s for k in SOMBRA_MODELOS):
+            continue
+        for k in nombres:
+            p = r["scores"] if k == "ensamble" else s[k]
+            tot = sum(p)
+            orden = sorted(range(K), key=lambda i: (-p[i], i))
+            pos = orden.index(r["salio"]) + 1
+            x = m[k]; x["n"] += 1
+            x["top3"] += pos <= 3; x["top5"] += pos <= 5; x["top15"] += pos <= 15
+            x["mbits"] += 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
+            x["t5_neto"] += PAGO * fichas[pos] - sum(fichas)
+    for x in m.values():
+        if x["n"]:
+            for c in ("top3", "top5", "top15"):
+                x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
+            x["mbits"] = round(x["mbits"] / x["n"], 1)
+    return {"desde": SOMBRA_DESDE, "marcador": m}
+
 def nota_cambio_rd(info):
     if info is None:
         return ""
@@ -1691,6 +1739,10 @@ def preparar():
                     "orden_completo": list(e["orden"]), "salio": None,
                     "scores": [round(float(x), 6) for x in e["sc"]],
                     "creado": ahora(), "modelo": modelo, **sello(info)}
+            if modelo == MODELO_MARCADOR:
+                sombra = sombra_de(filas, e["pf"], e["ph"], e["sc"])
+                if sombra:
+                    pend["sombra"] = sombra
             d["registros"].append(pend); cambio = True
     # Lo que se muestra es SIEMPRE el pronóstico congelado que se puntúa: tras
     # un deshacer o un reinicio el cálculo del momento puede no coincidir.
@@ -2313,6 +2365,9 @@ class H(BaseHTTPRequestHandler):
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/cambio_rd":
             self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
+                       "application/json; charset=utf-8")
+        elif ruta == "/api/sombra":
+            self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),
                        "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
