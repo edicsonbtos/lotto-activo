@@ -117,6 +117,13 @@ Valores anteriores en `motor_nuevo/energia_antes.txt` → restaurarlos cuando el
 - Para desplegar (con el OK del usuario): merge de lo necesario a master (servidor.py + herramientas/modelos/ag12/)
   → push → Railway despliega solo. Luego skill lotto-estado-web. Medir con /api/sombra.
 
+## DESPLEGADO EN SOMBRA (2026-09-26, OK del usuario)
+Master abe291e (servidor.py + herramientas/modelos/ag12/, copiados de motor-nuevo 494ed2b). Railway despliega solo.
+El usuario pidió: que prediga EN PARALELO sin afectar el motor, y revisar en UNA SEMANA (~2026-10-03).
+Revisar: https://lotto-activo-production.up.railway.app/api/sombra → ensamble vs ag12 vs ag12_rd (Top-3/5/15, mbits,
+Top-5 escalonado) sobre los mismos sorteos. En una semana hay ~80 sorteos: con eso NO se decide nada (el error del Top-15
+es ~±11 pp); informar como tendencia y seguir acumulando.
+
 ## Siguientes pasos (en orden)
 1. Esperar veredictos de la verificación. Anotar aquí cuáles sobreviven.
 2. Medir el **Top-15** de cada sobreviviente y de su combinación (apilado ag02+ag10+ag01, cross-fit) en desarrollo.
@@ -126,3 +133,14 @@ Valores anteriores en `motor_nuevo/energia_antes.txt` → restaurarlos cuando el
 ## Bitácora
 - 2026-09-25 21:44 apagón de la PC en plena verificación de ag02. Recuperado del diario; relanzado.
 - 2026-09-25 sondeo ag11_sacados: descartado.
+
+## PRUEBAS CIEGAS 3 y 4 (2026-09-26, UNA vez, prerregistro 068b3ba) — NO PASAN
+ag12 V0 (6 transiciones, pesos congelados de LA) sobre otros juegos. `ciegas34/`. Bonferroni k=2.
+- **3 RD Internacional** (11.031 sorteos, 2024-02-21..2026-09-22, base secuencia_v3): Δ **+0,50 [−3,07 ; +4,16] NO PASA**.
+  Descriptivo: RD SÍ evita el par s1→i de 2-7 jornadas (O/E 0,79, z −4,7), pero más flojo que LA (0,60); los pesos de LA
+  castigan de más y la ganancia neta se anula. Top-5 17,6→18,2 %, Top-15 49,8→50,5 % (sin veredicto). Reajustar pesos en RD
+  sería una hipótesis nueva sobre datos ya mirados: solo se podría confirmar con sorteos futuros de RD.
+- **4 LARD** (5.866 sorteos, base regla "ya salió hoy ×0,38"): Δ **−13,98 [−20,0 ; −8,0] NO PASA**. LARD no evita pares
+  (O/E 1,05) y ni siquiera evita repetir en el día (la base da −68 mbits): otro comportamiento, compatible con azar puro.
+- Lectura: la evitación de pares NO es una costumbre general del operador. En LA sigue valiendo la 2.ª prueba ciega;
+  lo único que falta es el marcador en sombra (/api/sombra, revisar ~2026-10-03).
