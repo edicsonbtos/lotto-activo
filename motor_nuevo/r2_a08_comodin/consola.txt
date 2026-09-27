@@ -1,0 +1,62 @@
+RD: 9782 sorteos h:30 hasta 2025-12-17; 8915 pares consecutivos internos RD
+
+== Diagnóstico: O/E de las máscaras RD (obs = ganador en la máscara; esp = suma de P) ==
+RD s1->i hace  1-1  | vs ens tot   46/   51.9 O/E 0.887 z -0.81 | vs V1 tot   46/   52.3 O/E 0.879 z -0.87 · m1 0.959 (-0.21) · m2 0.800 (-1.02)
+RD s1->i hace  2-7  | vs ens tot  294/  308.3 O/E 0.954 z -0.81 | vs V1 tot  294/  310.5 O/E 0.947 z -0.93 · m1 0.909 (-1.13) · m2 0.984 (-0.20)
+RD s1->i hace  8-30 | vs ens tot 1216/ 1131.6 O/E 1.075 z +2.51 | vs V1 tot 1216/ 1131.4 O/E 1.075 z +2.52 · m1 1.059 (+1.40) · m2 1.090 (+2.15)
+RD s1->i hace 31-90 | vs ens tot 2630/ 2522.3 O/E 1.043 z +2.14 | vs V1 tot 2630/ 2511.7 O/E 1.047 z +2.36 · m1 1.026 (+0.92) · m2 1.068 (+2.42)
+RD i->s1 hace  1-1  | vs ens tot   55/   51.9 O/E 1.060 z +0.43 | vs V1 tot   55/   51.6 O/E 1.065 z +0.47 · m1 0.976 (-0.12) · m2 1.153 (+0.78)
+RD i->s1 hace  2-7  | vs ens tot  361/  309.2 O/E 1.168 z +2.95 | vs V1 tot  361/  311.4 O/E 1.159 z +2.81 · m1 1.122 (+1.51) · m2 1.196 (+2.46)
+RD i->s1 hace  8-30 | vs ens tot 1140/ 1127.9 O/E 1.011 z +0.36 | vs V1 tot 1140/ 1126.7 O/E 1.012 z +0.40 · m1 1.003 (+0.07) · m2 1.021 (+0.49)
+RD i->s1 hace 31-90 | vs ens tot 2598/ 2526.3 O/E 1.028 z +1.43 | vs V1 tot 2598/ 2522.5 O/E 1.030 z +1.50 · m1 1.023 (+0.83) · m2 1.036 (+1.29)
+
+Control: 33 variables reproducen P_V1, dif. máx. = 2.02e-13
+
+== V1_primaria_33+6RD (Δ frente a ag12 V1; n=7357) ==
+mbits cand +142.64 · ag12 V1 +141.78
+Δ mbits +0.86 [-0.55 ; +2.29] · mitad1 +0.79 [-1.36 ; +2.95] · mitad2 +0.94 [-0.97 ; +2.91]
+Top-3 14.38% vs 13.85% · Top-5 22.16% vs 22.13% · Top-15 55.25% vs 54.78%
+Top-5 escalonado/ficha +37.01% vs +34.92% · Δ +0.02 [-0.00 ; +0.04]
+Forward (b1-4) frente a V1 forward: +0.99 [-0.38 ; +2.42] · mitades +1.62 / +0.36
+Forward frente a P_V1 (bloque 0 = P_V1): -1.50 [-3.39 ; +0.58]
+  peso RF1_rd_s1i_1d      -0.070 [-0.133 ; -0.042]
+  peso RF2_rd_s1i_2a7     -0.055 [-0.101 ; -0.016]
+  peso RF3_rd_s1i_8a30    +0.112 [+0.100 ; +0.122]
+  peso RR1_rd_is1_1d      +0.037 [-0.011 ; +0.056]
+  peso RR2_rd_is1_2a7     +0.185 [+0.139 ; +0.221]
+  peso RR3_rd_is1_8a30    +0.020 [-0.021 ; +0.058]
+  peso T1_s1i_1d          -0.192 [-0.245 ; -0.167]  (LA, ag12)
+  peso T2_s1i_2a7         -0.526 [-0.583 ; -0.481]  (LA, ag12)
+  peso T3_s1i_8a30        -0.281 [-0.330 ; -0.254]  (LA, ag12)
+  peso R1_is1_1d          -0.249 [-0.268 ; -0.227]  (LA, ag12)
+  peso R2_is1_2a7         -0.278 [-0.304 ; -0.237]  (LA, ag12)
+  peso R3_is1_8a30        -0.049 [-0.072 ; -0.033]  (LA, ag12)
+PASA BARRA (dev + forward): False
+
+== V2_lista_unica_27+6agrupadas (Δ frente a ag12 V1; n=7357) ==
+mbits cand +134.80 · ag12 V1 +141.78
+Δ mbits -6.97 [-9.66 ; -4.28] · mitad1 -6.56 [-10.05 ; -3.02] · mitad2 -7.39 [-11.44 ; -3.52]
+Top-3 14.10% vs 13.85% · Top-5 21.94% vs 22.13% · Top-15 54.08% vs 54.78%
+Top-5 escalonado/ficha +35.13% vs +34.92% · Δ +0.00 [-0.03 ; +0.03]
+Forward (b1-4) frente a V1 forward: -6.33 [-9.24 ; -3.47] · mitades -5.49 / -7.18
+Forward frente a P_V1 (bloque 0 = P_V1): -7.43 [-10.18 ; -4.65]
+  peso G_s1i_1d           -0.178 [-0.234 ; -0.139]
+  peso G_s1i_2a7          -0.300 [-0.359 ; -0.281]
+  peso G_s1i_8a30         -0.068 [-0.091 ; -0.050]
+  peso G_is1_1d           -0.121 [-0.148 ; -0.089]
+  peso G_is1_2a7          -0.026 [-0.055 ; +0.013]
+  peso G_is1_8a30         -0.014 [-0.034 ; +0.001]
+PASA BARRA (dev + forward): False
+
+== V3_parsimoniosa_33+2 (Δ frente a ag12 V1; n=7357) ==
+mbits cand +142.75 · ag12 V1 +141.78
+Δ mbits +0.97 [-0.13 ; +2.11] · mitad1 +0.40 [-1.31 ; +2.12] · mitad2 +1.54 [+0.13 ; +2.94]
+Top-3 14.22% vs 13.85% · Top-5 22.07% vs 22.13% · Top-15 54.97% vs 54.78%
+Top-5 escalonado/ficha +36.09% vs +34.92% · Δ +0.01 [-0.01 ; +0.03]
+Forward (b1-4) frente a V1 forward: +1.05 [+0.27 ; +1.87] · mitades +0.88 / +1.23
+Forward frente a P_V1 (bloque 0 = P_V1): -1.45 [-3.16 ; +0.37]
+  peso RF_1a30            +0.071 [+0.060 ; +0.082]
+  peso RR_1a7             +0.177 [+0.145 ; +0.211]
+PASA BARRA (dev + forward): False
+
+[13 s]

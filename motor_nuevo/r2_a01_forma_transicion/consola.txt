@@ -1,0 +1,58 @@
+rasgos listos [2 s]
+control V1 reproducido, max |P - P_V1| = 2.0165813463535187e-13
+A (primaria)
+   bloque 0: h_f=96 h_r=96 pesos nuevos [-0.407 -0.252] ventanas [-0.194 -0.315 -0.158 -0.199 -0.164  0.026]
+   bloque 1: h_f=192 h_r=96 pesos nuevos [-0.337 -0.187] ventanas [-0.147 -0.312 -0.095 -0.182 -0.212 -0.023]
+   bloque 2: h_f=96 h_r=192 pesos nuevos [-0.422 -0.275] ventanas [-0.133 -0.332 -0.154 -0.2   -0.151  0.1  ]
+   bloque 3: h_f=96 h_r=96 pesos nuevos [-0.458 -0.195] ventanas [-0.111 -0.356 -0.158 -0.187 -0.142 -0.009]
+   bloque 4: h_f=96 h_r=192 pesos nuevos [-0.402 -0.21 ] ventanas [-0.115 -0.281 -0.221 -0.223 -0.145  0.061]
+== A_primaria_33V1_mas_EF_ER_sorteos (Δ frente a ag12 V1) ==
+mbits cand +142.19 · ref +141.78
+Delta +0.41 [-0.56, +1.43] · mitad1 +0.39 [-0.97, +1.77] · mitad2 +0.43 [-0.96, +1.84]
+Top-3 13.81% vs 13.85% · Top-5 22.24% vs 22.13% · Top-15 55.08% vs 54.78%
+Top-5 escalonado/ficha +35.18% vs +34.92% · delta +0.00 [-0.01, +0.02]
+PASA BARRA DEV: False
+[72 s]
+A forward (informativo)
+   bloque 1: h_f=192 h_r=192 pesos nuevos [-0.306 -0.124] ventanas [ 0.031 -0.21  -0.152 -0.053 -0.086 -0.02 ]
+   bloque 2: h_f=96 h_r=192 pesos nuevos [-0.386 -0.248] ventanas [-0.024 -0.31  -0.241 -0.131 -0.048  0.095]
+   bloque 3: h_f=192 h_r=192 pesos nuevos [-0.352 -0.155] ventanas [-0.073 -0.319 -0.18  -0.178 -0.102  0.021]
+   bloque 4: h_f=96 h_r=192 pesos nuevos [-0.402 -0.21 ] ventanas [-0.115 -0.281 -0.221 -0.223 -0.145  0.061]
+== A_forward_vs_P_V1 (Δ frente a ag12 V1) ==
+mbits cand +140.38 · ref +141.78
+Delta -1.39 [-3.21, +0.47] · mitad1 -2.29 [-5.30, +0.80] · mitad2 -0.50 [-2.35, +1.39]
+Top-3 14.04% vs 13.85% · Top-5 22.09% vs 22.13% · Top-15 54.91% vs 54.78%
+Top-5 escalonado/ficha +35.48% vs +34.92% · delta +0.01 [-0.02, +0.03]
+PASA BARRA DEV: False
+== A_forward_vs_V1_forward (Δ frente a ag12 V1 forward) ==
+mbits cand +140.38 · ref +139.48
+Delta +0.91 [-0.02, +1.79] · mitad1 +1.03 [-0.15, +2.25] · mitad2 +0.78 [-0.66, +2.20]
+Top-3 14.04% vs 13.91% · Top-5 22.09% vs 22.02% · Top-15 54.91% vs 54.61%
+Top-5 escalonado/ficha +35.48% vs +34.72% · delta +0.01 [-0.01, +0.02]
+PASA BARRA DEV: False
+[102 s]
+B (repeticiones + hora)
+   bloque 0: h_f=96 h_r=96 pesos nuevos [-0.402 -0.253 -0.071 -0.018] ventanas [-0.194 -0.311 -0.151 -0.198 -0.164  0.026]
+   bloque 1: h_f=192 h_r=96 pesos nuevos [-0.335 -0.187 -0.064  0.015] ventanas [-0.146 -0.309 -0.089 -0.183 -0.212 -0.023]
+   bloque 2: h_f=96 h_r=192 pesos nuevos [-0.415 -0.275 -0.077 -0.061] ventanas [-0.132 -0.326 -0.147 -0.2   -0.151  0.1  ]
+   bloque 3: h_f=96 h_r=96 pesos nuevos [-0.448 -0.195 -0.164 -0.036] ventanas [-0.109 -0.347 -0.144 -0.187 -0.142 -0.01 ]
+   bloque 4: h_f=96 h_r=192 pesos nuevos [-0.396 -0.21  -0.06  -0.033] ventanas [-0.114 -0.277 -0.215 -0.223 -0.145  0.061]
+== B_A_mas_N2_HM (Δ frente a ag12 V1) ==
+mbits cand +142.11 · ref +141.78
+Delta +0.34 [-0.67, +1.35] · mitad1 +0.42 [-0.90, +1.79] · mitad2 +0.26 [-1.30, +1.74]
+Top-3 13.77% vs 13.85% · Top-5 22.17% vs 22.13% · Top-15 55.23% vs 54.78%
+Top-5 escalonado/ficha +34.77% vs +34.92% · delta -0.00 [-0.02, +0.01]
+PASA BARRA DEV: False
+C (reemplazo de ventanas)
+   bloque 0: h_f=96 h_r=96 pesos nuevos [-0.703 -0.31 ]
+   bloque 1: h_f=192 h_r=96 pesos nuevos [-0.514 -0.302]
+   bloque 2: h_f=96 h_r=96 pesos nuevos [-0.715 -0.338]
+   bloque 3: h_f=96 h_r=96 pesos nuevos [-0.764 -0.269]
+   bloque 4: h_f=192 h_r=96 pesos nuevos [-0.562 -0.274]
+== C_27ag02_mas_EF_ER (Δ frente a ag12 V1) ==
+mbits cand +141.17 · ref +141.78
+Delta -0.61 [-2.11, +0.94] · mitad1 -0.32 [-2.38, +1.69] · mitad2 -0.90 [-3.14, +1.18]
+Top-3 13.71% vs 13.85% · Top-5 22.02% vs 22.13% · Top-15 55.05% vs 54.78%
+Top-5 escalonado/ficha +34.01% vs +34.92% · delta -0.01 [-0.03, +0.01]
+PASA BARRA DEV: False
+[237 s]

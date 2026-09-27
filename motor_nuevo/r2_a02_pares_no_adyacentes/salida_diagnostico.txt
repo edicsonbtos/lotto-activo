@@ -1,0 +1,18 @@
+C|D ayer (pareja no ordenada, desf>=3)   m1  obs   137 esp    185.5 O/E 0.739 z -4.00
+C|D ayer (pareja no ordenada, desf>=3)   m2  obs   182 esp    238.0 O/E 0.765 z -4.14
+C|D ayer (pareja no ordenada, desf>=3)   tot obs   319 esp    423.4 O/E 0.753 z -5.75
+C|D ayer y var17                         m1  obs   130 esp    176.8 O/E 0.735 z -3.95
+C|D ayer y var17                         m2  obs   173 esp    232.1 O/E 0.745 z -4.42
+C|D ayer y var17                         tot obs   303 esp    408.8 O/E 0.741 z -5.93
+C|D ayer sin var17                       m1  obs     7 esp      8.7 O/E 0.805 z -0.67
+C|D ayer sin var17                       m2  obs     9 esp      5.9 O/E 1.532 z +1.50
+C|D ayer sin var17                       tot obs    16 esp     14.6 O/E 1.098 z +0.43
+D 2-7 y var17                            m1  obs   261 esp    245.4 O/E 1.064 z +1.09
+D 2-7 y var17                            m2  obs   376 esp    320.0 O/E 1.175 z +3.44
+D 2-7 y var17                            tot obs   637 esp    565.3 O/E 1.127 z +3.30
+D 2-7 sin var17                          m1  obs   263 esp    241.0 O/E 1.091 z +1.58
+D 2-7 sin var17                          m2  obs   332 esp    298.2 O/E 1.114 z +2.19
+D 2-7 sin var17                          tot obs   595 esp    539.1 O/E 1.104 z +2.69
+var17 sola                               m1  obs   886 esp    905.1 O/E 0.979 z -0.74
+var17 sola                               m2  obs  1057 esp   1040.2 O/E 1.016 z +0.62
+var17 sola                               tot obs  1943 esp   1945.4 O/E 0.999 z -0.06

@@ -1,0 +1,34 @@
+== A_primaria_33V1_mas_EF_ER_sorteos (Δ frente a ag12 V1) ==
+mbits cand +142.19 · ref +141.78
+Delta +0.41 [-0.56, +1.43] · mitad1 +0.39 [-0.97, +1.77] · mitad2 +0.43 [-0.96, +1.84]
+Top-3 13.81% vs 13.85% · Top-5 22.24% vs 22.13% · Top-15 55.08% vs 54.78%
+Top-5 escalonado/ficha +35.18% vs +34.92% · delta +0.00 [-0.01, +0.02]
+PASA BARRA DEV: False
+
+== A_forward_vs_P_V1 (Δ frente a ag12 V1) ==
+mbits cand +140.38 · ref +141.78
+Delta -1.39 [-3.21, +0.47] · mitad1 -2.29 [-5.30, +0.80] · mitad2 -0.50 [-2.35, +1.39]
+Top-3 14.04% vs 13.85% · Top-5 22.09% vs 22.13% · Top-15 54.91% vs 54.78%
+Top-5 escalonado/ficha +35.48% vs +34.92% · delta +0.01 [-0.02, +0.03]
+PASA BARRA DEV: False
+
+== A_forward_vs_V1_forward (Δ frente a ag12 V1 forward) ==
+mbits cand +140.38 · ref +139.48
+Delta +0.91 [-0.02, +1.79] · mitad1 +1.03 [-0.15, +2.25] · mitad2 +0.78 [-0.66, +2.20]
+Top-3 14.04% vs 13.91% · Top-5 22.09% vs 22.02% · Top-15 54.91% vs 54.61%
+Top-5 escalonado/ficha +35.48% vs +34.72% · delta +0.01 [-0.01, +0.02]
+PASA BARRA DEV: False
+
+== B_A_mas_N2_HM (Δ frente a ag12 V1) ==
+mbits cand +142.11 · ref +141.78
+Delta +0.34 [-0.67, +1.35] · mitad1 +0.42 [-0.90, +1.79] · mitad2 +0.26 [-1.30, +1.74]
+Top-3 13.77% vs 13.85% · Top-5 22.17% vs 22.13% · Top-15 55.23% vs 54.78%
+Top-5 escalonado/ficha +34.77% vs +34.92% · delta -0.00 [-0.02, +0.01]
+PASA BARRA DEV: False
+
+== C_27ag02_mas_EF_ER (Δ frente a ag12 V1) ==
+mbits cand +141.17 · ref +141.78
+Delta -0.61 [-2.11, +0.94] · mitad1 -0.32 [-2.38, +1.69] · mitad2 -0.90 [-3.14, +1.18]
+Top-3 13.71% vs 13.85% · Top-5 22.02% vs 22.13% · Top-15 55.05% vs 54.78%
+Top-5 escalonado/ficha +34.01% vs +34.92% · delta -0.01 [-0.03, +0.01]
+PASA BARRA DEV: False

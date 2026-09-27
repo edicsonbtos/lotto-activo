@@ -1,0 +1,57 @@
+prueba de fuga: barajar seq[6000:] -> máx dif filas < 6000 = 0.0 (control: filas > 6000 cambian 6.283)
+X (7357, 38, 11), 2 s. Candidatos con x != 0 por sorteo (media, de 38):
+  prog_arit   0.34
+  mono3       8.20
+  mono4       1.57
+  dif_hoy     2.15
+  difabs_hoy  4.51
+  dif_30d_z   30.20
+  term_s1s2   0.14
+  term_hoy    10.26
+  paridad3    6.20
+  color3      6.35
+  espejo      0.86
+
+== Etapa 1: barrido sobre ag12 V1 (O/E = observado / esperado por ag12 V1; z robusto por jornada) ==
+(para variables continuas O/E es la razón de sumas; el z es lo que cuenta)
+variable    | mitad1 O/E    z      p     BH | mitad2 O/E    z   | total O/E    z   | confirma
+prog_arit   |   1.192  +1.02 0.3076  no |   0.858  -0.91 |   1.024  +0.20 | no
+mono3       |   0.980  -0.78 0.4326  no |   0.969  -1.23 |   0.974  -1.42 | no
+mono4       |   1.024  +0.39 0.6963  no |   0.982  -0.29 |   1.004  +0.08 | no
+dif_hoy     |   0.982  -0.27 0.7890  no |   0.980  -0.31 |   0.981  -0.41 | no
+difabs_hoy  |   0.950  -1.05 0.2954  no |   0.972  -0.61 |   0.962  -1.15 | no
+dif_30d_z   |   1.818  -1.92 0.0544  no |   0.800  +0.46 |   1.284  -0.93 | no
+term_s1s2   |   0.336  -3.42 0.0006  SI |   0.768  -0.86 |   0.554  -2.68 | no
+term_hoy    |   1.037  +1.42 0.1560  no |   0.960  -1.65 |   0.996  -0.22 | no
+paridad3    |   0.989  -0.34 0.7316  no |   0.993  -0.22 |   0.991  -0.40 | no
+color3      |   1.048  +1.50 0.1323  no |   1.059  +1.79 |   1.054  +2.34 | no
+espejo      |   0.846  -1.65 0.0980  no |   1.017  +0.15 |   0.931  -0.93 | no
+
+Seleccionadas para VA (BH mitad 1 + confirmación mitad 2): []
+VA = P_V1 (ninguna sobrevive): Δ = 0, no pasa.
+
+== VB_11var crossfit (frente a ag12 V1) ==
+Delta mbits -0.83 [-2.38, +0.70] · mitad1 +0.51 [-1.43, +2.50] · mitad2 -2.17 [-4.57, +0.23]
+Top-3 13.96% vs 13.85% · Top-5 22.26% vs 22.13% · Top-15 55.09% vs 54.78%
+Top-5 escalonado/ficha +35.84% vs +34.92% · delta +0.01 [-0.01, +0.03]
+pasa_barra_dev (arnes, sin forward): False
+
+== VB_11var forward (frente a ag12 V1) ==
+Delta mbits -1.00 [-2.75, +0.73] · mitad1 -0.03 [-2.35, +2.24] · mitad2 -1.98 [-4.63, +0.49]
+Top-3 13.96% vs 13.85% · Top-5 22.03% vs 22.13% · Top-15 55.09% vs 54.78%
+Top-5 escalonado/ficha +34.97% vs +34.92% · delta +0.00 [-0.02, +0.02]
+pasa_barra_dev (arnes, sin forward): False
+forward, solo bloques 1-4 (los predichos): -1.24 [-3.38, +0.96]
+  peso prog_arit   +0.055 [-0.007, +0.112]
+  peso mono3       -0.062 [-0.077, -0.051]
+  peso mono4       +0.052 [+0.013, +0.096]
+  peso dif_hoy     +0.029 [-0.038, +0.065]
+  peso difabs_hoy  -0.079 [-0.111, -0.040]
+  peso dif_30d_z   -0.014 [-0.024, -0.003]
+  peso term_s1s2   -0.145 [-0.164, -0.114]
+  peso term_hoy    -0.009 [-0.045, +0.021]
+  peso paridad3    -0.015 [-0.043, +0.021]
+  peso color3      +0.100 [+0.097, +0.103]
+  peso espejo      -0.081 [-0.191, -0.033]
+PASA BARRA COMPLETA (arnes + forward > 0): False
+[3 s]

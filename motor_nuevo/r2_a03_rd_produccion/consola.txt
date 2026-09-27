@@ -1,0 +1,48 @@
+== control_ag12V1_contra_si_mismo (frente a ag12 V1, n=7357) ==
+mbits: cand +141.78 · ag12V1 +141.78
+Delta +0.00 [+0.00, +0.00] · mitad1 +0.00 [+0.00, +0.00] · mitad2 +0.00 [+0.00, +0.00]
+Top-3 13.85% vs 13.85% · Top-5 22.13% vs 22.13% · Top-15 54.78% vs 54.78%
+Top-5 escalonado/ficha +34.92% vs +34.92% · delta +0.00 [+0.00, +0.00]
+PASA BARRA DEV: False
+
+== VA_offsetV1_L1_L3_PF_PR (frente a ag12 V1, n=7357) ==
+mbits: cand +152.29 · ag12V1 +141.78
+Delta +10.51 [+7.89, +13.17] · mitad1 +11.87 [+8.44, +15.48] · mitad2 +9.16 [+5.16, +13.02]
+Top-3 14.24% vs 13.85% · Top-5 22.59% vs 22.13% · Top-15 55.59% vs 54.78%
+Top-5 escalonado/ficha +38.13% vs +34.92% · delta +0.03 [+0.01, +0.05]
+PASA BARRA DEV: True
+
+== VA_forward_informativo (frente a ag12 V1, n=7357) ==
+mbits: cand +149.41 · ag12V1 +141.78
+Delta +7.63 [+5.56, +9.62] · mitad1 +6.24 [+4.51, +7.94] · mitad2 +9.03 [+5.21, +12.75]
+Top-3 14.19% vs 13.85% · Top-5 22.50% vs 22.13% · Top-15 55.55% vs 54.78%
+Top-5 escalonado/ficha +37.57% vs +34.92% · delta +0.03 [+0.01, +0.04]
+PASA BARRA DEV: True
+
+== VB_offsetV1_L1_L3 (frente a ag12 V1, n=7357) ==
+mbits: cand +152.09 · ag12V1 +141.78
+Delta +10.32 [+7.79, +12.88] · mitad1 +11.82 [+8.63, +15.12] · mitad2 +8.81 [+4.87, +12.49]
+Top-3 14.14% vs 13.85% · Top-5 22.35% vs 22.13% · Top-15 55.73% vs 54.78%
+Top-5 escalonado/ficha +36.81% vs +34.92% · delta +0.02 [+0.00, +0.03]
+PASA BARRA DEV: True
+
+== VB_forward_informativo (frente a ag12 V1, n=7357) ==
+mbits: cand +149.22 · ag12V1 +141.78
+Delta +7.44 [+5.41, +9.38] · mitad1 +6.18 [+4.54, +7.84] · mitad2 +8.70 [+4.91, +12.23]
+Top-3 14.12% vs 13.85% · Top-5 22.40% vs 22.13% · Top-15 55.66% vs 54.78%
+Top-5 escalonado/ficha +36.96% vs +34.92% · delta +0.02 [+0.01, +0.03]
+PASA BARRA DEV: True
+
+== VC_conjunto_37var_desde_ensamble (frente a ag12 V1, n=7357) ==
+mbits: cand +152.30 · ag12V1 +141.78
+Delta +10.52 [+7.88, +13.19] · mitad1 +11.87 [+8.41, +15.48] · mitad2 +9.17 [+5.16, +13.04]
+Top-3 14.29% vs 13.85% · Top-5 22.58% vs 22.13% · Top-15 55.57% vs 54.78%
+Top-5 escalonado/ficha +38.24% vs +34.92% · delta +0.03 [+0.01, +0.05]
+PASA BARRA DEV: True
+
+== VC_forward_informativo_(bloque0=ensamble) (frente a ag12 V1, n=7357) ==
+mbits: cand +143.76 · ag12V1 +141.78
+Delta +1.98 [-1.74, +5.71] · mitad1 -3.83 [-9.97, +2.31] · mitad2 +7.79 [+3.77, +11.72]
+Top-3 14.08% vs 13.85% · Top-5 21.98% vs 22.13% · Top-15 55.24% vs 54.78%
+Top-5 escalonado/ficha +35.23% vs +34.92% · delta +0.00 [-0.03, +0.04]
+PASA BARRA DEV: False

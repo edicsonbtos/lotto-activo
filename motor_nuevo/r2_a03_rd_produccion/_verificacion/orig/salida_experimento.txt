@@ -1,0 +1,59 @@
+filas 7357 · con RD (h-1):30: 6930 · con RD (h-2):30: 6300
+== control_ag12V1_contra_si_mismo (frente a ag12 V1, n=7357) ==
+mbits: cand +141.78 · ag12V1 +141.78
+Delta +0.00 [+0.00, +0.00] · mitad1 +0.00 [+0.00, +0.00] · mitad2 +0.00 [+0.00, +0.00]
+Top-3 13.85% vs 13.85% · Top-5 22.13% vs 22.13% · Top-15 54.78% vs 54.78%
+Top-5 escalonado/ficha +34.92% vs +34.92% · delta +0.00 [+0.00, +0.00]
+PASA BARRA DEV: False
+== VA_offsetV1_L1_L3_PF_PR (frente a ag12 V1, n=7357) ==
+mbits: cand +152.29 · ag12V1 +141.78
+Delta +10.51 [+7.89, +13.17] · mitad1 +11.87 [+8.44, +15.48] · mitad2 +9.16 [+5.16, +13.02]
+Top-3 14.24% vs 13.85% · Top-5 22.59% vs 22.13% · Top-15 55.59% vs 54.78%
+Top-5 escalonado/ficha +38.13% vs +34.92% · delta +0.03 [+0.01, +0.05]
+PASA BARRA DEV: True
+  L1_rd_h1             -0.685 [-0.718, -0.633]
+  L3_rd_h2             -0.289 [-0.336, -0.239]
+  PF_par_rdla_1a30     -0.059 [-0.069, -0.042]
+  PR_par_lard_1a30     +0.035 [+0.014, +0.052]
+== VA_forward_informativo (frente a ag12 V1, n=7357) ==
+mbits: cand +149.41 · ag12V1 +141.78
+Delta +7.63 [+5.56, +9.62] · mitad1 +6.24 [+4.51, +7.94] · mitad2 +9.03 [+5.21, +12.75]
+Top-3 14.19% vs 13.85% · Top-5 22.50% vs 22.13% · Top-15 55.55% vs 54.78%
+Top-5 escalonado/ficha +37.57% vs +34.92% · delta +0.03 [+0.01, +0.04]
+PASA BARRA DEV: True
+== VB_offsetV1_L1_L3 (frente a ag12 V1, n=7357) ==
+mbits: cand +152.09 · ag12V1 +141.78
+Delta +10.32 [+7.79, +12.88] · mitad1 +11.82 [+8.63, +15.12] · mitad2 +8.81 [+4.87, +12.49]
+Top-3 14.14% vs 13.85% · Top-5 22.35% vs 22.13% · Top-15 55.73% vs 54.78%
+Top-5 escalonado/ficha +36.81% vs +34.92% · delta +0.02 [+0.00, +0.03]
+PASA BARRA DEV: True
+== VB_forward_informativo (frente a ag12 V1, n=7357) ==
+mbits: cand +149.22 · ag12V1 +141.78
+Delta +7.44 [+5.41, +9.38] · mitad1 +6.18 [+4.54, +7.84] · mitad2 +8.70 [+4.91, +12.23]
+Top-3 14.12% vs 13.85% · Top-5 22.40% vs 22.13% · Top-15 55.66% vs 54.78%
+Top-5 escalonado/ficha +36.96% vs +34.92% · delta +0.02 [+0.01, +0.03]
+PASA BARRA DEV: True
+== VC_conjunto_37var_desde_ensamble (frente a ag12 V1, n=7357) ==
+mbits: cand +152.30 · ag12V1 +141.78
+Delta +10.52 [+7.88, +13.19] · mitad1 +11.87 [+8.41, +15.48] · mitad2 +9.17 [+5.16, +13.04]
+Top-3 14.29% vs 13.85% · Top-5 22.58% vs 22.13% · Top-15 55.57% vs 54.78%
+Top-5 escalonado/ficha +38.24% vs +34.92% · delta +0.03 [+0.01, +0.05]
+PASA BARRA DEV: True
+== VC_forward_informativo_(bloque0=ensamble) (frente a ag12 V1, n=7357) ==
+mbits: cand +143.76 · ag12V1 +141.78
+Delta +1.98 [-1.74, +5.71] · mitad1 -3.83 [-9.97, +2.31] · mitad2 +7.79 [+3.77, +11.72]
+Top-3 14.08% vs 13.85% · Top-5 21.98% vs 22.13% · Top-15 55.24% vs 54.78%
+Top-5 escalonado/ficha +35.23% vs +34.92% · delta +0.00 [-0.03, +0.04]
+PASA BARRA DEV: False
+VC forward - ag12 forward: {'todo': (7.6490795100157, 5.576551881134582, 9.647931757251008), 'mitad1': (6.235859920875157, 4.501902298038206, 7.949772965663108), 'mitad2': (9.061914967710432, 5.240655918149957, 12.781537535694017), 'sin_bloque0': (9.446748020007638, 6.906303292337927, 11.923523352219727)}
+diag L1 antes_2025-07-01   obs   49 esp  139.4 O/E 0.351 z -7.66
+diag L1 desde_2025-07-01   obs   21 esp   46.3 O/E 0.453 z -3.72
+diag L1 todo               obs   70 esp  185.8 O/E 0.377 z -8.49
+diag L3 antes_2025-07-01   obs   88 esp  129.0 O/E 0.682 z -3.61
+diag L3 desde_2025-07-01   obs   33 esp   43.2 O/E 0.764 z -1.55
+diag L3 todo               obs  121 esp  172.2 O/E 0.703 z -3.90
+diag PF todo               obs 1372 esp 1416.4 O/E 0.969 z -1.18
+diag PR todo               obs 1518 esp 1477.2 O/E 1.028 z +1.06
+VA delta antes_2025-07-01: (11.246429769533233, 8.038814150395753, 14.186377108031587)
+VA delta desde_2025-07-01: (8.42547398438897, 2.6903853255263224, 13.64758391352313)
+[6 s]

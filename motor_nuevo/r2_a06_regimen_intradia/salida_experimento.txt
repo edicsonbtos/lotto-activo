@@ -1,0 +1,104 @@
+n=7357, régimen: MED 0.345 TAR 0.310 FDS 0.277 D12 0.606; bloques [1400 1397 1515 1524 1521]
+== Descriptivo O/E frente a P_V1 (ya calibrado para transiciones; interesa si difiere por régimen) ==
+  trans_any|k1_3                   obs    651 esp    647.6 O/E 1.005 z +0.14
+  trans_any|k4_7                   obs    842 esp    857.9 O/E 0.981 z -0.55
+  trans_any|k8_11                  obs    745 esp    754.2 O/E 0.988 z -0.34
+  trans_any|entre_semana           obs   1610 esp   1632.1 O/E 0.986 z -0.55
+  trans_any|fin_semana             obs    628 esp    627.5 O/E 1.001 z +0.02
+  trans_any|dia11                  obs    835 esp    840.5 O/E 0.993 z -0.19
+  trans_any|dia12                  obs   1403 esp   1419.1 O/E 0.989 z -0.43
+  ya_salio_hoy|k1_3                obs     13 esp     22.4 O/E 0.581 z -1.99
+  ya_salio_hoy|k4_7                obs     69 esp     84.1 O/E 0.821 z -1.65
+  ya_salio_hoy|k8_11               obs    328 esp    322.7 O/E 1.016 z +0.30
+  ya_salio_hoy|entre_semana        obs    278 esp    314.3 O/E 0.884 z -2.06
+  ya_salio_hoy|fin_semana          obs    132 esp    114.8 O/E 1.150 z +1.62
+  ya_salio_hoy|dia11               obs    164 esp    155.5 O/E 1.055 z +0.69
+  ya_salio_hoy|dia12               obs    246 esp    273.7 O/E 0.899 z -1.69
+
+== V1_refit_control (33 var) cross-fit, frente a P_V1 ==
+Δ mbits +0.00 [-0.00, +0.00] · mitad1 +0.00 [-0.00, +0.00] · mitad2 -0.00 [-0.00, +0.00] · PASA False
+Top-3 13.85% vs 13.85% · Top-5 22.13% vs 22.13% · Top-15 54.78% vs 54.78% · ret T5 +34.92% vs +34.92%
+   T1_s1i_1d              -0.192 [-0.244, -0.166] mismo signo
+   T2_s1i_2a7             -0.523 [-0.579, -0.479] mismo signo
+   T3_s1i_8a30            -0.283 [-0.331, -0.257] mismo signo
+   R1_is1_1d              -0.249 [-0.268, -0.226] mismo signo
+   R2_is1_2a7             -0.279 [-0.304, -0.238] mismo signo
+   R3_is1_8a30            -0.050 [-0.073, -0.033] mismo signo
+   control: max |P - P_V1| = 2.02e-13
+
+== VR_ablacion_33_REPD (34 var) cross-fit, frente a P_V1 ==
+Δ mbits -0.83 [-1.35, -0.33] · mitad1 -0.96 [-1.79, -0.13] · mitad2 -0.69 [-1.35, -0.08] · PASA False
+Top-3 13.86% vs 13.85% · Top-5 22.20% vs 22.13% · Top-15 54.79% vs 54.78% · ret T5 +35.23% vs +34.92%
+   T1_s1i_1d              -0.192 [-0.245, -0.166] mismo signo
+   T2_s1i_2a7             -0.524 [-0.579, -0.479] mismo signo
+   T3_s1i_8a30            -0.283 [-0.331, -0.257] mismo signo
+   R1_is1_1d              -0.249 [-0.268, -0.227] mismo signo
+   R2_is1_2a7             -0.280 [-0.305, -0.237] mismo signo
+   R3_is1_8a30            -0.051 [-0.073, -0.035] mismo signo
+   REPD                   -0.069 [-0.168, +0.033] cambia
+
+== VA_tramo_dia (48 var) cross-fit, frente a P_V1 ==
+Δ mbits -1.08 [-2.13, -0.08] · mitad1 -0.66 [-2.01, +0.78] · mitad2 -1.51 [-2.99, -0.06] · PASA False
+Top-3 13.95% vs 13.85% · Top-5 22.06% vs 22.13% · Top-15 54.80% vs 54.78% · ret T5 +35.02% vs +34.92%
+   T1_s1i_1d              -0.187 [-0.237, -0.161] mismo signo
+   T2_s1i_2a7             -0.441 [-0.498, -0.391] mismo signo
+   T3_s1i_8a30            -0.241 [-0.257, -0.211] mismo signo
+   R1_is1_1d              -0.234 [-0.254, -0.212] mismo signo
+   R2_is1_2a7             -0.219 [-0.246, -0.172] mismo signo
+   R3_is1_8a30            -0.076 [-0.089, -0.054] mismo signo
+   REPD                   -0.119 [-0.206, -0.064] mismo signo
+   T1_s1i_1dxMED          -0.047 [-0.058, -0.027] mismo signo
+   T2_s1i_2a7xMED         -0.077 [-0.113, -0.054] mismo signo
+   T3_s1i_8a30xMED        -0.110 [-0.147, -0.073] mismo signo
+   R1_is1_1dxMED          -0.056 [-0.101, -0.012] mismo signo
+   R2_is1_2a7xMED         -0.166 [-0.200, -0.139] mismo signo
+   R3_is1_8a30xMED        +0.038 [-0.030, +0.100] cambia
+   REPDxMED               -0.085 [-0.188, -0.030] mismo signo
+   T1_s1i_1dxTAR          -0.051 [-0.105, -0.017] mismo signo
+   T2_s1i_2a7xTAR         -0.277 [-0.323, -0.217] mismo signo
+   T3_s1i_8a30xTAR        -0.018 [-0.115, +0.033] cambia
+   R1_is1_1dxTAR          -0.100 [-0.127, -0.074] mismo signo
+   R2_is1_2a7xTAR         -0.072 [-0.111, -0.026] mismo signo
+   R3_is1_8a30xTAR        +0.035 [-0.034, +0.079] cambia
+   REPDxTAR               +0.106 [+0.038, +0.170] mismo signo
+
+== VB_fin_de_semana (41 var) cross-fit, frente a P_V1 ==
+Δ mbits -1.20 [-1.89, -0.50] · mitad1 -0.54 [-1.44, +0.31] · mitad2 -1.85 [-2.92, -0.75] · PASA False
+Top-3 13.85% vs 13.85% · Top-5 22.13% vs 22.13% · Top-15 54.70% vs 54.78% · ret T5 +34.92% vs +34.92%
+   T1_s1i_1d              -0.195 [-0.244, -0.171] mismo signo
+   T2_s1i_2a7             -0.510 [-0.567, -0.465] mismo signo
+   T3_s1i_8a30            -0.273 [-0.307, -0.236] mismo signo
+   R1_is1_1d              -0.253 [-0.271, -0.232] mismo signo
+   R2_is1_2a7             -0.277 [-0.304, -0.229] mismo signo
+   R3_is1_8a30            -0.053 [-0.073, -0.026] mismo signo
+   REPD                   -0.115 [-0.211, -0.008] mismo signo
+   T1_s1i_1dxFDS          +0.072 [-0.009, +0.112] cambia
+   T2_s1i_2a7xFDS         -0.070 [-0.103, -0.050] mismo signo
+   T3_s1i_8a30xFDS        -0.040 [-0.095, +0.021] cambia
+   R1_is1_1dxFDS          +0.028 [-0.007, +0.059] cambia
+   R2_is1_2a7xFDS         -0.013 [-0.083, +0.066] cambia
+   R3_is1_8a30xFDS        +0.006 [-0.035, +0.028] cambia
+   REPDxFDS               +0.195 [+0.129, +0.340] mismo signo
+
+== VC_dias_12 (41 var) cross-fit, frente a P_V1 ==
+Δ mbits -1.07 [-2.15, +0.02] · mitad1 -1.61 [-3.19, -0.04] · mitad2 -0.53 [-2.04, +0.96] · PASA False
+Top-3 13.88% vs 13.85% · Top-5 22.40% vs 22.13% · Top-15 54.86% vs 54.78% · ret T5 +36.04% vs +34.92%
+   T1_s1i_1d              -0.174 [-0.225, -0.152] mismo signo
+   T2_s1i_2a7             -0.465 [-0.524, -0.406] mismo signo
+   T3_s1i_8a30            -0.312 [-0.339, -0.270] mismo signo
+   R1_is1_1d              -0.231 [-0.253, -0.199] mismo signo
+   R2_is1_2a7             -0.189 [-0.235, -0.166] mismo signo
+   R3_is1_8a30            -0.024 [-0.067, +0.016] cambia
+   REPD                   +0.001 [-0.058, +0.046] cambia
+   T1_s1i_1dxD12          -0.183 [-0.227, -0.153] mismo signo
+   T2_s1i_2a7xD12         -0.130 [-0.179, -0.050] mismo signo
+   T3_s1i_8a30xD12        +0.052 [+0.014, +0.099] mismo signo
+   R1_is1_1dxD12          -0.113 [-0.143, -0.071] mismo signo
+   R2_is1_2a7xD12         -0.195 [-0.221, -0.160] mismo signo
+   R3_is1_8a30xD12        -0.049 [-0.086, -0.011] mismo signo
+   REPDxD12               -0.139 [-0.301, -0.031] mismo signo
+VR_ablacion_33_REPD    Δ vs VR (cross-fit) +0.00 [+0.00, +0.00] · forward vs V1-forward (b1-4) -0.60 [-1.08, -0.14] · forward vs P_V1 (b1-4) -3.44 [-5.53, -1.44]
+VA_tramo_dia           Δ vs VR (cross-fit) -0.26 [-1.13, +0.57] · forward vs V1-forward (b1-4) -0.89 [-2.33, +0.39] · forward vs P_V1 (b1-4) -3.73 [-6.12, -1.36]
+VB_fin_de_semana       Δ vs VR (cross-fit) -0.37 [-0.89, +0.18] · forward vs V1-forward (b1-4) -1.11 [-2.24, -0.01] · forward vs P_V1 (b1-4) -3.95 [-6.36, -1.63]
+VC_dias_12             Δ vs VR (cross-fit) -0.24 [-1.03, +0.59] · forward vs V1-forward (b1-4) -0.65 [-1.46, +0.18] · forward vs P_V1 (b1-4) -3.49 [-5.64, -1.43]
+[15 s]

@@ -1,0 +1,80 @@
+﻿GUID de plan de energía: 0ce37f6b-648e-42ff-bfb8-e5a9f5c501a8  (ASUS Recommended)
+  GUID de subgrupo: 238c9fa8-0aad-41ed-83f4-97be242c8f20  (Suspender)
+    Alias de GUID: SUB_SLEEP
+    GUID de configuración de energía: 29f6c1db-86da-48c5-9fdb-f2b67b1f44da  (Suspender tras)
+      Alias de GUID: STANDBYIDLE
+      Mínima configuración posible: 0x00000000
+      Máxima configuración posible: 0xffffffff
+      Incremento de configuración posible: 0x00000001
+      Unidades de configuración posibles: Segundos:
+    Índice de configuración de corriente alterna actual: 0x000004b0
+    Índice de configuración de corriente continua actual: 0x00000384
+
+    GUID de configuración de energía: 94ac6d29-73ce-41a6-809f-6363ba21b47e  (Permitir suspensión híbrida)
+      Alias de GUID: HYBRIDSLEEP
+      Índice de configuración posible: 000
+      Nombre descriptivo de configuración posible: Desactivar
+      Índice de configuración posible: 001
+      Nombre descriptivo de configuración posible: Activar
+    Índice de configuración de corriente alterna actual: 0x00000001
+    Índice de configuración de corriente continua actual: 0x00000001
+
+    GUID de configuración de energía: 9d7815a6-7ee4-497e-8888-515a05f02364  (Hibernar tras)
+      Alias de GUID: HIBERNATEIDLE
+      Mínima configuración posible: 0x00000000
+      Máxima configuración posible: 0xffffffff
+      Incremento de configuración posible: 0x00000001
+      Unidades de configuración posibles: Segundos:
+    Índice de configuración de corriente alterna actual: 0x00000000
+    Índice de configuración de corriente continua actual: 0x00005460
+
+    GUID de configuración de energía: bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d  (Permitir temporizadores de reactivación)
+      Alias de GUID: RTCWAKE
+      Índice de configuración posible: 000
+      Nombre descriptivo de configuración posible: Deshabilitar
+      Índice de configuración posible: 001
+      Nombre descriptivo de configuración posible: Habilitar
+      Índice de configuración posible: 002
+      Nombre descriptivo de configuración posible: Solo temporizadores de activación importantes
+    Índice de configuración de corriente alterna actual: 0x00000001
+    Índice de configuración de corriente continua actual: 0x00000000
+
+GUID de plan de energía: 0ce37f6b-648e-42ff-bfb8-e5a9f5c501a8  (ASUS Recommended)
+  GUID de subgrupo: 7516b95f-f776-4464-8c53-06167f40cc99  (Pantalla)
+    Alias de GUID: SUB_VIDEO
+    GUID de configuración de energía: 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e  (Apagar la pantalla tras)
+      Alias de GUID: VIDEOIDLE
+      Mínima configuración posible: 0x00000000
+      Máxima configuración posible: 0xffffffff
+      Incremento de configuración posible: 0x00000001
+      Unidades de configuración posibles: Segundos:
+    Índice de configuración de corriente alterna actual: 0x00000000
+    Índice de configuración de corriente continua actual: 0x00000384
+
+    GUID de configuración de energía: aded5e82-b909-4619-9949-f5d71dac0bcb  (Brillo de pantalla)
+      Alias de GUID: VIDEONORMALLEVEL
+      Mínima configuración posible: 0x00000000
+      Máxima configuración posible: 0x00000064
+      Incremento de configuración posible: 0x00000001
+      Unidades de configuración posibles: %
+    Índice de configuración de corriente alterna actual: 0x00000046
+    Índice de configuración de corriente continua actual: 0x00000046
+
+    GUID de configuración de energía: f1fbfde2-a960-4165-9f88-50667911ce96  (Brillo de la pantalla atenuada)
+      Mínima configuración posible: 0x00000000
+      Máxima configuración posible: 0x00000064
+      Incremento de configuración posible: 0x00000001
+      Unidades de configuración posibles: %
+    Índice de configuración de corriente alterna actual: 0x00000032
+    Índice de configuración de corriente continua actual: 0x00000032
+
+    GUID de configuración de energía: fbd9aa66-9553-4097-ba44-ed6e9d65eab8  (Habilitar brillo adaptable)
+      Alias de GUID: ADAPTBRIGHT
+      Índice de configuración posible: 000
+      Nombre descriptivo de configuración posible: Desactivar
+      Índice de configuración posible: 001
+      Nombre descriptivo de configuración posible: Activar
+    Índice de configuración de corriente alterna actual: 0x00000000
+    Índice de configuración de corriente continua actual: 0x00000000
+
+GUID de plan de energía: 0ce37f6b-648e-42ff-bfb8-e5a9f5c501a8  (ASUS Recommended)
