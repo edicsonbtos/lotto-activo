@@ -1327,7 +1327,7 @@ def html_compartir(titulo, animales):
             '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
             '<button type="button" class="sec">Compartir</button></div>')
 
-def html_jugada(e, calculando, pend, aviso_modelo, modelo):
+def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     """La jugada del próximo sorteo: Top-5 a la vista y del 6º al 15º plegado.
 
     El orden es SIEMPRE el congelado que se puntúa (pend), como antes."""
@@ -1372,10 +1372,73 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo):
                '(60 si sale del 1º al 3º, 30 si sale 4º o 5º).</p>'
                '<p><i class="b"></i><b>Top-15 ponderado</b> (alternativa): 23 fichas, cobra ~1 de cada 2 '
                '(+67, +37 o +7).</p></div>')
-    return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">{cab}'
+    return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
+            f'{html_nav_hist("la", 0, n_pasados)}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}'
             f'{html_compartir(f"Lotto Activo {fecha} {hora}", [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
             f'{leyenda}{aviso_modelo}</section>')
+
+def html_nav_hist(tab, atras, total):
+    """Flechas para ver el Top congelado de sorteos anteriores (atras=0: el próximo)."""
+    def enlace(n, txt):
+        return f'<a href="/?tab={tab}' + (f'&amp;atras={n}' if n else '') + f'">{txt}</a>'
+    ant = enlace(atras + 1, "‹ Anterior") if atras < total else '<span class="off">‹ Anterior</span>'
+    sig = enlace(atras - 1, "Siguiente ›") if atras > 0 else '<span class="off">Siguiente ›</span>'
+    pos = "próximo sorteo" if atras == 0 else f"hace {atras} sorteo{'s' if atras > 1 else ''}"
+    return f'<nav class="histnav" aria-label="Sorteos anteriores">{ant}<span class="pos">{pos}</span>{sig}</nav>'
+
+def la_pasados(d):
+    return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None and r.get("orden_completo")]
+
+def html_pasado_la(d, atras):
+    """Top-15 congelado de un sorteo ya jugado, con el ganador marcado."""
+    vistos = la_pasados(d)
+    atras = max(1, min(atras, len(vistos)))
+    r = vistos[-atras]
+    orden, sc = r["orden_completo"], r.get("scores")
+    tot = sum(sc) if sc else 0
+    p = puesto_ganador(r)
+    esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
+    def fila(k, i):
+        li = fila_jugada(k, POS[i], ANIM[POS[i]].title(),
+                         f'{num(sc[i] / tot * 100, 2)} %' if tot else "", esc5[k], pond[k])
+        return li.replace("<li>", '<li class="gana">', 1) if i == r["salio"] else li
+    s = POS[r["salio"]]
+    tramo = "Top-5" if p and p <= 5 else "Top-15" if p and p <= TOP_N else "fuera del Top-15"
+    cab = (f'<div class="jh"><h2 id="jug-t">Sorteo · <span>{HORAS[r["hora"]]}</span></h2>'
+           f'<span class="pill gris">jugado</span></div>'
+           f'<p class="ult">{esc(fecha_corta(r["fecha"]).capitalize())} · salió <b>{esc(s)} {ANIM[s].title()}</b>'
+           f' · puesto {p}º ({tramo})</p>')
+    top5 = "".join(fila(k, i) for k, i in enumerate(orden[:5], 1))
+    resto = "".join(fila(k, i) for k, i in enumerate(orden[5:15], 6))
+    return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
+            f'{html_nav_hist("la", atras, len(vistos))}{cab}'
+            f'<ol class="jug">{COLS_JUGADA}{top5}</ol><ol class="jug resto" start="6">{resto}</ol>'
+            '<p class="note">Es el Top congelado antes del sorteo, el mismo que se puntúa en el marcador.</p></section>')
+
+# Prueba ciega del "animal del día" (herramientas/exploracion/animal_dia.py, 254 días no vistos):
+# Top-1 al abrir el día sale el 38,6 % de los días (azar 29,5 %); alguno del Top-2, el 60,6 % (azar 50,9 %).
+def html_animales_hoy(d, filas, e):
+    """Los 2 animales del día: Top-2 del pronóstico congelado de las 8:00 de ese día."""
+    fecha = e["pf"]
+    r = next((x for x in d["registros"] if vigente(x) and x["fecha"] == fecha and x["hora"] == 0
+              and x.get("orden_completo")), None)
+    if r is None:
+        return ""
+    salidos = {v: h for f, h, v in filas if f == fecha}
+    chips = ""
+    for k, i in enumerate(r["orden_completo"][:2], 1):
+        ya = (f'<small class="ok">salió {HORAS[salidos[i]]} ✓</small>' if i in salidos
+              else '<small>aún no sale</small>')
+        chips += (f'<div class="adh{" si" if i in salidos else ""}"><span class="rk">{k}º</span>'
+                  f'<span class="n">{POS[i]}</span><span class="nm">{ANIM[POS[i]].title()}{ya}</span></div>')
+    cuando = fecha_corta(fecha)
+    return (f'<section class="card adia" aria-labelledby="adia-t"><div class="jh"><h2 id="adia-t">'
+            f'Animales para {esc(cuando)}</h2><span class="pill gris">todo el día</span></div>'
+            f'<div class="adhs">{chips}</div>'
+            '<p class="note">Elegidos antes del primer sorteo. En prueba ciega (254 días) al menos uno de los dos '
+            'salió el 61 % de los días (al azar, 51 %) y el 1º solo, el 39 % (azar 30 %). No es seguro y no '
+            'reemplaza la jugada de cada hora.</p></section>')
 
 def _clase_puesto(p):
     if p is None: return "fuera"
@@ -1798,23 +1861,25 @@ def preparar():
                 modelo=modelo, pend=pend, tri_mostrada=tri_mostrada, faltan_h=faltan_h)
 
 
-def html_rd():
+def html_rd(atras=0):
     """Fragmento de la pestaña RD Internacional. Si el módulo falla, la
     pestaña lo dice y Lotto Activo sigue funcionando."""
     try:
         import rdint_vivo
-        return rdint_vivo.html()
+        return rdint_vivo.html(atras)
     except Exception as ex:  # noqa: BLE001
         print(f"[rdint] {ahora()} html: {ex!r}", file=sys.stderr, flush=True)
         return '<div class="card"><p>RD Internacional se está preparando…</p></div>'
 
 
-def render(banca=None, tab="la"):
+def render(banca=None, tab="la", atras=0):
     x = preparar()
     filas, e, d = x["filas"], x["e"], x["d"]
     calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
     pend = x["pend"]
     tab = "rd" if tab == "rd" else "la"
+    atras_la = atras if tab == "la" else 0
+    atras_rd = atras if tab == "rd" else 0
 
     aviso = ""
     if AVISO["texto"]:
@@ -1822,8 +1887,10 @@ def render(banca=None, tab="la"):
         AVISO["texto"] = ""
 
     n_mesa = sum(1 for r in d["registros"] if vigente(r))
+    jugada = (html_pasado_la(d, atras_la) if atras_la > 0 and la_pasados(d)
+              else html_jugada(e, calculando, pend, aviso_modelo, modelo, len(la_pasados(d))))
     panel_la = (
-        f'{aviso}<div class="duo">{html_jugada(e, calculando, pend, aviso_modelo, modelo)}'
+        f'{aviso}{html_animales_hoy(d, filas, e)}<div class="duo">{jugada}'
         f'{html_registro(e)}</div>'
         + sec("sec-mesa", "Historial de cuadrantes",
               f"los 38 animales por cuadrante, puesto o días sin salir · "
@@ -1846,7 +1913,7 @@ def render(banca=None, tab="la"):
         f'<section class="panel" id="p-la" role="tabpanel" aria-labelledby="t-la"{"" if tab == "la" else " hidden"}>'
         f'{panel_la}</section>'
         f'<section class="panel" id="p-rd" role="tabpanel" aria-labelledby="t-rd"{"" if tab == "rd" else " hidden"}>'
-        f'{html_rd()}</section>'
+        f'{html_rd(atras_rd)}</section>'
         '<footer>Es un juego de azar: ningún modelo garantiza ganar. Juega solo lo que puedas perder.</footer></main>')
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -2171,6 +2238,23 @@ CSS_MESA = """
 .mesa-stats th{text-align:left;color:var(--muted);font-weight:600;padding:5px 7px;border-bottom:1px solid var(--line)}
 .mesa-stats td{padding:5px 7px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
 .mesa-stats h4{margin:14px 0 0;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.histnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-4px 0 12px;font-size:13.5px}
+.histnav a,.histnav .off{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:var(--pil);
+  border:1px solid var(--line);background:var(--bg-2);color:var(--ink);text-decoration:none;font-weight:600}
+.histnav .off{opacity:.4}
+.histnav .pos{color:var(--muted);font-size:12.5px;text-align:center}
+.jug li.gana{background:var(--ok-soft);border-radius:8px}
+.jug li.gana .n{color:var(--ok)}
+.adia{margin-bottom:var(--gap)}
+.adhs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 8px}
+.adh{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:8px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:var(--r2)}
+.adh.si{background:var(--ok-soft)}
+.adh .rk{font-size:12px;color:var(--soft)}
+.adh .n{font-size:28px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;line-height:1}
+.adh .nm{font-size:16px;font-weight:600;min-width:0}
+.adh .nm small{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+.adh .nm small.ok{color:var(--ok);font-weight:600}
 """
 
 JS_MESA = """
@@ -2355,7 +2439,11 @@ class H(BaseHTTPRequestHandler):
             except ValueError:
                 banca = None
             tab = (q.get("tab", ["la"])[0] or "la").strip().lower()
-            self._send(render(banca, tab))
+            try:
+                atras = max(0, min(int(q.get("atras", ["0"])[0] or 0), 10000))
+            except ValueError:
+                atras = 0
+            self._send(render(banca, tab, atras))
         elif ruta == "/tareas.json":
             est = estado_tareas()
             est["_auto"] = auto_estado()

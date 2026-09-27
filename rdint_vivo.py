@@ -428,7 +428,36 @@ def _resultados(d, limite=100):
             % (clave, filas, nota)), meta
 
 
-def html():
+def _nav(atras, total):
+    """Flechas para ver sorteos RD anteriores (mismo estilo .histnav de servidor.py)."""
+    def enlace(n, txt):
+        return '<a href="/?tab=rd%s">%s</a>' % ("&amp;atras=%d" % n if n else "", txt)
+    ant = enlace(atras + 1, "‹ Anterior") if atras < total else '<span class="off">‹ Anterior</span>'
+    sig = enlace(atras - 1, "Siguiente ›") if atras > 0 else '<span class="off">Siguiente ›</span>'
+    pos = "próximo sorteo" if atras == 0 else "hace %d sorteo%s" % (atras, "s" if atras > 1 else "")
+    return '<nav class="histnav" aria-label="Sorteos anteriores">%s<span class="pos">%s</span>%s</nav>' % (ant, pos, sig)
+
+
+def _pasado(vistos, atras):
+    """Top-15 congelado de un sorteo RD ya jugado, con el ganador marcado."""
+    atras = max(1, min(atras, len(vistos)))
+    r = vistos[-atras]; o = r["orden"]; pr = r.get("prob", {}); p = r["puesto"]
+    def fila(k, cod):
+        li = _fila(k, cod, 100 * pr.get(cod, 0))
+        return li.replace("<li>", '<li class="gana">', 1) if cod == r["salio"] else li
+    tramo = "Top-5" if p <= 5 else "Top-15" if p <= 15 else "fuera del Top-15"
+    return ('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">%s'
+            '<div class="jh"><h2 id="rd-t">Sorteo RD · <span>%s</span></h2><span class="pill gris">jugado</span></div>'
+            '<p class="ult">%s · salió <b>%s %s</b> · puesto %dº (%s)</p>'
+            '<ol class="jug">%s%s</ol><ol class="jug resto" start="6">%s</ol>'
+            '<p class="note">Es el Top congelado antes del sorteo, el mismo que se puntúa en el marcador.</p></section>'
+            % (_nav(atras, len(vistos)), _e(HORAS_RD[r["hora"]]), _e(_fecha(r["fecha"]).capitalize()),
+               _e(r["salio"]), _e(NOMBRE[r["salio"]]), p, tramo, _COLS,
+               "".join(fila(k, c) for k, c in enumerate(o[:5], 1)),
+               "".join(fila(k, c) for k, c in enumerate(o[5:15], 6))))
+
+
+def html(atras=0):
     with CERROJO:
         x = preparar()
     if x is None:
@@ -437,6 +466,13 @@ def html():
     hoy = [r for r in x["filas"] if r[0] == f]
     la = la_del_dia(f)
     partes = []
+    vistos = [r for r in d["registros"] if r.get("salio") and r.get("puesto")]
+    if atras > 0 and vistos:
+        partes.append(_pasado(vistos, atras))
+        partes.append('<div style="height:14px"></div>')
+        cuerpo_r, meta_r = _resultados(d)
+        partes.append(_sec("rd-historico", "Resultados y puestos en el Top", meta_r, cuerpo_r))
+        return "".join(partes)
     # --- jugada (abierta, arriba)
     jugado = datetime.now() >= hora_sorteo(f, h)
     if pend is None:
@@ -471,10 +507,10 @@ def html():
                   % (_COLS, top5, resto, _compartir("RD Internacional %s %s" % (_fecha(f), HORAS_RD[h]),
                                                     ["%s %s" % (c, NOMBRE[c]) for c in o[:15]]),
                      HORAS_LA[h], HORAS_RD[h]))
-    partes.append('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">'
+    partes.append('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">%s'
                   '<div class="jh"><h2 id="rd-t">Próximo RD · <span>%s</span></h2>%s</div>'
                   '<p class="ult">%s</p>%s</section>'
-                  % (_e(HORAS_RD[h]), pill, linea, cuerpo))
+                  % (_nav(0, len(vistos)), _e(HORAS_RD[h]), pill, linea, cuerpo))
     partes.append('<div style="height:14px"></div>')
     # --- resultados con su puesto en el Top (misma lista que Lotto Activo)
     cuerpo_r, meta_r = _resultados(d)
