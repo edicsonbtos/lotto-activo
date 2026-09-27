@@ -20,19 +20,27 @@ N=12511  ultimo=2026-09-16 h7 '32'  -> objetivo 2026-09-16 h8
 == D: ensamble de produccion (intradia_v2+secuencia_v3+haz_v1) ==
   calculando submodelos (puede tardar varios minutos)...
   bloque T=12500  pesos=[ 0.516  0.585 -0.059]  vigente=True
-Traceback (most recent call last):
-  File "C:\Users\edics\Downloads\lotto-activo\lotto-activo\herramientas\exploracion\consejo_mesa.py", line 235, in <module>
-    Pm = LE.normalizar(sub.predecir(ext, T))[-1]
-                       ~~~~~~~~~~~~^^^^^^^^
-  File "C:\Users\edics\Downloads\lotto-activo\lotto-activo\herramientas\modelos\intradia_v2.py", line 136, in predecir
-    tabs, D = construir(datos, self.cfg)
-              ~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "C:\Users\edics\Downloads\lotto-activo\lotto-activo\herramientas\modelos\intradia_v2.py", line 89, in construir
-    D = np.stack(dens, axis=2) if dens else np.zeros((n, K, 0))
-        ~~~~~~~~^^^^^^^^^^^^^^
-  File "C:\Users\edics\AppData\Roaming\Python\Python314\site-packages\numpy\_core\shape_base.py", line 465, in stack
-    return _nx.concatenate(expanded_arrays, axis=axis, out=out,
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                           dtype=dtype, casting=casting)
-                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-numpy._core._exceptions._ArrayMemoryError: Unable to allocate 29.0 MiB for an array with shape (12512, 38, 8) and data type float64
+  intradia_v2 ok
+  secuencia_v3 ok
+  haz_v1 ok
+
+==============================================================================
+PREDICCIONES PARA 2026-09-16 hora 8 (proximo sorteo)
+==============================================================================
+  A intradia       top3: ['30', '31', '28']   top5: 30(4.3)  31(4.2)  28(3.8)  27(3.8)  36(3.5)
+  B markov         top3: ['19', '6', '21']   top5: 19(3.6)  6(3.6)  21(3.3)  7(3.2)  30(3.2)
+  C M2_hazard      top3: ['6', '20', '25']   top5: 6(3.3)  20(3.3)  25(3.3)  33(3.3)  18(3.2)
+  D ensamble       top3: ['2', '13', '25']   top5: 2(4.2)  13(4.2)  25(4.1)  23(3.9)  6(3.8)
+  E reciente84     top3: ['34', '1', '30']   top5: 34(3.3)  1(3.0)  30(2.9)  22(2.9)  31(2.9)
+
+-- CONSENSO (media de probabilidades de las 5 estrategias) --
+  # 1   6  p_cons= 3.17%  votos_top3=2/5
+  # 2  22  p_cons= 3.06%  votos_top3=0/5
+  # 3  31  p_cons= 3.03%  votos_top3=1/5
+  # 4  33  p_cons= 3.02%  votos_top3=0/5
+  # 5  23  p_cons= 3.01%  votos_top3=0/5
+  # 6  28  p_cons= 2.98%  votos_top3=1/5
+  # 7  25  p_cons= 2.96%  votos_top3=2/5
+  # 8  20  p_cons= 2.92%  votos_top3=1/5
+  # 9  18  p_cons= 2.89%  votos_top3=0/5
+  #10  27  p_cons= 2.88%  votos_top3=0/5
