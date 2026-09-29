@@ -121,6 +121,56 @@ def log_guardar(d):
         json.dump(d, f, ensure_ascii=False, indent=1)
     os.replace(LOG + ".tmp", LOG)
 
+CORRECCION_HIST = os.path.join(HERR, "correccion_historial_2026-09-29.json")
+
+def corregir_historial():
+    """Aplica UNA vez la corrección de fechas de historial.txt (2026-09-29).
+
+    En los feriados sin sorteo (25-dic, 1-ene, Semana Santa) el historial
+    guardó los resultados del día siguiente con la fecha del feriado y quedó
+    corrido hasta realinearse; además los 4 primeros sorteos de las 08:00
+    (2024-11-28..12-01) quedaron 3 días antes. La tabla de cambios se verificó
+    contra la API oficial y tuazar. Solo cambian fechas: el número de líneas
+    no cambia, así que fronteras de pesos, hist_n y tripletas siguen igual.
+    Si alguna línea original no está tal cual, no toca nada."""
+    hecho = os.path.join(DATOS, "correccion_historial_2026-09-29.hecho.json")
+    if os.path.exists(hecho) or not os.path.exists(CORRECCION_HIST):
+        return
+    with CERROJO:
+        with open(CORRECCION_HIST, encoding="utf-8") as f:
+            cambios = {c["antes"]: c["despues"] for c in json.load(f)["cambios"]}
+        with open(HIST, "rb") as f:
+            crudo = f.read()
+        lineas = [l for l in crudo.decode("utf-8").splitlines() if l.strip()]
+        cuenta = {}
+        for l in lineas:
+            if l in cambios:
+                cuenta[l] = cuenta.get(l, 0) + 1
+        if len(cuenta) != len(cambios) or any(v != 1 for v in cuenta.values()):
+            print(f"  Corrección del historial NO aplicada: {len(cuenta)} de {len(cambios)} "
+                  "líneas coinciden", file=sys.stderr)
+            return
+        if any(suspendido(x) for x in log_cargar()["registros"]):
+            print("  Corrección del historial pospuesta: hay pronósticos suspendidos", file=sys.stderr)
+            return
+        clave = lambda l: (l.split()[0], int(l.split()[1]))
+        nuevas = sorted((cambios.get(l, l) for l in lineas), key=clave)
+        if len(nuevas) != len(lineas) or len(set(map(clave, nuevas))) != len(nuevas):
+            print("  Corrección del historial NO aplicada: quedarían sorteos duplicados", file=sys.stderr)
+            return
+        os.makedirs(os.path.join(DATOS, "respaldo"), exist_ok=True)
+        with open(os.path.join(DATOS, "respaldo", "historial_antes_correccion_2026-09-29.txt"), "wb") as f:
+            f.write(crudo)
+        nuevo = ("\n".join(nuevas) + "\n").encode("utf-8")
+        with open(HIST + ".tmp", "wb") as f:
+            f.write(nuevo)
+        os.replace(HIST + ".tmp", HIST)
+        with open(hecho, "w", encoding="utf-8") as f:
+            json.dump({"cuando": ahora(), "lineas": len(nuevas), "cambiadas": len(cambios),
+                       "sha1_antes": hashlib.sha1(crudo).hexdigest(),
+                       "sha1_despues": hashlib.sha1(nuevo).hexdigest()}, f, indent=1)
+        print(f"  Historial corregido: {len(cambios)} líneas con la fecha arreglada (respaldo en /respaldo)")
+
 def ahora():
     return datetime.now().isoformat(timespec="seconds")
 
@@ -1320,9 +1370,9 @@ def fila_jugada(r, num_, nombre, sub, f5, fp):
 COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
                '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
 
-def html_compartir(titulo, animales):
+def html_compartir(juego, cuando, animales):
     """Compartir la jugada como texto: Top 5 o Top 15, monto fijo por animal."""
-    return (f'<div class="compartir" data-t="{esc(titulo)}" data-a="{esc("|".join(animales[:15]))}">'
+    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}">'
             '<select aria-label="Cuántos animales"><option value="5">Top 5</option><option value="15">Top 15</option></select>'
             '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
             '<button type="button" class="sec">Compartir</button></div>')
@@ -1375,7 +1425,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
             f'{html_nav_hist("la", 0, n_pasados)}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}'
-            f'{html_compartir(f"Lotto Activo {fecha} {hora}", [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
+            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
             f'{leyenda}{aviso_modelo}</section>')
 
 def html_nav_hist(tab, atras, total):
@@ -2390,9 +2440,17 @@ document.addEventListener('click', function(ev){
   var c = b.parentNode, n = +c.querySelector('select').value;
   var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
   var a = c.dataset.a.split('|').slice(0, n);
-  var t = c.dataset.t + ' - Top ' + n + (m ? ' - $' + m + ' por animal' : '') + '\n'
-        + a.map(function(x, k){ return (k + 1) + '. ' + x + (m ? ' - $' + m : ''); }).join('\n')
-        + (m ? '\nTotal: $' + (m * a.length) : '');
+  // Formato para WhatsApp: cabecera en negrita y bloques de 5 separados por una línea en blanco.
+  var filas = a.map(function(x, k){
+    return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (m ? '  →  $' + m : '');
+  });
+  var bloques = [];
+  for(var i = 0; i < filas.length; i += 5) bloques.push(filas.slice(i, i + 5).join('\n'));
+  var t = '*' + c.dataset.t.toUpperCase() + '*\n'
+        + '📅 ' + c.dataset.f + '\n'
+        + '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n'
+        + bloques.join('\n\n')
+        + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
   if(navigator.share) navigator.share({text: t}).catch(function(){});
   else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });
 });
@@ -2539,6 +2597,10 @@ if __name__ == "__main__":
                 shutil.copy2(origen, os.path.join(DATOS, nombre))
     if not os.path.exists(HIST):
         sys.exit("Falta historial.txt en esta carpeta.")
+    try:
+        corregir_historial()
+    except Exception as ex:  # noqa: BLE001  (nunca impedir que arranque la web)
+        print(f"  Corrección del historial falló: {ex!r}", file=sys.stderr)
     PUERTO = int(os.environ.get("PORT", PUERTO))
     EN_NUBE = bool(os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("PORT"))
     HOST = "0.0.0.0" if EN_NUBE else "127.0.0.1"
