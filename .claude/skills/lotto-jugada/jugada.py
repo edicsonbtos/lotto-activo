@@ -56,9 +56,9 @@ def main():
         return
     orden = sorted((a for a in m["animales"] if a["rank"]), key=lambda a: a["rank"])
     print(f"Sorteo: {m['fecha_txt']} {m['hora_txt']} · modelo {m['modelo']}")
-    # Regla de cambio (hilo 7, adoptada sin confirmar 2026-09-23): si el animal de RD de las
-    # (h−1):30 está en el Top-5, sale, los de abajo suben y el 6º entra 5º. Igual que la web
-    # y que lo validado (herramientas/rdint/cambio_top5.py).
+    # Regla de cambio (hilo 7, adoptada sin confirmar 2026-09-23; ampliada al Top-15 el 2026-10-01,
+    # herramientas/exploracion/top15_tarde/PREREGISTRO_vivo.md): si el animal de RD de las (h−1):30
+    # está en el Top-15, sale, los de abajo suben y el 16º entra 15º. Igual que la web (_cambiar15).
     if m["hora"] > 0:
         try:
             rdu = {(f, h): c for f, h, c in leer("/api/rdint").get("ultimos", [])}
@@ -68,15 +68,16 @@ def main():
         if c is None:
             print("OJO: RD de la media hora anterior aún no está anotado; vuelve a pedir la jugada cuando salga.")
         else:
-            k = next((i for i, a in enumerate(orden[:5]) if a["num"] == c), None)
-            if k is not None and len(orden) > 5:
+            k = next((i for i, a in enumerate(orden[:15]) if a["num"] == c), None)
+            if k is not None and len(orden) > 15:
+                quinto = f"entra {orden[5]['num']} {orden[5]['nombre']} de 5º y " if k < 5 else ""
                 print(f"Cambio por RD: {c} {orden[k]['nombre']} salió en RD media hora antes -> "
-                      f"sale del {k + 1}º, los de abajo suben y entra {orden[5]['num']} {orden[5]['nombre']} de 5º.")
-                orden = orden[:k] + orden[k + 1:6] + [orden[k]] + orden[6:]
+                      f"sale del {k + 1}º, los de abajo suben: {quinto}{orden[15]['num']} {orden[15]['nombre']} entra 15º.")
+                orden = orden[:k] + orden[k + 1:16] + [orden[k]] + orden[16:]
                 for r, a in enumerate(orden, 1):
                     a["rank"] = r
             else:
-                print(f"RD media hora antes: {c}, no está en el Top-5 (sin cambio).")
+                print(f"RD media hora antes: {c}, no está en el Top-15 (sin cambio).")
     if str(m["modelo"]).endswith("_sin_pesos"):
         print("AVISO: pronóstico hecho SIN pesos del ensamble: no es el modelo medido. Mejor no jugar este.")
     # ficha: base Top-3 con 1/4 de Kelly sobre el límite bajo (0,33 % de la banca en el Top-3)

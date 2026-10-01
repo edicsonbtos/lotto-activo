@@ -36,7 +36,7 @@ ESTRATEGIAS = [
 def rd():
     """Marcador en vivo de RD Internacional (h:30), leído de /api/rdint."""
     try:
-        m = leer("/api/rdint")["marcador"]
+        api = leer("/api/rdint"); m = api["marcador"]
     except (ValueError, KeyError):
         print("\nRD Internacional: sin /api/rdint (¿desplegado?).")
         return
@@ -53,6 +53,13 @@ def rd():
         print(f"  {p['plan']:<28} neto {p['neto']:+6.0f} $  ({p['retorno']*100:+5.1f} %)")
     print("  Esperado (prueba ciega / réplica): Top-3 +20/+14 %, Top-5 esc. +20/+9 %, "
           "Top-15 pond. +12/+5 %, Top-15 plano +7/+2 %.")
+    t = api.get("seguimiento_top21")
+    if t and t["hora_1830"]["n"]:
+        x = t["hora_1830"]; ic = x["ic95"]
+        print(f"  En observación, sin plata (PREREGISTRO_vivo.md, regla B): Top-21 de las 18:30 desde {t['desde']}: "
+              f"{x['aciertos']}/{x['n']} = {x['tasa']*100:.1f} % (IC95 {ic[0]*100:.1f}-{ic[1]*100:.1f}; empata al 70 %), "
+              f"neto {x['neto_fichas']:+d} fichas. Resto de horas: {t['resto']['tasa'] and t['resto']['tasa']*100 or 0:.1f} %. "
+              f"Se juzga a los {t['juicio_en']} sorteos: {t['veredicto']}.")
 
 
 def validar(regs):
@@ -118,6 +125,14 @@ def main():
               f"ganó el de RD {c['gano_rd']}, el 6º que entró {c['gano_6']}. "
               f"Top-5 escalonado con cambio {c['con']:+.0f} $ vs sin cambio {c['sin']:+.0f} $ "
               f"({c['dif']:+.0f} $). En la prueba: RD 6 vs 6º 14 en 377 cambios.")
+    try:
+        c = leer("/api/cambio_rd15")
+    except ValueError:
+        c = None
+    if c and c.get("n"):
+        print(f"Regla RD en el Top-15 (PREREGISTRO_vivo.md, regla A, desde {c['desde']}): {c['n']} sorteos, cambió en "
+              f"{c['cambios']} (se juzga a los {c['juicio']}: {c['veredicto']}); ganó el de RD {c['gano_rd']}, el 16º que entró "
+              f"{c['gano_16']}. Top-15 {c['top15_con']} con regla vs {c['top15_sin']} sin; ponderado {c['dif_pond']:+.0f} $.")
     validar(regs)
     print(f"\nCon {n} sorteos el ruido es enorme (el Top-3 se mueve ±{1.96*math.sqrt(.12*.88/n)*100:.0f} puntos)."
           " Hacen falta ~1.000 para concluir.")

@@ -103,3 +103,16 @@ Detalle: herramientas/resultados/hilo7_*.md y
 herramientas/exploracion/PREREGISTRO_rdint_cruzado.md.
 Código: rdint_vivo.py (en vivo), herramientas/rdint/ (datos, modelo, pruebas).
 API: /api/rdint.
+
+
+TOP-15 DE LA Y TOP-21 DE RD 18:30 (2026-10-01)
+----------------------------------------------
+- En Lotto Activo, si el animal que salió en RD media hora antes está en el
+  Top-15, ahora sale del Top-15 entero (antes solo del Top-5): los de abajo
+  suben y entra el 16º. En 2024, 2025 y 2026 subió el Top-15 entre +0,6 y
+  +1,3 puntos. Su marcador en vivo está en /api/cambio_rd15 y se juzga una
+  vez a los 500 cambios.
+- RD Internacional, Top-21 de las 18:30: SOLO en observación, sin plata.
+  Empata al 70 % (21 fichas, paga 30). Se ve en "Marcador RD" y se juzga a
+  los 150 sorteos de las 18:30.
+Detalles: herramientas/exploracion/top15_tarde/ (INFORME.md, PREREGISTRO_vivo.md).

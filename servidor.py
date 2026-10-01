@@ -1174,9 +1174,11 @@ def cambio_rd(orden, pf, ph):
     """Regla de cambio (PREREGISTRO_cambio_rd_top5.md, adoptada sin confirmar el 2026-09-23).
 
     Si el animal que salió en RD Internacional a las (h−1):30 está en el Top-5 de LA h:00, se
-    intercambia con el 6º. Solo cambia lo que se MUESTRA para jugar: el congelado que se puntúa
-    no se toca. Devuelve (orden, info); info es None en el sorteo de 8:00 o si falla RD."""
-    if ph <= 0 or len(orden) < 6:
+    intercambia con el 6º. Desde 2026-10-01 (PREREGISTRO_vivo.md, regla A) también sale del Top-15:
+    si está entre los 15 primeros, los de abajo suben y el 16º entra 15º. Solo cambia lo que se
+    MUESTRA para jugar: el congelado que se puntúa no se toca. Devuelve (orden, info); info es None
+    en el sorteo de 8:00 o si falla RD."""
+    if ph <= 0 or len(orden) < 16:
         return orden, None
     try:
         import rdint_vivo
@@ -1184,10 +1186,13 @@ def cambio_rd(orden, pf, ph):
         info = {"hora_rd": rdint_vivo.HORAS_RD[ph - 1], "rd": cod}
     except Exception:  # noqa: BLE001 — RD no debe tumbar la jugada de LA
         return orden, None
-    nuevo = _cambiar(orden, cod) if cod is not None else orden
+    nuevo = _cambiar15(orden, cod) if cod is not None else orden
     if nuevo is orden:
         return orden, info
-    info.update(sale=cod, entra=POS[orden[5]], puesto=orden.index(IDX[cod]) + 1)
+    puesto = orden.index(IDX[cod]) + 1
+    info.update(sale=cod, puesto=puesto, entra15=POS[orden[15]])
+    if puesto <= 5:
+        info["entra"] = POS[orden[5]]
     return nuevo, info
 
 def _cambiar(orden, cod):
@@ -1198,6 +1203,15 @@ def _cambiar(orden, cod):
     if len(orden) < 6 or r not in orden[:5]:
         return orden
     return [x for x in orden[:5] if x != r] + [orden[5], r] + list(orden[6:])
+
+def _cambiar15(orden, cod):
+    """Regla A de PREREGISTRO_vivo.md: si `cod` está entre los 15 primeros, sale; los de abajo
+    suben un puesto, el 16º entra 15º y `cod` pasa al 16º. El Top-5 resultante es el mismo que
+    el de _cambiar. Devuelve el MISMO objeto `orden` si no hay cambio."""
+    r = IDX[cod]
+    if len(orden) < 16 or r not in orden[:15]:
+        return orden
+    return [x for x in orden[:16] if x != r] + [r] + list(orden[16:])
 
 # Marcador en vivo de la regla: cuenta desde el día en que se adoptó, que la
 # prueba (hasta 2026-09-22) nunca vio. RD de las (h−1):30 siempre sale antes
@@ -1230,6 +1244,46 @@ def marcador_cambio_rd(d):
             m["gano_6"] += r["salio"] == orden[5]
         m["con"] += PAGO * f[nuevo.index(r["salio"]) + 1] - sum(f)
     m["dif"] = m["con"] - m["sin"]
+    return m
+
+# Regla A (Top-15) de herramientas/exploracion/top15_tarde/PREREGISTRO_vivo.md: cuenta desde el
+# 2026-09-30, el primer día que el estudio no vio. Se juzga una vez, a los 500 cambios.
+CAMBIO_RD15_DESDE = "2026-09-30"
+CAMBIO_RD15_JUICIO = 500
+
+def marcador_cambio_rd15(d):
+    """Top-15 (aciertos y ponderado) con y sin sacar el RD (h−1):30, sobre el mismo congelado."""
+    try:
+        import rdint_vivo
+        rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
+    except Exception:  # noqa: BLE001
+        return None
+    fp = fichas_por_puesto(PONDERADO)
+    m = dict(desde=CAMBIO_RD15_DESDE, juicio=CAMBIO_RD15_JUICIO, n=0, cambios=0, gano_rd=0, gano_16=0,
+             top15_sin=0, top15_con=0, pond_sin=0, pond_con=0)
+    for r in resueltas(d):
+        orden = r.get("orden_completo")
+        if not orden or len(orden) < 16 or r["fecha"] < CAMBIO_RD15_DESDE or r["hora"] <= 0 or r["salio"] not in orden:
+            continue
+        cod = rd.get((r["fecha"], r["hora"] - 1))
+        if cod is None:
+            continue
+        m["n"] += 1
+        nuevo = _cambiar15(orden, cod)
+        p0, p1 = orden.index(r["salio"]) + 1, nuevo.index(r["salio"]) + 1
+        m["top15_sin"] += p0 <= 15; m["top15_con"] += p1 <= 15
+        m["pond_sin"] += PAGO * fp[p0] - sum(fp); m["pond_con"] += PAGO * fp[p1] - sum(fp)
+        if nuevo is not orden:
+            m["cambios"] += 1
+            m["gano_rd"] += r["salio"] == IDX[cod]
+            m["gano_16"] += r["salio"] == orden[15]
+    m["dif_top15"] = m["top15_con"] - m["top15_sin"]
+    m["dif_pond"] = m["pond_con"] - m["pond_sin"]
+    k, nd = m["gano_16"], m["gano_16"] + m["gano_rd"]
+    m["p_binomial"] = (sum(math.comb(nd, i) for i in range(k, nd + 1)) / 2 ** nd) if nd else None
+    m["veredicto"] = ("pendiente" if m["cambios"] < CAMBIO_RD15_JUICIO else
+                      "CONFIRMADA" if m["p_binomial"] is not None and k > m["gano_rd"] and m["p_binomial"] < 0.05
+                      else "NO CONFIRMADA")
     return m
 
 # ------------------------------------------------ pronósticos en sombra (motor_nuevo)
@@ -1321,14 +1375,17 @@ def nota_cambio_rd(info):
         return ""
     if info["rd"] is None:
         return (f'<p class="note">RD de las {info["hora_rd"]} aún no está anotado: si el animal que salga ahí '
-                'está en este Top-5, se cambia por el 6º al recargar.</p>')
+                'está en este Top-15, sale y suben los de abajo al recargar.</p>')
     if "sale" not in info:
         return (f'<p class="note">RD de las {info["hora_rd"]}: '
-                f'<b>{esc(info["rd"])} {esc(ANIM[info["rd"]].title())}</b> — no está en el Top-5, sin cambio.</p>')
+                f'<b>{esc(info["rd"])} {esc(ANIM[info["rd"]].title())}</b> — no está en el Top-15, sin cambio.</p>')
+    e15 = f'<b>{esc(info["entra15"])} {esc(ANIM[info["entra15"]].title())}</b> entra 15º'
+    entra = (f'entra <b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b> de 5º y {e15}'
+             if "entra" in info else e15)
     return (f'<div class="tip"><b>Cambio por RD:</b> {esc(info["sale"])} {esc(ANIM[info["sale"]].title())} '
-            f'salió en RD a las {info["hora_rd"]} → sale del {info["puesto"]}º, los de abajo suben un puesto y entra '
-            f'<b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b> de 5º. Lotto Activo casi nunca repite lo '
-            'que RD sacó media hora antes (prueba 2026-09-23: +1,4 puntos por ficha, sin confirmar aún).</div>')
+            f'salió en RD a las {info["hora_rd"]} → sale del {info["puesto"]}º, los de abajo suben un puesto: {entra}. '
+            'Lotto Activo casi nunca repite lo que RD sacó media hora antes (Top-5: +1,4 puntos por ficha en la prueba; '
+            'Top-15: +0,6 a +1,3 puntos de acierto en 2024-2026). Sin confirmar aún en vivo.</div>')
 
 def html_banca(e, banca=None):
     """Cuánto poner en cada animal según la banca (misma regla que gestion_banca.py)."""
@@ -1696,6 +1753,13 @@ def html_economia(d):
                   f'<span class="dv"><b>{c["dif"]:+,} fichas</b> frente a no cambiar'
                   f'<small>desde {esc(fecha_corta(c["desde"]))}: {c["n"]} sorteos, cambió en {c["cambios"]} · '
                   f'ganó el de RD {c["gano_rd"]}, el 6º que entró {c["gano_6"]}</small></span></div>')
+    c15 = marcador_cambio_rd15(d)
+    if c15 and c15["n"]:
+        filas += (f'<div class="dist"><span class="dl">Regla RD en el Top-15 (ponderado)</span>'
+                  f'<span class="dv"><b>{c15["dif_pond"]:+,} fichas</b> frente a no cambiar'
+                  f'<small>desde {esc(fecha_corta(c15["desde"]))}: {c15["n"]} sorteos, cambió en {c15["cambios"]} '
+                  f'(se juzga a los {c15["juicio"]}) · ganó el de RD {c15["gano_rd"]}, el 16º que entró {c15["gano_16"]} · '
+                  f'Top-15 {c15["top15_con"]} contra {c15["top15_sin"]}</small></span></div>')
     return ('<div style="margin-top:18px"><div class="hh"><h2>Cada forma de jugar, con plata</h2>'
             f'<span>{ec[0]["n"]} sorteos con orden guardado</span></div>{filas}'
             '<p class="note">Regla de cambio RD: en la prueba (377 cambios) ganó el de RD 6 veces y el 6º 14. '
@@ -2547,6 +2611,9 @@ class H(BaseHTTPRequestHandler):
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/cambio_rd":
             self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
+                       "application/json; charset=utf-8")
+        elif ruta == "/api/cambio_rd15":
+            self._send(json.dumps(_api(lambda: marcador_cambio_rd15(log_cargar())), ensure_ascii=False),
                        "application/json; charset=utf-8")
         elif ruta == "/api/sombra":
             self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),

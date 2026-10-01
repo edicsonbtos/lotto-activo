@@ -308,6 +308,34 @@ def marcador(d):
     return out
 
 
+# Regla B de herramientas/exploracion/top15_tarde/PREREGISTRO_vivo.md: Top-21 de las 18:30 (hora 10),
+# SOLO seguimiento, sin plata. Cuenta desde 2026-09-30 y se juzga una vez a los 150 sorteos de las 18:30.
+TOP21_DESDE, TOP21_HORA, TOP21_N, TOP21_JUICIO = "2026-09-30", 10, 21, 150
+
+
+def _wilson(k, n, z=1.959964):
+    if not n:
+        return None
+    p = k / n; den = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / den; h = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / den
+    return [round(c - h, 4), round(c + h, 4)]
+
+
+def seguimiento_top21(d):
+    """Aciertos del Top-21 congelado a las 18:30 contra el resto de horas (control). Empate: 70 %."""
+    out = {"desde": TOP21_DESDE, "hora": HORAS_RD[TOP21_HORA], "juicio_en": TOP21_JUICIO, "empate": 0.70}
+    for clave, sel in (("hora_1830", lambda h: h == TOP21_HORA), ("resto", lambda h: h != TOP21_HORA)):
+        ps = [r["puesto"] for r in d["registros"]
+              if r.get("puesto") and r["fecha"] >= TOP21_DESDE and sel(r["hora"])]
+        k = sum(p <= TOP21_N for p in ps)
+        out[clave] = {"n": len(ps), "aciertos": k, "tasa": round(k / len(ps), 4) if ps else None,
+                      "ic95": _wilson(k, len(ps)), "neto_fichas": PAGO * k - TOP21_N * len(ps)}
+    a = out["hora_1830"]
+    out["veredicto"] = ("pendiente" if a["n"] < TOP21_JUICIO else
+                        "CONFIRMADA" if a["ic95"][0] > 0.70 else "NO CONFIRMADA")
+    return out
+
+
 def pasada():
     """Una vuelta del bucle: resultados nuevos + congelado."""
     with CERROJO:
@@ -344,7 +372,7 @@ def api():
     f, h = x["sig"]
     return {"sorteo": {"fecha": f, "hora": HORAS_RD[h]}, "pronostico": x["pend"],
             "ultimos": [list(r) for r in x["filas"][-24:]],   # [fecha, h, código]: regla de cambio en LA
-            "marcador": marcador(x["d"]), "estado": ESTADO}
+            "marcador": marcador(x["d"]), "seguimiento_top21": seguimiento_top21(x["d"]), "estado": ESTADO}
 
 
 def _e(s):
@@ -540,6 +568,11 @@ def html(atras=0):
         cuerpo_m = '<p class="note">Todavía no hay sorteos RD puntuados en vivo.</p>'
     resumen = ("%d sorteos · Top-3 %d · Top-15 %d" % (m["n"], m["top3"], m["top15"])
                if m["n"] else "aún vacío")
+    t21 = seguimiento_top21(d)["hora_1830"]
+    cuerpo_m += ('<p class="note"><b>En observación, sin plata:</b> Top-21 de las 18:30 desde el 30-sep. '
+                 + ("Lleva %d de %d (%s %%; empata al 70 %%), neto %+d fichas a 1 por animal. Se juzga a los %d sorteos."
+                    % (t21["aciertos"], t21["n"], ("%.1f" % (100 * t21["tasa"])).replace(".", ","), t21["neto_fichas"], TOP21_JUICIO)
+                    if t21["n"] else "Aún sin sorteos puntuados.") + '</p>')
     partes.append(_sec("rd-marcador", "Marcador RD", resumen, cuerpo_m))
     # --- evidencia
     partes.append(_sec(
