@@ -904,6 +904,7 @@ input{caret-color:var(--brand)}
   .leyenda{margin-top:10px}}
 .jug li.cols{border-top:none;padding:0 0 6px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .jug li.cols span:nth-child(n+4){text-align:center;line-height:1.15}
+.jug.anti li{grid-template-columns:24px 50px minmax(0,1fr)}
 .jug .rk{font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums;text-align:right}
 .jug .n{font-size:28px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
 .jug .nm{font-size:16px;font-weight:600;letter-spacing:-.01em;min-width:0}
@@ -1145,7 +1146,7 @@ def html_prediccion(e, calculando, pend, aviso_modelo):
             '<b>1 ficha</b> al 4º y al 5º (refuerzo: gana en los datos pero sin certeza estadística). 8 fichas; cobra '
             '~1 de cada 5 sorteos: 60 si sale uno de los 3 primeros, 30 si sale el 4º o el 5º. '
             'La raya gris marca el azar (2,63%).</p>')
-    top15 = html_top15(e, pend) + html_anti_top15(e, pend)
+    top15 = html_top15(e, pend)
     return f'<section class="card" id="sorteo">{cab}{filas}{nota}{aviso_modelo}{top15}</section>'
 
 def html_top15(e, pend=None):
@@ -1170,27 +1171,24 @@ def html_top15(e, pend=None):
             'Prueba ciega ≈ +6% (el Top-15 plano, −1%).</p>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
 
-def html_anti_top15(e, pend=None):
+def html_anti_top15(orden, sc, gaps):
     """Los 15 animales con MENOS probabilidad (puestos 24-38): los que el modelo descarta.
     Mismo orden congelado que se puntúa. Solo informativo: no cambia la jugada."""
-    orden = e["orden"]
-    if pend is not None and pend.get("orden_completo"):
-        orden = pend["orden_completo"]
     if len(orden) < 38:
         return ""
-    ultimos = list(orden[-15:])[::-1]            # el menos probable primero
-    masa = sum(e["sc"][i] for i in ultimos)
-    filas = ""
-    for r, i in enumerate(ultimos, 1):
-        p = e["sc"][i]
-        filas += (f'<div class="pick" style="opacity:.8"><span class="rk">{39 - r}</span><span class="num">{POS[i]}</span>'
-                  f'<div><div class="nm">{ANIM[POS[i]].title()}</div></div>'
-                  f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
-    nota = (f'<p class="note"><b>Anti Top-15:</b> los 15 que el modelo da por más improbables. Entre todos suman '
-            f'<b>{masa*100:.1f}%</b> de probabilidad (el azar daría {15/K*100:.1f}%): sale uno de ellos en ~1 de cada '
-            f'{1/masa:.1f} sorteos. Sirve para <b>descartar</b>, no para apostar: no cambia la jugada.</p>')
-    return (f'<details style="margin-top:12px"><summary>Ver Anti Top-15 (los 15 menos probables)</summary>'
-            f'{nota}{filas}</details>')
+    ultimos = list(orden[-15:])[::-1]            # el menos probable primero (puesto 38)
+    masa = sum(sc[i] for i in ultimos)
+    filas = "".join(
+        f'<li><span class="rk">{38 - k}</span><span class="n">{esc(POS[i])}</span>'
+        f'<span class="nm">{esc(ANIM[POS[i]].title())}'
+        f'<small>{num(sc[i] * 100, 2)} % · hace {gaps[i] + 1} sorteos</small></span></li>'
+        for k, i in enumerate(ultimos))
+    return ('<details class="mas" id="la-anti" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+            'Anti Top-15 · los 15 menos probables</summary>'
+            f'<ol class="jug resto anti" start="24">{filas}</ol>'
+            f'<p class="note">Entre los 15 suman <b>{num(masa * 100, 1)} %</b> (el azar daría {num(15 / K * 100, 1)} %): '
+            f'sale uno de ellos en ~1 de cada {num(1 / masa, 1)} sorteos. Sirve para <b>descartar</b>, no para '
+            'apostar: no cambia la jugada.</p></details>')
 
 def cambio_rd(orden, pf, ph):
     """Regla de cambio (PREREGISTRO_cambio_rd_top5.md, adoptada sin confirmar el 2026-09-23).
@@ -1497,6 +1495,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
                            esc5[r], pond[r])
     top5 = "".join(fila(r, i) for r, i in enumerate(orden[:5], 1))
     resto = "".join(fila(r, i) for r, i in enumerate(orden[5:15], 6))
+    anti = html_anti_top15(orden, e["sc"], e["gaps"])
     mas = (f'<details class="mas" id="la-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
            f'Del 6º al 15º · solo para el ponderado</summary>'
            f'<ol class="jug resto" start="6">{resto}</ol>'
@@ -1509,7 +1508,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
                '(+67, +37 o +7).</p></div>')
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
             f'{html_nav_hist("la", 0, n_pasados)}{cab}'
-            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}'
+            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
             f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
             f'{leyenda}{aviso_modelo}</section>')
 
