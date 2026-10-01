@@ -1,0 +1,27 @@
+
+## RD: Top-21
+  2024-25 todas las horas  n  5784 | acierta  68.4 % [67.2; 69.6] (el modelo dice 69.2 %) | plano  -2.3 % por ficha [-4.1; -0.5] | escalonado  +0.6 % [-1.9; +3.1] | peor racha de fallos 7
+  2024-25 horas 10-11      n   964 | acierta  69.0 % [66.1; 71.8] (el modelo dice 71.5 %) | plano  -1.5 % por ficha [-5.5; +2.5] | escalonado  -0.8 % [-6.7; +5.2] | peor racha de fallos 5
+  2026 todas las horas     n  3180 | acierta  69.7 % [68.1; 71.2] (el modelo dice 71.7 %) | plano  -0.4 % por ficha [-2.6; +1.8] | escalonado  +2.4 % [-0.8; +5.8] | peor racha de fallos 5
+  2026 horas 10-11         n   530 | acierta  72.6 % [68.9; 76.4] (el modelo dice 75.0 %) | plano  +3.8 % por ficha [-1.6; +9.2] | escalonado  +1.3 % [-6.5; +9.1] | peor racha de fallos 4
+  2026 solo hora 10        n   265 | acierta  78.9 % [73.6; 83.8] (el modelo dice 76.3 %) | plano +12.7 % por ficha [+5.7; +19.7] | escalonado +10.5 % [+0.3; +20.6] | peor racha de fallos 4
+  2026 solo hora 11        n   265 | acierta  66.4 % [60.8; 72.1] (el modelo dice 73.6 %) | plano  -5.1 % por ficha [-13.2; +3.0] | escalonado  -7.9 % [-18.4; +3.1] | peor racha de fallos 5
+  2026 por mes (todas las horas): 01: 71  02: 70  03: 69  04: 64  05: 72  06: 71  07: 67  08: 73  09: 69
+  2026 por hora (todas): 8h: 70  9h: 70  10h: 66  11h: 68  12h: 66  13h: 69  14h: 65  15h: 70  16h: 73  17h: 74  18h: 79  19h: 66
+  2026 acierto por tamaño (todas las horas): T15: 52  T18: 61  T20: 66  T21: 70  T22: 73  T24: 78  T26: 83
+
+## LA: Top-21
+  2024-25 todas las horas  n  7357 | acierta  69.8 % [68.7; 70.8] (el modelo dice 69.6 %) | plano  -0.3 % por ficha [-1.9; +1.2] | escalonado  +6.3 % [+4.1; +8.5] | peor racha de fallos 6
+  2024-25 horas 10-11      n  1270 | acierta  66.9 % [64.3; 69.4] (el modelo dice 68.2 %) | plano  -4.4 % por ficha [-8.2; -0.7] | escalonado  +6.6 % [+1.0; +12.2] | peor racha de fallos 4
+  2026 todas las horas     n  3179 | acierta  66.2 % [64.5; 67.8] (el modelo dice 69.0 %) | plano  -5.5 % por ficha [-7.9; -3.1] | escalonado  +0.5 % [-2.9; +4.0] | peor racha de fallos 6
+  2026 horas 10-11         n   529 | acierta  60.1 % [55.8; 64.3] (el modelo dice 66.3 %) | plano -14.1 % por ficha [-20.2; -8.2] | escalonado  -6.3 % [-14.9; +2.5] | peor racha de fallos 6
+  2026 solo hora 10        n   265 | acierta  57.4 % [51.3; 63.4] (el modelo dice 66.0 %) | plano -18.1 % por ficha [-26.7; -9.4] | escalonado -12.9 % [-24.7; -0.8] | peor racha de fallos 5
+  2026 solo hora 11        n   264 | acierta  62.9 % [56.8; 68.6] (el modelo dice 66.6 %) | plano -10.2 % por ficha [-18.8; -2.1] | escalonado  +0.3 % [-11.8; +12.5] | peor racha de fallos 3
+  2026 por mes (todas las horas): 01: 72  02: 65  03: 64  04: 64  05: 66  06: 62  07: 68  08: 67  09: 66
+  2026 por hora (todas): 8h: 65  9h: 73  10h: 61  11h: 67  12h: 64  13h: 62  14h: 77  15h: 68  16h: 71  17h: 67  18h: 57  19h: 63
+  2026 acierto por tamaño (todas las horas): T15: 49  T18: 58  T20: 63  T21: 66  T22: 69  T24: 74  T26: 80
+
+## Control: Top-21 de RD por hora y por año (18:30 = hora 10)
+  2024 8:30 77% 9:30 61% 10:30 63% 11:30 61% 12:30 71% 13:30 64% 14:30 67% 15:30 69% 16:30 62% 17:30 72% 18:30 67% 19:30 69% | todas 67.0%
+  2025 8:30 78% 9:30 76% 10:30 67% 11:30 69% 12:30 70% 13:30 67% 14:30 66% 15:30 71% 16:30 75% 17:30 79% 18:30 78% 19:30 72% | todas 72.3%
+  2026 8:30 70% 9:30 70% 10:30 66% 11:30 68% 12:30 66% 13:30 69% 14:30 65% 15:30 70% 16:30 73% 17:30 74% 18:30 79% 19:30 66% | todas 69.7%
