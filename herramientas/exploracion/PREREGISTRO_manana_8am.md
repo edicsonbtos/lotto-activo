@@ -26,3 +26,14 @@ no pueden confirmarlas. Solo cuentan los sorteos desde 2026-10-02.
 - Prospectiva: en los 30 sorteos de H1, contar la fracción con hueco 1-3 d; pasa si ≥ 80 %.
 
 Todo cambio de modelo o de jugada sigue gobernado por `gestion_banca.VIGILANCIA`.
+
+## Fe de erratas (2026-10-01, añadida después; los criterios de arriba NO se cambian)
+Las "referencias fijas" de arriba salieron de `en_vivo_manana_8am.py` con `hora == 8`. En el historial la
+hora va de 0 a 11 y 0 = 8:00, así que `hora == 8` son las **16:00**. Valores correctos de las 8:00 en el
+mismo desarrollo (`calor_cache.npz`, `hora == 0`, n = 372; las 8:00 existen desde nov-2024):
+- Top-15 a las 8:00: **60,5 %** (el 53,1 % de arriba es el de las 16:00).
+- Ganador con hueco de 1-3 días a las 8:00: **65,6 %** (el modelo esperaba 61,3 %).
+Consecuencia para H1: con la tasa real de las 8:00 (60,5 %), acertar ≥ 22/30 pasa por azar el 10,4 % de las
+veces, no el 1,9 %. Que H1 "pase" ya no indicaría que las 8:00 rinden más de lo de siempre. Para eso harían
+falta ≥ 24/30 (P = 2,0 %) o ≥ 25/30 (P = 0,7 %). Se deja el criterio original tal como se escribió y se
+anota esta lectura. El script ya está corregido (`hora[g] == 0`). Fuente: `herramientas/exploracion/top15_70/`.
