@@ -1262,8 +1262,19 @@ def _con_rd(p, rd, f, h):
             q[IDX[c]] *= mult; usado = True
     return q, usado
 
+SOMBRA_EXP_DESDE = "2026-10-02"         # exposición (fecha/hora): PREREGISTRO_sombra_exposicion.md
+
+def _exposicion(p, f, h):
+    """Multiplicadores congelados por fecha y hora (herramientas/modelos/exposicion.py); solo calendario."""
+    ruta = os.path.join(HERR, "modelos")
+    if ruta not in sys.path:
+        sys.path.insert(0, ruta)
+    import exposicion
+    return exposicion.aplicar(p, f, h)
+
 def marcador_sombra(d):
-    """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE)."""
+    """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE).
+    Aparte, desde SOMBRA_EXP_DESDE: ensamble, ag12_rd y los dos con la corrección por exposición."""
     try:
         import rdint_vivo
         rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
@@ -1272,6 +1283,8 @@ def marcador_sombra(d):
     fichas = fichas_por_puesto()
     nombres = ("ensamble", "ag12", "ag12_rd")
     m = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nombres}
+    nexp = ("ensamble", "ag12_rd", "ensamble_exp", "ag12_rd_exp")
+    mx = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nexp}
     con_rd = 0
     for r in resueltas(d):
         s = r.get("sombra")
@@ -1279,20 +1292,29 @@ def marcador_sombra(d):
             continue
         q, usado = _con_rd(s["ag12"], rd, r["fecha"], r["hora"])
         con_rd += usado
-        for k, p in (("ensamble", r["scores"]), ("ag12", s["ag12"]), ("ag12_rd", q)):
+        filas = [(m, "ensamble", r["scores"]), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
+        if r["fecha"] >= SOMBRA_EXP_DESDE:
+            try:
+                filas += [(mx, "ensamble", r["scores"]), (mx, "ag12_rd", q),
+                          (mx, "ensamble_exp", _exposicion(r["scores"], r["fecha"], r["hora"])),
+                          (mx, "ag12_rd_exp", _exposicion(q, r["fecha"], r["hora"]))]
+            except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
+                print(f"[sombra] {ahora()} exposición falló: {ex!r}", file=sys.stderr, flush=True)
+        for mm, k, p in filas:
             tot = sum(p)
             orden = sorted(range(K), key=lambda i: (-p[i], i))
             pos = orden.index(r["salio"]) + 1
-            x = m[k]; x["n"] += 1
+            x = mm[k]; x["n"] += 1
             x["top3"] += pos <= 3; x["top5"] += pos <= 5; x["top15"] += pos <= 15
             x["mbits"] += 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
             x["t5_neto"] += PAGO * fichas[pos] - sum(fichas)
-    for x in m.values():
+    for x in list(m.values()) + list(mx.values()):
         if x["n"]:
             for c in ("top3", "top5", "top15"):
                 x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
             x["mbits"] = round(x["mbits"] / x["n"], 1)
-    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m}
+    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m,
+            "exposicion": {"desde": SOMBRA_EXP_DESDE, "decide_con": 930, "marcador": mx}}
 
 def nota_cambio_rd(info):
     if info is None:
@@ -2529,6 +2551,14 @@ class H(BaseHTTPRequestHandler):
         elif ruta == "/api/sombra":
             self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),
                        "application/json; charset=utf-8")
+        elif ruta == "/api/datos_publicados":
+            try:
+                sys.path.insert(0, os.path.join(RUTA, "scraping"))
+                import datos_publicados
+                cuerpo = datos_publicados.resumen(DATOS)
+            except Exception as ex:  # noqa: BLE001
+                cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
+            self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
                        "application/json; charset=utf-8")
@@ -2614,6 +2644,13 @@ if __name__ == "__main__":
         print("  RD Internacional: anotado y pronóstico automáticos activos")
     except Exception as ex:  # noqa: BLE001
         print(f"  RD Internacional desactivado: {ex!r}", file=sys.stderr)
+    try:                                  # datos que publican los pronosticadores (solo se guardan)
+        sys.path.insert(0, os.path.join(RUTA, "scraping"))
+        import datos_publicados
+        datos_publicados.iniciar(DATOS)
+        print("  Datos publicados: se guardan cada mañana (6:00-7:55)")
+    except Exception as ex:  # noqa: BLE001
+        print(f"  Datos publicados desactivado: {ex!r}", file=sys.stderr)
     if AUTO["activo"]:
         threading.Thread(target=auto_bucle, daemon=True).start()
         print(f"  Resultado: se anota solo (revisa cada {AUTO_INTERVALO // 60} min, "

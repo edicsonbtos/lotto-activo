@@ -2,3 +2,4 @@
 {"cuando": "2026-10-01T16:52:22Z", "evento": "pre-registro ronda 2 escrito antes de medir", "sha256": "4e94c6a6c681e504bb1134fa3354f155fa90f66672fe76fbf707dd541c485c93"}
 {"cuando": "2026-10-01T16:55:12Z", "evento": "pre-registro ronda 3 escrito antes de medir", "sha256": "08d1c3281ebf79c221fb5c25ada65a65a72fc74d2cb82c2353ede001ca6e772c"}
 {"cuando": "2026-10-01T17:04:18Z", "evento": "pre-registro ronda 4 escrito antes de medir", "sha256": "245b5d1dad824286d79d7a8270dc3dff150ac22594111808ee62427cfcf2daea"}
+{"cuando": "2026-10-01T17:25:41Z", "evento": "pre-registro sombra exposicion (antes del primer sorteo puntuable, 2026-10-02)", "sha256": "7f7a5324a38711c35e3a817e58b3777069d1d095a85a19040283704a14f2f51c"}
