@@ -431,7 +431,8 @@ RES["P7"] = r7
 log("\nPLAN 8  reencuadre: Top-15 en dos sorteos seguidos (h, h+1)")
 iB = np.where(IB)[0]
 pb = pos_de(ORD_B1[iB], Y[iB]) < 15
-pares = [(k, k + 1) for k in range(len(iB) - 1) if DIA[iB[k]] == DIA[iB[k + 1]]]
+pares = [(k, k + 1) for k in range(len(iB) - 1)   # mismo día y hora siguiente (auditoría: sin huecos)
+         if DIA[iB[k]] == DIA[iB[k + 1]] and HORA[iB[k + 1]] == HORA[iB[k]] + 1]
 alguno = np.array([pb[a] or pb[b] for a, b in pares], float)
 ambos = np.array([pb[a] and pb[b] for a, b in pares], float)
 dpar = np.array([DIA[iB[a]] for a, b in pares])
@@ -457,8 +458,10 @@ r9 = dict(N=Nst, curva_devA=curvaA, top=boot(hit, DIA[IB]),
           ret_plano=boot((30 * hit - Nst) / Nst, DIA[IB]),
           ret_ponderado=boot((30 * wpos[posB] - wN.sum()) / wN.sum(), DIA[IB]), azar=Nst / K,
           curva_devB={n_: float(np.mean(posB < n_)) for n_ in range(15, 31)})
-r9["veredicto"] = ("Top-%d llega al 70 %% " % Nst) + ("pero PIERDE plata" if r9["ret_plano"]["media"] < 0 else "y gana")
-log(f"  N* = {Nst} (dev-A {100*curvaA[Nst]:.1f} %).  dev-B: Top-{Nst} {100*hit.mean():.2f} % "
+ic = r9["ret_plano"]["ic95"]   # auditoría: el veredicto en plata mira el IC, no solo la media
+r9["veredicto"] = ("Top-%d llega al 70 %% " % Nst) + ("y gana (IC95 > 0)" if ic[0] > 0 else
+                   ("y PIERDE (IC95 < 0)" if ic[1] < 0 else "pero el retorno plano no se distingue de 0"))
+log(f"  N* = {Nst} (dev-A {100*curvaA[Nst]:.1f} %) => {r9['veredicto']}.  dev-B: Top-{Nst} {100*hit.mean():.2f} % "
     f"[IC95 {100*r9['top']['ic95'][0]:.1f}; {100*r9['top']['ic95'][1]:.1f}] (azar {100*Nst/K:.1f} %)  "
     f"retorno/ficha plano {100*r9['ret_plano']['media']:+.1f} % [{100*r9['ret_plano']['ic95'][0]:+.1f}; "
     f"{100*r9['ret_plano']['ic95'][1]:+.1f}], ponderado {100*r9['ret_ponderado']['media']:+.1f} %")
@@ -506,7 +509,8 @@ for nom, (src, lag) in FUENTES.items():
     log(f"  {nom}: n={len(ov)} obs {int(o)} esp {e:.1f} O/E {oe_:.3f} [IC99,5 {ic[0]:.2f}; {ic[1]:.2f}] => {r10[nom]['veredicto']}")
 RES["P10"] = r10
 
-with io.open(os.path.join(AQUI, "resultados.json"), "w", encoding="utf-8") as fh:
+if __name__ == "__main__":   # las rondas 2-4 importan este script con runpy: que no reescriban las salidas
+  with io.open(os.path.join(AQUI, "resultados.json"), "w", encoding="utf-8") as fh:
     json.dump(RES, fh, ensure_ascii=False, indent=1, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o))
-with io.open(os.path.join(AQUI, "salida.txt"), "w", encoding="utf-8") as fh:
+  with io.open(os.path.join(AQUI, "salida.txt"), "w", encoding="utf-8") as fh:
     fh.write("\n".join(SAL) + "\n")

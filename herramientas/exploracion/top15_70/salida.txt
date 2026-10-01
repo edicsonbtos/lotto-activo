@@ -49,7 +49,7 @@ PLAN 8  reencuadre: Top-15 en dos sorteos seguidos (h, h+1)
   los dos (dupleta del Top-15): 30.98 % (azar 15.6 %)  => REENCUADRE (no es mejora por sorteo): llega al 70 %
 
 PLAN 9  Top-N necesario para el 70 %
-  N* = 22 (dev-A 71.4 %).  dev-B: Top-22 74.43 % [IC95 73.0; 75.9] (azar 57.9 %)  retorno/ficha plano +1.5 % [-0.4; +3.5], ponderado +9.5 %
+  N* = 22 (dev-A 71.4 %) => Top-22 llega al 70 % pero el retorno plano no se distingue de 0.  dev-B: Top-22 74.43 % [IC95 73.0; 75.9] (azar 57.9 %)  retorno/ficha plano +1.5 % [-0.4; +3.5], ponderado +9.5 %
   curva dev-B Top-N: {15: 55.5, 16: 58.2, 17: 61.2, 18: 63.8, 19: 66.9, 20: 69.4, 21: 72.0, 22: 74.4, 23: 77.1, 24: 79.1, 25: 81.5, 26: 84.3, 27: 86.5, 28: 88.6, 29: 90.5, 30: 92.2}
 
 PLAN 10  otras loterías como fuente (2026-04-13..09-13; réplica débil)

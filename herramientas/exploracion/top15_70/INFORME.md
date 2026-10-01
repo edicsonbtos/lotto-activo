@@ -18,7 +18,7 @@ ni Railway, ni el tramo de prueba (≥ 9357).
 3. **El 70 % sí se alcanza cambiando la forma de jugar, no el pronóstico:**
    - **Top-22 escalonado** (3-3-3-2-2 y 1 ficha a los puestos 6-22, 30 fichas): en dev-B **no pierde en el
      74,4 %** de los sorteos (gana en el 21,6 % y recupera lo apostado en el 52,9 %), con un retorno de
-     +9,5 % por ficha [+6,2; +12,7].
+     +9,5 % por ficha [+6,2; +12,7]. Es un nivel optimista (ver §6) y en 2026 será menor.
    - **Top-15 en dos sorteos seguidos**: sale en al menos uno de los dos el **79,8 %** de las veces (al azar,
      63,4 %). No es mejor pronóstico: es el mismo Top-15 contado de otra manera, y cuesta el doble.
 4. **Hallazgo nuevo y real:** el animal cuyo número es **el día del mes** sale **la mitad** de lo esperado
@@ -74,7 +74,7 @@ Comparador: B1 = ensamble + regla RD en el Top-15. Criterio de MEJORA: diferenci
 | 6 | **ag12 reajustado SOLO con dev-A + RD (h−1, h−2)** | **56,88 %** | **+1,34 [−0,03; +2,64]**, p = 0,03 | NO PASA por Bonferroni; el mejor; +25,5 mbits [+18; +33] |
 | 7 | Jugar solo las horas buenas (dev-A eligió las 17:00) | 55,08 % | −0,51 frente al resto | NO PASA. Las 8:00 dan 61,1 % [55,6; 66,7] (réplica débil) |
 | 8 | Top-15 en dos sorteos seguidos | 79,8 % (al menos uno) | — | Llega al 70 % como reencuadre, no como mejora |
-| 9 | Top-N mínimo para el 70 % (dev-A: N = 22) | 74,4 % (Top-22) | — | Llega al 70 %; plano +1,5 %, escalonado +9,5 % por ficha |
+| 9 | Top-N mínimo para el 70 % (dev-A: N = 22) | 74,4 % (Top-22) | — | Llega al 70 %; plano +1,5 % [−0,4; +3,5] (no se distingue de 0), escalonado +9,5 % por ficha |
 | 10 | Otras loterías (h−1) como fuente | O/E 0,87-0,90 | — | NO PASA (el control RD da 0,20, como se sabía) |
 
 Lo que enseña la ronda 1:
@@ -150,10 +150,34 @@ bloqueadas desde aquí). Punta: LA dev-B 0,57, pero RD 0,96 → **NO PASA**. Par
 - LARD no replica la fecha. Si el efecto fuera de "todo el operador", debería verse; por eso la regla queda
   como hipótesis de LA y RD, a confirmar en vivo.
 
+## 6. Auditoría (subagente `revisor-sesgo`, 2026-10-01) y lo que se corrigió
+**No hay fuga de información futura.** La auditoría barajó el futuro desde 4 cortes (incluido el borde de dev-B)
+y nada de lo anterior cambió: variables, pesos, rondas, temperatura, desfases, horas y N*. Una corrida
+independiente reproduce `salida.txt` byte a byte. Los 10 NO PASA de la ronda 1 se sostienen. Lo que señaló:
+- **Los niveles de dev-B son optimistas.** Los modelos del ensamble y las 33 variables de ag12 se diseñaron
+  mirando todo el desarrollo, incluido dev-B. Por eso el 55,0 % de B0, el 74,4 % del Top-22, el 79,8 % de dos
+  sorteos y la ventaja de P6 salen algo inflados. En 2026 todo rinde menos (ensamble ~49-50 %).
+- **El plan 10 miró resultados de LA del tramo de prueba** (2026-04..09). Ya está anotado en
+  `herramientas/registro_final.jsonl`. Nada se eligió con eso.
+- **Veredicto del plan 9 corregido.** El Top-22 llega al 70 %, pero su retorno plano (+1,5 %, IC [−0,4; +3,5])
+  no se distingue de 0. Antes decía "y gana".
+- **Fechas corridas en el historial congelado** (155 filas del desarrollo, sobre todo feriados y las primeras
+  8:00 de nov-2024). `robustez_fechas.py` repite A1 y A2 con las fechas corregidas: A1 da O/E 0,72 en dev-A y
+  **0,50 en dev-B**, A2 0,91 y 0,64, y día+1 0,66. **La señal de la fecha no depende de ese error.**
+- Desviaciones del pre-registro, ninguna ajustada en dev-B:
+  - P3 usa dos multiplicadores, "hoy LA" y "hoy RD", en vez de uno.
+  - P4 añade lambda_l2 = 1, bagging 0,8 y tres variables (la_veces_ayer, rd_hueco, hay_rd). El ensamble entra
+    como log P y no como logit, y falta el penúltimo hueco en días.
+  - El umbral de 56 % del plan 7 se fijó después de haber visto las horas en todo el desarrollo.
+  - El IC del plan 10 es al 99,5 %, más estricto que el 98,75 % que pedía Bonferroni por 4.
+- Arreglos de código: los pares del plan 8 exigen ahora hora consecutiva (no cambió ningún número). Las
+  rondas 2-4 ya no reescriben las salidas de la ronda 1 al importarla.
+
 ## Archivos
 - `PREREGISTRO.md`, `PREREGISTRO_ronda2.md`, `PREREGISTRO_ronda3.md`, `PREREGISTRO_ronda4.md`: las reglas,
   escritas antes de medir (sus huellas están en `registro.jsonl`).
 - `top15_70.py` → `resultados.json`, `salida.txt` (los 10 planes).
 - `ronda2.py`, `ronda3.py`, `ronda4.py` → `ronda*.json`, `salida_ronda*.txt`.
+- `robustez_fechas.py` → `salida_robustez_fechas.txt` (A1/A2 con las fechas corregidas).
 - Para reproducir: `pip install numpy scipy lightgbm` y luego `python herramientas/exploracion/top15_70/top15_70.py`
   (~10 s). Las rondas 2-4 se corren igual.
