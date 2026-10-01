@@ -1,0 +1,7 @@
+(a) LA: RD (h-1):30 fuera del Top-15, todas las horas
+  2024: n 3292  actual 51.49 %  con regla 52.25 %  Δ +0.76 pp [+0.33; +1.21]  Δ ret. ponderado +1.23 pp [+0.36; +2.07]  | RD dentro del Top-15 en 39 % de los sorteos; ese animal ganó 16 veces (el modelo esperaba 44.8)
+  2025: n 4200  actual 54.31 %  con regla 54.93 %  Δ +0.62 pp [+0.21; +1.02]  Δ ret. ponderado +1.27 pp [+0.40; +2.11]  | RD dentro del Top-15 en 38 % de los sorteos; ese animal ganó 25 veces (el modelo esperaba 56.7)
+  2026: n 3179  actual 49.17 %  con regla 50.46 %  Δ +1.29 pp [+0.79; +1.79]  Δ ret. ponderado +2.30 pp [+1.44; +3.16]  | RD dentro del Top-15 en 36 % de los sorteos; ese animal ganó 10 veces (el modelo esperaba 40.0)
+(b) Calibración del Top-15 actual por trimestre: acierto real / lo que se da el modelo
+  LA: 2024T1 54.7/54.7  2024T2 50.9/54.2  2024T3 51.1/51.9  2024T4 51.5/52.1  2025T1 50.7/52.0  2025T2 55.1/52.6  2025T3 57.2/54.9  2025T4 54.1/56.6  2026T1 49.3/54.7  2026T2 48.4/51.6  2026T3 49.7/50.8
+  RD: 2024T1 44.2/49.8  2024T2 48.8/50.8  2024T3 50.7/51.1  2024T4 48.9/51.1  2025T1 52.7/51.8  2025T2 52.9/52.8  2025T3 55.6/54.0  2025T4 54.9/54.8  2026T1 51.7/55.0  2026T2 50.9/53.6  2026T3 52.7/53.2
