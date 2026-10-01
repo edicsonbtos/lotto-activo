@@ -122,7 +122,10 @@ bloqueadas desde aquí). Punta: LA dev-B 0,57, pero RD 0,96 → **NO PASA**. Par
 1. **Poner en sombra "ag12_rd + exposición"** (fecha, fecha+1, hora). Es lo único que sube el Top-15 por sorteo
    y tiene respaldo fuera de muestra. ag12_rd ya corre en sombra; habría que añadir los tres multiplicadores en
    `herramientas/modelos/ag12/sombra.py` y en `/api/sombra`. Eso toca el servidor y necesita tu OK.
-   Juez: el marcador en vivo, con criterio fijado antes, como el de ag12 (mirada única al llegar a ~930 sorteos).
+   Juez: el marcador en vivo, con el criterio fijado antes, como el de ag12. En dev-B la exposición sumó
+   +6,1 mbits sobre P6, con una dispersión de 74,8 por sorteo. Con 80 % de potencia hacen falta **~930
+   sorteos (~78 días)** para verlo. Si el efecto real fuera la mitad, harían falta ~3.800. Para ver los +0,8 pp
+   de Top-15 hacen falta ~3.150 sorteos (~9 meses). Por eso se decide en mbits, no en aciertos.
 2. **Fuente nueva: los "datos" que publica la gente.** Si los operadores esquivan lo más jugado (la fecha lo
    sugiere en 5 loterías), lo que recomiendan los pronosticadores populares (foros como El Grupo Sortario, las
    pirámides de tuazar.com y juegoactivo.com) también debería salir menos. Plan: que Railway, que sí tiene
