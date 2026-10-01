@@ -1263,14 +1263,35 @@ def _con_rd(p, rd, f, h):
     return q, usado
 
 SOMBRA_EXP_DESDE = "2026-10-02"         # exposición (fecha/hora): PREREGISTRO_sombra_exposicion.md
+SOMBRA_EXP_N_PRIMERA = 930              # primera mirada (solo para apagar); la decisión de encender es con SOMBRA_EXP_N_FINAL
+SOMBRA_EXP_N_FINAL = 6000               # ~1,5 años: n con potencia ~75-80 % para ~+2,3 mbits (ver el pre-registro)
+_EXPOSICION = []                        # módulo cargado una vez (evita tocar sys.path en cada consulta)
 
 def _exposicion(p, f, h):
     """Multiplicadores congelados por fecha y hora (herramientas/modelos/exposicion.py); solo calendario."""
-    ruta = os.path.join(HERR, "modelos")
-    if ruta not in sys.path:
-        sys.path.insert(0, ruta)
-    import exposicion
-    return exposicion.aplicar(p, f, h)
+    if not _EXPOSICION:
+        ruta = os.path.join(HERR, "modelos")
+        if ruta not in sys.path:
+            sys.path.append(ruta)
+        import exposicion
+        _EXPOSICION.append(exposicion)
+    return _EXPOSICION[0].aplicar(p, f, h)
+
+def _ic90_jornadas(pares):
+    """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)]."""
+    por = {}
+    for f, v in pares:
+        a = por.setdefault(f, [0.0, 0]); a[0] += v; a[1] += 1
+    n = sum(a[1] for a in por.values())
+    if n == 0:
+        return None
+    media = sum(a[0] for a in por.values()) / n
+    J = len(por)
+    if J < 2:
+        return dict(n=n, jornadas=J, media=round(media, 2), ic90=None)
+    se = math.sqrt(sum((a[0] - media * a[1]) ** 2 for a in por.values()) * J / (J - 1)) / n
+    return dict(n=n, jornadas=J, media=round(media, 2),
+                ic90=[round(media - 1.645 * se, 2), round(media + 1.645 * se, 2)])
 
 def marcador_sombra(d):
     """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE).
@@ -1286,6 +1307,8 @@ def marcador_sombra(d):
     nexp = ("ensamble", "ag12_rd", "ensamble_exp", "ag12_rd_exp")
     mx = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nexp}
     con_rd = 0
+    dif = {"ensamble": ([], []), "ag12_rd": ([], [])}      # (dif mbits, dif Top-5 en 0/1) por sorteo y jornada
+    fallos_exp = 0
     for r in resueltas(d):
         s = r.get("sombra")
         if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not r.get("scores"):
@@ -1299,22 +1322,40 @@ def marcador_sombra(d):
                           (mx, "ensamble_exp", _exposicion(r["scores"], r["fecha"], r["hora"])),
                           (mx, "ag12_rd_exp", _exposicion(q, r["fecha"], r["hora"]))]
             except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
-                print(f"[sombra] {ahora()} exposición falló: {ex!r}", file=sys.stderr, flush=True)
+                fallos_exp += 1
+                if fallos_exp == 1:                          # una línea por consulta, no una por sorteo
+                    print(f"[sombra] {ahora()} exposición falló: {ex!r}", file=sys.stderr, flush=True)
+        este = {}
         for mm, k, p in filas:
             tot = sum(p)
             orden = sorted(range(K), key=lambda i: (-p[i], i))
             pos = orden.index(r["salio"]) + 1
             x = mm[k]; x["n"] += 1
             x["top3"] += pos <= 3; x["top5"] += pos <= 5; x["top15"] += pos <= 15
-            x["mbits"] += 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
+            mb = 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
+            x["mbits"] += mb
             x["t5_neto"] += PAGO * fichas[pos] - sum(fichas)
+            if mm is mx:
+                este[k] = (mb, pos <= 5)
+        if len(este) == 4:                                  # los 4 modelos del bloque, mismo sorteo
+            for base in dif:
+                dif[base][0].append((r["fecha"], este[base + "_exp"][0] - este[base][0]))
+                dif[base][1].append((r["fecha"], float(este[base + "_exp"][1]) - float(este[base][1])))
     for x in list(m.values()) + list(mx.values()):
         if x["n"]:
             for c in ("top3", "top5", "top15"):
                 x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
             x["mbits"] = round(x["mbits"] / x["n"], 1)
+    difs = {}
+    for base, (dm, dt) in dif.items():
+        a = _ic90_jornadas(dm); b = _ic90_jornadas(dt)
+        difs[base + "_exp_vs_" + base] = dict(mbits=a, top5_pp=(None if b is None else
+            dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
+                 [round(100 * v, 2) for v in b["ic90"]]))))
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m,
-            "exposicion": {"desde": SOMBRA_EXP_DESDE, "decide_con": 930, "marcador": mx}}
+            "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
+                           "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
+                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp}}
 
 def nota_cambio_rd(info):
     if info is None:
@@ -2553,11 +2594,11 @@ class H(BaseHTTPRequestHandler):
                        "application/json; charset=utf-8")
         elif ruta == "/api/datos_publicados":
             try:
-                sys.path.insert(0, os.path.join(RUTA, "scraping"))
                 import datos_publicados
                 cuerpo = datos_publicados.resumen(DATOS)
             except Exception as ex:  # noqa: BLE001
-                cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
+                print(f"[datos_publicados] resumen falló: {ex!r}", file=sys.stderr, flush=True)
+                cuerpo = {"error": "no disponible"}
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
@@ -2645,7 +2686,8 @@ if __name__ == "__main__":
     except Exception as ex:  # noqa: BLE001
         print(f"  RD Internacional desactivado: {ex!r}", file=sys.stderr)
     try:                                  # datos que publican los pronosticadores (solo se guardan)
-        sys.path.insert(0, os.path.join(RUTA, "scraping"))
+        if os.path.join(RUTA, "scraping") not in sys.path:
+            sys.path.append(os.path.join(RUTA, "scraping"))
         import datos_publicados
         datos_publicados.iniciar(DATOS)
         print("  Datos publicados: se guardan cada mañana (6:00-7:55)")
