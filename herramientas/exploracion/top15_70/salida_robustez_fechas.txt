@@ -1,0 +1,8 @@
+filas de desarrollo con fecha corregida: 155
+A1_dia_del_mes dev-A (fechas corregidas): obs 71 esp 98.7 O/E 0.720
+A1_dia_del_mes dev-B (fechas corregidas): obs 49 esp 98.7 O/E 0.497
+  placebo día-1 (todo dev, corregido): O/E 0.871
+  placebo día+1 (todo dev, corregido): O/E 0.661
+  placebo día+2 (todo dev, corregido): O/E 0.874
+A2_hora_12h dev-A (fechas corregidas): obs 89 esp 97.4 O/E 0.913
+A2_hora_12h dev-B (fechas corregidas): obs 61 esp 95.8 O/E 0.637

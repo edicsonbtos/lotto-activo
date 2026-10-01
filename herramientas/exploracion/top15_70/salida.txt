@@ -1,0 +1,60 @@
+dev-A ['2024-03-07', '2025-02-03', 3688]  dev-B ['2025-02-04', '2025-12-17', 3669]
+Comparadores en dev-B:
+  B0 ensamble: Top-15 54.95 %  mbits 145.6  plano +9.9 %  ponderado +16.8 %
+  B1 ensamble + regla RD: Top-15 55.55 %  plano +11.1 %  ponderado +18.1 %
+
+PLAN 1  exclusión dura de lo que ya salió hoy en LA (+ regla RD)
+  P1: Top-15 55.57 % [IC95 54.0; 57.2]  comparador 55.55 %  dif +0.03 pp [-0.30; +0.38] p=0.4710
+     retorno/ficha plano +11.1 % (comp +11.1 %), ponderado +18.2 % (comp +18.1 %)  => NO PASA
+
+PLAN 2  exclusión cruzada RD completa (desfases elegidos en dev-A)
+  O/E dev-A por desfase j (LA h:00 = RD (h-j):30): {1: (33, 94.4, 0.349), 2: (60, 85.9, 0.699), 3: (60, 77.3, 0.776), 4: (62, 68.7, 0.902), 5: (59, 60.1, 0.981), 6: (66, 51.6, 1.28), 7: (38, 43.0, 0.884), 8: (27, 34.4, 0.785), 9: (28, 25.8, 1.085), 10: (16, 17.2, 0.93), 11: (5, 8.6, 0.581)}
+  desfases excluidos: [1, 2, 3, 8, 11]
+  P2: Top-15 55.00 % [IC95 53.4; 56.6]  comparador 55.55 %  dif -0.55 pp [-1.25; +0.16] p=0.9390
+     retorno/ficha plano +10.0 % (comp +11.1 %), ponderado +17.3 % (comp +18.1 %)  => NO PASA
+
+PLAN 3  corriente combinada LA+RD con rechazo (m_k, k=1..24, + hoy LA / hoy RD)
+  multiplicadores exp(w) k=1..24: [0.59, 0.81, 0.87, 0.91, 0.99, 1.13, 1.0, 0.97, 0.98, 0.86, 1.3, 1.07, 0.97, 0.9, 1.12, 1.01, 1.07, 0.89, 1.12, 1.05, 1.05, 1.05, 0.9, 1.02]  hoyLA 1.14  hoyRD 0.79
+  P3: Top-15 55.14 % [IC95 53.6; 56.8]  comparador 55.55 %  dif -0.41 pp [-1.36; +0.57] p=0.8055
+     retorno/ficha plano +10.3 % (comp +11.1 %), ponderado +16.6 % (comp +18.1 %)  mbits 147.5 (dif vs B0 +1.9 [-4.4; +8.0])  => NO PASA
+
+Variables para P4-P6 ...
+  73 variables
+
+PLAN 4  LightGBM binario sobre el ensamble (init_score)
+  rondas elegidas: 59
+  importancia (ganancia): [('rd_hueco', 1874.0), ('gap2', 1591.4), ('ens_logp', 1549.7), ('gap1', 847.3), ('ens_rank', 797.7), ('cnt456', 644.3), ('hora', 480.5), ('ag12_T2_s1i_2a7', 384.8), ('k_hoy', 357.4), ('ag12_T3_s1i_8a30', 347.7), ('cnt120', 299.9), ('ag12_s1_col', 208.2)]
+  P4: Top-15 56.12 % [IC95 54.6; 57.8]  comparador 55.55 %  dif +0.57 pp [-0.84; +1.94] p=0.2218
+     retorno/ficha plano +12.2 % (comp +11.1 %), ponderado +21.3 % (comp +18.1 %)  mbits 169.7 (dif vs B0 +24.1 [+16.0; +32.4])  => NO PASA
+
+PLAN 5  LightGBM LambdaRank truncado en 15 sobre el ensamble
+  rondas elegidas: 10
+  temperatura 0.778
+  P5: Top-15 54.16 % [IC95 52.5; 55.9]  comparador 55.55 %  dif -1.39 pp [-2.84; -0.03] p=0.9788
+     retorno/ficha plano +8.3 % (comp +11.1 %), ponderado +15.7 % (comp +18.1 %)  mbits 141.2 (dif vs B0 -4.4 [-10.0; +1.4])  => NO PASA
+
+PLAN 6  ag12 re-ajustado solo en dev-A (+ RD h-1, h-2), lambda 30
+  pesos RD h-1, h-2 -> multiplicador 0.625 0.808
+  P6: Top-15 56.88 % [IC95 55.2; 58.6]  comparador 55.55 %  dif +1.34 pp [-0.03; +2.64] p=0.0295
+     retorno/ficha plano +13.8 % (comp +11.1 %), ponderado +24.6 % (comp +18.1 %)  mbits 171.0 (dif vs B0 +25.5 [+18.0; +33.0])  => NO PASA
+
+PLAN 7  jugar solo las horas buenas (elegidas en dev-A)
+  dev-A por hora (n, Top-15 B1): {8: (66, 57.6), 9: (329, 45.6), 10: (329, 52.6), 11: (329, 55.6), 12: (329, 54.4), 13: (329, 48.6), 14: (329, 52.0), 15: (329, 49.8), 16: (329, 52.6), 17: (330, 58.5), 18: (330, 51.8), 19: (330, 49.1)}
+  horas elegidas: [17]
+  dev-B horas elegidas: Top-15 55.08 % (n=305) [IC95 49.5; 60.3]  resto 55.59 %  dif -0.51 pp [-6.32; +5.41] p=0.5687  plano +10.2 %  ponderado +20.2 %  => NO PASA
+  8:00 en dev-B (réplica débil, ya mirada): Top-15 61.11 % (n=306) [IC95 55.6; 66.7]
+
+PLAN 8  reencuadre: Top-15 en dos sorteos seguidos (h, h+1)
+  al menos uno de los dos: 79.84 % [IC95 78.1; 81.5] (azar 63.4 %)  cuesta 30 fichas, retorno/ficha +10.8 %
+  los dos (dupleta del Top-15): 30.98 % (azar 15.6 %)  => REENCUADRE (no es mejora por sorteo): llega al 70 %
+
+PLAN 9  Top-N necesario para el 70 %
+  N* = 22 (dev-A 71.4 %) => Top-22 llega al 70 % pero el retorno plano no se distingue de 0.  dev-B: Top-22 74.43 % [IC95 73.0; 75.9] (azar 57.9 %)  retorno/ficha plano +1.5 % [-0.4; +3.5], ponderado +9.5 %
+  curva dev-B Top-N: {15: 55.5, 16: 58.2, 17: 61.2, 18: 63.8, 19: 66.9, 20: 69.4, 21: 72.0, 22: 74.4, 23: 77.1, 24: 79.1, 25: 81.5, 26: 84.3, 27: 86.5, 28: 88.6, 29: 90.5, 30: 92.2}
+
+PLAN 10  otras loterías como fuente (2026-04-13..09-13; réplica débil)
+  granjita_h-1: n=1566 obs 37 esp 41.0 O/E 0.903 [IC99,5 0.54; 1.33] => NO PASA
+  selvaplus_h-1:15: n=1453 obs 33 esp 38.1 O/E 0.866 [IC99,5 0.51; 1.27] => NO PASA
+  guacharo_h-1: n=732 obs 17 esp 19.2 O/E 0.884 [IC99,5 0.37; 1.48] => NO PASA
+  granjita_h_simultaneo: n=1711 obs 55 esp 44.8 O/E 1.227 [IC99,5 0.78; 1.68] => descriptivo
+  rdint_h-1:30_control: n=1569 obs 8 esp 41.0 O/E 0.195 [IC99,5 0.05; 0.42] => control

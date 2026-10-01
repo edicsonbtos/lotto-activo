@@ -55,7 +55,7 @@ for j in range(len(P)):
     if not ayer: continue
     msk=np.zeros(38,bool); msk[list(ayer)]=True
     e=Pn[j][msk].sum(); h=y[j] in ayer
-    if hora[g]==8: tot+=1; hit+=h; exp+=e
+    if hora[g]==0: tot+=1; hit+=h; exp+=e   # en el historial la hora va de 0 a 11: 0 = 8:00 (antes decía 8 = 16:00)
     else: tot_o+=1; hit_o+=h; exp_o+=e
 print(f"\nDEV 8:00: ganador salio ayer {hit}/{tot}={hit/tot*100:.1f}% ; modelo esperaba {exp/tot*100:.1f}%")
 print(f"DEV otras horas: {hit_o/tot_o*100:.1f}% ; modelo esperaba {exp_o/tot_o*100:.1f}%")

@@ -1,0 +1,9 @@
+  PIR-punta LA dev-A: candidatos 1109 obs 24 esp 29.5 O/E 0.815 [IC98,75 0.46; 1.26]
+  PIR-punta LA dev-B: candidatos 1176 obs 19 esp 33.1 O/E 0.574 [IC98,75 0.29; 0.90]
+  PIR-punta RD dev: candidatos 1800 obs 46 esp 47.9 O/E 0.961 [IC98,75 0.65; 1.31]
+  => PIR-punta: NO PASA
+  PIR-pares LA dev-A: candidatos 7252 obs 177 esp 190.7 O/E 0.928 [IC98,75 0.76; 1.11]
+  PIR-pares LA dev-B: candidatos 6918 obs 152 esp 181.2 O/E 0.839 [IC98,75 0.68; 1.01]
+  PIR-pares RD dev: candidatos 11268 obs 299 esp 296.7 O/E 1.008 [IC98,75 0.88; 1.15]
+  => PIR-pares: NO PASA
+  ejemplo 2026-10-01: [[0, 1, 1, 0, 2, 0, 2, 6], [1, 2, 1, 2, 2, 2, 8], [3, 3, 3, 4, 4, 0], [6, 6, 7, 8, 4], [2, 3, 5, 2], [5, 8, 7], [3, 5]] [35] [23, 35]

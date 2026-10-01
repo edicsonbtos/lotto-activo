@@ -1,0 +1,14 @@
+FAMILIA A — ¿el operador evita lo que más se juega?
+  A1_dia_del_mes: dev-A O/E 0.706 [0.54; 0.89] (obs 70, esp 99.1)  dev-B O/E 0.506 [IC99,17 0.35; 0.68] (obs 50, esp 98.8)  => PASA
+    sacarlo del Top-15 en dev-B: +0.44 pp
+  A2_hora_12h: dev-A O/E 0.913 [0.73; 1.10] (obs 89, esp 97.4)  dev-B O/E 0.637 [IC99,17 0.46; 0.83] (obs 61, esp 95.8)  => PASA
+    sacarlo del Top-15 en dev-B: +0.16 pp
+  A3_popularidad_estable: Spearman dev-A vs dev-B rho = +0.329, p = 0.0227 => NO PASA
+     frecuencias dev-B: min 2.04 %  max 3.19 %  (uniforme 2.63 %)
+
+FAMILIA B — P4 + P6 juntos (descriptivo: dev-B ya se vio en la ronda 1)
+  B-comb: Top-15 57.05 % (B1 55.55 %, dif +1.50 pp [+0.03; +2.83])  mbits 174.3 (dif vs B0 +28.7)
+  masa Top-15 que el modelo se da: media 55.3 %, máx 68.1 %, sorteos con ≥ 70 %: 0
+
+FAMILIA C — Top-22 escalonado 3-3-3-2-2-1×17 (30 fichas), desglose del plan 9 (B1)
+  no pierde 74.4 % [IC95 73.0; 75.9] = gana 21.6 % + recupera lo apostado 52.9 %;  pierde todo 25.6 %;  retorno/ficha +9.5 % [+6.2; +12.7]
