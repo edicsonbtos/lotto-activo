@@ -6,8 +6,8 @@ LA: ensamble_v2 (intradia_v2 + secuencia_v3 + haz_v1), predecir(D, 2000): submod
     Historial: enjambre_2026-09-30/reentreno/historial_la.txt (fechas corregidas el 2026-09-29 y API
     oficial hasta el 2026-09-29; se cotejaron 5.147 sorteos con la API sin diferencias).
 RD: B1 = B0 (secuencia_v3 solo con RD, desde 2000) * exp(b.x), b walk-forward (modelo.cruzado,
-    R=250, minimo=500), como cache_todo.npz. RD = rdint_hist.csv + API oficial (juego 2) del
-    2026-09-23 al 29 (oficial_extra.csv del enjambre).
+    R=250, minimo=500), como cache_todo.npz. RD = rdint_hist.csv corregido y completado con la API
+    oficial (juego 2) hasta el 2026-09-29 (oficial_multi.csv + oficial_extra.csv del enjambre).
 
 Uso: python predecir.py         (2-4 min; no calcula ninguna métrica de la idea)
 """
@@ -17,7 +17,7 @@ import numpy as np
 AQUI = os.path.dirname(os.path.abspath(__file__))
 HERR = os.path.abspath(os.path.join(AQUI, "..", ".."))
 RAIZ = os.path.dirname(HERR)
-sys.path.insert(0, HERR); sys.path.insert(0, os.path.join(HERR, "rdint"))
+sys.path.insert(0, HERR); sys.path.insert(0, os.path.join(HERR, "rdint")); sys.path.insert(0, RAIZ)
 import lotto_eval as LE
 
 ENJ = os.path.join(HERR, "exploracion", "enjambre_2026-09-30", "reentreno")
@@ -29,23 +29,26 @@ DESDE = 2000
 
 
 def rd_csv_extendido():
-    """rdint_hist.csv + juego 2 de la API oficial desde el día siguiente al último del CSV."""
+    """rdint_hist.csv corregido con la API oficial (juego 2): donde hay dato oficial manda el oficial
+    (el CSV tiene 11 sorteos distintos, 2026-03-04..07 de 17:30 a 19:30), y se añaden los sorteos
+    oficiales que faltan (2026-09-23..29 de oficial_extra.csv)."""
     import rdint_vivo as RV
     base = list(csv.DictReader(io.open(os.path.join(RAIZ, "datos_multiloteria", "rdint_hist.csv"), encoding="utf-8")))
-    ult = max(r["fecha"] for r in base)
-    extra = [r for r in csv.DictReader(io.open(EXTRA, encoding="utf-8")) if r["juego"] == "2" and r["fecha"] > ult]
-    # control: lo oficial (juego 2) coincide con el CSV donde se solapan
-    of = {(r["fecha"], r["hora"]): r["codigo"] for r in csv.DictReader(io.open(
-        os.path.join(RAIZ, "datos_multiloteria", "oficial_multi.csv"), encoding="utf-8")) if r["juego"] == "2"}
-    comp = [(of[(r["fecha"], r["hora"])], RV.codigo_de_nombre(r["animal"])) for r in base if (r["fecha"], r["hora"]) in of]
-    print("RD: CSV hasta", ult, "| cotejo con API oficial:", len(comp), "sorteos,",
-          sum(a != b for a, b in comp), "diferencias | se añaden", len(extra), "sorteos de la API")
+    of = {}
+    for ruta in (os.path.join(RAIZ, "datos_multiloteria", "oficial_multi.csv"), EXTRA):
+        for r in csv.DictReader(io.open(ruta, encoding="utf-8")):
+            if r["juego"] == "2":
+                of[(r["fecha"], r["hora"])] = r["codigo"]
+    filas = {(r["fecha"], r["hora"]): RV.codigo_de_nombre(r["animal"]) for r in base}
+    dif = sorted(k for k in filas if k in of and of[k] != filas[k])
+    nuevos = sorted(k for k in of if k not in filas)
+    print("RD: CSV hasta", max(k[0] for k in filas), "| cotejo con API oficial:", sum(k in of for k in filas),
+          "sorteos,", len(dif), "diferencias (manda la API):", dif, "| se añaden", len(nuevos), "sorteos de la API")
+    filas.update(of)
     with io.open(RD_CSV_EXT, "w", encoding="utf-8", newline="") as fh:
         w = csv.writer(fh); w.writerow(["fecha", "hora", "animal"])
-        for r in base:
-            w.writerow([r["fecha"], r["hora"], r["animal"]])
-        for r in extra:
-            w.writerow([r["fecha"], r["hora"], RV.NOMBRE[r["codigo"]]])
+        for (f, h), c in sorted(filas.items()):
+            w.writerow([f, h, RV.NOMBRE[c]])
 
 
 def la():

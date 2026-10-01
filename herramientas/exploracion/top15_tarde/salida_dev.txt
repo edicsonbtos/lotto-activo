@@ -1,0 +1,81 @@
+modo dev | PREREGISTRO.md sha256 560cf4f650f7e85221e0e34959917e67c3bbb998bcf22ce294551a900aef8a12
+
+## Lotto Activo: 1270 sorteos de las horas 10-11, 635 jornadas (2024-03-07 .. 2025-12-18)
+  Top-15 actual: acierto 53.23 % (el modelo se da 53.40 %; azar 39,47 %)  IC95 [50.39 %; 55.98 %]
+  retorno/ficha: Top-15 ponderado +16.6 %, Top-15 plano +6.5 %, Top-5 escalonado +35.5 %
+  tamaño medio: HOY 9.8, HERMANO aparte 0.69, FRÍO(4) aparte 8.3, quedan 19.2  (quedan < 15 en 0.9 % de los sorteos)
+  D1 HOY      salieron  269 | azar  326.4 (O/E 0.82) | modelo  243.7 (O/E 1.10) | 2.17 % por animal
+  D1 HERMANO  salieron   17 | azar   23.2 (O/E 0.73) | modelo   25.6 (O/E 0.67) | 1.93 % por animal
+  D1 FRÍO(4)  salieron  216 | azar  278.5 (O/E 0.78) | modelo  230.7 (O/E 0.94) | 2.04 % por animal
+  D1 quedan   salieron  768 | azar  641.8 (O/E 1.20) | modelo  770.0 (O/E 1.00) | 3.15 % por animal
+  D2 el Top-15 actual trae de media: HOY 1.00 (ganó 34), HERMANO 0.36 (ganó 11), FRÍO(4) 1.26 (ganó 45)
+     con la idea salen 2.58 por sorteo (ganaron 87, el modelo esperaba 97.3) y entran 2.58 (ganaron 90, el modelo esperaba 79.1)
+  variante                 Top-15    Δ Top-15 [IC 98,75 %]        Δ ret. ponderado   Δ ret. plano
+  HOY                    53.39 %  +0.16 pp [-1.42; +1.73]   +0.21 pp           +0.31 pp
+  HERM                   53.23 %  +0.00 pp [-0.94; +0.94]   +0.10 pp           +0.00 pp
+  HOY+HERM               53.46 %  +0.24 pp [-1.65; +2.13]   +0.41 pp           +0.47 pp
+  FRIO3                  52.52 %  -0.71 pp [-2.68; +1.26]   -1.23 pp           -1.42 pp
+  HOY+FRIO3              52.36 %  -0.87 pp [-3.46; +1.65]   -1.23 pp           -1.73 pp
+  HERM+FRIO3             52.44 %  -0.79 pp [-2.91; +1.42]   -1.23 pp           -1.57 pp
+  HOY+HERM+FRIO3         52.13 %  -1.10 pp [-3.70; +1.57]   -1.44 pp           -2.20 pp
+  FRIO4                  53.46 %  +0.24 pp [-1.65; +2.13]   -0.10 pp           +0.47 pp
+  HOY+FRIO4              53.07 %  -0.16 pp [-2.68; +2.20]   -0.41 pp           -0.31 pp
+  HERM+FRIO4             53.62 %  +0.39 pp [-1.65; +2.52]   +0.21 pp           +0.79 pp
+  HOY+HERM+FRIO4         53.46 %  +0.24 pp [-2.36; +2.91]   +0.21 pp           +0.47 pp <- H1
+  FRIO5                  52.99 %  -0.24 pp [-1.89; +1.50]   -0.62 pp           -0.47 pp
+  HOY+FRIO5              53.39 %  +0.16 pp [-2.13; +2.52]   +0.10 pp           +0.31 pp
+  HERM+FRIO5             53.46 %  +0.24 pp [-1.73; +2.20]   +0.10 pp           +0.47 pp
+  HOY+HERM+FRIO5         53.78 %  +0.55 pp [-2.05; +3.07]   +0.72 pp           +1.10 pp
+  FRIO6                  53.31 %  +0.08 pp [-1.42; +1.57]   -0.10 pp           +0.16 pp
+  HOY+FRIO6              53.31 %  +0.08 pp [-2.05; +2.17]   +0.10 pp           +0.16 pp
+  HERM+FRIO6             53.54 %  +0.31 pp [-1.50; +2.13]   +0.31 pp           +0.63 pp
+  HOY+HERM+FRIO6         53.78 %  +0.55 pp [-1.73; +2.91]   +0.82 pp           +1.10 pp
+  FRIO7                  53.07 %  -0.16 pp [-1.26; +0.94]   -0.41 pp           -0.31 pp
+  HOY+FRIO7              53.23 %  +0.00 pp [-1.89; +1.97]   +0.00 pp           +0.00 pp
+  HERM+FRIO7             53.23 %  +0.00 pp [-1.50; +1.50]   -0.10 pp           +0.00 pp
+  HOY+HERM+FRIO7         53.31 %  +0.08 pp [-2.09; +2.20]   +0.21 pp           +0.16 pp
+  D4 Top-N para 50/60/70 %: actual {'50': 15, '60': 18, '70': 23}, con la idea {'50': 14, '60': 19, '70': 23}
+     jugar plano todo lo que queda (19.2 animales): acierto 60.47 %, retorno -5.5 % por ficha
+  D3 Lotto Activo: Top-15 todas las horas 53.13 % (modelo 53.45 %), horas 10-11 53.23 % (modelo 53.40 %); por hora: 0:61 1:53 2:54 3:52 4:52 5:51 6:50 7:52 8:54 9:56 10:56 11:51
+  D5 Lotto Activo, todas las horas (7357 sorteos): actual 53.13 %; HOY +0.03 pp [-0.18; +0.24]; HERM +0.71 pp [+0.41; +1.02]; FRIO4 -1.30 pp [-2.20; -0.42]; HOY+HERM+FRIO4 -0.56 pp [-1.53; +0.42]
+  ELEGIDA para H2 (LA): HOY+HERM+FRIO5
+
+## RD Internacional: 964 sorteos de las horas 10-11, 482 jornadas (2024-03-01 .. 2025-06-30)
+  Top-15 actual: acierto 50.10 % (el modelo se da 52.95 %; azar 39,47 %)  IC95 [46.99 %; 53.32 %]
+  retorno/ficha: Top-15 ponderado +0.4 %, Top-15 plano +0.2 %, Top-5 escalonado +0.8 %
+  tamaño medio: HOY 10.2, HERMANO aparte 0.75, FRÍO(4) aparte 6.7, quedan 20.4  (quedan < 15 en 0.3 % de los sorteos)
+  D1 HOY      salieron  112 | azar  259.2 (O/E 0.43) | modelo  111.6 (O/E 1.00) | 1.14 % por animal
+  D1 HERMANO  salieron    7 | azar   19.0 (O/E 0.37) | modelo    5.7 (O/E 1.23) | 0.97 % por animal
+  D1 FRÍO(4)  salieron  192 | azar  169.6 (O/E 1.13) | modelo  205.8 (O/E 0.93) | 2.98 % por animal
+  D1 quedan   salieron  653 | azar  516.3 (O/E 1.26) | modelo  640.9 (O/E 1.02) | 3.33 % por animal
+  D2 el Top-15 actual trae de media: HOY 0.00 (ganó 0), HERMANO 0.04 (ganó 0), FRÍO(4) 3.54 (ganó 108)
+     con la idea salen 3.57 por sorteo (ganaron 108, el modelo esperaba 119.6) y entran 3.57 (ganaron 117, el modelo esperaba 105.7)
+  variante                 Top-15    Δ Top-15 [IC 98,75 %]        Δ ret. ponderado   Δ ret. plano
+  HOY                    50.10 %  +0.00 pp [+0.00; +0.00]   +0.00 pp           +0.00 pp
+  HERM                   50.31 %  +0.21 pp [+0.00; +0.62]   +0.68 pp           +0.41 pp
+  HOY+HERM               50.31 %  +0.21 pp [+0.00; +0.62]   +0.68 pp           +0.41 pp
+  FRIO3                  52.18 %  +2.07 pp [-3.01; +7.16]   +3.52 pp           +4.15 pp
+  HOY+FRIO3              52.28 %  +2.18 pp [-2.90; +7.26]   +3.65 pp           +4.36 pp
+  HERM+FRIO3             52.39 %  +2.28 pp [-2.90; +7.47]   +3.92 pp           +4.56 pp
+  HOY+HERM+FRIO3         52.49 %  +2.39 pp [-2.59; +7.37]   +4.06 pp           +4.77 pp
+  FRIO4                  50.93 %  +0.83 pp [-3.11; +4.77]   +1.76 pp           +1.66 pp
+  HOY+FRIO4              50.93 %  +0.83 pp [-3.01; +4.67]   +1.76 pp           +1.66 pp
+  HERM+FRIO4             51.04 %  +0.93 pp [-2.90; +4.77]   +2.16 pp           +1.87 pp
+  HOY+HERM+FRIO4         51.04 %  +0.93 pp [-2.90; +4.88]   +2.16 pp           +1.87 pp <- H1
+  FRIO5                  48.86 %  -1.24 pp [-4.10; +1.56]   -1.62 pp           -2.49 pp
+  HOY+FRIO5              48.86 %  -1.24 pp [-4.15; +1.61]   -1.62 pp           -2.49 pp
+  HERM+FRIO5             48.96 %  -1.14 pp [-4.05; +1.66]   -1.22 pp           -2.28 pp
+  HOY+HERM+FRIO5         48.96 %  -1.14 pp [-3.94; +1.66]   -1.22 pp           -2.28 pp
+  FRIO6                  49.17 %  -0.93 pp [-3.32; +1.35]   -1.49 pp           -1.87 pp
+  HOY+FRIO6              49.17 %  -0.93 pp [-3.22; +1.35]   -1.49 pp           -1.87 pp
+  HERM+FRIO6             49.27 %  -0.83 pp [-3.11; +1.45]   -1.08 pp           -1.66 pp
+  HOY+HERM+FRIO6         49.27 %  -0.83 pp [-3.22; +1.56]   -1.08 pp           -1.66 pp
+  FRIO7                  49.79 %  -0.31 pp [-1.97; +1.35]   -0.27 pp           -0.62 pp
+  HOY+FRIO7              49.79 %  -0.31 pp [-1.97; +1.35]   -0.27 pp           -0.62 pp
+  HERM+FRIO7             49.90 %  -0.21 pp [-1.87; +1.45]   +0.14 pp           -0.41 pp
+  HOY+HERM+FRIO7         49.90 %  -0.21 pp [-1.97; +1.45]   +0.14 pp           -0.41 pp
+  D4 Top-N para 50/60/70 %: actual {'50': 15, '60': 19, '70': 22}, con la idea {'50': 15, '60': 18, '70': 22}
+     jugar plano todo lo que queda (20.4 animales): acierto 67.74 %, retorno -0.1 % por ficha
+  D3 RD Internacional: Top-15 todas las horas 50.38 % (modelo 51.44 %), horas 10-11 50.10 % (modelo 52.95 %); por hora: 0:57 1:51 2:49 3:49 4:51 5:46 6:50 7:52 8:46 9:54 10:52 11:48
+  D5 RD Internacional, todas las horas (5784 sorteos): actual 50.38 %; HOY +0.00 pp [+0.00; +0.00]; HERM +0.12 pp [+0.03; +0.24]; FRIO4 +0.17 pp [-1.00; +1.35]; HOY+HERM+FRIO4 +0.24 pp [-0.93; +1.42]
+  ELEGIDA para H2 (RD): HOY+HERM+FRIO3
