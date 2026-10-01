@@ -1145,7 +1145,7 @@ def html_prediccion(e, calculando, pend, aviso_modelo):
             '<b>1 ficha</b> al 4º y al 5º (refuerzo: gana en los datos pero sin certeza estadística). 8 fichas; cobra '
             '~1 de cada 5 sorteos: 60 si sale uno de los 3 primeros, 30 si sale el 4º o el 5º. '
             'La raya gris marca el azar (2,63%).</p>')
-    top15 = html_top15(e, pend)
+    top15 = html_top15(e, pend) + html_anti_top15(e, pend)
     return f'<section class="card" id="sorteo">{cab}{filas}{nota}{aviso_modelo}{top15}</section>'
 
 def html_top15(e, pend=None):
@@ -1169,6 +1169,28 @@ def html_top15(e, pend=None):
             'al 15º = 23 fichas. Cobra ~1 de cada 2 sorteos y cada acierto deja ganancia: +67, +37 o +7. '
             'Prueba ciega ≈ +6% (el Top-15 plano, −1%).</p>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
+
+def html_anti_top15(e, pend=None):
+    """Los 15 animales con MENOS probabilidad (puestos 24-38): los que el modelo descarta.
+    Mismo orden congelado que se puntúa. Solo informativo: no cambia la jugada."""
+    orden = e["orden"]
+    if pend is not None and pend.get("orden_completo"):
+        orden = pend["orden_completo"]
+    if len(orden) < 38:
+        return ""
+    ultimos = list(orden[-15:])[::-1]            # el menos probable primero
+    masa = sum(e["sc"][i] for i in ultimos)
+    filas = ""
+    for r, i in enumerate(ultimos, 1):
+        p = e["sc"][i]
+        filas += (f'<div class="pick" style="opacity:.8"><span class="rk">{39 - r}</span><span class="num">{POS[i]}</span>'
+                  f'<div><div class="nm">{ANIM[POS[i]].title()}</div></div>'
+                  f'<span class="pc">{p*100:.2f}%<small>salió hace {e["gaps"][i] + 1} sorteos</small></span></div>')
+    nota = (f'<p class="note"><b>Anti Top-15:</b> los 15 que el modelo da por más improbables. Entre todos suman '
+            f'<b>{masa*100:.1f}%</b> de probabilidad (el azar daría {15/K*100:.1f}%): sale uno de ellos en ~1 de cada '
+            f'{1/masa:.1f} sorteos. Sirve para <b>descartar</b>, no para apostar: no cambia la jugada.</p>')
+    return (f'<details style="margin-top:12px"><summary>Ver Anti Top-15 (los 15 menos probables)</summary>'
+            f'{nota}{filas}</details>')
 
 def cambio_rd(orden, pf, ph):
     """Regla de cambio (PREREGISTRO_cambio_rd_top5.md, adoptada sin confirmar el 2026-09-23).
