@@ -2528,38 +2528,23 @@ document.addEventListener('click', function(ev){
   var c = b.parentNode, v = c.querySelector('select').value;
   var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
   // Formato para WhatsApp: cabecera en negrita y bloques de 5 separados por una línea en blanco.
-  function lista(a, monto, desde){
+  function lista(a, monto){
     var filas = a.map(function(x, k){
       return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (monto ? '  →  $' + monto : '');
     });
     var bl = [];
-    for(var i = 0; i < filas.length; i += 5) bl.push(filas.slice(i, i + 5).join('
-'));
-    return bl.join('
-
-');
+    for(var i = 0; i < filas.length; i += 5) bl.push(filas.slice(i, i + 5).join('\n'));
+    return bl.join('\n\n');
   }
   var top = c.dataset.a.split('|'), anti = c.dataset.x ? c.dataset.x.split('|') : [];
-  var t = '*' + c.dataset.t.toUpperCase() + '*
-' + '📅 ' + c.dataset.f + '
-';
+  var t = '*' + c.dataset.t.toUpperCase() + '*\n' + '📅 ' + c.dataset.f + '\n';
   if(v === 'anti'){
-    t += '🚫 Anti Top 15 (los menos probables, para descartar)
-
-' + lista(anti, 0);
+    t += '🚫 Anti Top 15 (los menos probables, para descartar)\n\n' + lista(anti, 0);
   } else {
     var n = v === 'ambos' ? 15 : +v, a = top.slice(0, n);
-    t += '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '
-
-' + lista(a, m)
-       + (m ? '
-
-💰 *Total: $' + (m * a.length) + '*' : '');
-    if(v === 'ambos') t += '
-
-🚫 Anti Top 15 (para descartar)
-
-' + lista(anti, 0);
+    t += '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n' + lista(a, m)
+       + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
+    if(v === 'ambos') t += '\n\n🚫 Anti Top 15 (para descartar)\n\n' + lista(anti, 0);
   }
   if(navigator.share) navigator.share({text: t}).catch(function(){});
   else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });
