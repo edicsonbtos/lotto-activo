@@ -3,3 +3,4 @@
 {"cuando": "2026-10-02T19:25:01Z", "evento": "anexo 3 (prueba ciega C3 dic-2025..mar-2026) antes de mirar", "sha256": "cb6a4ec14332101b1773df0dca545ffad08436bf81ffade5ddef9c7d48077080"}
 {"cuando": "2026-10-02T19:56:12Z", "evento": "anexo 4 (regla 8:00 en motor y tripleta) antes de mirar", "sha256": "0aa42614314410190c152a6fd1d7640beb854f19bb781ea9ffb5f5e9be574846"}
 {"cuando": "2026-10-02T20:01:19Z", "evento": "anexo 5 (Top-17/18 a las 8:00) antes de mirar", "sha256": "7c579bc45084c9231430ed13ac458dbd9888092ead00fdf1264d92517c954d80"}
+{"cuando": "2026-10-02T20:05:39Z", "evento": "anexo 6 (8:00 epoca nueva) antes de mirar", "sha256": "acd52a2b4e51ca248f55580b9a01b15068f863bb667bd2407bb05c3cb76b2e8f"}

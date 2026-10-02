@@ -101,3 +101,24 @@ y post-desarrollo 2025-12-18..2026-09-29 (réplica débil, se anota en `registro
 - Retorno por ficha del Top-15/17/18 plano y ponderado (3-3-3-2-2 y 1 al resto).
 - Descriptivo extra: O/E de "salió ayer" a las 8:00 en post-desarrollo, para ver si la regla sigue viva en 2026.
 - Lo mismo para RD 8:30, solo en el desarrollo de RD (descriptivo).
+
+## Anexo 6 (2026-10-02, ANTES de mirar) — ¿la regla de las 8:00 cambió de forma en vez de desaparecer?
+Script: `ocho_nuevo.py`. Época nueva = 2025-11-01..2026-09-29 (después del cambio visto en el anexo 5).
+**Descubrimiento** = 2025-11-01..2026-04-30; **confirmación** = 2026-05-01..2026-09-29 (se mira una vez).
+- **Paso 0, datos:** las 8:00 de `reentreno/historial_la.txt` se comparan con la API oficial
+  (`oficial_multi.csv`, juego 1, desde 2025-07-01). Si no coinciden, se para todo: el cambio sería un error de datos.
+- **Hipótesis** sobre el ganador de LA 8:00 (O/E contra el azar, 1/38 por animal señalado):
+  - H1: evita lo último de anoche (LA 19:00, 18:00 y 17:00 de ayer).
+  - H2: evita RD de anoche (RD 19:30 y 18:30 de ayer).
+  - H3: evita LARD de anoche (LARD 21:00 y 20:00 de ayer, los últimos resultados del operador antes de las 8:00).
+  - H4: repite o evita el animal de las 8:00 de ayer.
+  - H5: prefiere lo de hace 2-3 días (O/E por grupo).
+  - H6: evita el número del día (ya conocido en general; aquí solo a las 8:00).
+  - H7: la regla "se mudó" de hora: O/E de "salió ayer" en cada hora de 9:00 a 19:00 (11 pruebas).
+  - H8: residuo del motor a las 8:00 (salió ayer / hace 2-3 días / 4+ días contra lo que espera el ensamble).
+- **Criterio, por hipótesis:** en descubrimiento O/E < 0,80 o > 1,25. En confirmación, mismo sentido y un IC
+  por bootstrap de jornadas al 99,6 % (Bonferroni ≈ 12 pruebas) que no contiene 1 → **REAL EN LA ÉPOCA NUEVA**.
+  Si solo se cumple en descubrimiento → "pista, sin confirmar"; se vigila en vivo.
+- Siempre se reporta también el Top-15 de las 8:00 contra el resto de horas en la época nueva.
+- Aviso de potencia: ~150 madrugadas por mitad. Un efecto como el de 2025 (O/E 0,5 sobre ~11 animales) se ve;
+  efectos sobre 1-2 animales (O/E 0,7) casi no se pueden ver con estos datos.
