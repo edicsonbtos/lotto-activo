@@ -1,0 +1,33 @@
+O/E de 'salió hace 2-3 días' por hora (1 = azar)
+hora   2024-11..2025-10   2025-11..2026-09
+ 8:00  1.59 (176/111)     1.37 (141/103)
+ 9:00  1.22 (140/115)     1.24 (123/99)
+10:00  1.35 (150/111)     1.17 (112/96)
+11:00  1.15 (123/107)     1.12 (104/93)
+12:00  1.23 (128/104)     1.23 (111/90)
+13:00  1.14 (115/100)     1.27 (111/87)
+14:00  1.08 (105/97)      1.35 (114/84)
+15:00  1.18 (112/95)      1.20 (98/81)
+16:00  1.06 (97/92)       1.24 (98/79)
+17:00  1.36 (121/89)      1.17 (89/76)
+18:00  1.24 (107/86)      1.10 (81/74)
+19:00  0.97 (81/83)       1.06 (76/72)
+
+El animal de las 8:00 de AYER, a las 8:00 de hoy (época nueva): sale 1 veces, esperado 8.1 → O/E 0.12
+Lo mismo en la época vieja (nov-2024..oct-2025): sale 0 veces, esperado 8.7 → O/E 0.00
+
+'El animal de la MISMA HORA de ayer' en cada hora (desde nov-2024): sale / esperado al azar / esperado por el motor
+   8:00  sale   1 | azar  16.8 (O/E 0.06) | motor   9.6 (O/E 0.10) | estaba en el Top-5 del motor 0 veces
+   9:00  sale  15 | azar  17.5 (O/E 0.86) | motor  17.5 (O/E 0.86) | estaba en el Top-5 del motor 38 veces
+  10:00  sale  19 | azar  17.5 (O/E 1.08) | motor  16.1 (O/E 1.18) | estaba en el Top-5 del motor 15 veces
+  11:00  sale  20 | azar  17.5 (O/E 1.14) | motor  15.9 (O/E 1.26) | estaba en el Top-5 del motor 17 veces
+  12:00  sale  17 | azar  17.5 (O/E 0.97) | motor  15.4 (O/E 1.10) | estaba en el Top-5 del motor 14 veces
+  13:00  sale  19 | azar  17.5 (O/E 1.08) | motor  16.0 (O/E 1.19) | estaba en el Top-5 del motor 19 veces
+  14:00  sale  15 | azar  17.5 (O/E 0.86) | motor  15.2 (O/E 0.99) | estaba en el Top-5 del motor 8 veces
+  15:00  sale  11 | azar  17.5 (O/E 0.63) | motor  15.3 (O/E 0.72) | estaba en el Top-5 del motor 5 veces
+  16:00  sale  21 | azar  17.5 (O/E 1.20) | motor  17.0 (O/E 1.23) | estaba en el Top-5 del motor 25 veces
+  17:00  sale  16 | azar  17.5 (O/E 0.91) | motor  16.8 (O/E 0.95) | estaba en el Top-5 del motor 23 veces
+  18:00  sale  24 | azar  17.5 (O/E 1.37) | motor  16.7 (O/E 1.44) | estaba en el Top-5 del motor 19 veces
+  19:00  sale  15 | azar  17.5 (O/E 0.86) | motor  16.9 (O/E 0.89) | estaba en el Top-5 del motor 14 veces
+
+Top-15 de las 8:00 (nov-2024..sep-2026, 638 madrugadas): el de las 8:00 de ayer estaba dentro 31 veces; Top-15 56.7 % → sacándolo 56.7 %

@@ -123,3 +123,19 @@ Datos hasta 2026-09-29, con el ensamble recalculado:
   | Retorno plano por ficha | +21,5 % | +17,6 % | +15,1 % | — |
   | Dic-2025..sep-2026 (acierto) | 50,4 % | 55,4 % | 57,2 % | 61,9 % |
   | Retorno plano por ficha | +0,7 % | −2,2 % | −4,7 % | — |
+
+## Segunda medición de las 8:00 (anexo 6, 2026-10-02): lo que SÍ sigue vivo
+`ocho_nuevo.py` (pre-registrado, una sola corrida) y `ocho_nuevo_detalle.py` (descriptivo).
+- **Datos verificados:** las 8:00 del historial coinciden con la API oficial en 429 de 429 madrugadas. Que la
+  regla de "esquivar lo de ayer" desapareciera no es un error de datos.
+- **Ninguna forma nueva de la regla pasa el criterio pre-registrado** (anoche en LA, RD o LARD; mudanza a otra
+  hora; residuo del motor). Hay pistas con muy pocos casos (LARD de anoche 0,35 → 0,68; número del día 0,48).
+- **Real y estable en las dos épocas (nov-2024..sep-2026):**
+  1. **A las 8:00 casi nunca se repite el animal de las 8:00 de AYER:** 1 vez en 638 madrugadas, cuando el azar
+     da 16,8 (O/E 0,06). Solo pasa a las 8:00: en las demás horas, "misma hora de ayer" da entre 0,63 y 1,37.
+     El motor lo sabe a medias (esperaba 9,6), pero nunca lo puso en el Top-5. Entró en el Top-15 31 veces y
+     sacarlo no cambia el acierto (56,7 % → 56,7 %).
+  2. **A las 8:00 salen más los animales de hace 2-3 días:** O/E 1,59 en la época vieja y 1,37 en la nueva, la
+     hora más alta en las dos. El motor ya lo usa (residuo ~1,0).
+- **El Top-15 de las 8:00 en la época nueva es 49,0 %, contra 50,0 % del resto de horas.** Ya no es una hora
+  especial para apostar más.
