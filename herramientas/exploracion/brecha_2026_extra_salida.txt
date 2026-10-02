@@ -1,0 +1,93 @@
+=== 1. Regla RD en todo el Top-15 frente a producción (Top-5 / Top-15 / retorno Top-5 esc. / Top-15 pond.) ===
+-- 2025 (n=4056)
+   producción (ensamble + cambio Top-5)   Top-5 21.30 %  Top-15 54.41 %  ret5 +29.8 %  ret15 +16.1 %
+   RD fuera de todo el Top-15             Top-5 21.30 %  Top-15 55.08 %  ret5 +29.8 %  ret15 +17.0 %
+   exposición + RD fuera del Top-15       Top-5 21.38 %  Top-15 55.52 %  ret5 +29.6 %  ret15 +17.5 %
+-- 2026-A ene-may (n=1920)
+   producción (ensamble + cambio Top-5)   Top-5 20.10 %  Top-15 49.38 %  ret5 +21.7 %  ret15  +6.7 %
+   RD fuera de todo el Top-15             Top-5 20.10 %  Top-15 50.62 %  ret5 +21.7 %  ret15  +8.4 %
+   exposición + RD fuera del Top-15       Top-5 19.74 %  Top-15 51.88 %  ret5 +20.5 %  ret15  +9.6 %
+-- 2026-B jun-sep (n=1403)
+   producción (ensamble + cambio Top-5)   Top-5 18.60 %  Top-15 49.11 %  ret5 +13.6 %  ret15  +3.6 %
+   RD fuera de todo el Top-15             Top-5 18.60 %  Top-15 50.25 %  ret5 +13.6 %  ret15  +5.1 %
+   exposición + RD fuera del Top-15       Top-5 18.67 %  Top-15 51.25 %  ret5 +12.3 %  ret15  +5.9 %
+-- vivo 14-29 sep (n=192)
+   producción (ensamble + cambio Top-5)   Top-5 15.62 %  Top-15 45.83 %  ret5 -10.2 %  ret15  -9.0 %
+   RD fuera de todo el Top-15             Top-5 15.62 %  Top-15 47.40 %  ret5 -10.2 %  ret15  -6.9 %
+   exposición + RD fuera del Top-15       Top-5 17.71 %  Top-15 51.04 %  ret5  -2.3 %  ret15  +0.5 %
+-- 2026 completo (n=3323)
+   producción (ensamble + cambio Top-5)   Top-5 19.47 %  Top-15 49.26 %  ret5 +18.3 %  ret15  +5.4 %
+   RD fuera de todo el Top-15             Top-5 19.47 %  Top-15 50.47 %  ret5 +18.3 %  ret15  +7.0 %
+   exposición + RD fuera del Top-15       Top-5 19.29 %  Top-15 51.61 %  ret5 +17.0 %  ret15  +8.0 %
+   2026-B jun-sep: RD fuera de todo el Top-15 − producción: Top-15 +1.14 pp [+0.57; +1.78], ret. ponderado +1.49 pp/ficha [+0.74; +2.32]
+   2026-B jun-sep: exposición + RD fuera del Top-15 − producción: Top-15 +2.14 pp [+0.92; +3.35], ret. ponderado +2.32 pp/ficha [+0.00; +4.46]
+   2026 completo: RD fuera de todo el Top-15 − producción: Top-15 +1.20 pp [+0.75; +1.69], ret. ponderado +1.57 pp/ficha [+0.98; +2.20]
+   2026 completo: exposición + RD fuera del Top-15 − producción: Top-15 +2.35 pp [+1.51; +3.19], ret. ponderado +2.63 pp/ficha [+1.10; +4.20]
+
+-- 2026 mes a mes: Top-15 producción → RD fuera del Top-15 (n)
+   2025-12:  51.4 →  50.7 %  (-0.7)  n=144
+   2026-01:  52.2 →  53.3 %  (+1.1)  n=360
+   2026-02:  47.3 →  48.8 %  (+1.5)  n=336
+   2026-03:  48.4 →  49.7 %  (+1.3)  n=372
+   2026-04:  48.2 →  48.5 %  (+0.3)  n=336
+   2026-05:  49.7 →  52.4 %  (+2.7)  n=372
+   2026-06:  46.9 →  47.9 %  (+1.0)  n=311
+   2026-07:  50.5 →  51.9 %  (+1.3)  n=372
+   2026-08:  51.6 →  52.7 %  (+1.1)  n=372
+   2026-09:  46.8 →  48.0 %  (+1.1)  n=348
+
+=== 2. Exposición (congelada en dev-A, nunca vio 2026): mbits sobre el ensamble ===
+   2025             Δmbits  +5.9 [+3.5; +8.3]  n=4056
+   2026-A ene-may   Δmbits  +5.4 [+1.5; +9.0]  n=1920
+   2026-B jun-sep   Δmbits  +3.9 [-0.1; +7.8]  n=1403
+   vivo 14-29 sep   Δmbits +14.8 [+8.1; +21.1]  n=192
+   2026 completo    Δmbits  +4.8 [+1.9; +7.5]  n=3323
+
+=== 3. LA esquiva RD (h-1):30: O/E contra el ensamble por hora ===
+   2025: total 0.54 | 8:00 1.64  9:00 0.32  10:00 0.53  11:00 0.33  12:00 0.54  13:00 0.74  14:00 0.33  15:00 0.23  16:00 0.11  17:00 0.23  18:00 0.67  19:00 0.90
+   2026: total 0.35 | 8:00 0.97  9:00 0.26  10:00 0.40  11:00 0.00  12:00 0.26  13:00 0.00  14:00 0.27  15:00 0.14  16:00 0.84  17:00 0.29  18:00 0.29  19:00 0.56
+
+=== 4. Las 8:00 mes a mes (Top-15 de producción; a las 8:00 no hay regla RD del mismo día) ===
+   2025-01: 24/30 =  80.0 %
+   2025-02: 16/28 =  57.1 %
+   2025-03: 17/31 =  54.8 %
+   2025-04: 20/30 =  66.7 %
+   2025-05: 19/30 =  63.3 %
+   2025-06: 19/30 =  63.3 %
+   2025-07: 20/30 =  66.7 %
+   2025-08: 22/31 =  71.0 %
+   2025-09: 19/30 =  63.3 %
+   2025-10: 21/31 =  67.7 %
+   2025-11: 12/30 =  40.0 %
+   2025-12:  8/19 =  42.1 %
+   2026-01: 16/30 =  53.3 %
+   2026-02:  7/28 =  25.0 %
+   2026-03: 14/31 =  45.2 %
+   2026-04: 14/28 =  50.0 %
+   2026-05: 16/31 =  51.6 %
+   2026-06: 14/26 =  53.8 %
+   2026-07: 18/31 =  58.1 %
+   2026-08: 20/31 =  64.5 %
+   2026-09: 15/29 =  51.7 %
+
+   Ganadores de las 8:00 en vivo (puesto; días desde su última salida; ¿salió ayer? y a qué hora)
+   2026-09-14  34  puesto 20  hueco 1 días  ayer: sí a las 14:00
+   2026-09-15  13  puesto 30  hueco 5 días  ayer: no
+   2026-09-16  30  puesto 24  hueco 4 días  ayer: no
+   2026-09-17   7  puesto  4  hueco 2 días  ayer: no
+   2026-09-18  13  puesto 23  hueco 3 días  ayer: no
+   2026-09-19  23  puesto 11  hueco 1 días  ayer: sí a las 13:00
+   2026-09-20  35  puesto 31  hueco 6 días  ayer: no
+   2026-09-21  30  puesto  2  hueco 2 días  ayer: no
+   2026-09-22  18  puesto 11  hueco 1 días  ayer: sí a las 16:00
+   2026-09-23  16  puesto  8  hueco 2 días  ayer: no
+   2026-09-24  28  puesto 12  hueco 1 días  ayer: sí a las 11:00
+   2026-09-25  17  puesto  6  hueco 2 días  ayer: no
+   2026-09-26   7  puesto  1  hueco 2 días  ayer: no
+   2026-09-27  25  puesto  6  hueco 2 días  ayer: no
+   2026-09-28  23  puesto 10  hueco 1 días  ayer: sí a las 10:00
+   2026-09-29   7  puesto 12  hueco 3 días  ayer: no
+
+=== 5. ¿Van por temporadas? Top-15 según la tasa de la MISMA hora en los 30 días anteriores (2025-2026) ===
+   8:00            tras 30 días buenos (≥ 55 %):  60.5 % (n=380)   tras 30 días flojos:  51.5 % (n=235)   diferencia +9.0 pp
+   resto de horas  tras 30 días buenos (≥ 55 %):  52.6 % (n=2414)   tras 30 días flojos:  51.1 % (n=4350)   diferencia +1.4 pp

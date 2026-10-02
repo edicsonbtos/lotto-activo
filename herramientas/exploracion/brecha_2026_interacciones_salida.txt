@@ -1,0 +1,17 @@
+Barrido: 268 interacciones; 2026-A n=1920, 2026-B n=1403; percentil 95 del máximo |z| bajo el nulo = 4.12
+Las 15 interacciones con mayor |z| en 2026-A:
+  R RD (h-1):30 × 12-15                                        O/E 0.18  z -3.43  
+  G hueco 4-6 sorteos × 8:00                                   O/E 2.01  z +3.22  
+  H salió hoy 1 vez (12-15) × 12-15                            O/E 1.71  z +3.01  
+  G hueco 18-23 sorteos × 16-19                                O/E 0.73  z -2.87  
+  G hueco 4-6 sorteos × 16-19                                  O/E 1.58  z +2.85  
+  R RD (h-1):30 × 9-11                                         O/E 0.23  z -2.83  
+  D hueco 0 días × 12-15                                       O/E 1.65  z +2.81  
+  G hueco 3 sorteo(s) × 12-15                                  O/E 2.44  z +2.77  
+  H salió hoy 1 vez (16-19) × 16-19                            O/E 1.29  z +2.76  
+  Y ayer 2+ veces × 9-11                                       O/E 1.81  z +2.74  
+  D hueco 0 días × 16-19                                       O/E 1.27  z +2.59  
+  F día del mes × 16-19                                        O/E 0.40  z -2.56  
+  Y misma hora en los últimos 7 días × 12-15                   O/E 0.79  z -2.47  
+  R RD (h-1):30 ±1 × 8:00                                      O/E 1.84  z +2.47  
+  R RD (h-1):30 × 16-19                                        O/E 0.43  z -2.35  
