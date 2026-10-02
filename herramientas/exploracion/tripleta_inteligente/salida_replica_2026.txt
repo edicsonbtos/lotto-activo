@@ -1,0 +1,9 @@
+ventanas 2100: 2026-04-01 .. 2026-09-29 (última termina 2026-09-29); azar por tripleta 1.98 %
+  A                4200 tripletas, 184 aciertos = 4.38 %  EV +97.1 % [+44; +155]
+  C3               2100 tripletas, 116 aciertos = 5.52 %  EV +148.6 % [+60; +247]
+  A_lista_negra    4200 tripletas, 167 aciertos = 3.98 %  EV +78.9 % [+28; +132]
+  C3_lista_negra   2100 tripletas, 109 aciertos = 5.19 %  EV +133.6 % [+48; +228]
+  C3 - A: +51.4 pp [-3; +106]
+  A_lista_negra - A: -18.2 pp [-38; +0]
+  C3_lista_negra - A: +36.4 pp [-18; +95]
+Veredicto (anexo 1): SE ADOPTA C3 + lista negra

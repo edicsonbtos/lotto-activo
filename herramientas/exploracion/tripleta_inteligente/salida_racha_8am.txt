@@ -1,0 +1,37 @@
+R1 — ganadores de las 8:00 desde 2026-09-14 (datos hasta 2026-09-29)
+  2026-09-14  34 Venado    hueco  1 d  salió ayer sí  puesto 20
+  2026-09-15  13 Mono      hueco  5 d  salió ayer no  puesto 30
+  2026-09-16  30 Caimán    hueco  4 d  salió ayer no  puesto 24
+  2026-09-17   7 Perico    hueco  2 d  salió ayer no  puesto  4  ← Top-15  ← Top-5
+  2026-09-18  13 Mono      hueco  3 d  salió ayer no  puesto 23
+  2026-09-19  23 Cebra     hueco  1 d  salió ayer sí  puesto 11  ← Top-15
+  2026-09-20  35 Jirafa    hueco  6 d  salió ayer no  puesto 31
+  2026-09-21  30 Caimán    hueco  2 d  salió ayer no  puesto  2  ← Top-15  ← Top-5
+  2026-09-22  18 Burro     hueco  1 d  salió ayer sí  puesto 11  ← Top-15
+  2026-09-23  16 Oso       hueco  2 d  salió ayer no  puesto  8  ← Top-15
+  2026-09-24  28 Zamuro    hueco  1 d  salió ayer sí  puesto 12  ← Top-15
+  2026-09-25  17 Pavo      hueco  2 d  salió ayer no  puesto  6  ← Top-15
+  2026-09-26   7 Perico    hueco  2 d  salió ayer no  puesto  1  ← Top-15  ← Top-5
+  2026-09-27  25 Gallina   hueco  2 d  salió ayer no  puesto  6  ← Top-15
+  2026-09-28  23 Cebra     hueco  1 d  salió ayer sí  puesto 10  ← Top-15
+  2026-09-29   7 Perico    hueco  3 d  salió ayer no  puesto 12  ← Top-15
+  hueco 1-3 d: 13/16;  Top-15: 11/16;  Top-5: 3/16;  salió ayer: 5/16
+  el ensamble le daba a los animales con hueco 1-3 d: 76 % de media (cuántos animales había con hueco 1-3 d: ~25 de 38)
+
+R2 — rachas de madrugadas seguidas con hueco 1-3 d, en desarrollo (8:00 desde nov-2024, filas < 9357)
+  madrugadas: 372; tasa de hueco 1-3 d: 65.3 %
+  rachas de ≥  5: 18 observadas, ~15.3 esperadas por azar con esa tasa; prob. de una racha de 5 = 11.89 %
+  rachas de ≥  8: 6 observadas, ~4.2 esperadas por azar con esa tasa; prob. de una racha de 8 = 3.32 %
+  rachas de ≥ 11: 1 observadas, ~1.2 esperadas por azar con esa tasa; prob. de una racha de 11 = 0.92 %
+  racha más larga en desarrollo: 11
+
+R3 — ¿la racha predice la siguiente? (desarrollo)
+  tras 1 seguidas con hueco 1-3 d: la siguiente también 64.5 % (n=242) vs general 65.3 %
+  tras 3 seguidas con hueco 1-3 d: la siguiente también 66.3 % (n=95) vs general 65.3 %
+  tras 5 seguidas con hueco 1-3 d: la siguiente también 58.1 % (n=43) vs general 65.3 %
+
+R4 — la racha de Top-15 a las 8:00 (desarrollo, ensamble recalculado)
+  Top-15 a las 8:00 en desarrollo: 60.8 %; rachas de ≥ 9 seguidas: 2 (prob. de 9 seguidas 1.1 %); racha más larga 16
+  tras 1 aciertos seguidos a las 8:00, el siguiente acierta 62.2 % (n=225) vs 60.8 %
+  tras 3 aciertos seguidos a las 8:00, el siguiente acierta 60.5 % (n=86) vs 60.8 %
+  tras 5 aciertos seguidos a las 8:00, el siguiente acierta 66.7 % (n=36) vs 60.8 %

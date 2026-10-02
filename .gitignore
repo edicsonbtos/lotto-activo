@@ -19,3 +19,4 @@ herramientas/exploracion/*.npz
 rdint_historial.txt
 rdint_predicciones.json
 herramientas/rdint/*.npz
+herramientas/exploracion/enjambre_2026-09-30/reentreno/cache/
