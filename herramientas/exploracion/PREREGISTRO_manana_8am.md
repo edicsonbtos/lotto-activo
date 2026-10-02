@@ -37,3 +37,10 @@ Consecuencia para H1: con la tasa real de las 8:00 (60,5 %), acertar ≥ 22/30 p
 veces, no el 1,9 %. Que H1 "pase" ya no indicaría que las 8:00 rinden más de lo de siempre. Para eso harían
 falta ≥ 24/30 (P = 2,0 %) o ≥ 25/30 (P = 0,7 %). Se deja el criterio original tal como se escribió y se
 anota esta lectura. El script ya está corregido (`hora[g] == 0`). Fuente: `herramientas/exploracion/top15_70/`.
+
+## Nota (2026-10-02, añadida después; los criterios de arriba NO se cambian)
+La ventaja de las 8:00 se probó a ciegas en el tramo de prueba 2026 (260 madrugadas, `PREREGISTRO_hora_8am_ciega.md`):
+Top-15 49,2 % [43,1; 55,4] contra 49,4 % del resto → **FALSADA**. La tasa de referencia de las 8:00 en 2026 es la
+de cualquier hora (~49 %). Con esa tasa, ≥ 22/30 en H1 saldría por azar solo el 0,7 % de las veces: si H1 pasa, sí
+sería un indicio serio de que las 8:00 cambiaron (y aún pediría la réplica de otros 30).
+La racha en vivo reconstruida (11/16; 9 seguidas del 21 al 29-sep) está en `INFORME_hora_8am_y_caida.md`.

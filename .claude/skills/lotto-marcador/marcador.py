@@ -83,6 +83,9 @@ def validar(regs):
         ob = sum(k <= t for k in pue) / n
         print(f"  Calibración Top-{t:<2}: el modelo esperaba {ex*100:4.1f} % · salió {ob*100:4.1f} %"
               f" · equilibrio {t/30*100:4.1f} %")
+    # El motor promete de más en 2026 (herramientas/exploracion/INFORME_hora_8am_y_caida.md): compara con esto.
+    print("  Lo realista (prueba ciega 2026, 3.122 sorteos): Top-3 12,2 % · Top-5 19,4 % · Top-15 49,4 % · +90 mbits."
+          " El motor esperaba ahí Top-15 52,5 % y +117 mbits.")
 
 
 def main():

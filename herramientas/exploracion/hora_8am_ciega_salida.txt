@@ -1,0 +1,156 @@
+Historial congelado 12511 + corrección de fechas (406); API oficial LA 5232; solapan 5071, difieren 0
+Historial extendido: 12671 sorteos, hasta ('2026-09-29', 11)
+Tramos: desarrollo 2024-03-07..2025-12-19 (7357), prueba 2025-12-19..2026-09-13 (3122), vivo reconstruido 2026-09-14..2026-09-29 (192)
+Comprobación: desarrollo Top-15 53.13 % (publicado 53,07); prueba Top-3 12.17 % (12,27), mbits 90.0 (90)
+
+--- Top-15 por trimestre: observado / esperado por el motor; mbits observado / esperado ---
+  2024-T1  dev    n= 256  Top-15  54.7 /  54.7   mbits  +108 /  +129   8:00 n=0
+  2024-T2  dev    n=1001  Top-15  50.9 /  54.2   mbits   +86 /  +125   8:00 n=0
+  2024-T3  dev    n=1001  Top-15  51.1 /  51.9   mbits   +91 /   +95   8:00 n=0
+  2024-T4  dev    n=1034  Top-15  51.5 /  52.1   mbits  +113 /  +106   8:00 n=33
+  2025-T1  dev    n=1068  Top-15  50.7 /  52.0   mbits   +73 /  +103   8:00 n=89
+  2025-T2  dev    n=1080  Top-15  55.1 /  52.6   mbits  +130 /  +101   8:00 n=90
+  2025-T3  dev    n=1092  Top-15  57.2 /  54.9   mbits  +196 /  +142   8:00 n=91
+  2025-T4  mixto  n= 960  Top-15  54.1 /  56.6   mbits  +157 /  +178   8:00 n=80
+  2026-T1  prueba n=1068  Top-15  49.3 /  54.7   mbits   +78 /  +147   8:00 n=89
+  2026-T2  prueba n=1019  Top-15  48.4 /  51.6   mbits   +79 /  +100   8:00 n=85
+  2026-T3  mixto  n=1092  Top-15  49.7 /  50.8   mbits  +111 /   +95   8:00 n=91
+
+--- Desarrollo (ya mirado): por hora (Top-15 observado / esperado por el motor, z; Top-5; mbits obs / esperado) ---
+   8:00  n= 372  Top-15  60.8 % /  57.7 %  z=+1.21   Top-5  23.9 /  23.8   mbits   +174 /  +167
+   9:00  n= 635  Top-15  53.1 % /  50.5 %  z=+1.31   Top-5  20.0 /  19.5   mbits    +99 /   +66
+  10:00  n= 635  Top-15  54.0 % /  50.8 %  z=+1.61   Top-5  20.3 /  19.7   mbits   +103 /   +80
+  11:00  n= 635  Top-15  52.4 % /  51.5 %  z=+0.50   Top-5  18.3 /  20.0   mbits    +95 /   +93
+  12:00  n= 635  Top-15  52.1 % /  51.6 %  z=+0.28   Top-5  18.6 /  19.7   mbits   +125 /  +104
+  13:00  n= 635  Top-15  50.7 % /  52.1 %  z=-0.71   Top-5  19.2 /  19.9   mbits    +93 /  +116
+  14:00  n= 635  Top-15  49.9 % /  53.2 %  z=-1.68   Top-5  17.5 /  20.3   mbits   +134 /  +147
+  15:00  n= 635  Top-15  51.7 % /  54.5 %  z=-1.43   Top-5  20.5 /  20.9   mbits   +189 /  +168
+  16:00  n= 635  Top-15  53.5 % /  57.0 %  z=-1.77   Top-5  20.9 /  22.9   mbits   +167 /  +179
+  17:00  n= 635  Top-15  56.1 % /  57.5 %  z=-0.74   Top-5  22.5 /  23.4   mbits   +145 /  +162
+  18:00  n= 635  Top-15  55.6 % /  53.3 %  z=+1.13   Top-5  20.0 /  22.1   mbits    +57 /   +88
+  19:00  n= 635  Top-15  50.9 % /  53.4 %  z=-1.30   Top-5  23.1 /  22.1   mbits    +91 /   +93
+  TODAS  n=7357  Top-15  53.1 % /  53.4 %            Top-5  20.3 /  21.1   mbits   +121 /  +120
+
+--- dev-A (2.000..mitad): por hora (Top-15 observado / esperado por el motor, z; Top-5; mbits obs / esperado) ---
+   8:00  n=  66  Top-15  60.6 % /  50.9 %  z=+1.58   Top-5  13.6 /  19.6   mbits   +186 /   +67
+   9:00  n= 329  Top-15  45.9 % /  49.4 %  z=-1.26   Top-5  16.4 /  18.9   mbits    +24 /   +50
+  10:00  n= 328  Top-15  52.7 % /  49.4 %  z=+1.20   Top-5  19.2 /  18.8   mbits    +92 /   +62
+  11:00  n= 328  Top-15  53.4 % /  50.2 %  z=+1.16   Top-5  18.3 /  19.1   mbits    +95 /   +79
+  12:00  n= 328  Top-15  53.0 % /  51.5 %  z=+0.57   Top-5  19.5 /  19.6   mbits   +135 /   +99
+  13:00  n= 328  Top-15  48.2 % /  51.5 %  z=-1.21   Top-5  17.1 /  19.6   mbits    +88 /  +108
+  14:00  n= 328  Top-15  50.0 % /  53.1 %  z=-1.14   Top-5  18.0 /  20.4   mbits   +108 /  +139
+  15:00  n= 328  Top-15  49.1 % /  54.3 %  z=-1.89   Top-5  18.9 /  20.8   mbits   +160 /  +164
+  16:00  n= 328  Top-15  52.1 % /  56.9 %  z=-1.75   Top-5  20.1 /  22.9   mbits   +114 /  +173
+  17:00  n= 329  Top-15  58.4 % /  57.4 %  z=+0.34   Top-5  22.8 /  23.5   mbits   +123 /  +155
+  18:00  n= 329  Top-15  51.7 % /  53.8 %  z=-0.76   Top-5  19.5 /  22.4   mbits    +26 /   +92
+  19:00  n= 329  Top-15  49.5 % /  54.2 %  z=-1.69   Top-5  21.6 /  22.6   mbits    +67 /  +102
+  TODAS  n=3678  Top-15  51.4 % /  52.8 %            Top-5  19.1 /  20.8   mbits    +95 /  +110
+
+--- dev-B (mitad..9357): por hora (Top-15 observado / esperado por el motor, z; Top-5; mbits obs / esperado) ---
+   8:00  n= 306  Top-15  60.8 % /  59.1 %  z=+0.59   Top-5  26.1 /  24.7   mbits   +171 /  +189
+   9:00  n= 306  Top-15  60.8 % /  51.7 %  z=+3.20   Top-5  23.9 /  20.1   mbits   +180 /   +83
+  10:00  n= 307  Top-15  55.4 % /  52.3 %  z=+1.07   Top-5  21.5 /  20.6   mbits   +115 /   +99
+  11:00  n= 307  Top-15  51.5 % /  52.8 %  z=-0.48   Top-5  18.2 /  20.9   mbits    +95 /  +107
+  12:00  n= 307  Top-15  51.1 % /  51.7 %  z=-0.19   Top-5  17.6 /  19.7   mbits   +114 /  +109
+  13:00  n= 307  Top-15  53.4 % /  52.8 %  z=+0.23   Top-5  21.5 /  20.2   mbits    +99 /  +126
+  14:00  n= 307  Top-15  49.8 % /  53.3 %  z=-1.23   Top-5  16.9 /  20.2   mbits   +162 /  +154
+  15:00  n= 307  Top-15  54.4 % /  54.7 %  z=-0.09   Top-5  22.1 /  20.9   mbits   +221 /  +172
+  16:00  n= 307  Top-15  55.0 % /  57.1 %  z=-0.73   Top-5  21.8 /  22.8   mbits   +224 /  +186
+  17:00  n= 306  Top-15  53.6 % /  57.6 %  z=-1.41   Top-5  22.2 /  23.2   mbits   +169 /  +170
+  18:00  n= 306  Top-15  59.8 % /  52.9 %  z=+2.42   Top-5  20.6 /  21.7   mbits    +89 /   +84
+  19:00  n= 306  Top-15  52.3 % /  52.6 %  z=-0.12   Top-5  24.8 /  21.5   mbits   +116 /   +84
+  TODAS  n=3679  Top-15  54.8 % /  54.1 %            Top-5  21.4 /  21.4   mbits   +146 /  +130
+
+--- PRUEBA 2025-12-19..2026-09-13 (ciega por hora): por hora (Top-15 observado / esperado por el motor, z; Top-5; mbits obs / esperado) ---
+   8:00  n= 260  Top-15  49.2 % /  53.6 %  z=-1.41   Top-5  22.3 /  22.9   mbits    +39 /   +93
+   9:00  n= 260  Top-15  54.6 % /  52.6 %  z=+0.65   Top-5  20.4 /  20.3   mbits   +120 /   +90
+  10:00  n= 260  Top-15  50.4 % /  52.0 %  z=-0.52   Top-5  20.8 /  20.1   mbits    +56 /   +94
+  11:00  n= 260  Top-15  51.5 % /  52.1 %  z=-0.18   Top-5  18.8 /  20.0   mbits    +74 /  +104
+  12:00  n= 260  Top-15  49.6 % /  50.8 %  z=-0.39   Top-5  20.0 /  19.1   mbits    +41 /   +93
+  13:00  n= 260  Top-15  43.1 % /  51.2 %  z=-2.62   Top-5  18.5 /  19.3   mbits     +9 /   +98
+  14:00  n= 260  Top-15  55.8 % /  52.8 %  z=+0.94   Top-5  18.5 /  19.7   mbits   +210 /  +159
+  15:00  n= 260  Top-15  45.0 % /  53.9 %  z=-2.89   Top-5  15.0 /  20.0   mbits   +161 /  +188
+  16:00  n= 260  Top-15  50.4 % /  55.4 %  z=-1.63   Top-5  20.0 /  21.0   mbits   +213 /  +208
+  17:00  n= 261  Top-15  50.6 % /  54.4 %  z=-1.23   Top-5  19.5 /  20.8   mbits   +113 /  +141
+  18:00  n= 261  Top-15  42.5 % /  50.3 %  z=-2.52   Top-5  17.6 /  19.5   mbits     -8 /   +63
+  19:00  n= 260  Top-15  50.0 % /  50.9 %  z=-0.28   Top-5  21.2 /  20.0   mbits    +53 /   +71
+  TODAS  n=3122  Top-15  49.4 % /  52.5 %            Top-5  19.4 /  20.2   mbits    +90 /  +117
+
+H8: Top-15 8:00 49.2 % [IC95 43.1; 55.4] (n=260) vs resto 49.4 % (n=2862); dif -0.2 pp [IC95 -6.7; +6.2], p=0.5290  => FALSADA
+H8-cal: a las 8:00 el motor esperaba 53.6 % y salió 49.2 % (z=-1.41); resto esperaba 52.4 % y salió 49.4 % (z=-3.21)  => el motor YA lo sabe (calibrado)
+H-día: pendiente Top-15 por sorteo del día -0.37 pp/sorteo [IC95 -0.92; +0.19], p=0.8997  => FALSADA
+       (esperado por el motor: pendiente -0.02 pp/sorteo; mbits 8:00 93, 19:00 71)
+
+--- Vivo reconstruido 2026-09-14..2026-09-29 (originó la idea; no es evidencia): por hora (Top-15 observado / esperado por el motor, z; Top-5; mbits obs / esperado) ---
+   8:00  n=  16  Top-15  68.8 % /  54.5 %  z=+1.15   Top-5  18.8 /  23.3   mbits   +176 /  +101
+   9:00  n=  16  Top-15  56.2 % /  51.6 %  z=+0.38   Top-5  12.5 /  19.5   mbits    +83 /   +76
+  10:00  n=  16  Top-15  37.5 % /  51.5 %  z=-1.12   Top-5   0.0 /  19.5   mbits    +33 /   +82
+  11:00  n=  16  Top-15  31.2 % /  52.8 %  z=-1.73   Top-5  12.5 /  19.9   mbits    -16 /  +102
+  12:00  n=  16  Top-15  50.0 % /  49.9 %  z=+0.01   Top-5  31.2 /  18.9   mbits    +78 /   +69
+  13:00  n=  16  Top-15  31.2 % /  50.7 %  z=-1.55   Top-5  12.5 /  18.9   mbits   +108 /   +85
+  14:00  n=  16  Top-15  37.5 % /  52.3 %  z=-1.19   Top-5  12.5 /  19.3   mbits    +63 /  +145
+  15:00  n=  16  Top-15  50.0 % /  53.0 %  z=-0.24   Top-5  31.2 /  19.3   mbits   +271 /  +167
+  16:00  n=  16  Top-15  50.0 % /  54.5 %  z=-0.36   Top-5   6.2 /  20.2   mbits   +276 /  +196
+  17:00  n=  16  Top-15  50.0 % /  54.0 %  z=-0.32   Top-5  25.0 /  20.3   mbits   +184 /  +139
+  18:00  n=  16  Top-15  37.5 % /  48.0 %  z=-0.84   Top-5   6.2 /  18.1   mbits    -43 /   +35
+  19:00  n=  16  Top-15  50.0 % /  50.2 %  z=-0.02   Top-5  12.5 /  19.7   mbits    +23 /   +62
+  TODAS  n= 192  Top-15  45.8 % /  51.9 %            Top-5  15.1 /  19.7   mbits   +103 /  +105
+
+--- Vivo reconstruido, sorteo de las 8:00 día por día (puesto del ganador; Top-15 que esperaba el motor) ---
+  2026-09-14  ganador 34  puesto 20  fuera   esperaba 56.2 %
+  2026-09-15  ganador 13  puesto 30  fuera   esperaba 55.3 %
+  2026-09-16  ganador 30  puesto 24  fuera   esperaba 53.6 %
+  2026-09-17  ganador  7  puesto  4  Top-15  esperaba 55.5 %
+  2026-09-18  ganador 13  puesto 23  fuera   esperaba 53.6 %
+  2026-09-19  ganador 23  puesto 11  Top-15  esperaba 52.1 %
+  2026-09-20  ganador 35  puesto 31  fuera   esperaba 54.0 %
+  2026-09-21  ganador 30  puesto  2  Top-15  esperaba 53.8 %
+  2026-09-22  ganador 18  puesto 11  Top-15  esperaba 55.5 %
+  2026-09-23  ganador 16  puesto  8  Top-15  esperaba 54.9 %
+  2026-09-24  ganador 28  puesto 12  Top-15  esperaba 55.9 %
+  2026-09-25  ganador 17  puesto  6  Top-15  esperaba 52.5 %
+  2026-09-26  ganador  7  puesto  1  Top-15  esperaba 53.9 %
+  2026-09-27  ganador 25  puesto  6  Top-15  esperaba 54.4 %
+  2026-09-28  ganador 23  puesto 10  Top-15  esperaba 55.9 %
+  2026-09-29  ganador  7  puesto 12  Top-15  esperaba 54.6 %
+  8:00 en vivo: 11/16 en el Top-15; resto de horas 43.8 %
+
+--- Calibración por bandas de puesto: % de ganadores observado / esperado por el motor (azar) ---
+  desarrollo 1-5 20.3/21.1 (13.2)   6-15 32.9/32.4 (26.3)   16-25 26.2/25.8 (26.3)   26-38 20.7/20.7 (34.2)
+  prueba     1-5 19.4/20.2 (13.2)   6-15 30.0/32.3 (26.3)   16-25 28.1/26.6 (26.3)   26-38 22.5/20.9 (34.2)
+  vivo       1-5 15.1/19.7 (13.2)   6-15 30.7/32.2 (26.3)   16-25 36.5/26.7 (26.3)   26-38 17.7/21.4 (34.2)
+
+--- Por hora en prueba: ganadores en el fondo (puestos 26-38) y en la cabeza (1-15); azar 34,2 % y 39,5 % ---
+   8:00  fondo 26.2 % (esperaba 23.3)   cabeza 49.2 % (esperaba 53.6)
+   9:00  fondo 18.8 % (esperaba 22.2)   cabeza 54.6 % (esperaba 52.6)
+  10:00  fondo 25.4 % (esperaba 22.3)   cabeza 50.4 % (esperaba 52.0)
+  11:00  fondo 20.4 % (esperaba 21.7)   cabeza 51.5 % (esperaba 52.1)
+  12:00  fondo 26.9 % (esperaba 22.2)   cabeza 49.6 % (esperaba 50.8)
+  13:00  fondo 24.2 % (esperaba 21.6)   cabeza 43.1 % (esperaba 51.2)
+  14:00  fondo 12.7 % (esperaba 18.7)   cabeza 55.8 % (esperaba 52.8)
+  15:00  fondo 18.5 % (esperaba 17.1)   cabeza 45.0 % (esperaba 53.9)
+  16:00  fondo 18.5 % (esperaba 15.5)   cabeza 50.4 % (esperaba 55.4)
+  17:00  fondo 18.8 % (esperaba 17.7)   cabeza 50.6 % (esperaba 54.4)
+  18:00  fondo 32.2 % (esperaba 24.1)   cabeza 42.5 % (esperaba 50.3)
+  19:00  fondo 27.7 % (esperaba 23.8)   cabeza 50.0 % (esperaba 50.9)
+
+--- Temperatura (motor más o menos seguro): b < 1 = el motor estaba sobreconfiado ---
+  desarrollo b óptimo a posteriori 1.00; b móvil (sin futuro) medio 1.02, ganancia -0.7 mbits [IC95 -2.2; +0.8]
+  prueba     b óptimo a posteriori 0.85; b móvil (sin futuro) medio 0.86, ganancia +0.3 mbits [IC95 -2.9; +3.5]
+  vivo       b óptimo a posteriori 1.00; b móvil (sin futuro) medio 1.04, ganancia -1.3 mbits [IC95 -4.8; +1.8]
+
+--- Estructura del operador por trimestre (resultados crudos): O/E de repetir HOY y de sacar uno de AYER ---
+    (azar = 1,00; el motor gana cuando 'repite hoy' es bajo y 'sale de ayer' se aparta de 1)
+  2023-T3  n= 297  repite hoy 0.58 (22/38)   sale de ayer 1.02 (78/77)
+  2023-T4  n= 980  repite hoy 0.49 (61/125)   sale de ayer 0.96 (249/260)
+  2024-T1  n= 979  repite hoy 0.45 (57/126)   sale de ayer 1.04 (272/261)
+  2024-T2  n=1001  repite hoy 0.43 (56/129)   sale de ayer 1.04 (284/274)
+  2024-T3  n=1001  repite hoy 0.42 (55/130)   sale de ayer 1.04 (282/271)
+  2024-T4  n=1034  repite hoy 0.43 (60/140)   sale de ayer 1.15 (330/287)
+  2025-T1  n=1068  repite hoy 0.60 (89/149)   sale de ayer 1.08 (330/305)
+  2025-T2  n=1080  repite hoy 0.37 (57/153)   sale de ayer 1.09 (348/320)
+  2025-T3  n=1092  repite hoy 0.25 (40/157)   sale de ayer 1.10 (361/329)
+  2025-T4  n= 960  repite hoy 0.31 (42/138)   sale de ayer 1.09 (308/282)
+  2026-T1  n=1068  repite hoy 0.51 (77/150)   sale de ayer 1.08 (333/309)
+  2026-T2  n=1019  repite hoy 0.49 (70/142)   sale de ayer 1.05 (306/293)
+  2026-T3  n=1092  repite hoy 0.38 (59/155)   sale de ayer 1.00 (327/327)
