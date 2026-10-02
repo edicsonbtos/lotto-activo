@@ -1,5 +1,13 @@
 # Tripleta inteligente y la racha de las 8:00
 
+> **ACTUALIZACIÓN 2026-10-02 — la prueba ciega NO PASA (anexo 3).** En el único tramo que nunca se miró para
+> esta tripleta (2025-12-18..2026-03-31, 102 jornadas), la 1-2-3 sola (C3) dio **+26 % por ficha [−52; +124]**
+> (2,80 % de aciertos; al azar, 1,89 %), y quedó **por debajo** de las 2 tripletas de la web (A: +46 % [−11; +112]).
+> **No se cambia la web**, y queda retirado el consejo de "jugar solo la primera": lo que se sostiene es la
+> jugada actual (A). La tripleta tiene ventaja en los tres tramos medidos (+80/+97/+46 % para A), pero su
+> tamaño es incierto y en el tramo ciego el IC cruza 0. Tamaño prudente: 0,3 % de la banca por tripleta como máximo.
+
+
 Fecha: 2026-10-02. Reglas escritas antes de medir: `PREREGISTRO.md` (más anexos 1 y 2), con sus huellas en
 `registro.jsonl`. No se tocó producción.
 
@@ -48,7 +56,7 @@ Datos hasta 2026-09-29, con el ensamble recalculado:
   probabilidad.
 
 ## Cómo usar mejor el dinero con esto
-1. **Juega cada día solo la primera tripleta que muestra la web** (la 1-2-3). No hace falta cambiar nada.
+1. ~~Juega cada día solo la primera tripleta~~ **RETIRADO por la prueba ciega:** sigue con las 2 tripletas de la web.
 2. **Tamaño:** ~0,3-0,5 % de la banca por tripleta. Sale de 1/4 de Kelly con la tasa más prudente (3,6 %, el
    límite bajo de 2026). Con una banca de 1.000 $, unos 3-5 $ por tripleta.
 3. **Una al día, no varias seguidas.** Las tripletas de horas vecinas comparten sorteos y animales: si una
@@ -62,3 +70,15 @@ Datos hasta 2026-09-29, con el ensamble recalculado:
 `medir.py` → `resultados.json`, `salida.txt` (2025). `replica_2026.py` → `replica_2026.json`,
 `salida_replica_2026.txt` (corre una sola vez; anotada en `herramientas/registro_final.jsonl`).
 `racha_8am.py` → `salida_racha_8am.txt`.
+
+## Por qué las 8:00 aciertan más (y dónde se repite)
+`porque_8am.py` → `salida_porque_8am.txt` (desarrollo, descriptivo).
+- **A las 8:00 el operador trata lo de AYER como "reciente".** Los animales que salieron ayer salen a las 8:00 la
+  **mitad** de lo normal (O/E 0,50), y los de hace 2-3 días **un 54 % más** (O/E 1,54). En las demás horas, lo de
+  ayer sale normal o más (O/E 1,0-1,6). En la primera hora el reparto queda más "cerrado" y el motor lo aprovecha:
+  le da a su Top-15 un 57 % de masa, la más alta del día.
+- **Se repite en el primer sorteo de RD Internacional:** las 8:30 son la mejor hora de RD (Top-15 56,8 %,
+  contra 45-52 % en casi todas las demás). Es el mismo fenómeno de "primer sorteo del día".
+- Otra hora alta en los dos juegos: **17:00 en LA (56,1 %)** y **17:30 en RD (55,8 %)**. No tiene explicación
+  clara: puede ser casualidad, y el plan 7 (elegir horas con dev-A) no lo confirmó.
+- No hay otro "reinicio" en el día, así que el 60 % de las 8:00 no se puede fabricar en otra hora.

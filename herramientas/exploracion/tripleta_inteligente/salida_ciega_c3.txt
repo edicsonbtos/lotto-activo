@@ -1,0 +1,6 @@
+tramo ciego: 2025-12-18 .. último inicio 2026-03-31 (ventana termina 2026-03-31); 1213 inicios, 102 jornadas; azar por tripleta 1.89 %
+  C3       1213 tripletas,  34 aciertos = 2.80 %  EV +26.1 % [-52; +124]
+  A        2426 tripletas,  79 aciertos = 3.26 %  EV +46.5 % [-11; +112]
+  C3_8am    102 tripletas,   3 aciertos = 2.94 %  EV +32.4 % [-100; +209]
+  C3_9am    101 tripletas,   3 aciertos = 2.97 %  EV +33.7 % [-100; +212]
+Veredicto (anexo 3): NO PASA
