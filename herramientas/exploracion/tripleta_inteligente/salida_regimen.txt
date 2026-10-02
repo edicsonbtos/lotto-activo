@@ -1,0 +1,42 @@
+(a) El animal de las 8:00 en el resto del día (10:00-19:00), desarrollo: ¿cuánto le da el motor y cuánto sale?
+   sale 20 veces; el motor esperaba 33.7 (O/E contra el motor 0.59)
+
+(b) Fuerza de la estructura mes a mes (ensamble walk-forward): mbits y Top-15
+   2024-03  mbits  108.0  Top-15  54.7 %    n=256
+   2024-04  mbits  145.5  Top-15  55.8 %    n=330
+   2024-05  mbits   96.5  Top-15  51.0 %    n=341
+   2024-06  mbits   14.3  Top-15  46.1 %    n=330
+   2024-07  mbits   96.7  Top-15  52.4 %    n=330
+   2024-08  mbits   78.7  Top-15  50.4 %    n=341
+   2024-09  mbits   97.0  Top-15  50.6 %    n=330
+   2024-10  mbits  115.1  Top-15  51.6 %    n=341
+   2024-11  mbits  121.3  Top-15  52.9 %    n=333
+   2024-12  mbits  104.3  Top-15  50.3 %  (con 8:00)  n=360
+   2025-01  mbits   76.1  Top-15  51.4 %  (con 8:00)  n=360
+   2025-02  mbits   73.9  Top-15  51.5 %  (con 8:00)  n=336
+   2025-03  mbits   69.1  Top-15  49.5 %  (con 8:00)  n=372
+   2025-04  mbits  123.7  Top-15  54.4 %  (con 8:00)  n=360
+   2025-05  mbits  117.5  Top-15  53.1 %  (con 8:00)  n=360
+   2025-06  mbits  148.3  Top-15  57.8 %  (con 8:00)  n=360
+   2025-07  mbits  186.5  Top-15  58.3 %  (con 8:00)  n=360
+   2025-08  mbits  198.8  Top-15  56.5 %  (con 8:00)  n=372
+   2025-09  mbits  202.0  Top-15  56.9 %  (con 8:00)  n=360
+   2025-10  mbits  181.8  Top-15  54.3 %  (con 8:00)  n=372
+   2025-11  mbits  171.4  Top-15  55.8 %  (con 8:00)  n=360
+   2025-12  mbits   95.1  Top-15  50.9 %  (con 8:00)  n=228
+   2026-01  mbits  120.6  Top-15  52.2 %  (con 8:00)  n=360
+   2026-02  mbits   56.7  Top-15  47.3 %  (con 8:00)  n=336
+   2026-03  mbits   57.5  Top-15  48.4 %  (con 8:00)  n=372
+   2026-04  mbits   77.0  Top-15  48.2 %  (con 8:00)  n=336
+   2026-05  mbits   92.4  Top-15  49.7 %  (con 8:00)  n=372
+   2026-06  mbits   66.5  Top-15  46.9 %  (con 8:00)  n=311
+   2026-07  mbits  122.3  Top-15  50.5 %  (con 8:00)  n=372
+   2026-08  mbits  112.0  Top-15  51.6 %  (con 8:00)  n=372
+   2026-09  mbits   97.0  Top-15  46.8 %  (con 8:00)  n=348
+
+(c) ¿El mes pasado anticipa el siguiente? (persistencia del régimen)
+   correlación mbits(mes) vs mbits(mes siguiente): +0.65  (n=30)
+   correlación mbits(mes) vs retorno Top-5 escalonado(mes siguiente): +0.26
+   Top-5 escalonado el mes siguiente: tras un mes FUERTE +22.3 %, tras uno FLOJO +20.2 %
+(d) Sacar el animal de las 8:00 del Top-5 el resto del día (exploratorio, desarrollo)
+   cambia en 0 sorteos; Top-5 escalonado +23.76 % -> +23.76 % por ficha

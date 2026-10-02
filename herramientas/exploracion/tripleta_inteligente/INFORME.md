@@ -82,3 +82,22 @@ Datos hasta 2026-09-29, con el ensamble recalculado:
 - Otra hora alta en los dos juegos: **17:00 en LA (56,1 %)** y **17:30 en RD (55,8 %)**. No tiene explicación
   clara: puede ser casualidad, y el plan 7 (elegir horas con dev-A) no lo confirmó.
 - No hay otro "reinicio" en el día, así que el 60 % de las 8:00 no se puede fabricar en otra hora.
+
+## Qué significa que "a las 8:00 lo de ayer cuenta como reciente" (2026-10-02, descriptivo)
+`memoria_operador.py` → `salida_memoria_operador.txt` y `regimen.py` → `salida_regimen.txt`.
+- **El operador lleva una lista de "recién salidos" y los esquiva.** Dentro del día esa lista son los sorteos de
+  hoy: los últimos ~6 se esquivan mucho (O/E 0,20-0,44) y del 7.º al 10.º atrás, menos (0,52-0,68).
+- **La noche borra la lista**, salvo en las 8:00. De 9:00 en adelante, lo de ayer sale normal o un poco más
+  (O/E 1,1-1,6: es el "reciclaje"). A las 8:00, en cambio, la lista que usa es la de AYER: lo de ayer sale la
+  mitad (0,50) y lo de hace 2-3 días un 54 % más.
+- **No es "el primer sorteo del día", es el de las 8:00.** Antes de nov-2024 el primer sorteo era el de las 9:00,
+  y NO esquivaba lo de ayer (O/E 0,98, Top-15 47,5 %). Las 8:00 se añadieron en nov-2024 con su propia regla.
+- **El animal de las 8:00 queda "quemado" el resto del día**, más que cualquier otro: O/E 0,21, contra 0,46 del
+  de las 9:00, y 0,59 de lo que espera el motor. El motor ya lo manda al fondo: en desarrollo nunca entró en el
+  Top-5 de las horas siguientes, así que esto no cambia la jugada.
+- **RD tiene su propia memoria**, que sí cruza la noche y se va apagando (repetir el de anoche: 0,24). Cada juego
+  está configurado aparte.
+- **La fuerza de la estructura cambia por épocas y dura meses.** mbits mensuales del ensamble: jun-nov 2025
+  entre 150 y 200 (Top-15 55-58 %); feb-jun 2026 entre 57 y 92 (47-50 %). La correlación de un mes con el
+  siguiente es +0,65. Pero apostar más tras un mes "fuerte" no paga: el Top-5 escalonado del mes siguiente da
+  +22,3 % tras un mes fuerte y +20,2 % tras uno flojo. La fuerza vive en el fondo de la lista (quién no sale).

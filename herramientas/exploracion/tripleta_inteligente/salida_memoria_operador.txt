@@ -1,0 +1,51 @@
+1) Lotto Activo: O/E de repetir el animal de k sorteos atrás (1,00 = azar; <1 = lo evita; >1 = lo recicla)
+    k | misma jornada      | cruzando la noche  
+    1 |  0.20 (n= 6722)   |  0.66 (n=  634)
+    2 |  0.36 (n= 6087)   |  1.14 (n= 1268)
+    3 |  0.44 (n= 5452)   |  1.00 (n= 1902)
+    4 |  0.37 (n= 4817)   |  0.81 (n= 2536)
+    5 |  0.40 (n= 4182)   |  1.13 (n= 3170)
+    6 |  0.41 (n= 3547)   |  0.94 (n= 3804)
+    7 |  0.52 (n= 2912)   |  0.97 (n= 4438)
+    8 |  0.60 (n= 2277)   |  1.01 (n= 5072)
+    9 |  0.67 (n= 1641)   |  1.21 (n= 5707)
+   10 |  0.68 (n= 1006)   |  1.00 (n= 6341)
+   11 |  0.31 (n=  371)   |  0.86 (n= 6975)
+   12 |   nan (n=    0)   |  0.92 (n= 7345)
+   14 |   nan (n=    0)   |  1.13 (n= 7343)
+   16 |   nan (n=    0)   |  1.16 (n= 7341)
+   18 |   nan (n=    0)   |  1.23 (n= 7339)
+   20 |   nan (n=    0)   |  1.21 (n= 7337)
+   24 |   nan (n=    0)   |  1.03 (n= 7321)
+   30 |   nan (n=    0)   |  1.11 (n= 7207)
+   36 |   nan (n=    0)   |  1.13 (n= 6337)
+
+2) Después de un día SIN sorteos (feriado/hueco ≥ 2 días): O/E de repetir lo de los últimos 12 sorteos
+   tras feriado: O/E 0.00 (n=84, 7 mañanas)   tras una noche normal: O/E 0.69 (n=7536)
+
+3) RD Internacional consigo mismo (desarrollo de RD), O/E de repetir k sorteos atrás
+    k | misma jornada      | cruzando la noche
+    1 |  0.13 (n= 5302)   |  0.24 (n=  481)
+    2 |  0.21 (n= 4820)   |  0.40 (n=  962)
+    3 |  0.26 (n= 4338)   |  0.55 (n= 1443)
+    4 |  0.32 (n= 3856)   |  0.73 (n= 1924)
+    6 |  0.37 (n= 2892)   |  0.72 (n= 2886)
+    8 |  0.37 (n= 1928)   |  0.76 (n= 3848)
+   12 |   nan (n=    0)   |  0.89 (n= 5772)
+   16 |   nan (n=    0)   |  1.13 (n= 5768)
+   20 |   nan (n=    0)   |  0.86 (n= 5764)
+   24 |   nan (n=    0)   |  1.00 (n= 5760)
+
+4) Cruce RD -> LA: LA h:00 repite el RD de j sorteos de RD atrás (mismo día vs. el de anoche)
+   j=1: mismo día O/E 0.36 (n=5195)   de anoche O/E 1.27 (n=210)
+   j=2: mismo día O/E 0.71 (n=4723)   de anoche O/E 0.67 (n=681)
+   j=3: mismo día O/E 0.81 (n=4251)   de anoche O/E 1.06 (n=1152)
+
+5) Primer sorteo del día: ¿evita lo de ayer? (O/E de que salga un animal que salió ayer)
+   9:00 cuando ERA el primero (antes de nov-2024): O/E de 'salió ayer' 0.98  Top-15 47.5 %  (n=261)
+   8:00 (primero desde nov-2024): O/E de 'salió ayer' 0.50  Top-15 60.5 %  (n=367)
+   9:00 cuando ya hay 8:00 (segundo): O/E de 'salió ayer' 1.29  Top-15 56.1 %  (n=367)
+
+6) ¿El resto del día evita el animal de las 8:00 igual que el de las 9:00? (O/E de repetirlo, de 10:00 a 19:00)
+   animal de las 8:00: O/E 0.21 (n=3717)
+   animal de las 9:00 (con 8:00 antes): O/E 0.46 (n=3717)
