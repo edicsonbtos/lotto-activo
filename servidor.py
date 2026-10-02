@@ -571,8 +571,9 @@ def deshacer():
         return "La última línea no tiene formato válido, no se tocó nada.", False
     idx_quitado = len(cargar()) - 1
     lb = _lineas_bin()                     # historial ANTES de quitar la línea
-    with open(HIST, "w", encoding="utf-8") as f:
+    with open(HIST + ".tmp", "w", encoding="utf-8") as f:   # atómico: un corte no deja el historial vacío
         f.writelines(lineas[:-1])
+    os.replace(HIST + ".tmp", HIST)
     d = log_cargar()
     reabierto = False
     for r in d["registros"]:

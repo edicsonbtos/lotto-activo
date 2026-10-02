@@ -19,3 +19,5 @@ herramientas/exploracion/*.npz
 rdint_historial.txt
 rdint_predicciones.json
 herramientas/rdint/*.npz
+.coverage
+.pytest_cache/
