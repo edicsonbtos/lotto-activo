@@ -571,8 +571,9 @@ def deshacer():
         return "La última línea no tiene formato válido, no se tocó nada.", False
     idx_quitado = len(cargar()) - 1
     lb = _lineas_bin()                     # historial ANTES de quitar la línea
-    with open(HIST, "w", encoding="utf-8") as f:
+    with open(HIST + ".tmp", "w", encoding="utf-8") as f:   # atómico: un corte no deja el historial vacío
         f.writelines(lineas[:-1])
+    os.replace(HIST + ".tmp", HIST)
     d = log_cargar()
     reabierto = False
     for r in d["registros"]:
@@ -904,6 +905,7 @@ input{caret-color:var(--brand)}
   .leyenda{margin-top:10px}}
 .jug li.cols{border-top:none;padding:0 0 6px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .jug li.cols span:nth-child(n+4){text-align:center;line-height:1.15}
+.jug.anti li{grid-template-columns:24px 50px minmax(0,1fr)}
 .jug .rk{font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums;text-align:right}
 .jug .n{font-size:28px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
 .jug .nm{font-size:16px;font-weight:600;letter-spacing:-.01em;min-width:0}
@@ -1170,6 +1172,25 @@ def html_top15(e, pend=None):
             'Prueba ciega ≈ +6% (el Top-15 plano, −1%).</p>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
 
+def html_anti_top15(orden, sc, gaps):
+    """Los 15 animales con MENOS probabilidad (puestos 24-38): los que el modelo descarta.
+    Mismo orden congelado que se puntúa. Solo informativo: no cambia la jugada."""
+    if len(orden) < 38:
+        return ""
+    ultimos = list(orden[-15:])[::-1]            # el menos probable primero (puesto 38)
+    masa = sum(sc[i] for i in ultimos)
+    filas = "".join(
+        f'<li><span class="rk">{38 - k}</span><span class="n">{esc(POS[i])}</span>'
+        f'<span class="nm">{esc(ANIM[POS[i]].title())}'
+        f'<small>{num(sc[i] * 100, 2)} % · hace {gaps[i] + 1} sorteos</small></span></li>'
+        for k, i in enumerate(ultimos))
+    return ('<details class="mas" id="la-anti" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+            'Anti Top-15 · los 15 menos probables</summary>'
+            f'<ol class="jug resto anti" start="24">{filas}</ol>'
+            f'<p class="note">Entre los 15 suman <b>{num(masa * 100, 1)} %</b> (el azar daría {num(15 / K * 100, 1)} %): '
+            f'sale uno de ellos en ~1 de cada {num(1 / masa, 1)} sorteos. Sirve para <b>descartar</b>, no para '
+            'apostar: no cambia la jugada.</p></details>')
+
 def cambio_rd(orden, pf, ph):
     """Regla de cambio (PREREGISTRO_cambio_rd_top5.md, adoptada sin confirmar el 2026-09-23).
 
@@ -1317,14 +1338,35 @@ def _con_rd(p, rd, f, h):
     return q, usado
 
 SOMBRA_EXP_DESDE = "2026-10-02"         # exposición (fecha/hora): PREREGISTRO_sombra_exposicion.md
+SOMBRA_EXP_N_PRIMERA = 930              # primera mirada (solo para apagar); la decisión de encender es con SOMBRA_EXP_N_FINAL
+SOMBRA_EXP_N_FINAL = 6000               # ~1,5 años: n con potencia ~75-80 % para ~+2,3 mbits (ver el pre-registro)
+_EXPOSICION = []                        # módulo cargado una vez (evita tocar sys.path en cada consulta)
 
 def _exposicion(p, f, h):
     """Multiplicadores congelados por fecha y hora (herramientas/modelos/exposicion.py); solo calendario."""
-    ruta = os.path.join(HERR, "modelos")
-    if ruta not in sys.path:
-        sys.path.insert(0, ruta)
-    import exposicion
-    return exposicion.aplicar(p, f, h)
+    if not _EXPOSICION:
+        ruta = os.path.join(HERR, "modelos")
+        if ruta not in sys.path:
+            sys.path.append(ruta)
+        import exposicion
+        _EXPOSICION.append(exposicion)
+    return _EXPOSICION[0].aplicar(p, f, h)
+
+def _ic90_jornadas(pares):
+    """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)]."""
+    por = {}
+    for f, v in pares:
+        a = por.setdefault(f, [0.0, 0]); a[0] += v; a[1] += 1
+    n = sum(a[1] for a in por.values())
+    if n == 0:
+        return None
+    media = sum(a[0] for a in por.values()) / n
+    J = len(por)
+    if J < 2:
+        return dict(n=n, jornadas=J, media=round(media, 2), ic90=None)
+    se = math.sqrt(sum((a[0] - media * a[1]) ** 2 for a in por.values()) * J / (J - 1)) / n
+    return dict(n=n, jornadas=J, media=round(media, 2),
+                ic90=[round(media - 1.645 * se, 2), round(media + 1.645 * se, 2)])
 
 def marcador_sombra(d):
     """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE).
@@ -1340,6 +1382,8 @@ def marcador_sombra(d):
     nexp = ("ensamble", "ag12_rd", "ensamble_exp", "ag12_rd_exp")
     mx = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nexp}
     con_rd = 0
+    dif = {"ensamble": ([], []), "ag12_rd": ([], [])}      # (dif mbits, dif Top-5 en 0/1) por sorteo y jornada
+    fallos_exp = 0
     for r in resueltas(d):
         s = r.get("sombra")
         if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not r.get("scores"):
@@ -1353,22 +1397,40 @@ def marcador_sombra(d):
                           (mx, "ensamble_exp", _exposicion(r["scores"], r["fecha"], r["hora"])),
                           (mx, "ag12_rd_exp", _exposicion(q, r["fecha"], r["hora"]))]
             except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
-                print(f"[sombra] {ahora()} exposición falló: {ex!r}", file=sys.stderr, flush=True)
+                fallos_exp += 1
+                if fallos_exp == 1:                          # una línea por consulta, no una por sorteo
+                    print(f"[sombra] {ahora()} exposición falló: {ex!r}", file=sys.stderr, flush=True)
+        este = {}
         for mm, k, p in filas:
             tot = sum(p)
             orden = sorted(range(K), key=lambda i: (-p[i], i))
             pos = orden.index(r["salio"]) + 1
             x = mm[k]; x["n"] += 1
             x["top3"] += pos <= 3; x["top5"] += pos <= 5; x["top15"] += pos <= 15
-            x["mbits"] += 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
+            mb = 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
+            x["mbits"] += mb
             x["t5_neto"] += PAGO * fichas[pos] - sum(fichas)
+            if mm is mx:
+                este[k] = (mb, pos <= 5)
+        if len(este) == 4:                                  # los 4 modelos del bloque, mismo sorteo
+            for base in dif:
+                dif[base][0].append((r["fecha"], este[base + "_exp"][0] - este[base][0]))
+                dif[base][1].append((r["fecha"], float(este[base + "_exp"][1]) - float(este[base][1])))
     for x in list(m.values()) + list(mx.values()):
         if x["n"]:
             for c in ("top3", "top5", "top15"):
                 x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
             x["mbits"] = round(x["mbits"] / x["n"], 1)
+    difs = {}
+    for base, (dm, dt) in dif.items():
+        a = _ic90_jornadas(dm); b = _ic90_jornadas(dt)
+        difs[base + "_exp_vs_" + base] = dict(mbits=a, top5_pp=(None if b is None else
+            dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
+                 [round(100 * v, 2) for v in b["ic90"]]))))
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m,
-            "exposicion": {"desde": SOMBRA_EXP_DESDE, "decide_con": 930, "marcador": mx}}
+            "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
+                           "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
+                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp}}
 
 def nota_cambio_rd(info):
     if info is None:
@@ -1449,10 +1511,14 @@ def fila_jugada(r, num_, nombre, sub, f5, fp):
 COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
                '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
 
-def html_compartir(juego, cuando, animales):
-    """Compartir la jugada como texto: Top 5 o Top 15, monto fijo por animal."""
-    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}">'
-            '<select aria-label="Cuántos animales"><option value="5">Top 5</option><option value="15">Top 15</option></select>'
+def html_compartir(juego, cuando, animales, anti=()):
+    """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 o ambos (el monto va solo al Top)."""
+    op_anti = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>'
+               if anti else "")
+    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}"'
+            f' data-x="{esc("|".join(anti))}">'
+            '<select aria-label="Qué compartir"><option value="5">Top 5</option><option value="15">Top 15</option>'
+            f'{op_anti}</select>'
             '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
             '<button type="button" class="sec">Compartir</button></div>')
 
@@ -1491,6 +1557,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
                            esc5[r], pond[r])
     top5 = "".join(fila(r, i) for r, i in enumerate(orden[:5], 1))
     resto = "".join(fila(r, i) for r, i in enumerate(orden[5:15], 6))
+    anti = html_anti_top15(orden, e["sc"], e["gaps"])
     mas = (f'<details class="mas" id="la-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
            f'Del 6º al 15º · solo para el ponderado</summary>'
            f'<ol class="jug resto" start="6">{resto}</ol>'
@@ -1503,8 +1570,8 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
                '(+67, +37 o +7).</p></div>')
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
             f'{html_nav_hist("la", 0, n_pasados)}{cab}'
-            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}'
-            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
+            f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
+            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in list(orden[-15:])[::-1]] if len(orden) >= 38 else ())}'
             f'{leyenda}{aviso_modelo}</section>')
 
 def html_nav_hist(tab, atras, total):
@@ -2523,20 +2590,27 @@ JS_COMPARTIR = r"""
 <script>
 document.addEventListener('click', function(ev){
   var b = ev.target.closest('.compartir button'); if(!b) return;
-  var c = b.parentNode, n = +c.querySelector('select').value;
+  var c = b.parentNode, v = c.querySelector('select').value;
   var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
-  var a = c.dataset.a.split('|').slice(0, n);
   // Formato para WhatsApp: cabecera en negrita y bloques de 5 separados por una línea en blanco.
-  var filas = a.map(function(x, k){
-    return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (m ? '  →  $' + m : '');
-  });
-  var bloques = [];
-  for(var i = 0; i < filas.length; i += 5) bloques.push(filas.slice(i, i + 5).join('\n'));
-  var t = '*' + c.dataset.t.toUpperCase() + '*\n'
-        + '📅 ' + c.dataset.f + '\n'
-        + '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n'
-        + bloques.join('\n\n')
-        + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
+  function lista(a, monto){
+    var filas = a.map(function(x, k){
+      return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (monto ? '  →  $' + monto : '');
+    });
+    var bl = [];
+    for(var i = 0; i < filas.length; i += 5) bl.push(filas.slice(i, i + 5).join('\n'));
+    return bl.join('\n\n');
+  }
+  var top = c.dataset.a.split('|'), anti = c.dataset.x ? c.dataset.x.split('|') : [];
+  var t = '*' + c.dataset.t.toUpperCase() + '*\n' + '📅 ' + c.dataset.f + '\n';
+  if(v === 'anti'){
+    t += '🚫 Anti Top 15 (los menos probables, para descartar)\n\n' + lista(anti, 0);
+  } else {
+    var n = v === 'ambos' ? 15 : +v, a = top.slice(0, n);
+    t += '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n' + lista(a, m)
+       + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
+    if(v === 'ambos') t += '\n\n🚫 Anti Top 15 (para descartar)\n\n' + lista(anti, 0);
+  }
   if(navigator.share) navigator.share({text: t}).catch(function(){});
   else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });
 });
@@ -2620,11 +2694,11 @@ class H(BaseHTTPRequestHandler):
                        "application/json; charset=utf-8")
         elif ruta == "/api/datos_publicados":
             try:
-                sys.path.insert(0, os.path.join(RUTA, "scraping"))
                 import datos_publicados
                 cuerpo = datos_publicados.resumen(DATOS)
             except Exception as ex:  # noqa: BLE001
-                cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
+                print(f"[datos_publicados] resumen falló: {ex!r}", file=sys.stderr, flush=True)
+                cuerpo = {"error": "no disponible"}
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/mesa_stats":
             self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
@@ -2712,7 +2786,8 @@ if __name__ == "__main__":
     except Exception as ex:  # noqa: BLE001
         print(f"  RD Internacional desactivado: {ex!r}", file=sys.stderr)
     try:                                  # datos que publican los pronosticadores (solo se guardan)
-        sys.path.insert(0, os.path.join(RUTA, "scraping"))
+        if os.path.join(RUTA, "scraping") not in sys.path:
+            sys.path.append(os.path.join(RUTA, "scraping"))
         import datos_publicados
         datos_publicados.iniciar(DATOS)
         print("  Datos publicados: se guardan cada mañana (6:00-7:55)")

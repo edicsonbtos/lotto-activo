@@ -1,0 +1,15 @@
+1. RD Internacional, desarrollo de RD 2024-03-01..2025-06-30 (esperado = modelo B1 de RD)
+  RD S0: n=5784 obs 122 esp 157.8 O/E 0.773 [IC99,17 0.62; 0.93] => SE REPLICA
+  RD S10: n=4068 obs 89 esp 109.2 O/E 0.815 [IC99,17 0.63; 1.03] => NO
+
+2. LARD (Lotto Activo RD), API oficial 2025-07-01..2026-09-22 (esperado = frecuencia en LARD)
+  LARD S0: n=6286 obs 163 esp 167.7 O/E 0.972 [IC99,17 0.80; 1.15] => NO
+  LARD S10: n=4396 obs 105 esp 116.8 O/E 0.899 [IC99,17 0.70; 1.11] => NO
+
+3. Otros operadores, 2026-04-13..09-13 (esperado = frecuencia en cada lotería; descriptivo)
+  lagranjita S0: n=1800 obs 35 esp 44.2 O/E 0.791 [IC99,17 0.52; 1.10] => NO
+  lagranjita S10: n=1260 obs 32 esp 30.9 O/E 1.034 [IC99,17 0.68; 1.42] => NO
+  selvaplus S0: n=1723 obs 34 esp 44.3 O/E 0.767 [IC99,17 0.52; 1.04] => NO
+  selvaplus S10: n=1252 obs 28 esp 32.0 O/E 0.875 [IC99,17 0.56; 1.22] => NO
+  guacharoactivo S0: n=1800 obs 14 esp 21.3 O/E 0.657 [IC99,17 0.32; 1.05] => NO
+  guacharoactivo S10: n=1260 obs 13 esp 14.8 O/E 0.880 [IC99,17 0.40; 1.45] => NO

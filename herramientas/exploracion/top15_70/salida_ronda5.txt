@@ -1,0 +1,16 @@
+C1_mes: n(A,B)=(3688,3669) dev-A O/E 0.838 [0.66;1.04]  dev-B 0.878 [IC99,4 0.65;1.14] => NO PASA
+   placebos dev-B: placebo+1 0.87, placebo-1 1.06
+C2_semana: n(A,B)=(3688,3669) dev-A O/E 0.939 [0.76;1.12]  dev-B 1.222 [IC99,4 0.93;1.53] => NO PASA
+   placebos dev-B: placebo+1 0.96, placebo-1 1.06
+C3_dia+mes: n(A,B)=(3415,3453) dev-A O/E 1.017 [0.81;1.24]  dev-B 0.709 [IC99,4 0.46;0.98] => NO PASA
+   placebos dev-B: placebo+1 0.89, placebo-1 1.06
+C4_suma_digitos: n(A,B)=(3688,3669) dev-A O/E 0.735 [0.57;0.92]  dev-B 0.737 [IC99,4 0.53;0.97] => PASA
+   placebos dev-B: placebo+1 0.96, placebo-1 1.06
+C5_n_sorteo: n(A,B)=(1648,1527) dev-A O/E 1.191 [0.88;1.52]  dev-B 0.852 [IC99,4 0.50;1.27] => NO PASA
+   placebos dev-B: placebo+1 1.12, placebo-1 1.15
+C6_dia+hora12: n(A,B)=(3446,3439) dev-A O/E 0.997 [0.81;1.20]  dev-B 0.948 [IC99,4 0.70;1.21] => NO PASA
+   placebos dev-B: placebo+1 0.90, placebo-1 0.83
+C7_anio: n(A,B)=(3688,3669) dev-A O/E 1.006 [0.82;1.20]  dev-B 1.010 [IC99,4 0.75;1.30] => NO PASA
+   placebos dev-B: placebo+1 0.98, placebo-1 1.16
+C8_espejo: n(A,B)=(3565,3549) dev-A O/E 1.007 [0.82;1.20]  dev-B 1.064 [IC99,4 0.80;1.39] => NO PASA
+   placebos dev-B: placebo+1 1.02, placebo-1 0.97
