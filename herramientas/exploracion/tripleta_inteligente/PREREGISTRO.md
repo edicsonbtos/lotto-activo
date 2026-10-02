@@ -50,3 +50,20 @@ esperar HOY se mira **una sola vez** abr-sep 2026:
   1-3 días hay, y qué se espera por azar con la tasa de las 8:00?
 - R3: en desarrollo, ¿una racha predice la siguiente? Se compara P(hueco 1-3 | las 3 anteriores lo fueron)
   con la tasa general. Sin umbral: es descriptivo y no cambia la jugada.
+
+## Anexo 3 (2026-10-02, ANTES de mirar) — PRUEBA CIEGA de "una tripleta al día" (C3) y cambio en la web
+El usuario pide una tripleta al día, probada a ciegas, y que se aplique a la web si pasa.
+- **Tramo ciego:** inicios del 2025-12-18 al 2026-03-31 cuya ventana de 12 sorteos termina a más tardar el
+  2026-03-31. Datos de `reentreno/historial_la.txt` (fechas corregidas). La tripleta por ventana NUNCA se miró
+  en ese tramo: la réplica de 2026 empezó el 04-01, y la mirada del 2026-09-14 fue a la tripleta "del día"
+  (`tripleta.py`), que es otro modelo y otra regla. Se anota en `registro_final.jsonl`.
+- **Modelo:** `tripleta_ventana.Modelo()` de producción, walk-forward.
+- **Jugada probada (C3):** UNA tripleta, los 3 animales más probables para los 12 sorteos siguientes.
+- **Medida principal:** EV por ficha con 45x sobre todos los inicios del tramo (equivale a comprar una al día a
+  cualquier hora; la hora no importa, Q1). IC 95 % por bootstrap de jornadas (3.000, semilla 20261002).
+- **PASA** si EV > 0 y el límite inferior del IC 95 % > 0. Además, C3 no puede ir por debajo de A (2 tripletas)
+  en el punto.
+- **Secundario (solo informa):** una al día comprada a las 8:00 (ventana = el día) y una al día a las 9:00.
+- **Si PASA:** la web genera 1 tripleta (la 1-2-3) cada 24 h, en vez de 2. No cambia nada más (ni la cadencia,
+  ni el modelo, ni el marcador; las tripletas viejas se siguen puntuando igual).
+- **Si NO PASA:** la web no se toca.

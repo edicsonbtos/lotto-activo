@@ -1,0 +1,52 @@
+1) ¿Qué tiene de especial el ganador de las 8:00? O/E (observado/azar) según cuándo salió por última vez
+   hora   | salió hoy | ayer (1 d) | hace 2-3 d | hace 4-7 d | hace 8+ d | Top-15
+    8:00 |    —         |  0.50 (29.4%) |  1.54 (32.9%) |  0.94 (24.6%) |  0.86 (13.1%) | 60.5 % (n=372)
+    9:00 |  0.00 ( 1.5%) |  1.18 (28.3%) |  1.17 (32.0%) |  0.79 (25.8%) |  0.72 (12.4%) | 52.4 % (n=635)
+   10:00 |  0.08 ( 4.2%) |  1.00 (27.4%) |  1.19 (31.0%) |  0.97 (25.2%) |  0.90 (12.2%) | 53.5 % (n=635)
+   11:00 |  0.21 ( 6.8%) |  1.18 (26.7%) |  1.10 (30.0%) |  0.97 (24.6%) |  0.89 (11.9%) | 52.9 % (n=635)
+   12:00 |  0.17 ( 9.4%) |  1.04 (25.8%) |  1.27 (29.2%) |  1.04 (24.0%) |  0.81 (11.6%) | 52.9 % (n=635)
+   13:00 |  0.29 (12.0%) |  1.25 (25.1%) |  1.22 (28.2%) |  0.94 (23.3%) |  0.77 (11.4%) | 51.5 % (n=635)
+   14:00 |  0.16 (14.5%) |  1.21 (24.3%) |  1.11 (27.3%) |  1.25 (22.7%) |  0.85 (11.2%) | 49.9 % (n=635)
+   15:00 |  0.13 (17.1%) |  1.21 (23.5%) |  1.12 (26.5%) |  1.24 (22.0%) |  1.16 (10.9%) | 50.9 % (n=635)
+   16:00 |  0.19 (19.7%) |  1.38 (22.8%) |  1.05 (25.7%) |  1.09 (21.3%) |  1.39 (10.6%) | 53.1 % (n=635)
+   17:00 |  0.32 (22.2%) |  1.42 (22.0%) |  1.29 (25.0%) |  0.98 (20.7%) |  0.90 (10.1%) | 56.1 % (n=635)
+   18:00 |  0.79 (24.6%) |  1.41 (21.1%) |  1.15 (24.2%) |  0.82 (20.2%) |  0.67 ( 9.9%) | 55.9 % (n=635)
+   19:00 |  0.86 (26.8%) |  1.58 (20.3%) |  0.95 (23.4%) |  0.82 (19.7%) |  0.66 ( 9.7%) | 50.2 % (n=635)
+   (entre paréntesis: % de animales en esa situación; O/E < 1 = sale menos que al azar)
+
+2) A las 8:00: ¿evita lo que salió ANOCHE? O/E de repetir el animal de ayer a las ...
+   ayer 19:00  O/E 0.62  (n=367)
+   ayer 18:00  O/E 0.62  (n=367)
+   ayer 17:00  O/E 0.41  (n=367)
+   ayer 16:00  O/E 0.52  (n=367)
+   ayer 14:00  O/E 0.52  (n=367)
+   ayer 11:00  O/E 0.83  (n=367)
+   ayer  9:00  O/E 0.21  (n=367)
+
+3) Animales que salieron en las últimas 24 h (12 sorteos de LA) y masa que el motor da a su Top-15
+    8:00  distintos en las 12 previas 11.3  masa Top-15 57.3 %  Top-15 real 60.5 %
+    9:00  distintos en las 12 previas 11.2  masa Top-15 50.4 %  Top-15 real 52.4 %
+   10:00  distintos en las 12 previas 11.1  masa Top-15 50.8 %  Top-15 real 53.5 %
+   11:00  distintos en las 12 previas 11.0  masa Top-15 51.4 %  Top-15 real 52.9 %
+   12:00  distintos en las 12 previas 10.9  masa Top-15 51.6 %  Top-15 real 52.9 %
+   13:00  distintos en las 12 previas 10.8  masa Top-15 52.1 %  Top-15 real 51.5 %
+   14:00  distintos en las 12 previas 10.8  masa Top-15 53.3 %  Top-15 real 49.9 %
+   15:00  distintos en las 12 previas 10.8  masa Top-15 54.4 %  Top-15 real 50.9 %
+   16:00  distintos en las 12 previas 10.9  masa Top-15 57.0 %  Top-15 real 53.1 %
+   17:00  distintos en las 12 previas 11.0  masa Top-15 57.5 %  Top-15 real 56.1 %
+   18:00  distintos en las 12 previas 11.1  masa Top-15 53.2 %  Top-15 real 55.9 %
+   19:00  distintos en las 12 previas 11.2  masa Top-15 53.4 %  Top-15 real 50.2 %
+
+4) RD Internacional (desarrollo de RD, modelo B1): Top-15 por hora
+    8:30  Top-15 56.8 %  (n=482)
+    9:30  Top-15 51.5 %  (n=482)
+   10:30  Top-15 48.8 %  (n=482)
+   11:30  Top-15 49.0 %  (n=482)
+   12:30  Top-15 50.8 %  (n=482)
+   13:30  Top-15 45.4 %  (n=482)
+   14:30  Top-15 49.2 %  (n=482)
+   15:30  Top-15 51.9 %  (n=482)
+   16:30  Top-15 46.9 %  (n=482)
+   17:30  Top-15 55.8 %  (n=482)
+   18:30  Top-15 51.2 %  (n=482)
+   19:30  Top-15 47.5 %  (n=482)
