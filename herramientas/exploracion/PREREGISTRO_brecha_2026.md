@@ -56,3 +56,10 @@ z = (O − E) / raíz(Σ q(1 − q)). Es un contraste contra el MOTOR, no contra
 5. Si nada se confirma, la respuesta es "en 2026 el operador no tiene una brecha nueva aprovechable", con el perfil
    descriptivo de 2025 contra 2026 de toda la batería.
 6. Nada se cambia en producción sin el vivo y sin la regla de `gestion_banca.VIGILANCIA`.
+
+## Anexo (2026-10-02, escrito DESPUÉS de ver la batería principal y ANTES de correr esto)
+La batería principal confirmó solo "RD (h−1):30". Para agotar la búsqueda se corre, con el MISMO protocolo, un
+barrido de interacciones: cada variable de la batería (sin las 38 de identidad ni las M) × tramo horario
+(8:00, 9-11, 12-15, 16-19). Umbral de descubrimiento: percentil 95 del máximo |z| del barrido entero bajo el nulo
+(2.000 simulaciones). Confirmación en 2026-B con Bonferroni por el número de candidatas. Las interacciones de
+"RD (h−1):30" no cuentan como hallazgo nuevo (ya está confirmada). Script: `brecha_2026_interacciones.py`.
