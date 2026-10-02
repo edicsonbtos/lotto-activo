@@ -29,3 +29,24 @@ Escrito el 2026-10-02 ANTES de medir. Script: `medir.py` (misma carpeta).
 - La tripleta tiene muchas menos jugadas que la apuesta simple. Si el IC cruza 0, se dice "no se distingue" y
   no se cambia nada de la web.
 - La confirmación final es el marcador de tripletas en vivo.
+
+## Anexo 1 (2026-10-02, DESPUÉS de ver dev-B y ANTES de mirar 2026) — réplica débil única en 2026
+Resultado en dev-B: C3 (solo la 1-2-3) le gana a A por +41 pp [+2,5; +81] → MEJORA; lista negra +17,8 pp
+[+1,8; +33,8] → MEJORA; la hora no importa. 2025 fue un año "fácil" (el ensamble rindió más). Para saber qué
+esperar HOY se mira **una sola vez** abr-sep 2026:
+- Datos: `herramientas/exploracion/enjambre_2026-09-30/reentreno/historial_la.txt` (fechas corregidas, hasta
+  2026-09-29). Modelo walk-forward igual que arriba. Inicios con el primer sorteo entre 2026-04-01 y el último
+  inicio cuya ventana termina el 2026-09-29.
+- Estas filas de LA ya se miraron por otros motivos, pero nunca para tripletas por ventana: es **réplica
+  débil** y se anota en `herramientas/registro_final.jsonl`.
+- Se reporta el EV por ficha [IC 95 %] de A, C3, A + lista negra y C3 + lista negra, y las diferencias con A.
+- **Se adopta C3 + lista negra** en lo que se recomienda al usuario si en 2026 su EV es > 0 y su diferencia
+  con A no es negativa (punto). Si el EV de todas da IC por debajo de 0, se dice que la tripleta no rinde en 2026.
+
+## Anexo 2 — la racha de las 8:00 (descriptivo)
+- R1: lista de los ganadores de las 8:00 desde 2026-09-14: hueco en días, si salió ayer, puesto en el ensamble
+  (recalculado walk-forward con `reentreno/sub.py todo` + `comun.combinar`) y si entró en el Top-15.
+- R2: en desarrollo (8:00 = hora 0, desde 2024-11-28), ¿cuántas rachas de N madrugadas seguidas con hueco
+  1-3 días hay, y qué se espera por azar con la tasa de las 8:00?
+- R3: en desarrollo, ¿una racha predice la siguiente? Se compara P(hueco 1-3 | las 3 anteriores lo fueron)
+  con la tasa general. Sin umbral: es descriptivo y no cambia la jugada.
