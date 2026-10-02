@@ -1,0 +1,29 @@
+
+Top-15 a las 8:00 (madrugada tras madrugada): acierta 49.0 % en general (n=314)
+  tras 1 aciertos seguidos: 56.9 % (n=153)   |   tras 1 fallos seguidos: 41.9 % (n=160)
+  tras 2 aciertos seguidos: 62.8 % (n=86)   |   tras 2 fallos seguidos: 43.0 % (n=93)
+  tras 3 aciertos seguidos: 66.0 % (n=53)   |   tras 3 fallos seguidos: 39.6 % (n=53)
+  tras 5 aciertos seguidos: 71.4 % (n=21)   |   tras 5 fallos seguidos: 56.2 % (n=16)
+
+Top-5 en todas las horas (sorteo tras sorteo): acierta 19.5 % en general (n=3767)
+  tras 1 aciertos seguidos: 19.2 % (n=735)   |   tras 1 fallos seguidos: 19.6 % (n=3031)
+  tras 2 aciertos seguidos: 22.0 % (n=141)   |   tras 2 fallos seguidos: 19.6 % (n=2436)
+  tras 3 aciertos seguidos: 9.7 % (n=31)   |   tras 3 fallos seguidos: 19.3 % (n=1957)
+  tras 5 aciertos seguidos: 0.0 % (n=1)   |   tras 5 fallos seguidos: 20.3 % (n=1269)
+
+Top-5 escalonado, retorno por ficha: jugar SIEMPRE +19.0 % (3767 jugadas) | jugar solo después de un acierto +16.8 % (735 jugadas)
+
+A las 8:00 (época actual): cuánto sale cada animal según su grupo (1,00 = azar)
+  salió ayer       cada animal sale 1.09 veces lo normal; hay ~11 animales así cada mañana; ganan 32 % de las madrugadas
+  hace 2-3 días    cada animal sale 1.37 veces lo normal; hay ~12 animales así cada mañana; ganan 45 % de las madrugadas
+  frío (4+ días)   cada animal sale 0.61 veces lo normal; hay ~14 animales así cada mañana; ganan 23 % de las madrugadas
+
+¿Inercia real o meses buenos/malos? Top-15 8:00: tras acierto vs tras fallo, (a) por época, (b) DENTRO de cada mes
+  2025 (dic-2024..oct-2025): tras acierto 64.3 % | tras fallo 62.5 % | diferencia +1.8 pp; DENTRO del mismo mes -1.3 pp
+  época actual (nov-2025..sep-2026): tras acierto 56.9 % | tras fallo 41.9 % | diferencia +15.0 pp; DENTRO del mismo mes +11.5 pp
+
+Época actual, por mitades (descriptivo) y en plata (Top-15 plano y Top-5 escalonado a las 8:00)
+  nov-2025..abr-2026: tras acierto 45.1 % (n=71) | tras fallo 41.5 % (n=94)
+  may-2026..sep-2026: tras acierto 67.1 % (n=82) | tras fallo 42.4 % (n=66)
+  tras un acierto del Top-15: Top-15 plano +13.7 % | Top-5 escalonado +15.2 % por ficha (n=153)
+  tras un fallo del Top-15: Top-15 plano -16.2 % | Top-5 escalonado +28.9 % por ficha (n=160)
