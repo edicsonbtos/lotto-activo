@@ -1,0 +1,13 @@
+PARTE A — ¿el motor ya está optimizado para las 8:00?
+  A1 salió ayer: sale 54, el motor esperaba 52.6 → O/E contra el motor 1.03
+  A1 hace 2-3 días: sale 189, el motor esperaba 175.1 → O/E contra el motor 1.08
+  A1 hace 4+ días: sale 129, el motor esperaba 144.3 → O/E contra el motor 0.89
+  => hay margen: se prueba la corrección A2
+  A2 multiplicadores (ajustados en desarrollo): salió ayer ×1.15, hace 2-3 d ×1.21
+  A2 post-desarrollo (8:00, n=278): dif mbits +11.0 [-1.9; +22.8]; Top-5 escalonado +20.1 % → +20.1 %; Top-15 50.4 % → 51.8 %  => NO PASA
+
+PARTE B — tripleta con la regla de las 8:00 (T8)
+  modelos ajustados en 215s
+  dev-B (3658 ventanas): dif mbits/animal -0.00 [-0.23; +0.26]; EV A base +85 % → T8 +85 % (dif -0.6 pp [-20; +18]); EV C3 +125 % → +104 %
+  post-desarrollo (3324 ventanas): dif mbits/animal +0.26 [-0.09; +0.74]; EV A base +83 % → T8 +73 % (dif -10.2 pp [-26; +5]); EV C3 +114 % → +102 %
+  => NO PASA

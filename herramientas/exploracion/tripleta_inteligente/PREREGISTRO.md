@@ -91,3 +91,13 @@ corregidas. La tripleta ya se miró ahí hoy (anexos 1 y 3) y el LA de esas fech
 - **PASA** si la diferencia de mbits es > 0 con IC 95 % > 0 en dev-B **y** en post-desarrollo, y el EV de A con
   T8 no queda por debajo del base (punto) en post-desarrollo.
 - **Si PASA:** la web usa T8 para armar sus 2 tripletas (misma cadencia y mismo marcador). Si no pasa, no se toca.
+
+## Anexo 5 (2026-10-02, ANTES de mirar) — a las 8:00, ¿conviene jugar 2 o 3 animales más (Top-17/Top-18)?
+Script: `top_n_8am.py`. Motor = ensamble recalculado (reentreno/cache). Tramos: desarrollo (8:00 desde nov-2024)
+y post-desarrollo 2025-12-18..2026-09-29 (réplica débil, se anota en `registro_final.jsonl`).
+- Se reporta el acierto de Top-15, 16, 17, 18 y 20 a las 8:00, y el acierto de cada puesto (16.º, 17.º, 18.º).
+- Un puesto extra **vale la plata** solo si acierta más de 3,33 % (1/30) en los DOS tramos. Si no, sube el
+  acierto pero baja el retorno por ficha.
+- Retorno por ficha del Top-15/17/18 plano y ponderado (3-3-3-2-2 y 1 al resto).
+- Descriptivo extra: O/E de "salió ayer" a las 8:00 en post-desarrollo, para ver si la regla sigue viva en 2026.
+- Lo mismo para RD 8:30, solo en el desarrollo de RD (descriptivo).
