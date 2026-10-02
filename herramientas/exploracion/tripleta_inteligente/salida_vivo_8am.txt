@@ -1,0 +1,22 @@
+Las 8:00 en vivo (motor reconstruido)
+fecha       ganador          puesto  Top-5  Top-15  hueco   grupo         prob. motor  ¿8:00 de ayer?  ¿núm. del día?
+2026-09-14  34 Venado         20     —      NO      1 d  salió ayer      2.1 %         no           no
+2026-09-15  13 Mono           30     —      NO      5 d  frío (4+ d)     1.8 %         no           no
+2026-09-16  30 Caimán         24     —      NO      4 d  frío (4+ d)     2.2 %         no           no
+2026-09-17   7 Perico          4    sí      sí      2 d  hace 2-3 d      4.6 %         no           no
+2026-09-18  13 Mono           23     —      NO      3 d  hace 2-3 d      2.2 %         no           no
+2026-09-19  23 Cebra          11     —      sí      1 d  salió ayer      2.8 %         no           no
+2026-09-20  35 Jirafa         31     —      NO      6 d  frío (4+ d)     1.9 %         no           no
+2026-09-21  30 Caimán          2    sí      sí      2 d  hace 2-3 d      4.6 %         no           no
+2026-09-22  18 Burro          11     —      sí      1 d  salió ayer      2.6 %         no           no
+2026-09-23  16 Oso             8     —      sí      2 d  hace 2-3 d      3.4 %         no           no
+2026-09-24  28 Zamuro         12     —      sí      1 d  salió ayer      2.8 %         no           no
+2026-09-25  17 Pavo            6     —      sí      2 d  hace 2-3 d      3.9 %         no           no
+2026-09-26   7 Perico          1    sí      sí      2 d  hace 2-3 d      5.4 %         no           no
+2026-09-27  25 Gallina         6     —      sí      2 d  hace 2-3 d      4.2 %         no           no
+2026-09-28  23 Cebra          10     —      sí      1 d  salió ayer      2.9 %         no           no
+2026-09-29   7 Perico         12     —      sí      3 d  hace 2-3 d      2.7 %         no           no
+
+Cuando FALLA el Top-15 a las 8:00, ¿qué tipo de animal sale? (época actual, nov-2025..sep-2026)
+  aciertos: frío (4+ d) 8 %, hace 2-3 d 75 %, salió ayer 18 %  (n=154)
+  fallos: frío (4+ d) 38 %, hace 2-3 d 16 %, salió ayer 46 %  (n=160)
