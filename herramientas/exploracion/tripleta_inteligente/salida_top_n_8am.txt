@@ -1,0 +1,43 @@
+
+LA 8:00 desarrollo (n=372)
+  Top-15: acierta 60.8 %
+  Top-16: acierta 64.5 %
+  Top-17: acierta 66.7 %
+  Top-18: acierta 69.1 %
+  Top-20: acierta 74.2 %
+  puesto 16: acierta 3.8 %  (vale la plata si > 3,33 %)
+  puesto 17: acierta 2.2 %  (vale la plata si > 3,33 %)
+  puesto 18: acierta 2.4 %  (vale la plata si > 3,33 %)
+  Top-15 plano +21.5 % por ficha | ponderado +29.4 % por ficha
+  Top-17 plano +17.6 % por ficha | ponderado +26.1 % por ficha
+  Top-18 plano +15.1 % por ficha | ponderado +24.1 % por ficha
+
+LA 8:00 post-desarrollo (2025-12-18..2026-09-29) (n=278)
+  Top-15: acierta 50.4 %
+  Top-16: acierta 53.6 %
+  Top-17: acierta 55.4 %
+  Top-18: acierta 57.2 %
+  Top-20: acierta 61.9 %
+  puesto 16: acierta 3.2 %  (vale la plata si > 3,33 %)
+  puesto 17: acierta 1.8 %  (vale la plata si > 3,33 %)
+  puesto 18: acierta 1.8 %  (vale la plata si > 3,33 %)
+  Top-15 plano +0.7 % por ficha | ponderado +7.4 % por ficha
+  Top-17 plano -2.2 % por ficha | ponderado +4.9 % por ficha
+  Top-18 plano -4.7 % por ficha | ponderado +2.9 % por ficha
+
+Regla de las 8:00 (desarrollo): lo que salió ayer sale O/E 0.49 (n=372)
+
+Regla de las 8:00 (post-desarrollo): lo que salió ayer sale O/E 1.05 (n=278)
+
+RD 8:30 desarrollo de RD (n=482)
+  Top-15: acierta 56.8 %
+  Top-16: acierta 60.8 %
+  Top-17: acierta 64.5 %
+  Top-18: acierta 67.2 %
+  Top-20: acierta 72.4 %
+  puesto 16: acierta 3.9 %  (vale la plata si > 3,33 %)
+  puesto 17: acierta 3.7 %  (vale la plata si > 3,33 %)
+  puesto 18: acierta 2.7 %  (vale la plata si > 3,33 %)
+  Top-15 plano +13.7 % por ficha | ponderado +25.3 % por ficha
+  Top-17 plano +13.9 % por ficha | ponderado +24.5 % por ficha
+  Top-18 plano +12.0 % por ficha | ponderado +22.8 % por ficha

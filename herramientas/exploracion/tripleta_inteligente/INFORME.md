@@ -101,3 +101,25 @@ Datos hasta 2026-09-29, con el ensamble recalculado:
   entre 150 y 200 (Top-15 55-58 %); feb-jun 2026 entre 57 y 92 (47-50 %). La correlación de un mes con el
   siguiente es +0,65. Pero apostar más tras un mes "fuerte" no paga: el Top-5 escalonado del mes siguiente da
   +22,3 % tras un mes fuerte y +20,2 % tras uno flojo. La fuerza vive en el fondo de la lista (quién no sale).
+
+## CORRECCIÓN (2026-10-02, anexos 4 y 5): la regla de las 8:00 ya NO está activa
+`regla_8am.py`, `top_n_8am.py` y `cuando_cambio_8am.py` (con sus `salida_*.txt`).
+- **La regla existió de dic-2024 a ago-2025** (lo de ayer a las 8:00: O/E entre 0,00 y 0,47 cada mes). Se
+  debilitó en sep-oct 2025 (0,85-0,87) y desde nov-2025 no está: O/E 1,05 en dic-2025..sep-2026 y 1,04 en el
+  vivo de septiembre. El operador cambió cómo arma el sorteo de las 8:00, igual que cambió la fuerza general
+  de la estructura (los mbits caen desde dic-2025).
+- **El Top-15 de las 8:00 volvió al nivel normal:** 60,8 % en desarrollo, **50,4 %** en dic-2025..sep-2026
+  (meses entre 25 % y 64,5 %). La racha de 9 seguidas de septiembre no viene de esa regla (lo de ayer salió normal).
+- **El motor ya la había aprendido** mientras existió: a las 8:00 de 2025, lo de ayer salía lo que el motor
+  esperaba (O/E 1,03). La corrección A2 da +11 mbits [−1,9; +22,8] en post-desarrollo y **NO PASA**. La
+  tripleta con la regla (T8) tampoco mejora (dev-B +0,00 mbits por animal; EV de A −10 pp en post-desarrollo):
+  **NO PASA, la web no se toca.**
+- **2 o 3 animales más a las 8:00 suben el acierto, pero pierden plata.** Los puestos 17 y 18 aciertan 1,8-2,4 %
+  (por debajo del 3,33 % que pide el pago); el 16 está justo en el límite (3,8 % y 3,2 %).
+
+  | 8:00 | Top-15 | Top-17 | Top-18 | Top-20 |
+  |---|---|---|---|---|
+  | Desarrollo (acierto) | 60,8 % | 66,7 % | 69,1 % | 74,2 % |
+  | Retorno plano por ficha | +21,5 % | +17,6 % | +15,1 % | — |
+  | Dic-2025..sep-2026 (acierto) | 50,4 % | 55,4 % | 57,2 % | 61,9 % |
+  | Retorno plano por ficha | +0,7 % | −2,2 % | −4,7 % | — |
