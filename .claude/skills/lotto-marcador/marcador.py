@@ -94,6 +94,9 @@ def sombra_brecha26():
         b = leer("/api/sombra").get("brecha26") or {}
     except ValueError:
         return
+    if b.get("error"):
+        print(f"\nSombra brecha 2026: ERROR en el servidor: {b['error']}")
+        return
     if not b.get("n"):
         print(f"\nSombra brecha 2026: aún sin sorteos (cuenta desde {b.get('desde', '2026-10-03')}).")
         return
@@ -101,9 +104,14 @@ def sombra_brecha26():
     d, r = b.get("dif_top15_pp") or {}, b.get("dif_ponderado_pp_ficha") or {}
     print(f"\nSombra brecha 2026 ({b['n']} sorteos desde {b['desde']}; decide con {b['decide_con']}, estado: {b['estado']}):")
     print(f"  Top-15 web {p['top15_pct']:.1f} % · brecha26 {s['top15_pct']:.1f} %  ->  diferencia {d.get('media')} pp"
-          f" (IC90 {d.get('ic90')})  · esperado ~+1,5 a +2,2")
+          f" (IC90 {d.get('ic90')})  · esperado realista ~+1,0 a +1,8")
     print(f"  Top-15 ponderado por ficha: web {p['pond_ret_pct']:+.1f} % · brecha26 {s['pond_ret_pct']:+.1f} %"
           f" (dif {r.get('media')} pp, IC90 {r.get('ic90')}). Antes de {b['decide_con']} sorteos NO se enciende.")
+    if b.get("registros_saltados"):
+        print(f"  Registros saltados por estar incompletos: {b['registros_saltados']}")
+    if b.get("decision"):
+        dd = b["decision"]["dif_top15_pp"]
+        print(f"  DECISIÓN congelada (primeros {b['decide_con']}): Top-15 {dd.get('media')} pp, IC90 {dd.get('ic90')}")
 
 
 def main():

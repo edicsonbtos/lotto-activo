@@ -40,3 +40,22 @@ Origen: `INFORME_brecha_2026.md`. El usuario pidió armarlo y ponerlo en sombra 
 ## Lo que no cuenta
 - Los sorteos antes del 2026-10-03, incluidos el vivo del 14-sep al 2-oct.
 - Rachas: la regla es la de arriba.
+
+## Enmienda (2026-10-02, ANTES del primer sorteo puntuable; auditoría de `revisor-sesgo`)
+1. **Mirada única fijada en el código.** El estadístico decisorio se calcula sobre los **primeros 1.600 sorteos
+   válidos** (por fecha y hora) y no cambia al seguir acumulando (`decision` en `/api/sombra`). `todo` es solo
+   informativo. Esto evita elegir el momento favorable después de 1.600.
+2. **Qué señal aporta qué.** brecha26 mezcla dos señales: exposición (que ya tiene su propia sombra, con decisión a
+   n ≥ 6.000) y RD fuera del Top-15. Aunque brecha26 pase a 1.600, **la exposición no se enciende por esta vía
+   antes de su propio criterio**. Se publica la contrastación secundaria "solo sacar RD del Top-15 (sin
+   exposición) − producción" (`secundaria_solo_rd_fuera_top15_pp`). Si brecha26 pasa pero la secundaria no, solo
+   se propone la parte de RD. Referencia 2026 (descriptiva): RD solo +1,2 pp; con exposición +2,17 pp.
+3. **El segundo criterio ("ponderado ≥ 0") es redundante**: con el Top-5 idéntico y 23 fichas en los dos brazos,
+   el ponderado por ficha es (30/23) × la diferencia del Top-15. Se deja como informativo; decide solo el Top-15.
+4. **Potencia realista** (sd 0,241; n = 1.600; umbral ≈ +0,99 pp): efecto +1,04 pp (2025) → 53 %; +1,5 pp → 80 %;
+   +1,78 pp (jun-sep 2026) → 90 %; +2,17 pp (cifra elegida viendo 2026) → 97 %. El rango esperado realista es
+   +1,0 a +1,8 pp, no +2,2.
+5. **La regla de utilidad del pre-registro de la búsqueda NO se cumplió**: Δmbits de "Ensamble + confirmadas"
+   fue +8,6 [−1,3; +16,7] (toca 0). El híbrido por Top-15 es exploratorio y su cifra está elegida viendo 2026.
+6. Un registro malo (scores nulos o en cero, orden incompleto o con duplicados) se salta y se cuenta en
+   `registros_saltados`; no apaga el bloque.

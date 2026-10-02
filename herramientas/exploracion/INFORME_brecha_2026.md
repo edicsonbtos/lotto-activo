@@ -99,3 +99,22 @@ La tabla completa (110 variables × 3 tramos, contra el motor y contra el azar) 
 - La versión híbrida (Top-5 intacto) se eligió después de ver que la exposición bajaba un poco el Top-5 en 2026.
   Por eso su cifra es optimista. El juez es el vivo.
 - No hay vivo después del 29-sep en este equipo (el proxy bloquea la web de Railway).
+
+## 6. Auditoría (`revisor-sesgo`, 2026-10-02) y lo que se corrigió
+Sin fuga de futuro (se barajó el futuro en 3 cortes: las 110 variables no cambian), horas bien indexadas y la sombra
+reproduce el análisis al decimal. Ningún bloqueante. Lo que señaló y se hizo:
+- **La regla de utilidad pre-registrada NO se cumplió y este informe no lo decía.** El criterio era Δmbits > 0 con
+  IC95 sin tocar 0: "Ensamble + confirmadas" dio **+8,6 [−1,3; +16,7]**, "+ candidatas" −0,1 [−11,7; +10,2] y
+  LightGBM +1,2 [−8,0; +10,3]. Según su propio pre-registro, la brecha **no está demostrada como útil para jugar**.
+  El híbrido por Top-15 (49,26 → 51,43 %) es **exploratorio**: su forma se eligió viendo 2026. La entrada en
+  `registro_final.jsonl` queda corregida con una nota.
+- **Qué aporta cada señal.** Solo sacar el animal de RD del Top-15: **+1,2 pp [IC90 +0,8; +1,6]** en 2026. Con
+  exposición encima: +2,17 pp. La exposición tiene su propia sombra (decide a n ≥ 6.000) y **no se enciende por
+  esta vía**.
+- **Mirada única fijada** a los primeros 1.600 sorteos; registros malos aislados; potencia realista (+1,0 a +1,8 pp).
+- Lo confirmado usaba RD 19:30 de la víspera a las 8:00; la sombra no (a las 8:00 la O/E de 2026 es 0,97: inocuo).
+- El nulo por simulación supone el motor calibrado y en 2026 está sobreconfiado (z ≈ −3,5), así que el umbral es
+  algo anticonservador: "D hueco 0 días" (z = umbral) era descalibración, no brecha. La confirmación en jun-sep lo frenó.
+- La confirmación de RD no es fresca: el efecto se conocía (hilo 7; control del 2026-10-01).
+- No se verifica que RD (h−1):30 estuviera disponible antes de LA h:00 en cada sorteo; se vigila con `sorteos_con_rd`.
+- Las cifras del híbrido salen ahora de `brecha_2026_hibrido.py` (pasa 2026 por el mismo código de la sombra).

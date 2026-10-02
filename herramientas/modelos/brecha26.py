@@ -14,7 +14,9 @@ orden(orden_prod, scores, fecha, hora, rd) -> lista con los 38 índices.
 """
 import os, sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+_AQUI = os.path.dirname(os.path.abspath(__file__))
+if _AQUI not in sys.path:
+    sys.path.append(_AQUI)
 import exposicion  # noqa: E402
 
 K = 38

@@ -1,0 +1,4 @@
+2025    n=4056 Top-15 54.41 -> 55.45 dif 1.04 pp IC90 [0.43, 1.64]; solo RD fuera del Top-15 0.67 pp; ponderado 1.35
+2026-A  n=1920 Top-15 49.38 -> 51.82 dif 2.45 pp IC90 [1.53, 3.36]; solo RD fuera del Top-15 1.25 pp; ponderado 3.19
+2026-B  n=1403 Top-15 49.11 -> 50.89 dif 1.78 pp IC90 [0.79, 2.78]; solo RD fuera del Top-15 1.14 pp; ponderado 2.32
+2026    n=3323 Top-15 49.26 -> 51.43 dif 2.17 pp IC90 [1.49, 2.84]; solo RD fuera del Top-15 1.2 pp; ponderado 2.83

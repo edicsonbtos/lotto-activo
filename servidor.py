@@ -1401,46 +1401,83 @@ def _brecha26():
     return _BRECHA26[0]
 
 def marcador_brecha26(d, rd):
-    """Producción (orden congelado + cambio RD del Top-5) contra brecha26, mismos sorteos desde SOMBRA_B26_DESDE."""
+    """Producción (orden congelado + cambio RD del Top-5) contra brecha26, mismos sorteos desde SOMBRA_B26_DESDE.
+
+    `decision` se calcula SOLO con los primeros SOMBRA_B26_N_FINAL sorteos (por fecha y hora) y no cambia al
+    seguir acumulando: la mirada es única. `todo` es informativo. Un registro malo se salta y se cuenta."""
     b26 = _brecha26()
     pond = fichas_por_puesto(PONDERADO)
-    nombres = ("produccion", "brecha26")
-    m = {k: dict(n=0, top5=0, top15=0, pond_neto=0.0, plano15_neto=0.0) for k in nombres}
-    d15, dpo = [], []
-    con_rd = 0
+    filas, malos = [], 0
     for r in resueltas(d):
-        orden, sc = r.get("orden_completo"), r.get("scores")
-        if (r["fecha"] < SOMBRA_B26_DESDE or not orden or not sc or len(orden) != K or len(sc) != K
-                or r["salio"] not in orden):
-            continue
-        cod = rd.get((r["fecha"], r["hora"] - 1)) if r["hora"] >= 1 else None
-        cod = cod if cod in IDX else None
-        con_rd += cod is not None
-        prod = _cambiar(orden, cod) if cod is not None else orden
-        nuevo = b26.orden(prod, sc, r["fecha"], r["hora"], IDX[cod] if cod is not None else None)
-        este = {}
-        for k, o in (("produccion", prod), ("brecha26", nuevo)):
-            pos = o.index(r["salio"]) + 1
-            x = m[k]; x["n"] += 1
-            x["top5"] += pos <= 5; x["top15"] += pos <= 15
-            x["pond_neto"] += PAGO * pond[pos] - sum(pond)
-            x["plano15_neto"] += (PAGO if pos <= 15 else 0) - 15
-            este[k] = (pos <= 15, PAGO * pond[pos] - sum(pond))
-        # en puntos porcentuales ya aquí: _ic90_jornadas redondea a 2 decimales
-        d15.append((r["fecha"], 100.0 * (float(este["brecha26"][0]) - float(este["produccion"][0]))))
-        dpo.append((r["fecha"], 100.0 * (este["brecha26"][1] - este["produccion"][1]) / sum(pond)))
-    for x in m.values():
-        if x["n"]:
-            x["top5_pct"] = round(100 * x["top5"] / x["n"], 2); x["top15_pct"] = round(100 * x["top15"] / x["n"], 2)
-            x["pond_ret_pct"] = round(100 * x["pond_neto"] / (sum(pond) * x["n"]), 2)
-            x["plano15_ret_pct"] = round(100 * x["plano15_neto"] / (15 * x["n"]), 2)
-    n = m["produccion"]["n"]
-    return {"desde": SOMBRA_B26_DESDE, "n": n, "sorteos_con_rd": con_rd, "decide_con": SOMBRA_B26_N_FINAL,
-            "freno_desde": SOMBRA_B26_N_FRENO, "marcador": m,
-            "dif_top15_pp": _ic90_jornadas(d15), "dif_ponderado_pp_ficha": _ic90_jornadas(dpo),
-            "estado": ("decidir (una sola vez)" if n >= SOMBRA_B26_N_FINAL else
-                       "solo freno" if n >= SOMBRA_B26_N_FRENO else "acumulando"),
-            "preregistro": "herramientas/exploracion/PREREGISTRO_sombra_brecha26.md"}
+        if r["fecha"] >= SOMBRA_B26_DESDE:
+            filas.append(r)
+    filas.sort(key=lambda r: (r["fecha"], r["hora"]))
+
+    def medir(rs):
+        m = {k: dict(n=0, top5=0, top15=0, pond_neto=0.0, plano15_neto=0.0) for k in ("produccion", "brecha26")}
+        d15, solo_rd, dpo, con_rd, fallos = [], [], [], 0, 0
+        for r in rs:
+            try:
+                orden, sc = r["orden_completo"], [float(x) for x in r["scores"]]
+                if len(orden) != K or len(sc) != K or sorted(orden) != list(range(K)) or r["salio"] not in orden \
+                        or min(sc) < 0 or sum(sc) <= 0:
+                    raise ValueError("registro incompleto")
+                cod = rd.get((r["fecha"], r["hora"] - 1)) if r["hora"] >= 1 else None
+                cod = cod if cod in IDX else None
+                prod = _cambiar(orden, cod) if cod is not None else orden
+                nuevo = b26.orden(prod, sc, r["fecha"], r["hora"], IDX[cod] if cod is not None else None)
+            except Exception:  # noqa: BLE001  (un registro malo no apaga el bloque)
+                fallos += 1
+                continue
+            con_rd += cod is not None
+            este = {}
+            for k, o in (("produccion", prod), ("brecha26", nuevo)):
+                pos = o.index(r["salio"]) + 1
+                x = m[k]; x["n"] += 1
+                x["top5"] += pos <= 5; x["top15"] += pos <= 15
+                x["pond_neto"] += PAGO * pond[pos] - sum(pond)
+                x["plano15_neto"] += (PAGO if pos <= 15 else 0) - 15
+                este[k] = (pos <= 15, PAGO * pond[pos] - sum(pond))
+            # en puntos porcentuales ya aquí: _ic90_jornadas redondea a 2 decimales
+            d15.append((r["fecha"], 100.0 * (float(este["brecha26"][0]) - float(este["produccion"][0]))))
+            dpo.append((r["fecha"], 100.0 * (este["brecha26"][1] - este["produccion"][1]) / sum(pond)))
+            # secundaria: solo sacar el animal de RD del Top-15 (sin exposición), para separar qué aporta cada señal
+            solo_rd.append((r["fecha"], 100.0 * (float(_top15_sin_rd(prod, cod, r["salio"])) - float(este["produccion"][0]))))
+        for x in m.values():
+            if x["n"]:
+                x["top5_pct"] = round(100 * x["top5"] / x["n"], 2); x["top15_pct"] = round(100 * x["top15"] / x["n"], 2)
+                x["pond_ret_pct"] = round(100 * x["pond_neto"] / (sum(pond) * x["n"]), 2)
+                x["plano15_ret_pct"] = round(100 * x["plano15_neto"] / (15 * x["n"]), 2)
+        return dict(n=m["produccion"]["n"], sorteos_con_rd=con_rd, registros_saltados=fallos, marcador=m,
+                    dif_top15_pp=_ic90_jornadas(d15), dif_ponderado_pp_ficha=_ic90_jornadas(dpo),
+                    secundaria_solo_rd_fuera_top15_pp=_ic90_jornadas(solo_rd))
+
+    todo = medir(filas)
+    N = SOMBRA_B26_N_FINAL
+    out = {"desde": SOMBRA_B26_DESDE, "decide_con": N, "freno_desde": SOMBRA_B26_N_FRENO,
+           "estado": ("decidir (una sola vez)" if todo["n"] >= N else
+                      "solo freno" if todo["n"] >= SOMBRA_B26_N_FRENO else "acumulando"),
+           "preregistro": "herramientas/exploracion/PREREGISTRO_sombra_brecha26.md", **todo}
+    if todo["n"] >= N:
+        # primeros N sorteos válidos (el recorte se hace sobre los válidos, por fecha y hora)
+        validos = [r for r in filas if _registro_valido(r)][:N]
+        out["decision"] = medir(validos)
+    return out
+
+def _registro_valido(r):
+    try:
+        o, sc = r["orden_completo"], r["scores"]
+        return len(o) == K and len(sc) == K and sorted(o) == list(range(K)) and r["salio"] in o \
+            and all(x is not None for x in sc) and sum(float(x) for x in sc) > 0
+    except Exception:  # noqa: BLE001
+        return False
+
+def _top15_sin_rd(prod, cod, salio):
+    """¿Cae el ganador en el Top-15 si solo se saca de ahí el animal de RD (el 16º entra)? Sin exposición."""
+    if cod is None or IDX[cod] not in prod[:15]:
+        return salio in prod[:15]
+    top = [x for x in prod[:16] if x != IDX[cod]][:15]
+    return salio in top
 
 def nota_cambio_rd(info):
     if info is None:
