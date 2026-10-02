@@ -1453,10 +1453,14 @@ def fila_jugada(r, num_, nombre, sub, f5, fp):
 COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
                '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
 
-def html_compartir(juego, cuando, animales):
-    """Compartir la jugada como texto: Top 5 o Top 15, monto fijo por animal."""
-    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}">'
-            '<select aria-label="Cuántos animales"><option value="5">Top 5</option><option value="15">Top 15</option></select>'
+def html_compartir(juego, cuando, animales, anti=()):
+    """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 o ambos (el monto va solo al Top)."""
+    op_anti = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>'
+               if anti else "")
+    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}"'
+            f' data-x="{esc("|".join(anti))}">'
+            '<select aria-label="Qué compartir"><option value="5">Top 5</option><option value="15">Top 15</option>'
+            f'{op_anti}</select>'
             '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
             '<button type="button" class="sec">Compartir</button></div>')
 
@@ -1509,7 +1513,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
             f'{html_nav_hist("la", 0, n_pasados)}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
-            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]])}'
+            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in list(orden[-15:])[::-1]] if len(orden) >= 38 else ())}'
             f'{leyenda}{aviso_modelo}</section>')
 
 def html_nav_hist(tab, atras, total):
@@ -2521,20 +2525,42 @@ JS_COMPARTIR = r"""
 <script>
 document.addEventListener('click', function(ev){
   var b = ev.target.closest('.compartir button'); if(!b) return;
-  var c = b.parentNode, n = +c.querySelector('select').value;
+  var c = b.parentNode, v = c.querySelector('select').value;
   var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
-  var a = c.dataset.a.split('|').slice(0, n);
   // Formato para WhatsApp: cabecera en negrita y bloques de 5 separados por una línea en blanco.
-  var filas = a.map(function(x, k){
-    return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (m ? '  →  $' + m : '');
-  });
-  var bloques = [];
-  for(var i = 0; i < filas.length; i += 5) bloques.push(filas.slice(i, i + 5).join('\n'));
-  var t = '*' + c.dataset.t.toUpperCase() + '*\n'
-        + '📅 ' + c.dataset.f + '\n'
-        + '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n'
-        + bloques.join('\n\n')
-        + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
+  function lista(a, monto, desde){
+    var filas = a.map(function(x, k){
+      return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (monto ? '  →  $' + monto : '');
+    });
+    var bl = [];
+    for(var i = 0; i < filas.length; i += 5) bl.push(filas.slice(i, i + 5).join('
+'));
+    return bl.join('
+
+');
+  }
+  var top = c.dataset.a.split('|'), anti = c.dataset.x ? c.dataset.x.split('|') : [];
+  var t = '*' + c.dataset.t.toUpperCase() + '*
+' + '📅 ' + c.dataset.f + '
+';
+  if(v === 'anti'){
+    t += '🚫 Anti Top 15 (los menos probables, para descartar)
+
+' + lista(anti, 0);
+  } else {
+    var n = v === 'ambos' ? 15 : +v, a = top.slice(0, n);
+    t += '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '
+
+' + lista(a, m)
+       + (m ? '
+
+💰 *Total: $' + (m * a.length) + '*' : '');
+    if(v === 'ambos') t += '
+
+🚫 Anti Top 15 (para descartar)
+
+' + lista(anti, 0);
+  }
   if(navigator.share) navigator.share({text: t}).catch(function(){});
   else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });
 });

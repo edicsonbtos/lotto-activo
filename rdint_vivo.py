@@ -380,12 +380,31 @@ def _fila(k, cod, pct):
                _fx(PLANES[0][1][k - 1], "a"), _fx(PLANES[1][1][k - 1], "b")))
 
 
-def _compartir(titulo, animales):
+def _compartir(titulo, animales, anti=()):
     """Igual que html_compartir de servidor.py (el JS vive allí)."""
-    return ('<div class="compartir" data-t="%s" data-a="%s"><select aria-label="Cuántos animales">'
-            '<option value="5">Top 5</option><option value="15">Top 15</option></select>'
+    op = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>' if anti else "")
+    return ('<div class="compartir" data-t="%s" data-a="%s" data-x="%s"><select aria-label="Qué compartir">'
+            '<option value="5">Top 5</option><option value="15">Top 15</option>%s</select>'
             '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
-            '<button type="button" class="sec">Compartir</button></div>' % (_e(titulo), _e("|".join(animales))))
+            '<button type="button" class="sec">Compartir</button></div>'
+            % (_e(titulo), _e("|".join(animales)), _e("|".join(anti)), op))
+
+
+def _anti(o, pr):
+    """Los 15 animales con MENOS probabilidad de RD (el menos probable primero). Solo informativo."""
+    if len(o) < 30:
+        return ""
+    ult = list(o[-15:])[::-1]; n = len(o)
+    masa = sum(pr.get(c, 0) for c in ult)
+    filas = "".join('<li><span class="rk">%d</span><span class="n">%s</span><span class="nm">%s<small>%s %%</small></span></li>'
+                    % (n - k, _e(c), _e(NOMBRE[c]), ("%.2f" % (100 * pr.get(c, 0))).replace(".", ","))
+                    for k, c in enumerate(ult))
+    nota = ('<p class="note">Entre los 15 suman <b>%s %%</b> (el azar daría %s %%): sale uno de ellos en ~1 de cada %s '
+            'sorteos. Sirve para <b>descartar</b>, no para apostar: no cambia la jugada.</p>'
+            % (("%.1f" % (100 * masa)).replace(".", ","), ("%.1f" % (1500 / n)).replace(".", ","),
+               ("%.1f" % (1 / masa)).replace(".", ",") if masa else "—"))
+    return ('<details class="mas" id="rd-anti" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+            'Anti Top-15 · los 15 menos probables</summary><ol class="jug resto anti">%s</ol>%s</details>' % (filas, nota))
 
 
 def _sec(id_, titulo, meta, cuerpo):
@@ -500,12 +519,14 @@ def html(atras=0):
         cuerpo = ('<ol class="jug">%s%s</ol>'
                   '<details class="mas" id="rd-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
                   'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">%s</ol></details>'
-                  '%s<div class="leyenda"><p><i class="a"></i><b>Top-5 escalonado</b> (2-2-2-1-1) o '
+                  '%s%s<div class="leyenda"><p><i class="a"></i><b>Top-5 escalonado</b> (2-2-2-1-1) o '
                   '<i class="b" style="margin-left:4px"></i><b>Top-15 ponderado</b> (3-2-1).</p>'
                   '<p>Casi descartados: los que ya salieron hoy en RD y el de Lotto Activo de la misma hora. '
                   'Juega <b>después</b> de ver Lotto Activo de las %s y antes de las %s.</p></div>'
-                  % (_COLS, top5, resto, _compartir("RD Internacional %s %s" % (_fecha(f), HORAS_RD[h]),
-                                                    ["%s %s" % (c, NOMBRE[c]) for c in o[:15]]),
+                  % (_COLS, top5, resto, _anti(o, pr),
+                     _compartir("RD Internacional %s %s" % (_fecha(f), HORAS_RD[h]),
+                                ["%s %s" % (c, NOMBRE[c]) for c in o[:15]],
+                                ["%s %s" % (c, NOMBRE[c]) for c in list(o[-15:])[::-1]] if len(o) >= 30 else ()),
                      HORAS_LA[h], HORAS_RD[h]))
     partes.append('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">%s'
                   '<div class="jh"><h2 id="rd-t">Próximo RD · <span>%s</span></h2>%s</div>'
