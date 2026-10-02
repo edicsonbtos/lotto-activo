@@ -1372,10 +1372,75 @@ def marcador_sombra(d):
         difs[base + "_exp_vs_" + base] = dict(mbits=a, top5_pp=(None if b is None else
             dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
                  [round(100 * v, 2) for v in b["ic90"]]))))
+    try:
+        b26 = marcador_brecha26(d, rd)
+    except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
+        print(f"[sombra] {ahora()} brecha26 falló: {ex!r}", file=sys.stderr, flush=True)
+        b26 = {"error": repr(ex)}
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m,
             "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
                            "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
-                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp}}
+                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp},
+            "brecha26": b26}
+
+# Top-15 con la "brecha 2026" (herramientas/exploracion/PREREGISTRO_sombra_brecha26.md): Top-5 igual que la web;
+# puestos 6-15 con exposición y sin el animal de RD (h−1):30. Se aplica al PUNTUAR sobre lo congelado (solo
+# calendario y RD (h−1):30, que sale antes de LA h:00), como marcador_cambio_rd. No cambia la jugada.
+SOMBRA_B26_DESDE = "2026-10-03"
+SOMBRA_B26_N_FINAL = 1600               # decisión única (potencia 80 % para +1,5 pp de Top-15)
+SOMBRA_B26_N_FRENO = 600                # desde aquí, cada mes, solo para apagar si va < −1 pp
+_BRECHA26 = []
+
+def _brecha26():
+    if not _BRECHA26:
+        ruta = os.path.join(HERR, "modelos")
+        if ruta not in sys.path:
+            sys.path.append(ruta)
+        import brecha26
+        _BRECHA26.append(brecha26)
+    return _BRECHA26[0]
+
+def marcador_brecha26(d, rd):
+    """Producción (orden congelado + cambio RD del Top-5) contra brecha26, mismos sorteos desde SOMBRA_B26_DESDE."""
+    b26 = _brecha26()
+    pond = fichas_por_puesto(PONDERADO)
+    nombres = ("produccion", "brecha26")
+    m = {k: dict(n=0, top5=0, top15=0, pond_neto=0.0, plano15_neto=0.0) for k in nombres}
+    d15, dpo = [], []
+    con_rd = 0
+    for r in resueltas(d):
+        orden, sc = r.get("orden_completo"), r.get("scores")
+        if (r["fecha"] < SOMBRA_B26_DESDE or not orden or not sc or len(orden) != K or len(sc) != K
+                or r["salio"] not in orden):
+            continue
+        cod = rd.get((r["fecha"], r["hora"] - 1)) if r["hora"] >= 1 else None
+        cod = cod if cod in IDX else None
+        con_rd += cod is not None
+        prod = _cambiar(orden, cod) if cod is not None else orden
+        nuevo = b26.orden(prod, sc, r["fecha"], r["hora"], IDX[cod] if cod is not None else None)
+        este = {}
+        for k, o in (("produccion", prod), ("brecha26", nuevo)):
+            pos = o.index(r["salio"]) + 1
+            x = m[k]; x["n"] += 1
+            x["top5"] += pos <= 5; x["top15"] += pos <= 15
+            x["pond_neto"] += PAGO * pond[pos] - sum(pond)
+            x["plano15_neto"] += (PAGO if pos <= 15 else 0) - 15
+            este[k] = (pos <= 15, PAGO * pond[pos] - sum(pond))
+        # en puntos porcentuales ya aquí: _ic90_jornadas redondea a 2 decimales
+        d15.append((r["fecha"], 100.0 * (float(este["brecha26"][0]) - float(este["produccion"][0]))))
+        dpo.append((r["fecha"], 100.0 * (este["brecha26"][1] - este["produccion"][1]) / sum(pond)))
+    for x in m.values():
+        if x["n"]:
+            x["top5_pct"] = round(100 * x["top5"] / x["n"], 2); x["top15_pct"] = round(100 * x["top15"] / x["n"], 2)
+            x["pond_ret_pct"] = round(100 * x["pond_neto"] / (sum(pond) * x["n"]), 2)
+            x["plano15_ret_pct"] = round(100 * x["plano15_neto"] / (15 * x["n"]), 2)
+    n = m["produccion"]["n"]
+    return {"desde": SOMBRA_B26_DESDE, "n": n, "sorteos_con_rd": con_rd, "decide_con": SOMBRA_B26_N_FINAL,
+            "freno_desde": SOMBRA_B26_N_FRENO, "marcador": m,
+            "dif_top15_pp": _ic90_jornadas(d15), "dif_ponderado_pp_ficha": _ic90_jornadas(dpo),
+            "estado": ("decidir (una sola vez)" if n >= SOMBRA_B26_N_FINAL else
+                       "solo freno" if n >= SOMBRA_B26_N_FRENO else "acumulando"),
+            "preregistro": "herramientas/exploracion/PREREGISTRO_sombra_brecha26.md"}
 
 def nota_cambio_rd(info):
     if info is None:

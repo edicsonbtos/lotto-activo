@@ -88,6 +88,24 @@ def validar(regs):
           " El motor esperaba ahí Top-15 52,5 % y +117 mbits.")
 
 
+def sombra_brecha26():
+    """Sombra del Top-15 con la brecha 2026 (PREREGISTRO_sombra_brecha26.md). No cambia la jugada."""
+    try:
+        b = leer("/api/sombra").get("brecha26") or {}
+    except ValueError:
+        return
+    if not b.get("n"):
+        print(f"\nSombra brecha 2026: aún sin sorteos (cuenta desde {b.get('desde', '2026-10-03')}).")
+        return
+    p, s = b["marcador"]["produccion"], b["marcador"]["brecha26"]
+    d, r = b.get("dif_top15_pp") or {}, b.get("dif_ponderado_pp_ficha") or {}
+    print(f"\nSombra brecha 2026 ({b['n']} sorteos desde {b['desde']}; decide con {b['decide_con']}, estado: {b['estado']}):")
+    print(f"  Top-15 web {p['top15_pct']:.1f} % · brecha26 {s['top15_pct']:.1f} %  ->  diferencia {d.get('media')} pp"
+          f" (IC90 {d.get('ic90')})  · esperado ~+1,5 a +2,2")
+    print(f"  Top-15 ponderado por ficha: web {p['pond_ret_pct']:+.1f} % · brecha26 {s['pond_ret_pct']:+.1f} %"
+          f" (dif {r.get('media')} pp, IC90 {r.get('ic90')}). Antes de {b['decide_con']} sorteos NO se enciende.")
+
+
 def main():
     if "--rd" in sys.argv:
         rd()
@@ -122,6 +140,7 @@ def main():
               f"Top-5 escalonado con cambio {c['con']:+.0f} $ vs sin cambio {c['sin']:+.0f} $ "
               f"({c['dif']:+.0f} $). En la prueba: RD 6 vs 6º 14 en 377 cambios.")
     validar(regs)
+    sombra_brecha26()
     print(f"\nCon {n} sorteos el ruido es enorme (el Top-3 se mueve ±{1.96*math.sqrt(.12*.88/n)*100:.0f} puntos)."
           " Hacen falta ~1.000 para concluir.")
 
