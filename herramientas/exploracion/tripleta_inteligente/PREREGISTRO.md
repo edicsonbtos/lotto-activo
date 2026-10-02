@@ -67,3 +67,27 @@ El usuario pide una tripleta al día, probada a ciegas, y que se aplique a la we
 - **Si PASA:** la web genera 1 tripleta (la 1-2-3) cada 24 h, en vez de 2. No cambia nada más (ni la cadencia,
   ni el modelo, ni el marcador; las tripletas viejas se siguen puntuando igual).
 - **Si NO PASA:** la web no se toca.
+
+## Anexo 4 (2026-10-02, ANTES de mirar) — la regla de las 8:00 en el motor y en la tripleta
+Script: `regla_8am.py`. Desarrollo = filas < 9357. "Post-desarrollo" = 2025-12-18..2026-09-29, fechas
+corregidas. La tripleta ya se miró ahí hoy (anexos 1 y 3) y el LA de esas fechas muchas veces, así que es
+**réplica débil** y se anota en `registro_final.jsonl`. El juez final sigue siendo el marcador en vivo.
+
+**Parte A — ¿el motor (ensamble) ya está optimizado para las 8:00?**
+- A1 (desarrollo): O/E del ganador de las 8:00 contra lo que esperaba el ensamble, en 3 grupos: salió ayer,
+  hace 2-3 días, hace 4+ días. Si los tres quedan entre 0,90 y 1,10, **el motor ya está optimizado** y no se
+  prueba nada más en la parte A.
+- A2 (solo si A1 falla): corrección solo a las 8:00, P' ∝ P · m_g, con m_g ajustado por máxima verosimilitud
+  en las 8:00 del desarrollo. En post-desarrollo se mide la diferencia de mbits a las 8:00 [IC 95 % por
+  jornadas] y el Top-5 escalonado. Si los mbits dan IC > 0, se propone **en sombra**; no entra a la jugada.
+
+**Parte B — la tripleta con la regla de las 8:00 (modelo T8)**
+- T8 = `tripleta_ventana` + 13 variables: "salió ayer" × posición de inicio de la ventana (12) y "es el animal
+  de las 8:00 de hoy" (1). Mismo ajuste walk-forward, mismos parámetros.
+- Medida principal: log-verosimilitud de "sale en los 12" por animal (mbits por animal-ventana), T8 menos base.
+  Secundaria: EV por ficha de la jugada actual de la web (A: 123 + 456) y de C3.
+- Desarrollo: inicios en dev-B [5688, 9345]. Post-desarrollo: inicios del 2025-12-18 con ventana que termina
+  a más tardar el 2026-09-29.
+- **PASA** si la diferencia de mbits es > 0 con IC 95 % > 0 en dev-B **y** en post-desarrollo, y el EV de A con
+  T8 no queda por debajo del base (punto) en post-desarrollo.
+- **Si PASA:** la web usa T8 para armar sus 2 tripletas (misma cadencia y mismo marcador). Si no pasa, no se toca.
