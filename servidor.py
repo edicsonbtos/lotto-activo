@@ -1432,6 +1432,45 @@ def marcador_sombra(d):
                            "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
                            "marcador": mx, "diferencias": difs, "fallos": fallos_exp}}
 
+# ------------------------------------------------ vigilancia: racha de las 8:00
+# PREREGISTRO_racha_8am_vivo.md: ¿el Top-15 de las 8:00 acierta más tras una madrugada con acierto?
+# Solo mide sobre los pronósticos congelados; no cambia la jugada.
+RACHA8_DESDE = "2026-10-03"
+RACHA8_PARES = 300
+
+def marcador_racha_8am(d):
+    fichas = fichas_por_puesto()
+    dias = {}
+    for r in resueltas(d):
+        if r["hora"] == 0 and r["fecha"] >= RACHA8_DESDE:
+            p = puesto_ganador(r)
+            if p is not None:
+                dias[r["fecha"]] = p
+    g = {"tras_acierto": dict(n=0, top15=0, t5_neto=0.0), "tras_fallo": dict(n=0, top15=0, t5_neto=0.0)}
+    for f, p in sorted(dias.items()):
+        ayer = (date.fromisoformat(f) - timedelta(days=1)).isoformat()
+        if ayer not in dias:
+            continue
+        x = g["tras_acierto" if dias[ayer] <= 15 else "tras_fallo"]
+        x["n"] += 1; x["top15"] += p <= 15; x["t5_neto"] += PAGO * fichas[p] - sum(fichas)
+    for x in g.values():
+        x["top15_pct"] = round(100 * x["top15"] / x["n"], 1) if x["n"] else None
+        x["t5_por_ficha_pct"] = round(100 * x["t5_neto"] / (x["n"] * sum(fichas)), 1) if x["n"] else None
+    a, b = g["tras_acierto"], g["tras_fallo"]
+    n = a["n"] + b["n"]; dif = z = None
+    if a["n"] and b["n"]:
+        p1, p0 = a["top15"] / a["n"], b["top15"] / b["n"]; pc = (a["top15"] + b["top15"]) / n
+        se = math.sqrt(pc * (1 - pc) * (1 / a["n"] + 1 / b["n"])) if 0 < pc < 1 else 0
+        dif = round(100 * (p1 - p0), 1); z = round((p1 - p0) / se, 2) if se else None
+    if n < RACHA8_PARES:
+        estado = f"midiendo: {n} de {RACHA8_PARES} pares (ningún parcial decide)"
+    else:
+        pasa = (dif or 0) > 0 and (z or 0) >= 1.645 and (a["t5_por_ficha_pct"] or 0) >= (b["t5_por_ficha_pct"] or 0)
+        estado = "PASA (proponer en sombra)" if pasa else "NO PASA"
+    return {"desde": RACHA8_DESDE, "pares": n, "meta_pares": RACHA8_PARES, "grupos": g,
+            "diferencia_pp": dif, "z": z, "estado": estado,
+            "preregistro": "herramientas/exploracion/tripleta_inteligente/PREREGISTRO_racha_8am_vivo.md"}
+
 def nota_cambio_rd(info):
     if info is None:
         return ""
@@ -2688,6 +2727,9 @@ class H(BaseHTTPRequestHandler):
                        "application/json; charset=utf-8")
         elif ruta == "/api/cambio_rd15":
             self._send(json.dumps(_api(lambda: marcador_cambio_rd15(log_cargar())), ensure_ascii=False),
+                       "application/json; charset=utf-8")
+        elif ruta == "/api/racha_8am":
+            self._send(json.dumps(_api(lambda: marcador_racha_8am(log_cargar())), ensure_ascii=False),
                        "application/json; charset=utf-8")
         elif ruta == "/api/sombra":
             self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),
