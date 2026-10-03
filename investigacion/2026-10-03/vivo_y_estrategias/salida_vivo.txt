@@ -1,0 +1,7 @@
+VIVO desde 15-sep: 225 sorteos. Top-15 100/225 = 44.4%  (motor esperaba 51.6%)
+  2026-09-15..2026-09-24: 54/120 = 45.0%   esperado 51.9%   P(tan bajo o menos | motor) = 0.079
+  2026-09-25..2026-10-03: 46/105 = 43.8%   esperado 51.4%   P(tan bajo o menos | motor) = 0.073
+  2026-09-27..2026-10-03: 35/81 = 43.2%   esperado 51.5%   P(tan bajo o menos | motor) = 0.083
+  2026-09-30..2026-10-03: 19/45 = 42.2%   esperado 50.8%   P(tan bajo o menos | motor) = 0.159
+  por día: 09-15:7/12 09-16:2/12 09-17:5/12 09-18:5/12 09-19:5/12 09-20:7/12 09-21:6/12 09-22:7/12 09-23:4/12 09-24:6/12 09-25:6/12 09-26:5/12 09-27:6/12 09-28:4/12 09-29:6/12 09-30:5/12 10-01:5/12 10-02:5/12 10-03:4/9
+  En prueba (dic-25..sep-26), ventanas de 7 días con Top-15 <= 45%: 17% de las ventanas; peor 32%, mejor 64%
