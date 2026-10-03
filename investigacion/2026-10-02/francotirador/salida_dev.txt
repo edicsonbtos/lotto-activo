@@ -1,0 +1,20 @@
+n=7357 sorteos, jornadas=636
+V1 entropía: min 4.923 med 5.135 max 5.230 (máx teórico 5.248); <4,1 bits: 0; >4,2: 7357
+V1 masa Top-3: med 0.131 máx 0.220; >=0,60: 0; >=0,15: 1145
+V1 masa Top-5: med 0.207 máx 0.327; >=0,60: 0; >=0,15: 7357
+V1 masa Top-7: med 0.278 máx 0.414; >=0,60: 0; >=0,15: 7357
+V1 masa Top-15: med 0.529 máx 0.673; >=0,60: 349; >=0,15: 7357
+retorno por ficha Top-5 (todos): +24.27 %
+F1 entropía 20% menor: n=1472 ret +36.0 % IC[+16.8;+55.0]  dif vs todos +11.8 pp IC[-5.6;+30.7]  mitades +25.4/+39.4  O/E Top-5 0.965  acierto Top-5 22.4 % (modelo 23.2 %) -> NO PASA
+F2 entropía 10% menor: n=742 ret +20.3 % IC[-4.8;+44.3]  dif vs todos -4.0 pp IC[-26.3;+19.6]  mitades -39.9/+30.3  O/E Top-5 0.840  acierto Top-5 19.9 % (modelo 23.7 %) -> NO PASA
+F3 masa Top-5 20% mayor: n=1472 ret +28.9 % IC[+10.1;+47.8]  dif vs todos +4.6 pp IC[-11.7;+20.7]  mitades +20.3/+34.6  O/E Top-5 0.902  acierto Top-5 21.3 % (modelo 23.6 %) -> NO PASA
+
+F4 8:00: n=372 desde 2024-11-25
+  Top-15 acierto 60.5 % (modelo esperaba 57.3 %), O/E 1.055 IC[0.936;1.177] -> NO PASA
+  Top-5 escalonado en las 8:00: +42.1 % IC[+6.9;+82.5]
+  P(12 aciertos Top-15 seguidos desde un punto dado) = 0.240 %; racha máxima real de 8:00 en desarrollo: 16
+  Racha máxima por azar en 372 días con p=0.605: mediana 10, P(>=12) = 29.6 %, P(>=mx real) = 4.0 %
+
+F5 lunes: n=1067 O/E Top-5 1.055 IC[0.886;1.220] mitades 1.083/1.030 -> NO PASA
+F6 fríos>12d: 1.41 por sorteo, salieron 171 vs modelo 210.8 vs azar 273.5; O/E ensamble 0.811 IC[0.651;0.977] -> NO PASA
+F7 autocorr. sorpresa lag-1 por hora: rho -0.0169 IC[-0.0552;+0.0223] -> NO PASA
