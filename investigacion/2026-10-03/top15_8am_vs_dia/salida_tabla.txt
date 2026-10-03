@@ -1,0 +1,39 @@
+
+=== dev (nov24-dic25) ===   azar Top-15 = 39,5 %
+version                                      8:00      resto del día (9-19h)   esperado por el motor 8:00/resto
+motor actual                60.8% [55.7-65.6] n=372    53.6% [52.0-55.1] n=4089   57.7% / 53.4%
++ ajuste 1er sorteo         62.4% [57.3-67.1] n=372    53.6% [52.0-55.1] n=4089   58.6% / 53.4%
+B + fecha/hora (sombra)     64.5% [59.5-69.2] n=372    54.0% [52.5-55.6] n=4089   58.8% / 53.7%
+B + ventana 8am (sombra)    65.6% [60.6-70.2] n=372    54.0% [52.5-55.6] n=4089   60.0% / 53.7%
+
+=== prueba (dic25-sep26) ===   azar Top-15 = 39,5 %
+version                                      8:00      resto del día (9-19h)   esperado por el motor 8:00/resto
+motor actual                49.0% [43.0-55.1] n=261    49.5% [47.7-51.3] n=2873   53.6% / 52.4%
++ ajuste 1er sorteo         50.6% [44.5-56.6] n=261    49.5% [47.7-51.3] n=2873   55.1% / 52.4%
+B + fecha/hora (sombra)     51.3% [45.3-57.3] n=261    50.8% [49.0-52.6] n=2873   55.3% / 52.7%
+B + ventana 8am (sombra)    51.0% [44.9-57.0] n=261    50.8% [49.0-52.6] n=2873   56.1% / 52.7%
+
+=== vivo (15sep-3oct) ===   azar Top-15 = 39,5 %
+version                                      8:00      resto del día (9-19h)   esperado por el motor 8:00/resto
+motor actual                73.7% [51.2-88.2] n= 19    41.4% [34.8-48.4] n= 198   54.0% / 51.4%
++ ajuste 1er sorteo         73.7% [51.2-88.2] n= 19    41.4% [34.8-48.4] n= 198   55.5% / 51.4%
+B + fecha/hora (sombra)     78.9% [56.7-91.5] n= 19    45.5% [38.7-52.4] n= 198   55.7% / 51.7%
+B + ventana 8am (sombra)    78.9% [56.7-91.5] n= 19    45.5% [38.7-52.4] n= 198   56.5% / 51.7%
+
+=== todo desde nov-24 ===   azar Top-15 = 39,5 %
+version                                      8:00      resto del día (9-19h)   esperado por el motor 8:00/resto
+motor actual                56.4% [52.6-60.2] n=652    51.6% [50.4-52.7] n=7160   55.9% / 53.0%
++ ajuste 1er sorteo         58.0% [54.2-61.7] n=652    51.6% [50.4-52.7] n=7160   57.1% / 53.0%
+B + fecha/hora (sombra)     59.7% [55.9-63.4] n=652    52.5% [51.3-53.7] n=7160   57.3% / 53.3%
+B + ventana 8am (sombra)    60.1% [56.3-63.8] n=652    52.5% [51.3-53.7] n=7160   58.3% / 53.3%
+
+Top-15 por hora (desde nov-24), versión B:
+  8a 58%  9a 56%  10a 53%  11a 52%  12p 51%  1p 49%  2p 52%  3p 51%  4p 51%  5p 53%  6p 50%  7p 50%
+  dev (nov24-dic25)      B-A a las 8:00: +1.6 pp  IC95 [+0.0, +3.5]  (gana 8, pierde 2)
+  dev (nov24-dic25)      D-B a las 8:00: +3.2 pp  IC95 [+1.1, +5.6]  (gana 16, pierde 4)
+  prueba (dic25-sep26)   B-A a las 8:00: +1.5 pp  IC95 [+0.0, +3.4]  (gana 5, pierde 1)
+  prueba (dic25-sep26)   D-B a las 8:00: +0.4 pp  IC95 [-1.9, +2.7]  (gana 5, pierde 4)
+  vivo (15sep-3oct)      B-A a las 8:00: +0.0 pp  IC95 [-15.8, +15.8]  (gana 1, pierde 1)
+  vivo (15sep-3oct)      D-B a las 8:00: +5.3 pp  IC95 [+0.0, +15.8]  (gana 1, pierde 0)
+  todo desde nov-24      B-A a las 8:00: +1.5 pp  IC95 [+0.3, +2.8]  (gana 14, pierde 4)
+  todo desde nov-24      D-B a las 8:00: +2.1 pp  IC95 [+0.6, +3.8]  (gana 22, pierde 8)
