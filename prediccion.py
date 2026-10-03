@@ -30,6 +30,35 @@ import tripleta_ventana as TV           # noqa: E402
 
 K = 38
 
+# Ajuste del PRIMER sorteo del día (investigacion/2026-10-03/primer_sorteo_ayer/).
+# El operador casi nunca repite en el primer sorteo el ganador del primer
+# sorteo de ayer (3 veces en 1.082 días; contra el ensamble O/E 0,12 dev, 0,19
+# prueba) y repite de más el del primer sorteo de hace 3 días (O/E 1,45-1,89 en
+# las dos eras). El ensamble lo diluye porque su "retraso exacto" es común a
+# las 12 horas. Multiplicadores ajustados SOLO en dev [2000, 9357) con L2.
+AJUSTE_PRIMER = {1: 0.272, 3: 1.736}     # días atrás -> multiplicador
+
+
+def ajuste_primer_sorteo(datos, fecha_sig, hora_sig):
+    """Multiplicadores (K,) para el próximo sorteo y detalle; (None, None) si no aplica.
+
+    Solo usa datos ya registrados (filas < n): el ganador del primer sorteo de
+    hace k días, si ese sorteo fue a la misma hora que el que viene.
+    """
+    from datetime import date, timedelta
+    if datos.fecha and datos.fecha[-1] >= fecha_sig:
+        return None, None                       # no es el primero del día
+    f0 = date.fromisoformat(fecha_sig)
+    primero = {}
+    for f, h, s in zip(datos.fecha, datos.hora, datos.seq):
+        primero.setdefault(f, (int(h), int(s)))
+    m = np.ones(K); detalle = {}
+    for k, mult in AJUSTE_PRIMER.items():
+        x = primero.get((f0 - timedelta(days=k)).isoformat())
+        if x is not None and x[0] == int(hora_sig):
+            m[x[1]] *= mult; detalle[str(k)] = x[1]
+    return (m, detalle) if detalle else (None, None)
+
 
 def _frontera(n, inicio, R):
     return inicio + ((n - inicio) // R) * R
@@ -114,6 +143,11 @@ class Predictor:
         z = w @ L
         p = np.exp(z - z.max()); p /= p.sum()
         info = {"pesos": [round(float(x), 3) for x in w], "frontera_pesos": fw, "pesos_vigentes": vigentes}
+        m, detalle = ajuste_primer_sorteo(datos, fecha_sig, hora_sig)
+        if m is not None:
+            info["scores_base"] = [round(float(x), 6) for x in p]   # sin ajuste, para auditar
+            info["ajuste_primer"] = detalle
+            p = p * m; p /= p.sum()
         try:
             info["tripleta"] = [float(x) for x in self.calcular_tripleta(ext, n)]
         except Exception:

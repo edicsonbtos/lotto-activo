@@ -245,10 +245,13 @@ def sello(info):
     hist_n líneas del historial, el resultado del sorteo NO estaba dentro.
     pesos_frontera/pesos_vigentes/pesos: qué pesos del ensamble se usaron
     (no están en el historial, así que se guardan tal cual).
+    ajuste_primer/scores_base: solo en el primer sorteo del día; animales
+    ajustados (días atrás -> índice) y las probabilidades antes del ajuste.
     """
     return {k_dst: info.get(k_src) for k_dst, k_src in (
         ("hist_sha1", "hist_sha1"), ("hist_n", "hist_n"), ("calculado", "calculado"),
-        ("pesos_frontera", "frontera_pesos"), ("pesos_vigentes", "pesos_vigentes"), ("pesos", "pesos"))
+        ("pesos_frontera", "frontera_pesos"), ("pesos_vigentes", "pesos_vigentes"), ("pesos", "pesos"),
+        ("ajuste_primer", "ajuste_primer"), ("scores_base", "scores_base"))
         if info.get(k_src) is not None}
 
 # -------------------------------------------------------------- marcadores

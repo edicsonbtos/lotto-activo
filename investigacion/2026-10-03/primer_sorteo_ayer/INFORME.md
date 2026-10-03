@@ -47,7 +47,7 @@ Salvedad: la hipótesis nace de mirar el vivo y se midió de una vez en todos lo
 usado). Las dos eras (9:00 y 8:00) son independientes entre sí y ambas la muestran. Se hicieron 6 contrastes,
 y P = 9·10⁻⁵ sobrevive a Bonferroni.
 
-## Corrección propuesta (NO aplicada en producción)
+## Corrección de un factor (primer análisis)
 En el primer sorteo del día, multiplicar por m la probabilidad del ganador del primer sorteo de ayer y
 renormalizar. m = 0,171 se ajustó SOLO en dev (O = 1, E = 8,25, suavizado +0,5).
 
@@ -70,3 +70,44 @@ suma del orden de +0,3 pp de Top-15. Repartido en los 12 sorteos del día, son ~
 - Cualquier cambio de modelo sigue gobernado por `gestion_banca.VIGILANCIA` y debe pasar por `revisor-sesgo`.
 
 Reproducir: `python investigacion/2026-10-03/primer_sorteo_ayer/analizar.py COPIA_DEL_HISTORIAL` (~35 s).
+
+## Segunda ronda (mismo día, a pedido del usuario): revisión del motor y ajuste APLICADO
+
+### ¿Se satura u olvida? ¿Afecta guardar en archivos de Railway?
+- Historial del volumen: sin duplicados, ordenado, sin códigos inválidos. Los días sin sorteos (6-16 dic 2025,
+  25-28 jun 2026, feriados) son cierres reales: en la API oficial ese día solo aparece LARD (juego 3). Hay un solo
+  hueco real: falta **2026-06-24 7 PM (oficial 22 Camello)**. Es despreciable para el modelo.
+- Archivos o base de datos: el modelo lee el historial completo en milisegundos y la escritura ya es atómica. Una
+  base de datos no cambiaría ningún pronóstico.
+- Rendimiento walk-forward por semestre (mbits por sorteo): 2024-S1 +90, 2024-S2 +102, 2025-S1 +102,
+  **2025-S2 +178**, 2026-S1 +79, 2026-S2 +104. No hay desgaste continuo; 2025-S2 fue excepcional.
+- Calibración desde oct-2025: algo de exceso de confianza. La masa del Top-15 es 53,3 % y acierta 50,2 %, y la
+  franja más alta dice 5,3 % y sale 4,5 %. Un ajuste de temperatura no cambia el orden ni los aciertos, así que no se toca.
+
+### Barrido del primer sorteo (dev elige, prueba confirma)
+En dev se probaron 16 rasgos del primer sorteo: el primero de hace k días (k = 1, 2, 3, 4, 7) y el n-ésimo sorteo
+de ayer. Pasaron a prueba los 3 con p < 0,01: primero de ayer (bajo), primero de hace 3 días (alto) y 7.º de ayer (alto).
+
+| rasgo | 9:00 dev | 8:00 dev | 8:00 prueba | decisión |
+|---|---|---|---|---|
+| primero de ayer | 0,23 | 0,00 | 0,19 | entra (×0,272) |
+| primero de hace 3 días | 1,45 | 1,89 | 1,64 | entra (×1,736) |
+| 7.º de ayer | 2,68 | 0,86 | 2,30 | fuera (inestable) |
+
+Ajuste conjunto en dev (logit sobre el ensamble, L2 = 1):
+
+| tramo | mbits por primer sorteo | Top-3 | Top-5 | Top-15 |
+|---|---|---|---|---|
+| dev (n = 635) | +19,1 | 82 → 89 | 134 → 134 | 352 → 358 |
+| prueba (n = 261) | +22,2 [−2,7; +47,7], P(≤ 0) = 0,04 | 26 → 27 | 58 → 55 | 128 → 132 |
+| vivo (n = 19) | +81,4 | 3 → 4 | 4 → 5 | 14 → 14 |
+
+Repartido en el día son ~+1,8 mbits por sorteo, poco. Hoy, 2026-10-03, Iguana sale del Top-15, pero Jirafa (primer
+sorteo del 09-30) sube al #9 y **Gato sigue #16**.
+
+### En producción (`prediccion.ajuste_primer_sorteo`)
+Solo actúa en el primer sorteo del día y solo usa sorteos ya registrados. El modelo sigue llamándose `ensamble_v2`
+para que el marcador no se corte. Desde 2026-10-04, cada pronóstico ajustado guarda `ajuste_primer` y `scores_base`
+(sin ajuste), y así el marcador en vivo puede comparar las dos versiones. La verificación pre-registrada de arriba
+sigue igual. Se añade una para el premio: en los primeros sorteos desde 2026-10-04 hasta 2027-01-03, el primero de
+hace 3 días queda **falsado** si O/E < 0,8 contra `scores_base`.
