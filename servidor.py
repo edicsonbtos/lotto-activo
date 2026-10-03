@@ -2555,6 +2555,8 @@ document.addEventListener('click', function(ev){
 
 JS = JS + JS_MESA + JS_COMPARTIR
 
+MAX_POST = 64 * 1024        # los formularios son diminutos; más que esto es basura o abuso
+
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
         b = cuerpo.encode("utf-8")
@@ -2640,8 +2642,13 @@ class H(BaseHTTPRequestHandler):
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
     def _post(self):
-        n = int(self.headers.get("Content-Length", 0) or 0)
-        datos = self.rfile.read(n).decode("utf-8") if n else ""
+        try:
+            n = int(self.headers.get("Content-Length", 0) or 0)
+        except ValueError:
+            n = -1
+        if n < 0 or n > MAX_POST:
+            return self._send("Solicitud no válida", "text/plain; charset=utf-8", 400)
+        datos = self.rfile.read(n).decode("utf-8", errors="replace") if n else ""
         ruta = self.path.split("?")[0]
         if ruta == "/auto":
             # En segundo plano: consultar la fuente puede tardar varios segundos
