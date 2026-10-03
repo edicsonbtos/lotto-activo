@@ -1,0 +1,20 @@
+[D1] filas primer sorteo con motor: 911; referencias a sorteos no anteriores: 0; max|P_aj recalculado - P_aj base8| = 0.00e+00; filas no-primeras con P_aj != P: 0
+     cambiar el ganador de la propia fila t altera su multiplicador en 0 filas (debe ser 0)
+
+[D2] dev: n=635 filas; con primero de ayer: 627, con primero de hace 3: 623
+     sin L2           m1 = 0.118   m3 = 1.775
+     L2 λ=0,5 (½·b²)  m1 = 0.272   m3 = 1.736
+     L2 λ=1 (1·b²)    m1 = 0.360   m3 = 1.700
+     k=1: dev O=1 E(motor)=8.25 O/E=0.121  (O+0,5)/(E+0,5)=0.171
+     k=3: dev O=28 E(motor)=16.30 O/E=1.718  (O+0,5)/(E+0,5)=1.696
+     era 9:00 k=1: O=1 E=4.35 O/E=0.23
+     era 9:00 k=3: O=9 E=6.23 O/E=1.45
+     era 8:00 k=1: O=0 E=3.90 O/E=0.00
+     era 8:00 k=3: O=19 E=10.07 O/E=1.89
+     (contraste) ajustado SOLO en prueba con λ=1: m1=0.462 m3=1.564
+     (contraste) ajustado en dev+prueba con λ=1: m1=0.310 m3=1.701
+
+[D3] mbits por primer sorteo P_aj vs P
+     dev    n=635  +19.1 [+6.6; +32.6]
+     prueba n=261  +22.2 [-3.2; +48.9]
+     vivo   n=15 +102.0 [-6.9; +262.7]

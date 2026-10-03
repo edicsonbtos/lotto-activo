@@ -1,0 +1,50 @@
+RD primeros: 1087 días; discrepancias rdint_hist vs oficial juego 2: 0; LARD 449; GR 150 SP 143 GU 150
+discrepancias LA base8 vs oficial: 0
+
+=== DEV: LA primer sorteo vs primer sorteo de otro juego hace k días (contra P_aj) ===
+RD k=1 era=9: n= 261 O=  5 E=  7.00 O/E=0.71 [0.23;1.67] p(baja)=0.3002 p(alta)=0.8274
+RD k=1 era=8: n= 367 O= 12 E= 10.02 O/E=1.20 [0.62;2.09] p(baja)=0.7899 p(alta)=0.3052
+RD k=1 era=todo: n= 628 O= 17 E= 17.02 O/E=1.00 [0.58;1.60] p(baja)=0.5619 p(alta)=0.5344
+   (contra P sin ajuste: n= 628 O= 17 E= 16.94 O/E=1.00 [0.58;1.61] p(baja)=0.5696 p(alta)=0.5267)
+   cal crudo: n=179 O=3 E(1/38)=4.71
+RD k=2 era=9: n= 261 O=  9 E=  6.89 O/E=1.31 [0.60;2.48] p(baja)=0.8417 p(alta)=0.2564
+RD k=2 era=8: n= 366 O= 10 E=  9.29 O/E=1.08 [0.52;1.98] p(baja)=0.6706 p(alta)=0.4513
+RD k=2 era=todo: n= 627 O= 19 E= 16.18 O/E=1.17 [0.71;1.83] p(baja)=0.7993 p(alta)=0.2729
+   (contra P sin ajuste: n= 627 O= 19 E= 16.22 O/E=1.17 [0.71;1.83] p(baja)=0.7969 p(alta)=0.2757)
+   cal crudo: n=178 O=6 E(1/38)=4.68
+RD k=3 era=9: n= 261 O=  4 E=  6.78 O/E=0.59 [0.16;1.51] p(baja)=0.1941 p(alta)=0.9060
+RD k=3 era=8: n= 365 O= 15 E=  9.72 O/E=1.54 [0.86;2.55] p(baja)=0.9603 p(alta)=0.0697
+RD k=3 era=todo: n= 626 O= 19 E= 16.50 O/E=1.15 [0.69;1.80] p(baja)=0.7758 p(alta)=0.3003
+   (contra P sin ajuste: n= 626 O= 19 E= 16.79 O/E=1.13 [0.68;1.77] p(baja)=0.7531 p(alta)=0.3261)
+   cal crudo: n=177 O=3 E(1/38)=4.66
+LARD k=1 era=8: n= 159 O=  1 E=  4.41 O/E=0.23 [0.01;1.26] p(baja)=0.0656 p(alta)=0.9879
+LARD k=1 era=todo: n= 159 O=  1 E=  4.41 O/E=0.23 [0.01;1.26] p(baja)=0.0656 p(alta)=0.9879
+   (contra P sin ajuste: n= 159 O=  1 E=  4.29 O/E=0.23 [0.01;1.30] p(baja)=0.0723 p(alta)=0.9863)
+LARD k=2 era=8: n= 158 O=  5 E=  4.40 O/E=1.14 [0.37;2.65] p(baja)=0.7193 p(alta)=0.4495
+LARD k=2 era=todo: n= 158 O=  5 E=  4.40 O/E=1.14 [0.37;2.65] p(baja)=0.7193 p(alta)=0.4495
+   (contra P sin ajuste: n= 158 O=  5 E=  4.32 O/E=1.16 [0.38;2.70] p(baja)=0.7329 p(alta)=0.4339)
+LARD k=3 era=8: n= 157 O=  7 E=  4.36 O/E=1.60 [0.64;3.30] p(baja)=0.9242 p(alta)=0.1520
+LARD k=3 era=todo: n= 157 O=  7 E=  4.36 O/E=1.60 [0.64;3.30] p(baja)=0.9242 p(alta)=0.1520
+   (contra P sin ajuste: n= 157 O=  7 E=  4.29 O/E=1.63 [0.66;3.36] p(baja)=0.9299 p(alta)=0.1426)
+
+=== Contexto crudo (descriptivo): cada juego vs SU primer sorteo de ayer (todo el rango) ===
+LA propio k=1: n=1079 O=3 E=28.4 O/E=0.11
+LA propio k=3: n=1072 O=50 E=28.2 O/E=1.77
+RD propio k=1: n=1072 O=9 E=28.2 O/E=0.32
+RD propio k=3: n=1065 O=28 E=28.0 O/E=1.00
+LARD propio k=1: n=448 O=13 E=11.8 O/E=1.10
+LARD propio k=3: n=446 O=9 E=11.7 O/E=0.77
+Granjita propio k=1: n=148 O=1 E=3.9 O/E=0.26
+Granjita propio k=3: n=144 O=5 E=3.8 O/E=1.32
+SelvaPlus propio k=1: n=137 O=0 E=3.6 O/E=0.00
+SelvaPlus propio k=3: n=132 O=2 E=3.5 O/E=0.58
+Guacharo propio k=1: n=33 O=0 E=0.9 O/E=0.00
+Guacharo propio k=3: n=34 O=0 E=0.9 O/E=0.00
+
+=== Reverso (descriptivo): RD 8:30 de hoy == LA primer sorteo de hace k días (crudo vs 1/38) ===
+k=1 cal+dev era 9:00: n=440 O=9 E=11.6 O/E=0.78 p(baja)=0.281
+k=1 era 8:00: n=632 O=19 E=16.6 O/E=1.14 p(baja)=0.766
+k=1 RD-dev 2024-03..2025-06: n=477 O=10 E=12.6 O/E=0.80 p(baja)=0.292
+k=3 cal+dev era 9:00: n=438 O=9 E=11.5 O/E=0.78 p(baja)=0.286
+k=3 era 8:00: n=627 O=21 E=16.5 O/E=1.27 p(baja)=0.888
+k=3 RD-dev 2024-03..2025-06: n=477 O=14 E=12.6 O/E=1.12 p(baja)=0.720

@@ -1,0 +1,13 @@
+lambda 30
+  E_hueco_dias_2-2             +0.136 x1.15
+  G8xF_n_3d                    -0.114 x0.89
+  A_ayer_pos7                  +0.107 x1.11
+  B_anteayer_pos8              -0.086 x0.92
+  G8xD_hueco_sorteos_13-18     +0.085 x1.09
+  G8xD_hueco_sorteos_25-36     +0.083 x1.09
+  E_hueco_dias_3-3             -0.080 x0.92
+  G8xE_hueco_dias_4-4          +0.080 x1.08
+  D_hueco_sorteos_37-48        -0.075 x0.93
+  E_hueco_dias_1-1             +0.075 x1.08
+  G8xD_hueco_sorteos_19-24     -0.074 x0.93
+  C_primero_hace6              -0.074 x0.93

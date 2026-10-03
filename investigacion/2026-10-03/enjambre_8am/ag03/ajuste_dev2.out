@@ -1,0 +1,11 @@
+multiplicadores dev todas: {'dia': 0.607, 'dia+1': 0.661, 'dia-1': 0.872, 'hora12': 0.777}
+C3 multiplicadores (solo primer sorteo dev): {'dia': np.float64(0.584), 'dia+1': np.float64(0.368)}
+  C3 dev era 9:00: O=8 E(q_C1)=9.3 O/E=0.86
+  C1 dev era 9:00: O=8 E(P_aj)=14.4 O/E=0.56
+  C2 dev era 9:00: O=13 E(P_aj)=21.6 O/E=0.60
+  C3 dev era 8:00: O=8 E(q_C1)=13.2 O/E=0.61
+  C1 dev era 8:00: O=8 E(P_aj)=20.3 O/E=0.39
+  C2 dev era 8:00: O=16 E(P_aj)=29.5 O/E=0.54
+  dev primer P_aj: Top-5 134  Top-15 358
+  dev primer C1: Top-5 137  Top-15 370
+  dev primer C2: Top-5 138  Top-15 368

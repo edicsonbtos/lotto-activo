@@ -1,0 +1,16 @@
+RD primeros: 1087 días; discrepancias rdint_hist vs oficial juego 2: 0; LARD 449; GR 150 SP 143 GU 150
+discrepancias LA base8 vs oficial: 0
+=== Descriptivo: LA primer sorteo vs primer sorteo de Granjita / SelvaPlus / Guacharo hace k días ===
+Granjita k=1: n= 149 O=  2 E=  4.15 O/E=0.48 [0.06;1.74] p(baja)=0.2164 p(alta)=0.9191
+Granjita k=3: n= 147 O=  6 E=  4.02 O/E=1.49 [0.55;3.25] p(baja)=0.8873 p(alta)=0.2179
+SelvaPlus k=1: n= 140 O=  8 E=  3.90 O/E=2.05 [0.89;4.05] p(baja)=0.9816 p(alta)=0.0452
+SelvaPlus k=3: n= 138 O=  7 E=  3.73 O/E=1.87 [0.75;3.86] p(baja)=0.9631 p(alta)=0.0849
+Guacharo k=1: n=  72 O=  2 E=  1.86 O/E=1.07 [0.13;3.88] p(baja)=0.7138 p(alta)=0.5556
+Guacharo k=3: n=  72 O=  2 E=  2.04 O/E=0.98 [0.12;3.55] p(baja)=0.6664 p(alta)=0.6042
+=== Descriptivo: RD propio k=1 por tramo (crudo vs 1/38) ===
+cal 2023-09..2024-02: n=172 O=4 E=4.5 O/E=0.88 p(baja)=0.53
+RD-dev 2024-03..2025-06: n=477 O=4 E=12.6 O/E=0.32 p(baja)=0.0051
+RD-test 2025-07..2026-04-12: n=265 O=0 E=7.0 O/E=0.00 p(baja)=0.00094
+2026-04-13..: n=158 O=1 E=4.2 O/E=0.24 p(baja)=0.081
+LARD propio LARD 2025-07..12-19: n=171 O=3 E=4.5 O/E=0.67
+LARD propio LARD 2025-12-20..: n=277 O=10 E=7.3 O/E=1.37

@@ -1,0 +1,36 @@
+historial: lineas 12672 slots 12672 duplicados 0
+codigos invalidos 0
+oficial juego1 slots 5148 2025-07-01 2026-09-22
+codigos oficiales distintos 38 00 aparece 146 0 aparece 134
+
+[B1] historial vs oficial 2025-07-01..2026-09-22: comunes 5148, solo historial 0, solo oficial 0, valores distintos 0
+  solo historial: []
+  solo oficial: []
+  distintos: []
+  primeros sorteos distintos (hora o código): 0 []
+  repeticiones primero-ayer: historial 1/422, oficial 1/422
+  días con repetición en OFICIAL y no en historial: []
+  días con repetición en historial y no en oficial: []
+  días-par en oficial y no en historial: []
+  días-par en historial y no en oficial: []
+
+[B2] historial vs lottoactivo.csv (LH+TZ) 2026-04-13..2026-09-13: comunes 1800, solo hist 0, solo LH 0, distintos 0 []
+  solo LH: []  solo hist: []
+  repeticiones primero-ayer: LH 1/148, historial (mismo tramo) 1/148
+  oficial vs LH: comunes 1800, distintos 0
+
+[C] patrón crudo contra azar 1/38 (sin motor)
+  LA oficial (juego 1) 2025-07..09-22 primero=primero ayer   1/ 422 (azar  11.1) O/E 0.09 P(<=k)=0.00018 | demás horas misma hora ayer 123/4642 O/E 1.01 | primero hace 3 días 23/415 O/E 2.11 P(>=k)=0.00095
+  LA historial mismo tramo           primero=primero ayer   1/ 422 (azar  11.1) O/E 0.09 P(<=k)=0.00018 | demás horas misma hora ayer 123/4642 O/E 1.01 | primero hace 3 días 23/415 O/E 2.11 P(>=k)=0.00095
+  LA LH+TZ 2026-04..09               primero=primero ayer   1/ 148 (azar   4.0) O/E 0.25 P(<=k)=0.092 | demás horas misma hora ayer 43/1628 O/E 0.98 | primero hace 3 días 5/144 O/E 1.28 P(>=k)=0.35
+  RD Int oficial (juego 2)           primero=primero ayer   1/ 422 (azar  11.1) O/E 0.09 P(<=k)=0.00018 | demás horas misma hora ayer 120/4642 O/E 0.98 | primero hace 3 días 12/415 O/E 1.10 P(>=k)=0.41
+  LARD oficial (juego 3)             primero=primero ayer  13/ 448 (azar  11.8) O/E 1.10 P(<=k)=0.7 | demás horas misma hora ayer 140/5824 O/E 0.91 | primero hace 3 días 9/446 O/E 0.77 P(>=k)=0.83
+  RD Int rdint_hist 2023-09..        primero=primero ayer   9/1072 (azar  28.2) O/E 0.32 P(<=k)=2.5e-05 | demás horas misma hora ayer 304/11776 O/E 0.98 | primero hace 3 días 28/1065 O/E 1.00 P(>=k)=0.53
+  lottoactivordint (K=37) 2026-04..  primero=primero ayer   1/ 148 (azar   4.0) O/E 0.25 P(<=k)=0.092 | demás horas misma hora ayer 43/1628 O/E 0.98 | primero hace 3 días 5/144 O/E 1.28 P(>=k)=0.35
+  lagranjita (K=37) 2026-04..        primero=primero ayer   1/ 148 (azar   4.0) O/E 0.25 P(<=k)=0.092 | demás horas misma hora ayer 39/1628 O/E 0.89 | primero hace 3 días 5/144 O/E 1.28 P(>=k)=0.35
+  guacharoactivo (K=76) 2026-04..    primero=primero ayer   0/ 148 (azar   1.9) O/E 0.00 P(<=k)=0.14 | demás horas misma hora ayer 7/1628 O/E 0.33 | primero hace 3 días 1/144 O/E 0.53 P(>=k)=0.85
+  selvaplus (K=100) 2026-04..        primero=primero ayer   0/ 140 (azar   1.4) O/E 0.00 P(<=k)=0.25 | demás horas misma hora ayer 30/1546 O/E 1.94 | primero hace 3 días 2/134 O/E 1.49 P(>=k)=0.39
+
+[C2] LA oficial por tramo
+  oficial 2025-07-01..2025-12-19 (dev) primero=primero ayer   0/ 157 (azar   4.1) O/E 0.00 P(<=k)=0.016 | demás horas misma hora ayer 44/1727 O/E 0.97 | primero hace 3 días 10/153 O/E 2.48 P(>=k)=0.0085
+  oficial 2025-12-20..2026-09-14 (prueba) primero=primero ayer   1/ 257 (azar   6.8) O/E 0.15 P(<=k)=0.009 | demás horas misma hora ayer 78/2827 O/E 1.05 | primero hace 3 días 12/252 O/E 1.81 P(>=k)=0.038

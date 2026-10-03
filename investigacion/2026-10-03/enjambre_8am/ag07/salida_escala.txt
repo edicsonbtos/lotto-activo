@@ -1,0 +1,8 @@
+RD primeros: 1087 días; discrepancias rdint_hist vs oficial juego 2: 0; LARD 449; GR 150 SP 143 GU 150
+discrepancias LA base8 vs oficial: 0
+RD k=1: m=0.999 mbits dev (in-sample)=+0.00 [-0.02;+0.02] Top5 134->134 Top15 358->358
+RD k=2: m=1.169 mbits dev (in-sample)=+0.54 [-2.30;+3.64] Top5 134->134 Top15 358->359
+RD k=3: m=1.147 mbits dev (in-sample)=+0.42 [-2.02;+3.03] Top5 134->137 Top15 358->359
+LARD k=1: m=0.305 mbits dev (in-sample)=+4.37 [-1.62;+7.97] Top5 134->135 Top15 358->363
+LARD k=2: m=1.122 mbits dev (in-sample)=+0.09 [-0.95;+1.32] Top5 134->134 Top15 358->358
+LARD k=3: m=1.542 mbits dev (in-sample)=+1.57 [-2.98;+6.67] Top5 134->134 Top15 358->359

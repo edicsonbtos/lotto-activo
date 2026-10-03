@@ -7,10 +7,13 @@ Solo dependen del calendario, así que se aplican al PUNTUAR sobre lo ya congela
 la sombra los mide en vivo desde 2026-10-02 (PREREGISTRO_sombra_exposicion.md).
 
 aplicar(p, fecha, hora) -> 38 probabilidades normalizadas.  fecha 'AAAA-MM-DD', hora 0..11 (0 = 8:00).
+aplicar_8am(p, fecha, hora) -> lo mismo y, solo a las 8:00, un extra a la ventana {día−1, día, día+1}
+(variante en sombra desde 2026-10-04: investigacion/2026-10-03/enjambre_8am/PREREGISTRO_sombra_8am.md).
 """
 POS = ["0", "00"] + [str(i) for i in range(1, 37)]
 IDX = {c: i for i, c in enumerate(POS)}
 MULT = {"dia-1": 0.881, "dia": 0.816, "dia+1": 0.750, "dia+2": 0.984, "hora12": 0.955, "mes": 0.903}
+VENTANA_8AM = 0.59      # (25 + 0,5) / (42,7 + 0,5) en dev sobre P_aj × MULT, solo primeros sorteos; CONGELADO
 
 
 def numeros(fecha, hora):
@@ -24,5 +27,18 @@ def aplicar(p, fecha, hora):
     for n, clave in numeros(fecha, int(hora)):
         if 1 <= n <= 36:
             q[IDX[str(n)]] *= MULT[clave]
+    s = sum(q)
+    return [x / s for x in q]
+
+
+def aplicar_8am(p, fecha, hora):
+    """aplicar() y, en el primer sorteo (hora 0 = 8:00), × VENTANA_8AM a día−1, día y día+1."""
+    q = aplicar(p, fecha, hora)
+    if int(hora) != 0:
+        return q
+    d = int(fecha[8:10])
+    for n in (d - 1, d, d + 1):
+        if 1 <= n <= 36:
+            q[IDX[str(n)]] *= VENTANA_8AM
     s = sum(q)
     return [x / s for x in q]

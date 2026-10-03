@@ -1,0 +1,29 @@
+
+### 2026 (01-01 a 09-14; dentro del tramo de prueba): 250 primeros sorteos
+modelo                            mbits vs PROD [IC95 días]  Top5  Top15 neto T5esc  neto T15p
+motor sin ajuste (P)                  -23.9 [ -48.9;  +2.1]    54    123       +370       +310
+PRODUCCIÓN (P_aj)                      +0.0 [  +0.0;  +0.0]    53    127       +370       +430
++ventana fecha x0,486                 +22.0 [  -4.0; +43.5]    60    129       +730       +850
++exposición+ventana x0,59             +22.1 [  -4.3; +44.0]    59    128       +730       +820
++salió ayer/anteayer x1,378           +13.7 [ -14.4; +39.7]    56    131       +520       +700
++ventana +ayer/anteayer               +35.1 [  -2.7; +70.8]    62    131       +790       +970
+
+### VIVO (09-15 a 09-29; pronósticos reconstruidos = congelados): 15 primeros sorteos
+modelo                            mbits vs PROD [IC95 días]  Top5  Top15 neto T5esc  neto T15p
+motor sin ajuste (P)                 -102.0 [-262.7;  +6.9]     3     11        +30       +135
+PRODUCCIÓN (P_aj)                      +0.0 [  +0.0;  +0.0]     4     12        +90       +225
++ventana fecha x0,486                 +59.6 [ +53.6; +66.3]     4     12        +90       +225
++exposición+ventana x0,59             +67.2 [ +60.7; +73.9]     4     12        +90       +225
++salió ayer/anteayer x1,378            +0.5 [-120.5;+101.4]     3     12        +30       +165
++ventana +ayer/anteayer               +58.3 [ -63.6;+158.1]     3     12        +30       +165
+
+### 2026 completo (ene-sep): 265 primeros sorteos
+modelo                            mbits vs PROD [IC95 días]  Top5  Top15 neto T5esc  neto T15p
+motor sin ajuste (P)                  -28.3 [ -54.1;  -2.5]    57    134       +400       +445
+PRODUCCIÓN (P_aj)                      +0.0 [  +0.0;  +0.0]    57    139       +460       +655
++ventana fecha x0,486                 +24.2 [  +0.7; +44.6]    64    141       +820      +1075
++exposición+ventana x0,59             +24.6 [  +1.0; +46.2]    63    140       +820      +1045
++salió ayer/anteayer x1,378           +13.0 [ -13.7; +39.8]    59    143       +550       +865
++ventana +ayer/anteayer               +36.4 [  -0.3; +71.3]    65    143       +820      +1135
+
+Fichas: Top-5 escalonado 2-2-2-1-1 = 8 fichas/sorteo; Top-15 ponderado 3-3-3-2-2-1x10 = 23 fichas/sorteo; pago 30.

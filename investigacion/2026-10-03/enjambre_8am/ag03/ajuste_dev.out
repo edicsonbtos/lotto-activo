@@ -1,0 +1,29 @@
+dia     dev_todas  n= 7357 O= 120 E= 197.9 O/E=0.61 [0.50;0.72] p=0.0000
+dia     dev_demas  n= 6722 O= 110 E= 180.4 O/E=0.61 [0.50;0.73] p=0.0000
+dia     dev_primer n=  635 O=  10 E=  17.5 O/E=0.57 [0.27;1.05] p=0.0781
+        era 9:00 todas O/E=0.68
+        era 8:00 todas O/E=0.56
+dia+1   dev_todas  n= 7357 O= 132 E= 199.8 O/E=0.66 [0.55;0.78] p=0.0000
+dia+1   dev_demas  n= 6722 O= 126 E= 182.7 O/E=0.69 [0.57;0.82] p=0.0000
+dia+1   dev_primer n=  635 O=   6 E=  17.2 O/E=0.35 [0.13;0.76] p=0.0037
+        era 9:00 todas O/E=0.62
+        era 8:00 todas O/E=0.69
+dia-1   dev_todas  n= 7125 O= 163 E= 187.0 O/E=0.87 [0.74;1.02] p=0.0811
+dia-1   dev_demas  n= 6510 O= 154 E= 170.1 O/E=0.91 [0.77;1.06] p=0.2284
+dia-1   dev_primer n=  615 O=   9 E=  16.9 O/E=0.53 [0.24;1.01] p=0.0558
+        era 9:00 todas O/E=0.76
+        era 8:00 todas O/E=0.95
+hora12  dev_todas  n= 7357 O= 150 E= 193.2 O/E=0.78 [0.66;0.91] p=0.0015
+hora12  dev_demas  n= 6722 O= 137 E= 176.7 O/E=0.78 [0.65;0.92] p=0.0023
+hora12  dev_primer n=  635 O=  13 E=  16.5 O/E=0.79 [0.42;1.35] p=0.4733
+        era 9:00 todas O/E=0.95
+        era 8:00 todas O/E=0.67
+multiplicadores dev todas: {'dia': 0.607, 'dia+1': 0.661, 'dia-1': 0.872, 'hora12': 0.777}
+C1_fecha       dev   n=635 mbits/primer=+12.1 [+3.4;+19.9]
+C1_fecha       9:00  n=263 mbits/primer=+8.2 [-6.4;+21.4]
+C1_fecha       8:00  n=372 mbits/primer=+14.9 [+4.8;+23.8]
+C1_fecha       demás horas dev (control) mbits/sorteo=+5.8
+C2_fecha_hora  dev   n=635 mbits/primer=+13.0 [+3.2;+22.0]
+C2_fecha_hora  9:00  n=263 mbits/primer=+10.1 [-5.6;+24.6]
+C2_fecha_hora  8:00  n=372 mbits/primer=+15.0 [+2.7;+25.7]
+C2_fecha_hora  demás horas dev (control) mbits/sorteo=+6.9

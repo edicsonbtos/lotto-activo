@@ -1340,8 +1340,11 @@ SOMBRA_EXP_DESDE = "2026-10-02"         # exposición (fecha/hora): PREREGISTRO_
 SOMBRA_EXP_N_PRIMERA = 930              # primera mirada (solo para apagar); la decisión de encender es con SOMBRA_EXP_N_FINAL
 SOMBRA_EXP_N_FINAL = 6000               # ~1,5 años: n con potencia ~75-80 % para ~+2,3 mbits (ver el pre-registro)
 _EXPOSICION = []                        # módulo cargado una vez (evita tocar sys.path en cada consulta)
+SOMBRA_8AM_DESDE = "2026-10-04"         # ventana de fecha a las 8:00: investigacion/2026-10-03/enjambre_8am/
+SOMBRA_8AM_N_FRENO = 180                # desde aquí, apagar si O/E de la ventana >= 1,0
+SOMBRA_8AM_N_FINAL = 730                # decisión única (≈ 2 años de primeros sorteos)
 
-def _exposicion(p, f, h):
+def _exposicion(p, f, h, variante="aplicar"):
     """Multiplicadores congelados por fecha y hora (herramientas/modelos/exposicion.py); solo calendario."""
     if not _EXPOSICION:
         ruta = os.path.join(HERR, "modelos")
@@ -1349,7 +1352,11 @@ def _exposicion(p, f, h):
             sys.path.append(ruta)
         import exposicion
         _EXPOSICION.append(exposicion)
-    return _EXPOSICION[0].aplicar(p, f, h)
+    return getattr(_EXPOSICION[0], variante)(p, f, h)
+
+def _ventana_8am(fecha):
+    d = int(fecha[8:10])
+    return [IDX[str(n)] for n in (d - 1, d, d + 1) if 1 <= n <= 36]
 
 def _ic90_jornadas(pares):
     """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)]."""
@@ -1383,7 +1390,19 @@ def marcador_sombra(d):
     con_rd = 0
     dif = {"ensamble": ([], []), "ag12_rd": ([], [])}      # (dif mbits, dif Top-5 en 0/1) por sorteo y jornada
     fallos_exp = 0
+    v8 = dict(n=0, O=0, E=0.0, top5_exp=0, top5_exp8=0, mbits_dif=[])   # solo 8:00, exp8 contra exp
     for r in resueltas(d):
+        if r["fecha"] >= SOMBRA_8AM_DESDE and int(r["hora"]) == 0 and r.get("scores"):
+            try:
+                pe = _exposicion(r["scores"], r["fecha"], 0)
+                p8 = _exposicion(r["scores"], r["fecha"], 0, "aplicar_8am")
+                w = r["salio"]; ven = _ventana_8am(r["fecha"])
+                v8["n"] += 1; v8["O"] += w in ven; v8["E"] += sum(pe[i] for i in ven)
+                for k, p in (("top5_exp", pe), ("top5_exp8", p8)):
+                    v8[k] += sum(1 for i in range(K) if (-p[i], i) < (-p[w], w)) < 5
+                v8["mbits_dif"].append((r["fecha"], 1000 * math.log2(p8[w] / pe[w])))
+            except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
+                print(f"[sombra] {ahora()} ventana 8:00 falló: {ex!r}", file=sys.stderr, flush=True)
         s = r.get("sombra")
         if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not r.get("scores"):
             continue
@@ -1429,7 +1448,12 @@ def marcador_sombra(d):
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m,
             "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
                            "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
-                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp}}
+                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp},
+            "ventana_8am": {"desde": SOMBRA_8AM_DESDE, "freno_n": SOMBRA_8AM_N_FRENO, "decide_con": SOMBRA_8AM_N_FINAL,
+                            "n": v8["n"], "ventana_obs": v8["O"], "ventana_esp": round(v8["E"], 2),
+                            "oe": round(v8["O"] / v8["E"], 3) if v8["E"] else None,
+                            "top5_exp": v8["top5_exp"], "top5_exp8": v8["top5_exp8"],
+                            "mbits_exp8_vs_exp": _ic90_jornadas(v8["mbits_dif"])}}
 
 def nota_cambio_rd(info):
     if info is None:

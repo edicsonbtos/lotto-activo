@@ -1,0 +1,56 @@
+filas dev 635 rasgos 98
+
+C1 (98 rasgos) OOF n=529 lams=[1000, 1000, 100, 1000, 30]: mbits -19.4 [-32.9; -6.5] P(<=0)=0.999
+   era 9:00 n=157: +3.3 [+0.7; +5.9]  Top5 24->26  Top15 74->72
+   era 8:00 n=372: -28.9 [-48.0; -10.3]  Top5 90->96  Top15 232->230
+   pliegue 1 2024-06-23..2024-10-07: -1.6
+   pliegue 2 2024-10-08..2025-01-23: +4.6
+   pliegue 3 2025-01-24..2025-05-09: -2.7
+   pliegue 4 2025-05-10..2025-08-25: +2.9
+   pliegue 5 2025-08-26..2025-12-19: -100.9
+
+C2 (66 rasgos) OOF n=529 lams=[1000, 1000, 100, 1000, 30]: mbits -17.7 [-30.6; -4.7] P(<=0)=0.997
+   era 9:00 n=157: +3.1 [+0.5; +5.7]  Top5 24->26  Top15 74->72
+   era 8:00 n=372: -26.5 [-44.9; -8.3]  Top5 90->97  Top15 232->230
+   pliegue 1 2024-06-23..2024-10-07: -1.5
+   pliegue 2 2024-10-08..2025-01-23: +4.4
+   pliegue 3 2025-01-24..2025-05-09: -2.1
+   pliegue 4 2025-05-10..2025-08-25: +2.8
+   pliegue 5 2025-08-26..2025-12-19: -92.9
+
+Ablación sobre C1 (OOF mbits, quitando un bloque):
+   sin A: -8.2 [-17.0; +0.1] lams=[1000, 1000, 100, 1000, 100]
+   sin B: -8.6 [-17.2; -0.3] lams=[1000, 1000, 100, 1000, 100]
+   sin C: -19.5 [-33.3; -5.5] lams=[1000, 1000, 100, 1000, 30]
+   sin D: -15.0 [-28.3; -2.0] lams=[1000, 1000, 30, 1000, 30]
+   sin E: -17.3 [-28.4; -7.1] lams=[1000, 1000, 300, 1000, 30]
+   sin F: -5.1 [-16.1; +5.5] lams=[1000, 100, 30, 1000, 100]
+   sin G: -1.5 [-7.8; +4.7] lams=[1000, 1000, 100, 1000, 1000]
+
+C1 final: lambda=1000; 12 coeficientes mayores (multiplicador exp(b)):
+   F_n_7d                       +0.016  x1.02
+   F_n_3d                       +0.013  x1.01
+   E_hueco_dias_2-2             +0.012  x1.01
+   D_hueco_sorteos_13-18        +0.009  x1.01
+   E_hueco_dias_3-3             -0.007  x0.99
+   G8xD_hueco_sorteos_13-18     +0.007  x1.01
+   F_n_1d                       +0.007  x1.01
+   E_hueco_dias_1-1             +0.007  x1.01
+   D_hueco_sorteos_25-36        -0.006  x0.99
+   D_hueco_sorteos_37-48        -0.005  x0.99
+   G8xE_hueco_dias_2-2          +0.005  x1.01
+   E_hueco_dias_4-4             -0.005  x0.99
+
+C2 final: lambda=1000; 12 coeficientes mayores (multiplicador exp(b)):
+   F_n_7d                       +0.016  x1.02
+   F_n_3d                       +0.013  x1.01
+   E_hueco_dias_2-2             +0.012  x1.01
+   D_hueco_sorteos_13-18        +0.009  x1.01
+   E_hueco_dias_3-3             -0.007  x0.99
+   G8xD_hueco_sorteos_13-18     +0.007  x1.01
+   F_n_1d                       +0.007  x1.01
+   E_hueco_dias_1-1             +0.007  x1.01
+   D_hueco_sorteos_25-36        -0.006  x0.99
+   D_hueco_sorteos_37-48        -0.005  x0.99
+   G8xE_hueco_dias_2-2          +0.005  x1.01
+   E_hueco_dias_4-4             -0.005  x0.99

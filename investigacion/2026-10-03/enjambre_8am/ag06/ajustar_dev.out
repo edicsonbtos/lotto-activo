@@ -1,0 +1,23 @@
+Validación cruzada entre eras (ajusta en una era, mide en la otra), mbits por primer sorteo
+C1_temperatura   λ=  0  9→8   -6.7  8→9   -0.3  media   -3.5
+C1_temperatura   λ=  2  9→8   -4.9  8→9   -0.2  media   -2.6
+C1_temperatura   λ=  5  9→8   -3.4  8→9   -0.2  media   -1.8
+C1_temperatura   λ= 10  9→8   -2.1  8→9   -0.2  media   -1.1
+C1_temperatura   λ= 20  9→8   -1.0  8→9   -0.2  media   -0.6
+C1_temperatura   λ= 50  9→8   -0.3  8→9   -0.1  media   -0.2
+C2_bins_hueco    λ=  0  9→8  -31.3  8→9  +15.7  media   -7.8
+C2_bins_hueco    λ=  2  9→8  -26.1  8→9  +16.0  media   -5.0
+C2_bins_hueco    λ=  5  9→8  -20.0  8→9  +16.2  media   -1.9
+C2_bins_hueco    λ= 10  9→8  -13.1  8→9  +16.2  media   +1.6
+C2_bins_hueco    λ= 20  9→8   -5.2  8→9  +15.6  media   +5.2
+C2_bins_hueco    λ= 50  9→8   +2.5  8→9  +13.1  media   +7.8
+C3_temp+bins     λ=  0  9→8  -43.2  8→9  +15.7  media  -13.7
+C3_temp+bins     λ=  2  9→8  -32.9  8→9  +16.0  media   -8.5
+C3_temp+bins     λ=  5  9→8  -23.4  8→9  +16.2  media   -3.6
+C3_temp+bins     λ= 10  9→8  -14.3  8→9  +16.2  media   +1.0
+C3_temp+bins     λ= 20  9→8   -5.4  8→9  +15.7  media   +5.2
+C3_temp+bins     λ= 50  9→8   +2.5  8→9  +13.1  media   +7.8
+
+C1_temperatura: λ=50 β=0.983 mult bins A,B,C,D = [1. 1. 1. 1.]  dev in-sample +0.1 (era9 +0.4, era8 -0.1) mbits
+C2_bins_hueco: λ=50 β=1.000 mult bins A,B,C,D = [1.17  0.915 0.967 0.966]  dev in-sample +16.4 (era9 +31.0, era8 +6.0) mbits
+C3_temp+bins: λ=50 β=0.994 mult bins A,B,C,D = [1.17  0.915 0.967 0.966]  dev in-sample +16.4 (era9 +31.0, era8 +6.0) mbits

@@ -27,6 +27,17 @@ Estas ideas ya se probaron y quedaron cerradas. No se repiten sin una razón nue
 
 - **SEÑAL (2026-10-03, `investigacion/2026-10-03/primer_sorteo_ayer/`): el primer sorteo del día casi nunca repite el primer sorteo de ayer.** 3 veces en 1.082 días (unas 28 por azar). Contra el motor: O/E 0,12 en dev y 0,19 en prueba (P total 9·10⁻⁵). Solo pasa en el primer sorteo: en las demás horas, "misma hora de ayer" da O/E 1,06. El motor lo captura a medias, porque el retraso 12 tiene un peso compartido entre horas. Además, el primer sorteo de hace 3 días sale de más (O/E 1,45-1,89 en las dos eras). **APLICADO desde 2026-10-04** en `prediccion.ajuste_primer_sorteo` (×0,272 y ×1,736, ajustados en dev): +22 mbits por primer sorteo en prueba [−3; +48]. Los registros guardan `scores_base` para auditarlo. El 7.º de ayer se descartó por inestable. El vivo está pre-registrado en el INFORME. "Salió ayer" en general y "hace 2-3 sorteos" a las 8:00 ya están bien calibrados (O/E 0,7-1,2).
 
+- **Enjambre 8:00 (2026-10-03, `investigacion/2026-10-03/enjambre_8am/INFORME.md`, 10 agentes, ya corrido): sin ventaja nueva confirmada.**
+  - **NULOS:** memoria completa del primer sorteo (233 rasgos), distribución marginal, relaciones numéricas de noche a
+    mañana, bolsa o balanceo de primeros sorteos, temperatura a las 8:00, regla cruzada de primer sorteo entre juegos,
+    modelo especializado del primer sorteo (−19 mbits) y regla por días abiertos o por día de la semana.
+  - **Forense:** la regla "primero de ayer" es REAL (API oficial sola 1/422; RD 1/422; LARD no).
+  - **Ventana {día−1, día, día+1} a las 8:00 (×0,59 sobre exposición): PROMETEDOR.** Desde 2024-T3 sale O/E 0,40; antes,
+    1,4-1,7. La auditoría no la deja entrar en la jugada. **En sombra desde 2026-10-04** (`/api/sombra` → `ventana_8am`,
+    decisión a n = 730). No se vuelve a medir en prueba.
+  - **"Salió ayer o anteayer" ×1,3 en el primer sorteo:** prueba O/E 1,12, p ≈ 0,09; solo vigilancia.
+  - **RD esquiva su propio primero de ayer** (O/E 0,32): hilo pendiente para el motor de RD.
+
 Estructura real conocida: el operador **evita repetir el animal el mismo día** y **recicla con 1 a 2,5 días de hueco**. El ensamble ya lo captura. Desde 2026-10-01 se sabe además que **esquiva el número de la fecha (hoy y mañana) y el de la hora**. El ensamble NO lo captura; está pendiente de sombra en vivo.
 
 ## Cómo medir
