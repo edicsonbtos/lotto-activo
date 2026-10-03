@@ -391,20 +391,20 @@ def _compartir(titulo, animales, anti=()):
 
 
 def _anti(o, pr):
-    """Los 15 animales con MENOS probabilidad de RD (el menos probable primero). Solo informativo."""
+    """Los animales de RD del puesto 16 al 30 (justo después del Top-15), en orden. Solo informativo."""
     if len(o) < 30:
         return ""
-    ult = list(o[-15:])[::-1]; n = len(o)
+    ult = list(o[15:30]); n = len(o)
     masa = sum(pr.get(c, 0) for c in ult)
     filas = "".join('<li><span class="rk">%d</span><span class="n">%s</span><span class="nm">%s<small>%s %%</small></span></li>'
-                    % (n - k, _e(c), _e(NOMBRE[c]), ("%.2f" % (100 * pr.get(c, 0))).replace(".", ","))
+                    % (16 + k, _e(c), _e(NOMBRE[c]), ("%.2f" % (100 * pr.get(c, 0))).replace(".", ","))
                     for k, c in enumerate(ult))
     nota = ('<p class="note">Entre los 15 suman <b>%s %%</b> (el azar daría %s %%): sale uno de ellos en ~1 de cada %s '
             'sorteos. Sirve para <b>descartar</b>, no para apostar: no cambia la jugada.</p>'
             % (("%.1f" % (100 * masa)).replace(".", ","), ("%.1f" % (1500 / n)).replace(".", ","),
                ("%.1f" % (1 / masa)).replace(".", ",") if masa else "—"))
     return ('<details class="mas" id="rd-anti" data-rec><summary><span class="chev" aria-hidden="true"></span>'
-            'Anti Top-15 · los 15 menos probables</summary><ol class="jug resto anti">%s</ol>%s</details>' % (filas, nota))
+            'Anti Top-15 · del 16º al 30º</summary><ol class="jug resto anti" start="16">%s</ol>%s</details>' % (filas, nota))
 
 
 def _sec(id_, titulo, meta, cuerpo):
@@ -526,7 +526,7 @@ def html(atras=0):
                   % (_COLS, top5, resto, _anti(o, pr),
                      _compartir("RD Internacional %s %s" % (_fecha(f), HORAS_RD[h]),
                                 ["%s %s" % (c, NOMBRE[c]) for c in o[:15]],
-                                ["%s %s" % (c, NOMBRE[c]) for c in list(o[-15:])[::-1]] if len(o) >= 30 else ()),
+                                ["%s %s" % (c, NOMBRE[c]) for c in o[15:30]] if len(o) >= 30 else ()),
                      HORAS_LA[h], HORAS_RD[h]))
     partes.append('<section class="card jugada" id="rd-jugada" aria-labelledby="rd-t">%s'
                   '<div class="jh"><h2 id="rd-t">Próximo RD · <span>%s</span></h2>%s</div>'

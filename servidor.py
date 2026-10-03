@@ -1226,20 +1226,20 @@ def html_top15(e, pend=None):
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
 
 def html_anti_top15(orden, sc, gaps):
-    """Los 15 animales con MENOS probabilidad (puestos 24-38): los que el modelo descarta.
+    """Los animales del puesto 16 al 30 (justo después del Top-15), en orden.
     Mismo orden congelado que se puntúa. Solo informativo: no cambia la jugada."""
-    if len(orden) < 38:
+    if len(orden) < 30:
         return ""
-    ultimos = list(orden[-15:])[::-1]            # el menos probable primero (puesto 38)
-    masa = sum(sc[i] for i in ultimos)
+    lista = list(orden[15:30])                   # puestos 16 al 30, el 16º primero
+    masa = sum(sc[i] for i in lista)
     filas = "".join(
-        f'<li><span class="rk">{38 - k}</span><span class="n">{esc(POS[i])}</span>'
+        f'<li><span class="rk">{16 + k}</span><span class="n">{esc(POS[i])}</span>'
         f'<span class="nm">{esc(ANIM[POS[i]].title())}'
         f'<small>{num(sc[i] * 100, 2)} % · hace {gaps[i] + 1} sorteos</small></span></li>'
-        for k, i in enumerate(ultimos))
+        for k, i in enumerate(lista))
     return ('<details class="mas" id="la-anti" data-rec><summary><span class="chev" aria-hidden="true"></span>'
-            'Anti Top-15 · los 15 menos probables</summary>'
-            f'<ol class="jug resto anti" start="24">{filas}</ol>'
+            'Anti Top-15 · del 16º al 30º</summary>'
+            f'<ol class="jug resto anti" start="16">{filas}</ol>'
             f'<p class="note">Entre los 15 suman <b>{num(masa * 100, 1)} %</b> (el azar daría {num(15 / K * 100, 1)} %): '
             f'sale uno de ellos en ~1 de cada {num(1 / masa, 1)} sorteos. Sirve para <b>descartar</b>, no para '
             'apostar: no cambia la jugada.</p></details>')
@@ -1532,7 +1532,7 @@ COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><s
                '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
 
 def html_compartir(juego, cuando, animales, anti=()):
-    """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 o ambos (el monto va solo al Top)."""
+    """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 (16º al 30º) o ambos (el monto va solo al Top)."""
     op_anti = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>'
                if anti else "")
     return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}"'
@@ -1591,7 +1591,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
             f'{html_nav_hist("la", 0, n_pasados)}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
-            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in list(orden[-15:])[::-1]] if len(orden) >= 38 else ())}'
+            f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[15:30]] if len(orden) >= 30 else ())}'
             f'{leyenda}{aviso_modelo}</section>')
 
 def html_nav_hist(tab, atras, total):
@@ -2606,9 +2606,10 @@ document.addEventListener('click', function(ev){
   var c = b.parentNode, v = c.querySelector('select').value;
   var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
   // Formato para WhatsApp: cabecera en negrita y bloques de 5 separados por una línea en blanco.
-  function lista(a, monto){
+  function lista(a, monto, desde){
     var filas = a.map(function(x, k){
-      return (k < 9 ? '0' : '') + (k + 1) + '.  ' + x + (monto ? '  →  $' + monto : '');
+      var n = (desde || 0) + k + 1;
+      return (n < 10 ? '0' : '') + n + '.  ' + x + (monto ? '  →  $' + monto : '');
     });
     var bl = [];
     for(var i = 0; i < filas.length; i += 5) bl.push(filas.slice(i, i + 5).join('\n'));
@@ -2617,12 +2618,12 @@ document.addEventListener('click', function(ev){
   var top = c.dataset.a.split('|'), anti = c.dataset.x ? c.dataset.x.split('|') : [];
   var t = '*' + c.dataset.t.toUpperCase() + '*\n' + '📅 ' + c.dataset.f + '\n';
   if(v === 'anti'){
-    t += '🚫 Anti Top 15 (los menos probables, para descartar)\n\n' + lista(anti, 0);
+    t += '🚫 Anti Top 15 (del 16 al 30, para descartar)\n\n' + lista(anti, 0, 15);
   } else {
     var n = v === 'ambos' ? 15 : +v, a = top.slice(0, n);
     t += '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n' + lista(a, m)
        + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
-    if(v === 'ambos') t += '\n\n🚫 Anti Top 15 (para descartar)\n\n' + lista(anti, 0);
+    if(v === 'ambos') t += '\n\n🚫 Anti Top 15 (del 16 al 30, para descartar)\n\n' + lista(anti, 0, 15);
   }
   if(navigator.share) navigator.share({text: t}).catch(function(){});
   else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });

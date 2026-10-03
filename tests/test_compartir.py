@@ -63,13 +63,25 @@ def test_anti_vacio_si_hay_menos_de_30_animales():
     assert rdint_vivo._anti(CODIGOS[:29], {}) == ""
 
 
-def test_anti_lista_los_15_ultimos_el_menos_probable_primero():
+def test_anti_lista_del_puesto_16_al_30_en_orden():
     pr = {c: 0.01 for c in CODIGOS}
     h = rdint_vivo._anti(CODIGOS, pr)
     assert h.count("<li>") == 15
-    # el último del orden aparece antes que el penúltimo
-    assert h.index(rdint_vivo._e(CODIGOS[-1])) < h.index(rdint_vivo._e(CODIGOS[-2]) + "</span>")
+    # el 16º aparece antes que el 17º, y no entran ni el 15º ni el 31º
+    assert h.index(rdint_vivo._e(CODIGOS[15]) + "</span>") < h.index(rdint_vivo._e(CODIGOS[16]) + "</span>")
+    assert '<span class="rk">16</span>' in h and '<span class="rk">30</span>' in h
+    assert '<span class="rk">15</span>' not in h and '<span class="rk">31</span>' not in h
     assert "Anti Top-15" in h
+
+
+def test_la_anti_lista_del_puesto_16_al_30_en_orden():
+    orden = list(range(len(servidor.POS)))
+    sc = [0.02] * len(orden); gaps = [0] * len(orden)
+    h = servidor.html_anti_top15(orden, sc, gaps)
+    rks = [int(x) for x in re.findall(r'<span class="rk">(\d+)</span>', h)]
+    assert rks == list(range(16, 31))
+    nums = re.findall(r'<span class="n">([^<]*)</span>', h)
+    assert nums == [servidor.esc(servidor.POS[i]) for i in orden[15:30]]
 
 
 def test_anti_no_divide_por_cero_con_masa_nula():
