@@ -1,0 +1,5 @@
+{
+"descripcion": "Sorteos de Lotto Activo que faltan en historial.txt. 2026-06-24 7 PM (hora 11) = 22 Camello: API oficial (datos_multiloteria/oficial_multi.csv, juego 1, 19:00) y lottoactivo.csv (LH). Los otros 11 sorteos de ese día coinciden con el historial.",
+"fecha": "2026-10-03",
+"agregar": ["2026-06-24 11 22"]
+}

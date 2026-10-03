@@ -171,6 +171,56 @@ def corregir_historial():
                        "sha1_despues": hashlib.sha1(nuevo).hexdigest()}, f, indent=1)
         print(f"  Historial corregido: {len(cambios)} líneas con la fecha arreglada (respaldo en /respaldo)")
 
+FALTANTES_HIST = os.path.join(HERR, "faltantes_historial_2026-10-03.json")
+
+def agregar_faltantes():
+    """Inserta UNA vez sorteos que faltan en historial.txt (2026-10-03).
+
+    A diferencia de corregir_historial(), aquí sí cambia el número de líneas:
+    cada línea insertada corre una posición todo lo posterior, así que las
+    tripletas con n_inicio después del hueco se corren igual (si no, se
+    anularían por "el historial no coincide con el inicio"). Los hist_n de los
+    registros viejos son solo de auditoría: para comprobarlos hay que quitar
+    las líneas listadas en el .hecho.json. No toca nada si el sorteo ya está,
+    si el día no tiene sus vecinos, o si hay pronósticos suspendidos."""
+    hecho = os.path.join(DATOS, "faltantes_historial_2026-10-03.hecho.json")
+    if os.path.exists(hecho) or not os.path.exists(FALTANTES_HIST):
+        return
+    with CERROJO:
+        with open(FALTANTES_HIST, encoding="utf-8") as f:
+            nuevas_l = json.load(f)["agregar"]
+        with open(HIST, "rb") as f:
+            crudo = f.read()
+        lineas = [l for l in crudo.decode("utf-8").splitlines() if l.strip()]
+        clave = lambda l: (l.split()[0], int(l.split()[1]))
+        claves = {clave(l) for l in lineas}
+        for l in nuevas_l:
+            f_, h_, v_ = l.split()
+            if clave(l) in claves or v_ not in IDX or (f_, int(h_) - 1) not in claves:
+                print(f"  Sorteos faltantes NO agregados: {l!r} ya está o no tiene vecino", file=sys.stderr)
+                return
+        d = log_cargar()
+        if any(suspendido(x) for x in d["registros"] + d["tripletas"]):
+            print("  Sorteos faltantes pospuestos: hay pronósticos suspendidos", file=sys.stderr)
+            return
+        nuevas = sorted(lineas + nuevas_l, key=clave)
+        idx = sorted(nuevas.index(l) for l in nuevas_l)
+        for t in d["tripletas"]:
+            t["n_inicio"] += sum(1 for i in idx if i <= t["n_inicio"])
+        os.makedirs(os.path.join(DATOS, "respaldo"), exist_ok=True)
+        with open(os.path.join(DATOS, "respaldo", "historial_antes_faltantes_2026-10-03.txt"), "wb") as f:
+            f.write(crudo)
+        nuevo = ("\n".join(nuevas) + "\n").encode("utf-8")
+        with open(HIST + ".tmp", "wb") as f:
+            f.write(nuevo)
+        os.replace(HIST + ".tmp", HIST)
+        log_guardar(d)
+        with open(hecho, "w", encoding="utf-8") as f:
+            json.dump({"cuando": ahora(), "agregadas": nuevas_l, "posiciones": idx, "lineas": len(nuevas),
+                       "sha1_antes": hashlib.sha1(crudo).hexdigest(),
+                       "sha1_despues": hashlib.sha1(nuevo).hexdigest()}, f, indent=1)
+        print(f"  Historial: {len(nuevas_l)} sorteo(s) faltante(s) agregado(s) (respaldo en /respaldo)")
+
 def ahora():
     return datetime.now().isoformat(timespec="seconds")
 
@@ -2708,6 +2758,10 @@ if __name__ == "__main__":
         corregir_historial()
     except Exception as ex:  # noqa: BLE001  (nunca impedir que arranque la web)
         print(f"  Corrección del historial falló: {ex!r}", file=sys.stderr)
+    try:
+        agregar_faltantes()
+    except Exception as ex:  # noqa: BLE001
+        print(f"  Agregar sorteos faltantes falló: {ex!r}", file=sys.stderr)
     PUERTO = int(os.environ.get("PORT", PUERTO))
     EN_NUBE = bool(os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("PORT"))
     HOST = "0.0.0.0" if EN_NUBE else "127.0.0.1"
