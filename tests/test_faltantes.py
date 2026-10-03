@@ -63,3 +63,26 @@ def test_no_toca_si_ya_esta(entorno, monkeypatch, tmp_path):
     s.agregar_faltantes()
     assert hist.read_bytes() == antes
     assert not os.path.exists(os.path.join(s.DATOS, "faltantes_historial_2026-10-03.hecho.json"))
+
+
+def test_suspendido_anulado_no_bloquea(entorno):
+    hist, log, i = entorno
+    d = json.loads(log.read_text(encoding="utf-8"))
+    d["registros"].append({"fecha": "2026-06-25", "hora": 0, "salio": 3, "suspendido": {"requiere_n": 99},
+                           "anulado": {"motivo": "x"}})
+    log.write_text(json.dumps(d), encoding="utf-8")
+    s.agregar_faltantes()
+    assert "2026-06-24 11 22" in hist.read_text(encoding="utf-8")
+
+
+def test_suspendido_vigente_pospone_y_reintenta(entorno):
+    hist, log, i = entorno
+    d = json.loads(log.read_text(encoding="utf-8"))
+    d["registros"].append({"fecha": "2026-06-25", "hora": 0, "salio": None, "suspendido": {"requiere_n": 99}})
+    log.write_text(json.dumps(d), encoding="utf-8")
+    s.agregar_faltantes()
+    assert "2026-06-24 11 22" not in hist.read_text(encoding="utf-8")
+    d["registros"][-1].pop("suspendido")            # lo resolvió reanudar_suspendidos()
+    log.write_text(json.dumps(d), encoding="utf-8")
+    s.agregar_faltantes()                           # el reintento de auto_pasada()
+    assert "2026-06-24 11 22" in hist.read_text(encoding="utf-8")

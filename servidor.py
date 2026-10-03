@@ -182,7 +182,8 @@ def agregar_faltantes():
     anularían por "el historial no coincide con el inicio"). Los hist_n de los
     registros viejos son solo de auditoría: para comprobarlos hay que quitar
     las líneas listadas en el .hecho.json. No toca nada si el sorteo ya está,
-    si el día no tiene sus vecinos, o si hay pronósticos suspendidos."""
+    si el día no tiene sus vecinos, o si hay pronósticos suspendidos vigentes;
+    en ese caso lo reintenta auto_pasada() cada 5 min."""
     hecho = os.path.join(DATOS, "faltantes_historial_2026-10-03.hecho.json")
     if os.path.exists(hecho) or not os.path.exists(FALTANTES_HIST):
         return
@@ -200,7 +201,10 @@ def agregar_faltantes():
                 print(f"  Sorteos faltantes NO agregados: {l!r} ya está o no tiene vecino", file=sys.stderr)
                 return
         d = log_cargar()
-        if any(suspendido(x) for x in d["registros"] + d["tripletas"]):
+        # Solo frenan los suspendidos VIGENTES (esperan a que se vuelva a anotar
+        # y reanudar_suspendidos los resuelve); los anulados conservan la marca
+        # "suspendido" para siempre y no deben bloquear.
+        if any(vigente(x) and suspendido(x) for x in d["registros"] + d["tripletas"]):
             print("  Sorteos faltantes pospuestos: hay pronósticos suspendidos", file=sys.stderr)
             return
         nuevas = sorted(lineas + nuevas_l, key=clave)
@@ -804,6 +808,10 @@ def auto_pasada():
         from scraping import auto_resultado
         with CERROJO:
             n = auto_resultado.una_pasada()
+            try:                          # reintento si al arrancar quedó pospuesto
+                agregar_faltantes()
+            except Exception as ex:  # noqa: BLE001
+                print(f"  Agregar sorteos faltantes falló: {ex!r}", file=sys.stderr)
         AUTO["anotados"] = n
         AUTO["mensaje"] = (f"{n} resultado{'s' if n != 1 else ''} anotado"
                            f"{'s' if n != 1 else ''}") if n else "sin novedad"
