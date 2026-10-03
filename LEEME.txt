@@ -103,3 +103,8 @@ Detalle: herramientas/resultados/hilo7_*.md y
 herramientas/exploracion/PREREGISTRO_rdint_cruzado.md.
 Código: rdint_vivo.py (en vivo), herramientas/rdint/ (datos, modelo, pruebas).
 API: /api/rdint.
+
+INVESTIGACION CERRADA (2026-10-02)
+----------------------------------
+Sin cambios al modelo ni a la estrategia. Resumen en investigacion/2026-10-02/CIERRE.md.
+A partir de aqui: jugar todos los sorteos y validar con el marcador en vivo.

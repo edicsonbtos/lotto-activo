@@ -1,0 +1,10 @@
+n=7357; animales por sorteo: C1 27.0, C2 2.0, C3 3.7 de 38
+C1 atrasados >12 sorteos: salieron 5764 (azar 5229, ensamble 5824); O/E ensamble 0.990 IC[0.976;1.004] mitades 0.983/0.996 -> NO PASA
+C2 salió en últimos 2: salieron 142 (azar 386, ensamble 146); O/E ensamble 0.976 IC[0.772;1.189] mitades 1.025/0.933 -> NO PASA
+C3 zona muerta 5-8: salieron 571 (azar 716, ensamble 554); O/E ensamble 1.030 IC[0.919;1.145] mitades 1.089/0.976 -> NO PASA
+C4 C1 en 8:00: O/E 1.001 IC[0.940;1.052] (n=372) | resto 0.989 IC[0.975;1.004] -> NO PASA
+   descriptivo C2: 8:00 1.210 | resto 0.959
+   descriptivo C3: 8:00 0.984 | resto 1.032
+C5 terminación: mejora log-verosimilitud -7.28 mnats/sorteo IC[-12.39;-2.15] mitades -10.02/-4.73 -> NO PASA
+C6 estrategia: normal +24.3 %, contrarian +0.3 %, dif -24.0 pp IC[-33.6;-15.3] mitades -23.6/-24.4 -> NO PASA
+   Top-5 cambia en 95 % de los sorteos

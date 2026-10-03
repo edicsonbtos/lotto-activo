@@ -51,3 +51,35 @@ Lectura: el retorno positivo es el del ensamble en general (+24 %), no del filtr
 
 ## Limitaciones
 Un solo juego (LA), un solo tramo (desarrollo), cortes de 20 % y 10 % escogidos antes de medir y no optimizados. No se probó el tramo ciego porque ningún hallazgo pasó el desarrollo. No se hizo revisión de `revisor-sesgo` porque no cambia el modelo ni el registro.
+
+---
+# Anexo: "Motor Contrarian" (segundo texto, 2026-10-02)
+Preregistro `PREREGISTRO_contrarian.md`, script `contrarian.py`, salida `salida_contrarian.txt`. Desarrollo LA, 7357 sorteos, IC 99,17 % por jornada. Pregunta: dónde se equivoca el ensamble (O/E = salidas / ΣP), porque el ensamble ya ve huecos y repeticiones.
+
+| Regla del texto | O/E del ensamble | IC | Veredicto |
+|---|---|---|---|
+| C1 atrasados >12 sorteos (penalizar) | 0,990 | [0,976; 1,004] | No pasa: el ensamble ya los descuenta |
+| C2 salió en los últimos 2 (penalizar) | 0,976 | [0,772; 1,189] | No pasa |
+| C3 zona muerta 5-8 sorteos (bonificar) | 1,030 | [0,919; 1,145] | No pasa |
+| C4 8:00 sin penalizadores | 8:00 1,001 / resto 0,989 | [0,94; 1,05] / [0,975; 1,004] | No pasa: no hay diferencia entre 8:00 y el resto |
+| C5 terminación como desempate | −7,3 mnats/sorteo | [−12,4; −2,2] | No pasa: **empeora** el modelo en ambas mitades |
+| C6 estrategia completa (x0,5 / x0,7 / x1,3, 8:00 intacta) | dif. retorno −24,0 pp | [−33,6; −15,3] | No pasa: pasa de +24,3 % a +0,3 % |
+
+Hallazgos: (1) el "37 % menos que el azar" de los fríos es lo que el ensamble ya aplica (predijo 210,8, salieron 171; el residuo es O/E 0,81 con hueco en días y 0,99 con hueco en sorteos). (2) Con ">12 sorteos" la regla afecta a 27 de 38 animales por sorteo, porque 12 sorteos es un día; el texto confunde días con sorteos. (3) La regla completa mueve el Top-5 en el 95 % de los sorteos y borra todo el retorno. (4) La causalidad "público persigue, operador bloquea" no se puede medir: no hay datos de volumen jugado, y lo medido es compatible con el solo hecho de que el operador evita repetir y recicla con huecos (ya en el ensamble).
+
+---
+# Anexo 2: "Geometría y macro-estacionalidad" (tercer texto, 2026-10-03)
+Preregistro `PREREGISTRO_geometria_macro.md`, script `geometria_macro.py`, salida `salida_geometria_macro.txt`. Desarrollo LA, 7357 sorteos, 8 pruebas, IC 99,375 % por jornada. Sin multiplicadores sobre P.
+
+| Hipótesis | Resultado | Veredicto |
+|---|---|---|
+| G1 clúster dinámico (brecha > 0,002) | Tamaño medio 3,2; en el 65 % de los sorteos el clúster es 1 solo animal. Retorno/ficha +8,0 % contra Top-5 plano +21,5 % (dif −20,1 pp [−28,3; −12,2], ambas mitades negativas) | No pasa, es peor |
+| G2a diversificar por terminación | Cambia el 27 % de sorteos; retorno +24,3 % → +24,6 % (dif +0,31 pp [−1,48; +2,14]); mitades −0,4 / +1,0 | No pasa |
+| G2b diversificar por paridad | Cambia el 4 %; dif −0,15 pp [−0,82; +0,46] | No pasa |
+| G3a quincena (15 y 30) | O/E Top-5 0,978 [0,738; 1,226], 486 sorteos | No pasa |
+| G3b fin de mes | O/E 0,935 [0,695; 1,178] | No pasa |
+| G3c festivos fijos | O/E 0,924 [0,603; 1,260], solo 186 sorteos (poca potencia) | No pasa |
+| G4a alternancia de paridad | O/E 0,993 [0,962; 1,024]; control lag 2: 1,019 | No pasa |
+| G4b alternancia de magnitud | O/E 1,020 [0,986; 1,053]; control lag 2: 0,941 [0,906; 0,974] | No pasa |
+
+Notas: (1) La distribución es casi plana, por eso un clúster por brecha suele ser un solo animal y juega menos fichas con peor retorno; el tamaño "dinámico" no encuentra grupos reales. (2) Las pruebas de calendario tienen IC de ±25 %: aunque existiera un efecto del 10-15 %, 40 jornadas no lo detectan; el resultado es "sin evidencia", no "demostrado que no existe". Los festivos móviles (Carnaval, Semana Santa) no se probaron por falta de calendario. (3) El control de lag 2 en magnitud (0,941) excluye 1, pero era un control no preregistrado como hipótesis y entre 10 contrastes se espera alguno; no se actúa.

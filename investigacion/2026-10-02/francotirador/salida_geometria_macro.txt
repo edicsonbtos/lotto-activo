@@ -1,0 +1,10 @@
+G1 clúster eps=0,002: k medio 3.18 (min 1, máx 38); distribución k: 1:65%, 2:16%, 3:6%, 4:3%, 5:2%, 6:1%, 7:1%, 8:1%
+   retorno/ficha clúster +8.0 %, Top-5 plano +21.5 %, Top-5 escalonado +24.3 %
+   dif clúster-Top5 plano (por ficha media) -20.1 pp IC[-28.3;-12.2] mitades -16.5/-23.7 -> NO PASA
+G2a terminación: cambia en 27 % de sorteos; acierto Top-5 20.25 % -> 20.33 %; retorno +24.3 % -> +24.6 %; dif +0.31 pp IC[-1.48;+2.14] mitades -0.4/+1.0 -> NO PASA
+G2b paridad: cambia en 4 % de sorteos; acierto Top-5 20.25 % -> 20.21 %; retorno +24.3 % -> +24.1 %; dif -0.15 pp IC[-0.82;+0.46] mitades -0.2/-0.1 -> NO PASA
+G3a quincena (15 y 30): n=486 sorteos (42 jornadas); O/E Top-5 0.978 IC[0.738;1.226] mitades 0.902/1.045; retorno +31.9 % (resto +23.7 %) -> NO PASA
+G3b fin de mes (últimos 2 días): n=475 sorteos (41 jornadas); O/E Top-5 0.935 IC[0.695;1.178] mitades 0.734/1.085; retorno +27.1 % (resto +24.1 %) -> NO PASA
+G3c festivos de fecha fija: n=186 sorteos (16 jornadas); O/E Top-5 0.924 IC[0.603;1.260] mitades 0.974/0.848; retorno +21.0 % (resto +24.4 %) -> NO PASA
+G4a paridad: n=6563; O/E alternancia 0.993 IC[0.962;1.024] mitades 0.976/1.008; control lag 2: 1.019 IC[0.984;1.051] -> NO PASA
+G4b magnitud: n=6563; O/E alternancia 1.020 IC[0.986;1.053] mitades 1.015/1.024; control lag 2: 0.941 IC[0.906;0.974] -> NO PASA

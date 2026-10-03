@@ -1,0 +1,50 @@
+hipotesis: 366
+  40 / 366 10s
+  80 / 366 18s
+  120 / 366 27s
+  160 / 366 36s
+  200 / 366 44s
+  240 / 366 54s
+  280 / 366 62s
+  320 / 366 71s
+  360 / 366 80s
+SENALES: 5 de 366 | min q_BH 0.011
+con 4/4 OOF: 19 | p<0.05 sin corregir: 31
+eq_fecha                           a=8  +6.17 mbits IC[+3.31,+9.00] OOF[-0.5, 6.3, 8.4, 9.0] q=0.011 RUIDO
+eq_fecha                           a=1  +6.17 mbits IC[+3.26,+9.10] OOF[-0.6, 6.3, 8.4, 9.0] q=0.011 RUIDO
+eq_fecha*gap_prev_ult              a=8  +5.39 mbits IC[+2.60,+8.03] OOF[1.4, 4.9, 6.6, 7.6] q=0.011 SENAL
+eq_fecha*gap_prev_ult              a=1  +5.37 mbits IC[+2.56,+7.92] OOF[1.3, 4.9, 6.6, 7.5] q=0.011 SENAL
+eq_fecha*tramo_mes                 a=8  +5.07 mbits IC[+2.36,+7.59] OOF[-3.0, 6.4, 6.4, 7.8] q=0.011 RUIDO
+eq_fecha*tramo_mes                 a=1  +5.06 mbits IC[+2.31,+7.56] OOF[-3.1, 6.4, 6.4, 7.8] q=0.011 RUIDO
+eq_fecha*paso_ult                  a=8  +5.03 mbits IC[+2.51,+7.54] OOF[-4.3, 6.7, 6.8, 7.6] q=0.011 RUIDO
+eq_fecha*par_ult                   a=8  +4.75 mbits IC[+2.03,+7.42] OOF[0.8, 0.0, 7.1, 8.3] q=0.011 SENAL
+eq_fecha*paso_ult                  a=1  +4.72 mbits IC[+2.06,+7.33] OOF[-6.0, 6.5, 6.6, 7.4] q=0.011 RUIDO
+eq_fecha*quad_ult                  a=8  +4.70 mbits IC[+2.10,+7.10] OOF[-2.1, 5.2, 5.3, 7.8] q=0.011 RUIDO
+eq_fecha*quad_ult                  a=1  +4.68 mbits IC[+2.20,+7.14] OOF[-2.2, 5.2, 5.2, 7.8] q=0.011 RUIDO
+eq_fecha*color_ult                 a=8  +4.51 mbits IC[+1.90,+6.94] OOF[2.8, -0.3, 6.0, 7.4] q=0.020 RUIDO
+eq_fecha*par_ult                   a=1  +4.38 mbits IC[+1.40,+7.05] OOF[1.2, -1.7, 6.7, 7.8] q=0.027 RUIDO
+eq_fecha*racha_color               a=8  +4.26 mbits IC[+1.84,+6.71] OOF[-3.3, 5.2, 5.8, 6.7] q=0.011 RUIDO
+eq_fecha*racha_color               a=1  +4.23 mbits IC[+1.75,+6.75] OOF[-3.5, 5.2, 5.8, 6.7] q=0.011 RUIDO
+control positivo eq_fecha:
+  eq_fecha                       a=8  +6.17 q=0.011 4/4=False RUIDO
+  eq_fecha                       a=1  +6.17 q=0.011 4/4=False RUIDO
+  eq_fecha*gap_prev_ult          a=8  +5.39 q=0.011 4/4=True SENAL
+  eq_fecha*gap_prev_ult          a=1  +5.37 q=0.011 4/4=True SENAL
+  eq_fecha*tramo_mes             a=8  +5.07 q=0.011 4/4=False RUIDO
+  eq_fecha*tramo_mes             a=1  +5.06 q=0.011 4/4=False RUIDO
+  eq_fecha*paso_ult              a=8  +5.03 q=0.011 4/4=False RUIDO
+  eq_fecha*par_ult               a=8  +4.75 q=0.011 4/4=True SENAL
+  eq_fecha*paso_ult              a=1  +4.72 q=0.011 4/4=False RUIDO
+  eq_fecha*quad_ult              a=8  +4.70 q=0.011 4/4=False RUIDO
+  eq_fecha*quad_ult              a=1  +4.68 q=0.011 4/4=False RUIDO
+  eq_fecha*color_ult             a=8  +4.51 q=0.020 4/4=False RUIDO
+  eq_fecha*par_ult               a=1  +4.38 q=0.027 4/4=False RUIDO
+  eq_fecha*racha_color           a=8  +4.26 q=0.011 4/4=False RUIDO
+  eq_fecha*racha_color           a=1  +4.23 q=0.011 4/4=False RUIDO
+  eq_fecha*color_ult             a=1  +4.19 q=0.069 4/4=False RUIDO
+  eq_fecha*trim                  a=8  +4.05 q=0.011 4/4=False RUIDO
+  eq_fecha*dow                   a=8  +3.94 q=0.020 4/4=False RUIDO
+  eq_fecha*dow                   a=1  +3.93 q=0.011 4/4=False RUIDO
+  eq_fecha*trim                  a=1  +3.38 q=0.110 4/4=False RUIDO
+  eq_fecha*hora                  a=8  +2.72 q=0.069 4/4=True RUIDO
+  eq_fecha*hora                  a=1  +2.26 q=0.120 4/4=False RUIDO
