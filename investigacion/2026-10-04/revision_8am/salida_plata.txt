@@ -1,0 +1,10 @@
+versión B
+  Top-15 ponderado 3-2-1   ayer   +84 fichas (+30%)  hoy   -34 fichas (-18%)  vivo15sep  -418 fichas (-8%)  8am vivo  +230 fichas (+50%)
+  Top-5 escalonado         ayer   +54 fichas (+56%)  hoy    -4 fichas (-6%)  vivo15sep   -58 fichas (-3%)  8am vivo  +110 fichas (+69%)
+  Top-15 plano             ayer   +30 fichas (+17%)  hoy   -30 fichas (-25%)  vivo15sep  -360 fichas (-10%)  8am vivo  +120 fichas (+40%)
+  Top-3                    ayer   +24 fichas (+67%)  hoy    +6 fichas (+25%)  vivo15sep   -18 fichas (-3%)  8am vivo   +60 fichas (+100%)
+versión C
+  Top-15 ponderado 3-2-1   ayer   +24 fichas (+9%)  hoy    -4 fichas (-2%)  vivo15sep   -58 fichas (-1%)  8am vivo  +260 fichas (+57%)
+  Top-5 escalonado         ayer   +24 fichas (+25%)  hoy    -4 fichas (-6%)  vivo15sep   +32 fichas (+2%)  8am vivo  +110 fichas (+69%)
+  Top-15 plano             ayer    +0 fichas (+0%)  hoy    +0 fichas (+0%)  vivo15sep   -90 fichas (-3%)  8am vivo  +150 fichas (+50%)
+  Top-3                    ayer   +24 fichas (+67%)  hoy    +6 fichas (+25%)  vivo15sep   +12 fichas (+2%)  8am vivo   +60 fichas (+100%)
