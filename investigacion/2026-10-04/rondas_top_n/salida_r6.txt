@@ -1,0 +1,34 @@
+aciertos Top-15 últimos 12  (frío/caliente)
+   Top-2: dev  +38/ +34 prueba  +30/ +34 [dif -37;+51]
+   Top-5 escal.: dev  +24/ +27 prueba  +20/ +18 [dif -25;+22]
+   Top-15: dev   +9/  +5 prueba   -2/  -1 [dif -8;+10]
+aciertos Top-15 últimos 36  (frío/caliente)
+   Top-2: dev  +34/ +32 prueba  +31/ +20 [dif -48;+38]
+   Top-5 escal.: dev  +25/ +26 prueba  +17/ +13 [dif -26;+18]
+   Top-15: dev   +8/  +6 prueba   -0/  -1 [dif -9;+8]
+aciertos Top-15 últimos 120  (frío/caliente)
+   Top-2: dev  +34/ +37 prueba  +37/ +30 [dif -64;+55]
+   Top-5 escal.: dev  +23/ +27 prueba  +21/ +31 [dif -22;+44]
+   Top-15: dev   +5/  +7 prueba   -0/  -6 [dif -16;+6]
+aciertos Top-2 últimos 120  (frío/caliente)
+   Top-2: dev  +46/ +23 prueba  +25/ +28 [dif -34;+38]
+   Top-5 escal.: dev  +28/ +13 prueba  +23/ +12 [dif -35;+14]
+   Top-15: dev   +6/  +3 prueba   +3/  -9 [dif -20;-4]
+Top-15 real−esperado últimos 120  (frío/caliente)
+   Top-2: dev  +31/ +29 prueba  +37/  +3 [dif -77;+4]
+   Top-5 escal.: dev  +25/ +23 prueba  +18/ +17 [dif -27;+24]
+   Top-15: dev   +7/  +3 prueba   +0/  -5 [dif -15;+4]
+confianza p1+p2 ahora  (frío/caliente)
+   Top-2: dev  +19/ +49 prueba  +32/  +3 [dif -62;+6]
+   Top-5 escal.: dev   +9/ +36 prueba  +15/ +13 [dif -25;+21]
+   Top-15: dev   +1/  +9 prueba   -2/  -3 [dif -11;+8]
+confianza masa Top-5 ahora  (frío/caliente)
+   Top-2: dev  +15/ +47 prueba  +29/ -13 [dif -74;-8]
+   Top-5 escal.: dev   +8/ +36 prueba  +11/  +4 [dif -31;+19]
+   Top-15: dev   +1/ +10 prueba   -4/  -6 [dif -12;+8]
+confianza masa Top-15 ahora  (frío/caliente)
+   Top-2: dev  +16/ +43 prueba  +31/ +15 [dif -52;+21]
+   Top-5 escal.: dev  +12/ +33 prueba  +17/ +15 [dif -26;+23]
+   Top-15: dev   +1/ +10 prueba   -3/  -2 [dif -8;+11]
+Por hora (retorno prueba):  0:-20/+21/-2  1:+61/+28/+10  2:+61/+31/+1  3:+26/+16/+3  4:+61/+29/-0  5:+3/+8/-13  6:+21/+16/+11  7:-8/-9/-10  8:+21/+25/+1  9:+20/+20/+1  10:+37/+4/-15  11:+49/+31/-0
+Por hora (retorno dev):     0:+57/+44/+22  1:+35/+22/+6  2:+28/+20/+8  3:+9/+9/+5  4:+25/+13/+4  5:+13/+16/+1  6:+30/+7/-0  7:+35/+22/+3  8:+63/+30/+7  9:+58/+39/+12  10:+11/+24/+11  11:+51/+47/+2

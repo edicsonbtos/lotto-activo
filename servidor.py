@@ -1830,6 +1830,7 @@ def html_marcadores(d):
             f'<div><div class="hh"><h2>Marcador tripleta</h2></div>{s2}</div></div>'
             f'{html_economia(d)}'
             f'{html_temperatura(d)}'
+            f'{html_salud(d)}'
             f'<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p></section>')
 
 def html_economia(d):
@@ -1880,6 +1881,71 @@ def html_temperatura(d):
             txt += f' Saltaría la alerta a partir de {t["alerta"]} seguidos.'
     return (f'<div class="temp {t["nivel"]}"><span class="pts">{pts}</span>'
             f'<b>{t["etiqueta"]}</b><span class="txt">{txt}</span></div>')
+
+# Salud del modelo (2026-10-04, investigacion/2026-10-04/rondas_top_n/r6.py).
+# Tasas de referencia = lo que cada jugada acertó en el tramo de prueba
+# (dic-2025..sep-2026), no lo que promete el motor (exagera ~3 pp).
+# Ojo: esto NO dice cuándo apostar. Se probaron 8 indicadores de frío/caliente
+# (aciertos recientes, confianza del motor, hora) y ninguno repitió en prueba.
+# Solo dice si el modelo sigue rindiendo lo normal o si dejó de funcionar.
+SALUD_JUGADAS = [("Top-2", [1, 1], 0.085), ("Top-5 escalonado", [2, 2, 2, 1, 1], 0.194),
+                 ("Top-15", [1] * 15, 0.495)]
+SALUD_VENTANAS = [("7 días", 7), ("30 días", 30), ("Desde el inicio", None)]
+
+def salud_modelo(d, hoy=None):
+    """Aciertos y retorno por jugada en 7 días, 30 días y desde el inicio, contra la referencia.
+
+    estado por ventana (sobre el Top-15, el de más potencia): "normal" si
+    P(tan pocos aciertos | referencia) >= 5 %, "bajo" entre 1 % y 5 %,
+    "alarma" por debajo de 1 %. Con menos de 36 sorteos: "pocos datos".
+    """
+    regs = sorted(((r["fecha"], r["hora"], p) for r in resueltas(d)
+                   if (p := puesto_ganador(r)) is not None), key=lambda x: (x[0], x[1]))
+    if not regs:
+        return None
+    hoy = date.fromisoformat(hoy or regs[-1][0])
+    out = []
+    for nombre, dias in SALUD_VENTANAS:
+        desde = (hoy - timedelta(days=dias - 1)).isoformat() if dias else ""
+        sel = [p for f, _, p in regs if f >= desde]
+        n = len(sel)
+        jug = []
+        for jn, fichas, ref in SALUD_JUGADAS:
+            k = sum(1 for p in sel if p <= len(fichas))
+            gan = sum(30 * fichas[p - 1] for p in sel if p <= len(fichas))
+            costo = n * sum(fichas)
+            p_bajo = 1 - cola_binomial(k + 1, n, ref) if n else 1.0
+            jug.append({"jugada": jn, "aciertos": k, "n": n, "tasa": k / n if n else None,
+                        "referencia": ref, "retorno": (gan / costo - 1) if costo else None,
+                        "p_bajo": p_bajo})
+        p15 = jug[-1]["p_bajo"]
+        estado = ("pocos datos" if n < 36 else "alarma" if p15 < 0.01
+                  else "bajo" if p15 < 0.05 else "normal")
+        out.append({"ventana": nombre, "n": n, "estado": estado, "jugadas": jug})
+    return {"hasta": regs[-1][0], "ventanas": out}
+
+def html_salud(d):
+    s = salud_modelo(d)
+    if not s:
+        return ""
+    color = {"normal": "ok", "bajo": "ojo", "alarma": "alerta", "pocos datos": "ok"}
+    filas = ""
+    for v in s["ventanas"]:
+        celdas = "".join(
+            f'<td>{num(j["tasa"] * 100) if j["tasa"] is not None else "–"}% '
+            f'<small>(ref. {num(j["referencia"] * 100)}%)</small><br>'
+            f'<small>{(j["retorno"] or 0) * 100:+.0f}% por ficha</small></td>' for j in v["jugadas"])
+        filas += (f'<tr><td><b>{v["ventana"]}</b><br><small>{v["n"]} sorteos</small></td>{celdas}'
+                  f'<td><span class="temp {color[v["estado"]]}" style="display:inline-block;padding:2px 8px">'
+                  f'{v["estado"].upper()}</span></td></tr>')
+    cab = "".join(f"<th>{j[0]}</th>" for j in SALUD_JUGADAS)
+    return (f'<div class="hh"><h2>Salud del modelo</h2></div>'
+            f'<table class="tabla"><tr><th>Ventana</th>{cab}<th>Estado</th></tr>{filas}</table>'
+            f'<p class="note">Compara lo que acierta cada jugada con lo que acertó en la prueba ciega. '
+            f'NORMAL: dentro de lo esperable. BAJO: raro (menos del 5 % de las veces). '
+            f'ALARMA: casi imposible si el modelo siguiera funcionando (menos del 1 %): ahí conviene parar. '
+            f'<b>No dice cuándo entrar:</b> "caliente" y "frío" se probaron con 8 indicadores y ninguno '
+            f'anticipa el sorteo siguiente.</p>')
 
 def html_ultimas(d, filas, cuantos=48):
     """Estado de acierto reciente: sirve para detectar roturas, no para concluir."""
@@ -2707,6 +2773,9 @@ class H(BaseHTTPRequestHandler):
             self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
         elif ruta == "/api/cambio_rd":
             self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
+                       "application/json; charset=utf-8")
+        elif ruta == "/api/salud":
+            self._send(json.dumps(_api(lambda: salud_modelo(log_cargar())), ensure_ascii=False),
                        "application/json; charset=utf-8")
         elif ruta == "/api/sombra":
             self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),

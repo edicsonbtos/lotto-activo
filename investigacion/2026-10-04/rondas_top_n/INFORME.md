@@ -54,3 +54,14 @@ La simulación supone que la ventaja de prueba se mantiene. En vivo (19 días) v
   **Se descarta** si la media es ≤ 0. En cualquier otro caso queda sin concluir.
 - Hasta entonces la jugada oficial no cambia (`gestion_banca.VIGILANCIA`). Si alguien elige jugar el Top-2,
   conviene una banca de al menos 100 sorteos de apuesta.
+
+## R6. ¿Frío o caliente? ¿Cuándo entrar? (`r6.py`)
+Se probaron 8 indicadores, todos calculados solo con el pasado: aciertos del Top-15 en los últimos 12, 36 y
+120 sorteos; aciertos del Top-2 en los últimos 120; real − esperado del Top-15 en los últimos 120; y la
+confianza del motor (p1 + p2, masa del Top-5 y masa del Top-15). Para cada uno, los cortes en tercios se
+fijaron en dev. Se midió el retorno de Top-2, Top-5 escalonado y Top-15 en el tercio "frío" y en el "caliente".
+- **Ninguno repite en prueba.** La confianza parecía muy buena en dev (Top-2: +19 % frío contra +49 % caliente),
+  pero en prueba se invirtió (+32 % contra +3 %). Es el mismo patrón del hilo 6 ("calor de la lista").
+- La hora del día tampoco repite: Top-2 a las 8:00 da +57 % en dev y −20 % en prueba.
+- Conclusión: no hay señal para decidir cuándo entrar. Lo útil es vigilar la **salud** del modelo, es decir,
+  si deja de rendir lo de prueba. Para eso está `salud_modelo()` en la web y en `/api/salud`.
