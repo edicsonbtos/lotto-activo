@@ -1,0 +1,5 @@
+Banca inicial = 100 apuestas (p. ej. apuesta 1 $/sorteo con 100 $). 90 días de 12 sorteos, 4000 simulaciones con días reales de prueba
+  Top-5 escalonado (actual)  quiebra  0.2%   llega a perder la mitad  3.8%   banca final mediana    295   termina en pérdida  0.7%
+  Top-2                      quiebra  2.1%   llega a perder la mitad 15.8%   banca final mediana    400   termina en pérdida  2.6%
+  2-1                        quiebra  4.0%   llega a perder la mitad 19.8%   banca final mediana    370   termina en pérdida  4.8%
+  Top-1                      quiebra 23.4%   llega a perder la mitad 49.8%   banca final mediana    280   termina en pérdida 25.4%

@@ -1,0 +1,10 @@
+Elegir k animales al abrir el día (Top-k del motor) y jugarlos 1 ficha c/u por sorteo hasta que salgan o se cumpla la ventana
+  ventana 12 sorteos, k=1: dev: sale 35.4% retorno  +8.7%   prueba: sale 38.3% retorno +18.3%   vivo: sale 36.8% retorno +21.4%
+  ventana 12 sorteos, k=2: dev: sale 35.7% retorno  +9.8%   prueba: sale 35.2% retorno  +6.7%   vivo: sale 34.2% retorno  +2.4%
+  ventana 12 sorteos, k=3: dev: sale 34.9% retorno  +6.6%   prueba: sale 34.1% retorno  +2.7%   vivo: sale 36.8% retorno +12.9%
+  ventana 24 sorteos, k=1: dev: sale 57.3% retorno  +6.2%   prueba: sale 60.9% retorno +15.4%   vivo: sale 57.9% retorno +15.0%
+  ventana 24 sorteos, k=2: dev: sale 56.6% retorno  +4.8%   prueba: sale 58.2% retorno  +6.8%   vivo: sale 52.6% retorno  -4.9%
+  ventana 24 sorteos, k=3: dev: sale 55.7% retorno  +2.2%   prueba: sale 56.3% retorno  +1.8%   vivo: sale 54.4% retorno  +3.7%
+  renovar Top-1 en cada sorteo: dev: +33.3%   prueba: +19.7%   vivo: +20.0%
+  renovar Top-2 en cada sorteo: dev: +33.8%   prueba: +27.8%   vivo:  +0.0%
+  renovar Top-3 en cada sorteo: dev: +27.2%   prueba: +21.9%   vivo: -15.6%
