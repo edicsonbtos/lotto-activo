@@ -11,12 +11,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import servidor as s
 
 RAIZ = os.path.join(os.path.dirname(__file__), "..")
+# historial.txt no va al repo (.gitignore); en un clon limpio se usa la copia versionada.
+HIST_REAL = next(p for p in (os.path.join(RAIZ, "historial.txt"),
+                             os.path.join(RAIZ, "verificacion", "hilo9", "datos", "historial.txt"))
+                 if os.path.exists(p))
 
 
 @pytest.fixture
 def datos(tmp_path, monkeypatch):
     """Historial real (últimas 400 líneas, solo lectura) copiado a una carpeta temporal."""
-    with open(os.path.join(RAIZ, "historial.txt"), encoding="utf-8") as f:
+    with open(HIST_REAL, encoding="utf-8") as f:
         lineas = [l for l in f if l.strip()][-400:]
     hist, log = tmp_path / "historial.txt", tmp_path / "predicciones.json"
     hist.write_text("".join(lineas), encoding="utf-8")
