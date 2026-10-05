@@ -4,11 +4,11 @@ import sys, runpy
 sys.argv = sys.argv[:3]
 import io, contextlib
 with contextlib.redirect_stdout(io.StringIO()):
-    g = runpy.run_path("1_analisis.py")
+    g = runpy.run_path(__import__("os").path.join(__import__("os").path.dirname(__import__("os").path.abspath(__file__)), "1_analisis.py"))
 ocho, PB, S, F, ayer_set, EX, K = (g[k] for k in ("ocho", "PB", "S", "F", "ayer_set", "EX", "K"))
 import numpy as np
 def trim(f): return f[:4] + "-T" + str((int(f[5:7]) - 1) // 3 + 1)
-print(f"{'trimestre':10} {'n':>4} | ayer crudo O/E | ayer motor O/E | anteayer crudo | ventana fecha O/E(C) | hoy-dentro-del-día ref")
+print(f"{'trimestre':10} {'n':>4} | ayer crudo O/E | ayer motor O/E | anteayer crudo | ventana fecha O/E(C)")
 for q in sorted({trim(F[t]) for t in ocho}):
     x = [t for t in ocho if trim(F[t]) == q]
     r = {"ac": [0, 0.], "am": [0, 0.], "an": [0, 0.], "v": [0, 0.]}

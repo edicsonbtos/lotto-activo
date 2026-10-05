@@ -39,3 +39,6 @@ no se habían medido en él. La única confirmación limpia es el vivo posterior
 ## Cómo se adopta algo
 Nada de lo que salga aquí entra en la jugada. Una candidata que pase dev y prueba se ajusta SOLO en dev, se
 audita con `revisor-sesgo` y va a sombra en vivo con su propio pre-registro.
+
+---
+*Nota posterior (auditoría): la fila 9357 parte el 2025-12-19, así que el 8:00 de ese día cuenta como dev. Es una sola fila. `2_tiempo.py` (cortes por trimestre) se escribió DESPUÉS de ver `salida_analisis.txt`: es exploratorio, no pre-registrado.*
