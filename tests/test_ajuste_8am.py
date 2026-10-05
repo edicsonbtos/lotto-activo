@@ -42,3 +42,8 @@ def test_sombra_usa_las_probabilidades_sin_la_correccion():
     assert v8["n"] == 1 and v8["ventana_obs"] == 1
     esperado = sum(s._exposicion(base, "2026-10-06", 0)[IDX[n]] for n in ("5", "6", "7"))
     assert abs(v8["ventana_esp"] - esperado) < 1e-2
+
+
+def test_ag12_se_calcula_sobre_las_probabilidades_sin_la_correccion():
+    assert s.sc_sombra({"scores_sin_8am": [1.0] * 38}, [2.0] * 38) == [1.0] * 38
+    assert s.sc_sombra({}, [2.0] * 38) == [2.0] * 38       # otras horas: las mismas que se juegan
