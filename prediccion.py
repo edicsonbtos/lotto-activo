@@ -38,6 +38,26 @@ K = 38
 # las 12 horas. Multiplicadores ajustados SOLO en dev [2000, 9357) con L2.
 AJUSTE_PRIMER = {1: 0.272, 3: 1.736}     # días atrás -> multiplicador
 
+# Corrección de FECHA a las 8:00 (investigacion/2026-10-05/ocho_am/INFORME.md). El operador
+# esquiva el número de la fecha (día−1, día, día+1) en el primer sorteo: en prueba, 9 aciertos
+# contra 17,1 esperados; +24 mbits por mañana [no significativo al 95 %]. Se ENCIENDE antes de
+# que la sombra llegue a n = 730, por decisión del usuario (rompe ese pre-registro). Multiplicadores
+# congelados de herramientas/modelos/exposicion.aplicar_8am (ajustados solo en dev). Freno: con
+# n ≥ 180 mañanas desde ENCENDIDO_8AM, si la ventana sale O/E ≥ 1,0 (/api/sombra) se apaga.
+ENCENDIDO_8AM = "2026-10-06"
+
+
+def ajuste_8am(p, fecha_sig, hora_sig):
+    """Probabilidades con la corrección de fecha a las 8:00, o None si no aplica (otra hora o antes del encendido)."""
+    if int(hora_sig) != 0 or fecha_sig < ENCENDIDO_8AM:
+        return None
+    ruta = os.path.join(HERR, "modelos")
+    if ruta not in sys.path:
+        sys.path.append(ruta)
+    import exposicion
+    q = np.array(exposicion.aplicar_8am([float(x) for x in p], fecha_sig, 0))
+    return q / q.sum()
+
 
 def ajuste_primer_sorteo(datos, fecha_sig, hora_sig):
     """Multiplicadores (K,) para el próximo sorteo y detalle; (None, None) si no aplica.
@@ -148,6 +168,11 @@ class Predictor:
             info["scores_base"] = [round(float(x), 6) for x in p]   # sin ajuste, para auditar
             info["ajuste_primer"] = detalle
             p = p * m; p /= p.sum()
+        q = ajuste_8am(p, fecha_sig, hora_sig)
+        if q is not None:
+            info["scores_sin_8am"] = [round(float(x), 6) for x in p]   # = producción hasta el 5-oct; las sombras lo usan
+            info["ajuste_8am"] = "exposicion.aplicar_8am"
+            p = q
         try:
             info["tripleta"] = [float(x) for x in self.calcular_tripleta(ext, n)]
         except Exception:

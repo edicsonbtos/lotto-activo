@@ -301,11 +301,14 @@ def sello(info):
     (no están en el historial, así que se guardan tal cual).
     ajuste_primer/scores_base: solo en el primer sorteo del día; animales
     ajustados (días atrás -> índice) y las probabilidades antes del ajuste.
+    ajuste_8am/scores_sin_8am: solo a las 8:00 desde prediccion.ENCENDIDO_8AM;
+    probabilidades antes de la corrección de fecha (las sombras se miden sobre ellas).
     """
     return {k_dst: info.get(k_src) for k_dst, k_src in (
         ("hist_sha1", "hist_sha1"), ("hist_n", "hist_n"), ("calculado", "calculado"),
         ("pesos_frontera", "frontera_pesos"), ("pesos_vigentes", "pesos_vigentes"), ("pesos", "pesos"),
-        ("ajuste_primer", "ajuste_primer"), ("scores_base", "scores_base"))
+        ("ajuste_primer", "ajuste_primer"), ("scores_base", "scores_base"),
+        ("ajuste_8am", "ajuste_8am"), ("scores_sin_8am", "scores_sin_8am"))
         if info.get(k_src) is not None}
 
 # -------------------------------------------------------------- marcadores
@@ -1400,10 +1403,11 @@ def marcador_sombra(d):
     fallos_exp = 0
     v8 = dict(n=0, O=0, E=0.0, top5_exp=0, top5_exp8=0, mbits_dif=[])   # solo 8:00, exp8 contra exp
     for r in resueltas(d):
-        if r["fecha"] >= SOMBRA_8AM_DESDE and int(r["hora"]) == 0 and r.get("scores"):
+        base = r.get("scores_sin_8am") or r.get("scores")   # sin la corrección de las 8:00 ya encendida
+        if r["fecha"] >= SOMBRA_8AM_DESDE and int(r["hora"]) == 0 and base:
             try:
-                pe = _exposicion(r["scores"], r["fecha"], 0)
-                p8 = _exposicion(r["scores"], r["fecha"], 0, "aplicar_8am")
+                pe = _exposicion(base, r["fecha"], 0)
+                p8 = _exposicion(base, r["fecha"], 0, "aplicar_8am")
                 w = r["salio"]; ven = _ventana_8am(r["fecha"])
                 v8["n"] += 1; v8["O"] += w in ven; v8["E"] += sum(pe[i] for i in ven)
                 for k, p in (("top5_exp", pe), ("top5_exp8", p8)):
@@ -1412,15 +1416,15 @@ def marcador_sombra(d):
             except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
                 print(f"[sombra] {ahora()} ventana 8:00 falló: {ex!r}", file=sys.stderr, flush=True)
         s = r.get("sombra")
-        if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not r.get("scores"):
+        if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not base:
             continue
         q, usado = _con_rd(s["ag12"], rd, r["fecha"], r["hora"])
         con_rd += usado
-        filas = [(m, "ensamble", r["scores"]), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
+        filas = [(m, "ensamble", base), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
         if r["fecha"] >= SOMBRA_EXP_DESDE:
             try:
-                filas += [(mx, "ensamble", r["scores"]), (mx, "ag12_rd", q),
-                          (mx, "ensamble_exp", _exposicion(r["scores"], r["fecha"], r["hora"])),
+                filas += [(mx, "ensamble", base), (mx, "ag12_rd", q),
+                          (mx, "ensamble_exp", _exposicion(base, r["fecha"], r["hora"])),
                           (mx, "ag12_rd_exp", _exposicion(q, r["fecha"], r["hora"]))]
             except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
                 fallos_exp += 1
