@@ -1,0 +1,23 @@
+{
+ "sobrevivientes": [
+  "RD1:igual",
+  "L1:columna",
+  "L2:mitad",
+  "par_evita",
+  "z:dia",
+  "trans_cero",
+  "L1:sumadig",
+  "par_h4-h10:pm1",
+  "L2:decena",
+  "z:hora12",
+  "L1:espejo",
+  "trans_baja",
+  "par_h0-h5:pm1",
+  "ayer_h4-hoy_h1:igual",
+  "z:dia+1"
+ ],
+ "confirmados": [
+  "RD1:igual",
+  "par_evita"
+ ]
+}

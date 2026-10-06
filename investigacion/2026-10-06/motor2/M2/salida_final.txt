@@ -1,0 +1,5 @@
+multiplicadores al final: {'hoy_c0': np.float64(0.75), 'ayaa_c0': np.float64(1.089), 'hoy_c1': np.float64(1.305), 'ayaa_c1': np.float64(0.813), 'hoy_c2': np.float64(0.686), 'ayaa_c2': np.float64(1.191)}
+chequeo de fuga (futuro alterado en 3 cortes): OK
+[M2_final] AJUSTE    n= 2748 mbits +166.2 | Δ vs prod  +5.37 [ +2.68; +8.06] | Top-5 21.6 (prod 21.2) | Top-15 54.5 (prod 54.6) | ret Top-5 +31.7% (prod +29.1%)
+[M2_final] ELECCION  n= 1392 mbits  +86.9 | Δ vs prod  +7.90 [ +2.87;+12.93] | Top-5 20.2 (prod 20.1) | Top-15 48.1 (prod 48.6) | ret Top-5 +27.4% (prod +23.4%)
+[M2_final] PRUEBA26  n= 1164 mbits +118.6 | Δ vs prod  +9.52 [ +4.12;+14.93] | Top-5 19.2 (prod 18.6) | Top-15 51.5 (prod 49.6) | ret Top-5 +16.9% (prod +14.4%)
