@@ -1,0 +1,1 @@
+{"cuando": "2026-10-06 16:03:15", "nombre": "M1-final V3 w=0.5", "tramo": "PRUEBA26", "n": 1164, "mbits": 108.7, "dmbits_vs_prod": -0.31, "ic90": [-1.04, 0.41], "top5": 18.56, "top5_prod": 18.56, "top15": 49.57, "top15_prod": 49.57, "ret_top5": 14.4, "ret_top5_prod": 14.4, "extra": {"agente": "M1", "final": {"variante": "V3", "w": 0.5}}}

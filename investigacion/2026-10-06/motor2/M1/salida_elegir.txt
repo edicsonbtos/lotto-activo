@@ -1,0 +1,111 @@
+VC {'r': 1.0, 'tau': 1.0, 'u': 0.0, 'kap': 1.525, 'a0': -1.0, 'a1': 1.5, 'a2': 1.5, 'hs': 13.25, 'hr': 30.501}
+[M1-VC] AJUSTE    n= 2748 mbits +160.8 | Δ vs prod  +0.00 [ +0.00; +0.00] | Top-5 21.2 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-VC] ELECCION  n= 1392 mbits  +79.0 | Δ vs prod  +0.00 [ +0.00; +0.00] | Top-5 20.1 (prod 20.1) | Top-15 48.6 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+V0 {'r': 1.0, 'tau': 1.0, 'u': 0.0, 'kap': 1.525, 'a0': -0.847, 'a1': 1.5, 'a2': 1.5, 'hs': 13.25, 'hr': 30.5}
+[M1-V0] AJUSTE    n= 2748 mbits +160.8 | Δ vs prod  +0.00 [ +0.00; +0.00] | Top-5 21.2 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-V0] ELECCION  n= 1392 mbits  +79.0 | Δ vs prod  +0.00 [ +0.00; +0.00] | Top-5 20.1 (prod 20.1) | Top-15 48.6 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+V1 {'r': 6.0, 'tau': 0.3, 'u': 0.5, 'kap': 0.463, 'a0': 0.809, 'a1': 1.5, 'a2': 3.0, 'hs': 13.252, 'hr': 14.338}
+[M1-V1] AJUSTE    n= 2748 mbits +160.9 | Δ vs prod  +0.13 [ -0.37; +0.62] | Top-5 21.2 (prod 21.2) | Top-15 54.5 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-V1] ELECCION  n= 1392 mbits  +79.5 | Δ vs prod  +0.50 [ -0.73; +1.72] | Top-5 20.1 (prod 20.1) | Top-15 48.6 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+V2 {'r': 6.0, 'tau': 0.3, 'u': 0.5, 'kap': 0.182, 'a0': -6.0, 'a1': 3.0, 'a2': 1.5, 'hs': 0.5, 'hr': 30.496}
+[M1-V2] AJUSTE    n= 2748 mbits +160.8 | Δ vs prod  +0.01 [ -0.02; +0.04] | Top-5 21.2 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-V2] ELECCION  n= 1392 mbits  +79.1 | Δ vs prod  +0.03 [ -0.00; +0.06] | Top-5 20.1 (prod 20.1) | Top-15 48.6 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+V3 {'r': 5.324, 'tau': 0.801, 'u': 0.003, 'kap': 0.487, 'a0': 0.812, 'a1': 3.0, 'a2': 3.0, 'hs': 3.903, 'hr': 7.631}
+[M1-V3] AJUSTE    n= 2748 mbits +163.0 | Δ vs prod  +2.26 [ +0.04; +4.48] | Top-5 21.1 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.0% (prod +29.1%)
+[M1-V3] ELECCION  n= 1392 mbits  +80.5 | Δ vs prod  +1.46 [ -2.45; +5.38] | Top-5 20.2 (prod 20.1) | Top-15 49.0 (prod 48.6) | ret Top-5 +23.9% (prod +23.4%)
+  VC AJUSTE por día: lun:+0.0[+0;+0] mar:+0.0[+0;+0] mié:+0.0[+0;+0] jue:+0.0[+0;+0] vie:+0.0[+0;+0] sáb:+0.0[+0;+0] dom:+0.0[+0;+0]
+  VC ELECCION por día: lun:+0.0[+0;+0] mar:+0.0[+0;+0] mié:+0.0[+0;+0] jue:+0.0[+0;+0] vie:+0.0[+0;+0] sáb:+0.0[+0;+0] dom:+0.0[+0;+0]
+  VC ELECCION por mes: 2026-03:+0.0[+0;+0] 2026-04:+0.0[+0;+0] 2026-05:+0.0[+0;+0] 2026-06:+0.0[+0;+0]
+  V0 AJUSTE por día: lun:+0.0[+0;+0] mar:+0.0[+0;+0] mié:+0.0[+0;+0] jue:+0.0[+0;+0] vie:+0.0[+0;+0] sáb:+0.0[+0;+0] dom:+0.0[+0;+0]
+  V0 ELECCION por día: lun:+0.0[+0;+0] mar:+0.0[+0;+0] mié:+0.0[+0;+0] jue:+0.0[+0;+0] vie:+0.0[+0;+0] sáb:+0.0[+0;+0] dom:+0.0[+0;+0]
+  V0 ELECCION por mes: 2026-03:+0.0[+0;+0] 2026-04:+0.0[+0;+0] 2026-05:+0.0[+0;+0] 2026-06:+0.0[+0;+0]
+  V1 AJUSTE por día: lun:-0.8[-1;-1] mar:-0.7[-1;-0] mié:+0.4[-1;+1] jue:+0.0[-1;+1] vie:+2.4[+0;+5] sáb:-1.1[-1;-1] dom:+0.6[-1;+3]
+  V1 ELECCION por día: lun:-0.4[-3;+2] mar:-0.0[-4;+4] mié:+0.9[-2;+4] jue:+1.4[-1;+4] vie:+1.2[-2;+5] sáb:+0.9[-4;+6] dom:-0.3[-2;+1]
+  V1 ELECCION por mes: 2026-03:+0.8[-2;+3] 2026-04:+1.2[-2;+4] 2026-05:-0.3[-3;+2] 2026-06:+0.3[-1;+2]
+  V2 AJUSTE por día: lun:-0.0[-0;-0] mar:-0.0[-0;-0] mié:+0.0[-0;+0] jue:-0.0[-0;+0] vie:+0.2[+0;+0] sáb:-0.0[-0;-0] dom:-0.0[-0;+0]
+  V2 ELECCION por día: lun:+0.0[-0;+0] mar:-0.0[-0;+0] mié:+0.0[-0;+0] jue:+0.1[-0;+0] vie:+0.1[-0;+0] sáb:+0.0[-0;+0] dom:-0.0[-0;+0]
+  V2 ELECCION por mes: 2026-03:+0.1[-0;+0] 2026-04:+0.0[-0;+0] 2026-05:-0.0[-0;+0] 2026-06:+0.1[-0;+0]
+  V3 AJUSTE por día: lun:-2.0[-3;-1] mar:-1.9[-3;-1] mié:+2.6[-2;+8] jue:+0.4[-3;+4] vie:+19.8[+7;+32] sáb:-2.4[-4;-1] dom:-1.7[-3;-0]
+  V3 ELECCION por día: lun:-2.3[-6;+2] mar:-3.4[-9;+3] mié:+6.5[-6;+19] jue:+8.1[-2;+19] vie:+7.2[-16;+30] sáb:-2.5[-6;+1] dom:-1.6[-4;+1]
+  V3 ELECCION por mes: 2026-03:+9.0[-3;+21] 2026-04:-1.9[-8;+4] 2026-05:-3.0[-7;+1] 2026-06:+1.5[-3;+6]
+mejor variante en ELECCION: V3
+[M1-V3 loglin w=0.25] AJUSTE    n= 2748 mbits +161.8 | Δ vs prod  +1.02 [ +0.31; +1.72] | Top-5 21.2 (prod 21.2) | Top-15 54.5 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-V3 loglin w=0.25] ELECCION  n= 1392 mbits  +80.7 | Δ vs prod  +1.64 [ +0.40; +2.89] | Top-5 20.1 (prod 20.1) | Top-15 48.6 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+[M1-V3 loglin w=0.5] AJUSTE    n= 2748 mbits +162.6 | Δ vs prod  +1.77 [ +0.45; +3.10] | Top-5 21.2 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-V3 loglin w=0.5] ELECCION  n= 1392 mbits  +81.6 | Δ vs prod  +2.54 [ +0.21; +4.86] | Top-5 20.1 (prod 20.1) | Top-15 48.9 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+[M1-V3 loglin w=0.75] AJUSTE    n= 2748 mbits +163.0 | Δ vs prod  +2.21 [ +0.37; +4.04] | Top-5 21.2 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.0% (prod +29.1%)
+[M1-V3 loglin w=0.75] ELECCION  n= 1392 mbits  +81.6 | Δ vs prod  +2.54 [ -0.68; +5.75] | Top-5 20.2 (prod 20.1) | Top-15 48.9 (prod 48.6) | ret Top-5 +23.7% (prod +23.4%)
+[M1-V3 loglin w=1.0] AJUSTE    n= 2748 mbits +163.0 | Δ vs prod  +2.26 [ +0.04; +4.48] | Top-5 21.1 (prod 21.2) | Top-15 54.6 (prod 54.6) | ret Top-5 +29.0% (prod +29.1%)
+[M1-V3 loglin w=1.0] ELECCION  n= 1392 mbits  +80.5 | Δ vs prod  +1.46 [ -2.45; +5.38] | Top-5 20.2 (prod 20.1) | Top-15 49.0 (prod 48.6) | ret Top-5 +23.9% (prod +23.4%)
+[M1-V3 loglin w=1.25] AJUSTE    n= 2748 mbits +162.6 | Δ vs prod  +1.85 [ -0.62; +4.33] | Top-5 21.1 (prod 21.2) | Top-15 54.7 (prod 54.6) | ret Top-5 +29.0% (prod +29.1%)
+[M1-V3 loglin w=1.25] ELECCION  n= 1392 mbits  +78.1 | Δ vs prod  -0.90 [ -5.37; +3.57] | Top-5 20.0 (prod 20.1) | Top-15 49.0 (prod 48.6) | ret Top-5 +23.4% (prod +23.4%)
+[M1-V3 loglin w=1.5] AJUSTE    n= 2748 mbits +161.7 | Δ vs prod  +0.91 [ -1.70; +3.52] | Top-5 21.2 (prod 21.2) | Top-15 54.7 (prod 54.6) | ret Top-5 +29.1% (prod +29.1%)
+[M1-V3 loglin w=1.5] ELECCION  n= 1392 mbits  +74.3 | Δ vs prod  -4.77 [ -9.82; +0.28] | Top-5 20.0 (prod 20.1) | Top-15 49.2 (prod 48.6) | ret Top-5 +23.1% (prod +23.4%)
+== V1: π medio y evidencia e_d media por día de la semana y periodo
+  2024-03..2024-06                 π: lun 0.02 mar 0.02 mié 0.02 jue 0.03 vie 0.03 sáb 0.02 dom 0.02  top3 ['jue', 'vie', 'lun']
+                                   e: lun 0.14 mar 0.15 mié 0.21 jue 0.15 vie 0.09 sáb 0.18 dom 0.36  top3 ['dom', 'mié', 'sáb']
+  2024-07..2025-06 (ANTIGUO dom)   π: lun 0.02 mar 0.02 mié 0.02 jue 0.02 vie 0.02 sáb 0.02 dom 0.02  top3 ['mar', 'lun', 'mié']
+                                   e: lun 0.13 mar 0.11 mié 0.14 jue 0.13 vie 0.12 sáb 0.12 dom 0.31  top3 ['dom', 'mié', 'lun']
+  2025-07..2025-11                 π: lun 0.00 mar 0.00 mié 0.00 jue 0.00 vie 0.00 sáb 0.00 dom 0.00  top3 ['sáb', 'dom', 'jue']
+                                   e: lun 0.06 mar 0.09 mié 0.10 jue 0.08 vie 0.13 sáb 0.08 dom 0.06  top3 ['vie', 'mié', 'mar']
+  2025-12..2026-02                 π: lun 0.01 mar 0.01 mié 0.01 jue 0.01 vie 0.01 sáb 0.01 dom 0.01  top3 ['sáb', 'jue', 'dom']
+                                   e: lun 0.09 mar 0.10 mié 0.23 jue 0.19 vie 0.29 sáb 0.06 dom 0.13  top3 ['vie', 'mié', 'jue']
+  2026-03..2026-06 (ELECCION)      π: lun 0.02 mar 0.02 mié 0.02 jue 0.02 vie 0.02 sáb 0.02 dom 0.02  top3 ['sáb', 'dom', 'vie']
+                                   e: lun 0.12 mar 0.14 mié 0.18 jue 0.24 vie 0.21 sáb 0.12 dom 0.11  top3 ['jue', 'vie', 'mié']
+== V3: π medio y evidencia e_d media por día de la semana y periodo
+  2024-03..2024-06                 π: lun 0.04 mar 0.07 mié 0.12 jue 0.05 vie 0.03 sáb 0.06 dom 0.23  top3 ['dom', 'mié', 'mar']
+                                   e: lun 0.32 mar 0.35 mié 0.42 jue 0.32 vie 0.27 sáb 0.34 dom 0.54  top3 ['dom', 'mié', 'mar']
+  2024-07..2025-06 (ANTIGUO dom)   π: lun 0.05 mar 0.03 mié 0.06 jue 0.04 vie 0.03 sáb 0.03 dom 0.18  top3 ['dom', 'mié', 'lun']
+                                   e: lun 0.32 mar 0.28 mié 0.33 jue 0.31 vie 0.28 sáb 0.29 dom 0.47  top3 ['dom', 'mié', 'lun']
+  2025-07..2025-11                 π: lun 0.01 mar 0.02 mié 0.02 jue 0.01 vie 0.02 sáb 0.01 dom 0.01  top3 ['mié', 'vie', 'mar']
+                                   e: lun 0.28 mar 0.31 mié 0.34 jue 0.28 vie 0.36 sáb 0.28 dom 0.23  top3 ['vie', 'mié', 'mar']
+  2025-12..2026-02                 π: lun 0.05 mar 0.06 mié 0.13 jue 0.10 vie 0.25 sáb 0.04 dom 0.04  top3 ['vie', 'mié', 'jue']
+                                   e: lun 0.31 mar 0.36 mié 0.46 jue 0.44 vie 0.53 sáb 0.27 dom 0.33  top3 ['vie', 'mié', 'jue']
+  2026-03..2026-06 (ELECCION)      π: lun 0.04 mar 0.06 mié 0.15 jue 0.12 vie 0.27 sáb 0.05 dom 0.05  top3 ['vie', 'mié', 'jue']
+                                   e: lun 0.30 mar 0.31 mié 0.40 jue 0.45 vie 0.42 sáb 0.31 dom 0.31  top3 ['jue', 'vie', 'mié']
+== V2: π medio y evidencia e_d media por día de la semana y periodo
+  2024-03..2024-06                 π: lun 0.00 mar 0.00 mié 0.00 jue 0.00 vie 0.00 sáb 0.00 dom 0.00  top3 ['dom', 'mié', 'sáb']
+                                   e: lun 0.31 mar 0.32 mié 0.36 jue 0.31 vie 0.28 sáb 0.33 dom 0.43  top3 ['dom', 'mié', 'sáb']
+  2024-07..2025-06 (ANTIGUO dom)   π: lun 0.00 mar 0.00 mié 0.00 jue 0.00 vie 0.00 sáb 0.00 dom 0.00  top3 ['dom', 'mié', 'lun']
+                                   e: lun 0.31 mar 0.29 mié 0.31 jue 0.31 vie 0.29 sáb 0.30 dom 0.41  top3 ['dom', 'mié', 'lun']
+  2025-07..2025-11                 π: lun 0.00 mar 0.00 mié 0.00 jue 0.00 vie 0.00 sáb 0.00 dom 0.00  top3 ['vie', 'mié', 'mar']
+                                   e: lun 0.25 mar 0.28 mié 0.28 jue 0.26 vie 0.30 sáb 0.26 dom 0.24  top3 ['vie', 'mié', 'mar']
+  2025-12..2026-02                 π: lun 0.00 mar 0.00 mié 0.00 jue 0.00 vie 0.00 sáb 0.00 dom 0.00  top3 ['vie', 'mié', 'jue']
+                                   e: lun 0.27 mar 0.28 mié 0.36 jue 0.34 vie 0.40 sáb 0.24 dom 0.30  top3 ['vie', 'mié', 'jue']
+  2026-03..2026-06 (ELECCION)      π: lun 0.00 mar 0.00 mié 0.00 jue 0.00 vie 0.00 sáb 0.00 dom 0.00  top3 ['vie', 'jue', 'mié']
+                                   e: lun 0.29 mar 0.30 mié 0.34 jue 0.37 vie 0.36 sáb 0.29 dom 0.30  top3 ['jue', 'vie', 'mié']
+== V0: π medio y evidencia e_d media por día de la semana y periodo
+  2024-03..2024-06                 π: lun 0.30 mar 0.30 mié 0.30 jue 0.30 vie 0.30 sáb 0.30 dom 0.30  top3 ['dom', 'sáb', 'vie']
+                                   e: lun 0.50 mar 0.50 mié 0.50 jue 0.50 vie 0.50 sáb 0.50 dom 0.50  top3 ['dom', 'sáb', 'vie']
+  2024-07..2025-06 (ANTIGUO dom)   π: lun 0.30 mar 0.30 mié 0.30 jue 0.30 vie 0.30 sáb 0.30 dom 0.30  top3 ['sáb', 'vie', 'jue']
+                                   e: lun 0.50 mar 0.50 mié 0.50 jue 0.50 vie 0.50 sáb 0.50 dom 0.50  top3 ['dom', 'sáb', 'vie']
+  2025-07..2025-11                 π: lun 0.30 mar 0.30 mié 0.30 jue 0.30 vie 0.30 sáb 0.30 dom 0.30  top3 ['dom', 'sáb', 'vie']
+                                   e: lun 0.50 mar 0.50 mié 0.50 jue 0.50 vie 0.50 sáb 0.50 dom 0.50  top3 ['sáb', 'jue', 'dom']
+  2025-12..2026-02                 π: lun 0.30 mar 0.30 mié 0.30 jue 0.30 vie 0.30 sáb 0.30 dom 0.30  top3 ['dom', 'sáb', 'vie']
+                                   e: lun 0.50 mar 0.50 mié 0.50 jue 0.50 vie 0.50 sáb 0.50 dom 0.50  top3 ['vie', 'mié', 'jue']
+  2026-03..2026-06 (ELECCION)      π: lun 0.30 mar 0.30 mié 0.30 jue 0.30 vie 0.30 sáb 0.30 dom 0.30  top3 ['dom', 'sáb', 'vie']
+                                   e: lun 0.50 mar 0.50 mié 0.50 jue 0.50 vie 0.50 sáb 0.50 dom 0.50  top3 ['vie', 'dom', 'sáb']
+== V3 (κ=0.49) fracción de días 'relajados' a posteriori por periodo: {'ANTIGUO': np.float64(0.129), 'AJUSTE': np.float64(0.092), 'ELECCION': np.float64(0.112)}
+  AJUSTE   AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.86/0.94 9h:0.86/0.94 10h:0.86/0.94 11h:0.86/0.94 12h:0.87/0.94 13h:0.88/0.97 14h:0.91/0.98 15h:0.93/0.99 16h:0.93/0.99 17h:0.93/0.98 18h:0.94/0.98 19h:0.95/0.98
+  AJUSTE   Brier: 0.073 0.073 0.073 0.074 0.073 0.070 0.064 0.064 0.065 0.066 0.067 0.064 (base 0.083)
+  ELECCION AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.69/0.69 9h:0.70/0.70 10h:0.71/0.71 11h:0.72/0.72 12h:0.74/0.74 13h:0.76/0.76 14h:0.85/0.85 15h:0.85/0.85 16h:0.84/0.84 17h:0.84/0.84 18h:0.84/0.84 19h:0.87/0.87
+  ELECCION Brier: 0.096 0.096 0.096 0.094 0.090 0.085 0.080 0.080 0.081 0.082 0.087 0.082 (base 0.100)
+  ANTIGUO  AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.73/0.75 9h:0.72/0.74 10h:0.72/0.74 11h:0.72/0.74 12h:0.72/0.74 13h:0.73/0.75 14h:0.77/0.79 15h:0.79/0.80 16h:0.81/0.83 17h:0.83/0.85 18h:0.86/0.86 19h:0.87/0.87
+  ANTIGUO  Brier: 0.126 0.109 0.109 0.109 0.107 0.107 0.104 0.100 0.099 0.097 0.095 0.092 (base 0.112)
+  calibración (AJUSTE+ELECCION): [0.0,0.1) n=3452 q=0.03 real=0.05 | [0.1,0.2) n=390 q=0.14 real=0.24 | [0.2,0.3) n=158 q=0.25 real=0.32 | [0.3,0.4) n=54 q=0.35 real=0.37 | [0.4,0.5) n=56 q=0.45 real=0.70 | [0.5,0.6) n=16 q=0.55 real=0.56 | [0.6,0.8) n=14 q=0.64 real=1.00
+== V1 (κ=0.46) fracción de días 'relajados' a posteriori por periodo: {'ANTIGUO': np.float64(0.048), 'AJUSTE': np.float64(0.017), 'ELECCION': np.float64(0.043)}
+  AJUSTE   AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.76/0.83 9h:0.75/0.82 10h:0.76/0.83 11h:0.78/0.83 12h:0.80/0.83 13h:0.87/0.89 14h:0.97/0.95 15h:0.97/0.98 16h:0.97/0.98 17h:0.98/0.98 18h:0.95/0.96 19h:0.94/0.97
+  AJUSTE   Brier: 0.017 0.017 0.017 0.017 0.017 0.017 0.017 0.017 0.017 0.017 0.017 0.017 (base 0.017)
+  ELECCION AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.38/0.38 9h:0.59/0.48 10h:0.66/0.52 11h:0.74/0.58 12h:0.79/0.60 13h:0.83/0.67 14h:0.95/0.86 15h:0.95/0.88 16h:0.94/0.87 17h:0.94/0.86 18h:0.96/0.84 19h:0.97/0.92
+  ELECCION Brier: 0.042 0.042 0.042 0.042 0.040 0.040 0.040 0.040 0.040 0.041 0.041 0.042 (base 0.041)
+  ANTIGUO  AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.64/0.65 9h:0.54/0.56 10h:0.53/0.55 11h:0.55/0.55 12h:0.60/0.58 13h:0.63/0.59 14h:0.74/0.66 15h:0.84/0.71 16h:0.88/0.77 17h:0.90/0.84 18h:0.92/0.87 19h:0.94/0.89
+  ANTIGUO  Brier: 0.041 0.047 0.047 0.047 0.047 0.046 0.045 0.044 0.045 0.045 0.045 0.045 (base 0.046)
+  calibración (AJUSTE+ELECCION): [0.0,0.1) n=4136 q=0.01 real=0.03 | [0.1,0.2) n=4 q=0.10 real=0.25
+== V0 (κ=1.53) fracción de días 'relajados' a posteriori por periodo: {'ANTIGUO': np.float64(0.279), 'AJUSTE': np.float64(0.319), 'ELECCION': np.float64(0.328)}
+  AJUSTE   AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.50/0.50 9h:0.58/0.52 10h:0.65/0.51 11h:0.70/0.62 12h:0.74/0.61 13h:0.79/0.64 14h:0.81/0.57 15h:0.85/0.55 16h:0.91/0.52 17h:0.92/0.49 18h:0.96/0.49 19h:0.98/0.46
+  AJUSTE   Brier: 0.218 0.218 0.218 0.218 0.218 0.218 0.218 0.218 0.218 0.218 0.218 0.218 (base 0.217)
+  ELECCION AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.50/0.50 9h:0.51/0.50 10h:0.58/0.49 11h:0.67/0.54 12h:0.70/0.54 13h:0.73/0.52 14h:0.79/0.54 15h:0.81/0.51 16h:0.84/0.48 17h:0.88/0.50 18h:0.93/0.49 19h:0.97/0.52
+  ELECCION Brier: 0.221 0.221 0.221 0.221 0.221 0.221 0.221 0.221 0.221 0.221 0.221 0.221 (base 0.220)
+  ANTIGUO  AUC q_h (etiqueta LLR / ≥2 rep): 8h:0.50/0.50 9h:0.53/0.51 10h:0.65/0.50 11h:0.69/0.49 12h:0.74/0.49 13h:0.78/0.49 14h:0.82/0.47 15h:0.84/0.47 16h:0.88/0.46 17h:0.90/0.47 18h:0.93/0.50 19h:0.95/0.50
+  ANTIGUO  Brier: 0.213 0.201 0.201 0.201 0.201 0.201 0.201 0.201 0.201 0.201 0.201 0.201 (base 0.201)
+  calibración (AJUSTE+ELECCION): [0.3,0.4) n=4140 q=0.30 real=0.32

@@ -225,3 +225,34 @@ def fuga():
     def fn(S, hora, dow, fecha, i):
         return motor(S, th, var)[pos[i]]
     A.chequear_fuga(fn, cortes=(6000, 9000, 12000, 12743))
+
+
+FINAL = dict(variante="V3", w=0.5)   # congelado tras ELECCION (máx. Δmbits; IC 90 % [+0,21; +4,86])
+
+
+def final_P(seq, M=None):
+    P = motor(seq, cargar(FINAL["variante"]), FINAL["variante"], M)
+    Q = PROD ** (1 - FINAL["w"]) * P ** FINAL["w"]
+    return Q / Q.sum(1, keepdims=True)
+
+
+def fuga_final():
+    pos = {t: k for k, t in enumerate(T)}
+    A.chequear_fuga(lambda S, h, dw, f, i: final_P(S)[pos[i]], cortes=(6000, 9000, 12000, 12743))
+
+
+def guardar():
+    Q = final_P(D.seq)
+    np.savez_compressed(os.path.join(A.SP, "motor2_M1.npz"), P=Q, t=T)
+    json.dump(dict(FINAL, params=decodificar(cargar(FINAL["variante"]))), open(os.path.join(AQUI, "final.json"), "w"), indent=1)
+    A.evaluar(Q, "M1-final V3 w=0.5", tramos=("AJUSTE", "ELECCION", "ANTIGUO"))
+    return Q
+
+
+def prueba():
+    Q = guardar()
+    A.evaluar(Q, "M1-final V3 w=0.5", tramos=("PRUEBA26",), extra=dict(agente="M1", final=FINAL))
+    for tr in ("PRUEBA26",):
+        m = A.TRAMOS[tr]
+        print("  PRUEBA26 por día:", dmb_por(Q, m, [(DSEM[k], A.DOW == k) for k in range(7)]))
+        print("  PRUEBA26 por mes:", dmb_por(Q, m, [(mm, np.char.startswith(F.astype(str), mm)) for mm in ("2026-07", "2026-08", "2026-09", "2026-10")]))
