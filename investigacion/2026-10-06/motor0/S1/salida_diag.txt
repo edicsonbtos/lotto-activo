@@ -1,0 +1,32 @@
+== PROD AJUSTE: por día de la semana: jugado% / acierto jugados / acierto no jugados / acierto total
+   lun 100% 56.5/ nan/56.5 | mar 100% 54.3/ nan/54.3 | mié 100% 52.2/ nan/52.2 | jue 100% 57.8/ nan/57.8 | vie 100% 53.2/ nan/53.2 | sáb 100% 55.8/ nan/55.8 | dom  95% 52.3/55.6/52.4
+   corr(P̂ dentro del día, acierto) +0.028 | corr(P̂ media del día, acierto) +0.022
+   regla saltar mié-vie               ret/ficha   +9.6% [  +6; +13] jugado 56.3% acierto 54.8%
+   regla saltar si π_d>0,15           ret/ficha  +10.4% [  +7; +13] jugado 93.4% acierto 55.2%
+   regla saltar si q_h>0,2            ret/ficha   +9.8% [  +7; +13] jugado 95.7% acierto 54.9%
+   regla saltar si RD(h−1) en Top-15  ret/ficha   +9.8% [  +6; +13] jugado 61.8% acierto 54.9%
+   regla selector LR P̂≥0,50          ret/ficha   +9.2% [  +6; +12] jugado 99.3% acierto 54.6%
+== PROD ELECCION: por día de la semana: jugado% / acierto jugados / acierto no jugados / acierto total
+   lun  67% 49.0/54.9/50.9 | mar  58% 51.6/41.1/47.2 | mié  21% 53.5/46.0/47.5 | jue  47% 48.8/34.4/41.1 | vie   9% 47.1/38.7/39.4 | sáb  70% 54.5/62.1/56.8 | dom  10% 66.7/54.1/55.4
+   corr(P̂ dentro del día, acierto) +0.126 | corr(P̂ media del día, acierto) -0.021
+   regla saltar mié-vie               ret/ficha   +4.8% [  -1; +10] jugado 59.4% acierto 52.4%
+   regla saltar si π_d>0,15           ret/ficha   +0.7% [  -4;  +5] jugado 81.9% acierto 50.4%
+   regla saltar si q_h>0,2            ret/ficha   -0.7% [  -5;  +4] jugado 87.1% acierto 49.7%
+   regla saltar si RD(h−1) en Top-15  ret/ficha   +1.8% [  -4;  +7] jugado 65.5% acierto 50.9%
+   regla selector LR P̂≥0,50          ret/ficha   +3.5% [  -4; +11] jugado 41.0% acierto 51.8%
+== M4 AJUSTE: por día de la semana: jugado% / acierto jugados / acierto no jugados / acierto total
+   lun 100% 60.4/ nan/60.4 | mar 100% 58.1/ nan/58.1 | mié  94% 53.8/30.4/52.5 | jue 100% 61.5/ nan/61.5 | vie  90% 57.6/45.0/56.4 | sáb 100% 61.1/ nan/61.1 | dom  88% 51.8/43.2/50.8
+   corr(P̂ dentro del día, acierto) +0.056 | corr(P̂ media del día, acierto) +0.042
+   regla saltar mié-vie               ret/ficha  +15.4% [ +12; +19] jugado 56.3% acierto 57.7%
+   regla saltar si π_d>0,15           ret/ficha  +15.6% [ +12; +19] jugado 93.4% acierto 57.8%
+   regla saltar si q_h>0,2            ret/ficha  +15.1% [ +12; +18] jugado 95.7% acierto 57.5%
+   regla saltar si RD(h−1) en Top-15  ret/ficha  +14.5% [ +12; +17] jugado 99.9% acierto 57.2%
+   regla selector LR P̂≥0,50          ret/ficha  +15.8% [ +13; +19] jugado 96.1% acierto 57.9%
+== M4 ELECCION: por día de la semana: jugado% / acierto jugados / acierto no jugados / acierto total
+   lun  94% 56.7/76.9/57.9 | mar  91% 48.5/55.0/49.1 | mié  33% 48.5/47.8/48.0 | jue  77% 46.4/31.0/42.8 | vie  27% 52.1/50.8/51.1 | sáb  94% 56.1/50.0/55.7 | dom  23% 51.1/55.5/54.5
+   corr(P̂ dentro del día, acierto) +0.080 | corr(P̂ media del día, acierto) -0.027
+   regla saltar mié-vie               ret/ficha   +8.5% [  +3; +14] jugado 59.4% acierto 54.2%
+   regla saltar si π_d>0,15           ret/ficha   +5.8% [  +1; +11] jugado 81.9% acierto 52.9%
+   regla saltar si q_h>0,2            ret/ficha   +4.8% [  +0;  +9] jugado 87.1% acierto 52.4%
+   regla saltar si RD(h−1) en Top-15  ret/ficha   +2.9% [  -1;  +7] jugado 100.0% acierto 51.4%
+   regla selector LR P̂≥0,50          ret/ficha   +3.9% [  -2;  +9] jugado 63.3% acierto 51.9%

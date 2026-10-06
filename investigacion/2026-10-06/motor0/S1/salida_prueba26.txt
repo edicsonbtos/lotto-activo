@@ -1,0 +1,32 @@
+== PROD · parte 1 en PRUEBA26 (contaminada)
+  [PROD] PRUEBA26 n= 1164 acierto 49.6% | logloss C0 0.6943
+      C0_vm30d   logloss 0.6938 Δ  -0.43 m [ -3.05; +2.19]  AUC 0.482 [0.458;0.506]  P̂ media 0.495
+      C1_masa    logloss 0.6939 Δ  -0.36 m [ -3.57; +2.86]  AUC 0.513 [0.484;0.541]  P̂ media 0.510
+      LR         logloss 0.6937 Δ  -0.56 m [ -3.94; +2.83]  AUC 0.512 [0.489;0.540]  P̂ media 0.493
+      GBM        logloss 0.6893 Δ  -4.93 m [ -9.47; -0.39]  AUC 0.558 [0.530;0.582]  P̂ media 0.498
+  parte 2 en PRUEBA26 (n=1021, días=97)
+  REF Top-5 PROD +cambio (todos)         ret/ficha  +18.6% [   +7;  +29] | netas/día +15.69 | fichas/día   84.2 | máx. caída    276 | jugado 100.0% | acierto  19.4%
+  T15 plano todos                        ret/ficha   +1.5% [   -3;   +6] | netas/día  +2.32 | fichas/día  157.9 | máx. caída    480 | jugado 100.0% | acierto  50.7%
+  T15 ponderado todos                    ret/ficha   +7.1% [   +2;  +13] | netas/día +17.08 | fichas/día  242.1 | máx. caída    693 | jugado 100.0% | acierto  50.7%
+  T15 plano si P̂≥0.50                   ret/ficha   +3.2% [   -8;  +14] | netas/día  +0.93 | fichas/día   29.1 | máx. caída    225 | jugado  18.4% | acierto  51.6%
+  T15 ponderado si P̂≥0.50               ret/ficha  +13.8% [   -0;  +29] | netas/día  +6.14 | fichas/día   44.6 | máx. caída    340 | jugado  18.4% | acierto  51.6%
+  T15 plano graduado                     ret/ficha   +3.0% [   -8;  +14] | netas/día  +0.93 | fichas/día   30.9 | máx. caída    300 | jugado  18.4% | acierto  51.6%
+    pareado T15 plano si P̂≥0.50      : netas/día − REF -14.76 [-23.33;-5.57] | ret/ficha − 'T15 plano todos'  +1.7 pp [-7.9;+12.5]
+    pareado T15 ponderado si P̂≥0.50  : netas/día − REF  -9.55 [-18.91;-0.68] | ret/ficha − 'T15 ponderado todos'  +6.7 pp [-6.1;+20.6]
+    pareado T15 plano graduado        : netas/día − REF -14.76 [-23.81;-5.62] | ret/ficha − 'T15 plano todos'  +1.5 pp [-7.9;+12.2]
+== M4 · parte 1 en PRUEBA26 (contaminada)
+  [M4] PRUEBA26 n= 1164 acierto 52.2% | logloss C0 0.6926
+      C0_vm30d   logloss 0.6922 Δ  -0.45 m [ -1.57; +0.67]  AUC 0.505 [0.480;0.528]  P̂ media 0.526
+      C1_masa    logloss 0.6906 Δ  -1.99 m [ -5.73; +1.76]  AUC 0.530 [0.504;0.554]  P̂ media 0.516
+      LR         logloss 0.6920 Δ  -0.64 m [ -2.25; +0.96]  AUC 0.503 [0.476;0.529]  P̂ media 0.527
+      GBM        logloss 0.6928 Δ  +0.20 m [ -3.49; +3.88]  AUC 0.533 [0.506;0.561]  P̂ media 0.531
+  parte 2 en PRUEBA26 (n=1021, días=97)
+  REF Top-5 PROD +cambio (todos)         ret/ficha  +18.6% [   +8;  +29] | netas/día +15.69 | fichas/día   84.2 | máx. caída    276 | jugado 100.0% | acierto  19.4%
+  T15 plano todos                        ret/ficha   +4.6% [   -1;  +10] | netas/día  +7.27 | fichas/día  157.9 | máx. caída    405 | jugado 100.0% | acierto  52.3%
+  T15 ponderado todos                    ret/ficha  +12.0% [   +6;  +19] | netas/día +29.14 | fichas/día  242.1 | máx. caída    586 | jugado 100.0% | acierto  52.3%
+  T15 plano si P̂≥0.50                   ret/ficha   +5.4% [   +0;  +11] | netas/día  +8.20 | fichas/día  152.0 | máx. caída    375 | jugado  96.3% | acierto  52.7%
+  T15 ponderado si P̂≥0.50               ret/ficha  +13.3% [   +7;  +20] | netas/día +31.04 | fichas/día  233.1 | máx. caída    586 | jugado  96.3% | acierto  52.7%
+  T15 plano graduado                     ret/ficha   +5.7% [   +0;  +11] | netas/día  +8.81 | fichas/día  155.4 | máx. caída    375 | jugado  96.3% | acierto  52.7%
+    pareado T15 plano si P̂≥0.50      : netas/día − REF  -7.49 [-17.08;+3.05] | ret/ficha − 'T15 plano todos'  +0.8 pp [-0.4;+2.5]
+    pareado T15 ponderado si P̂≥0.50  : netas/día − REF +15.35 [+2.19;+28.59] | ret/ficha − 'T15 ponderado todos'  +1.3 pp [-0.1;+3.1]
+    pareado T15 plano graduado        : netas/día − REF  -6.88 [-17.47;+3.72] | ret/ficha − 'T15 plano todos'  +1.1 pp [-0.6;+3.0]

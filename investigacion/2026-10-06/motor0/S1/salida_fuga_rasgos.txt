@@ -1,0 +1,1 @@
+fuga de rasgos: OK (cortes 8285, 10709; filas <= corte idénticas)

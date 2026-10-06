@@ -1,0 +1,76 @@
+== Parte 1 · motor PROD: Δ log-loss contra C0 (milésimas de nat por sorteo; negativo = mejor), AUC
+  [PROD] AJUSTE   n= 2748 acierto 54.6% | logloss C0 0.6897
+      C0_vm30d   logloss 0.6886 Δ  -1.05 m [ -2.83; +0.72]  AUC 0.521 [0.503;0.537]  P̂ media 0.560
+      C1_masa    logloss 0.6899 Δ  +0.21 m [ -2.33; +2.74]  AUC 0.506 [0.489;0.523]  P̂ media 0.557
+      LR         logloss 0.6892 Δ  -0.51 m [ -3.53; +2.50]  AUC 0.526 [0.507;0.545]  P̂ media 0.569
+      GBM        logloss 0.6891 Δ  -0.52 m [ -4.02; +2.98]  AUC 0.529 [0.512;0.545]  P̂ media 0.570
+      LR_horadia logloss 0.6896 Δ  -0.08 m [ -2.60; +2.45]  AUC 0.521 [0.502;0.539]  P̂ media 0.563
+      LR_masa+RD logloss 0.6883 Δ  -1.41 m [ -4.10; +1.28]  AUC 0.522 [0.506;0.537]  P̂ media 0.565
+  [PROD] ELECCION n= 1392 acierto 48.6% | logloss C0 0.6964
+      C0_vm30d   logloss 0.6931 Δ  -3.22 m [ -5.90; -0.55]  AUC 0.498 [0.476;0.522]  P̂ media 0.498
+      C1_masa    logloss 0.6956 Δ  -0.73 m [ -3.02; +1.56]  AUC 0.516 [0.490;0.542]  P̂ media 0.525
+      LR         logloss 0.6914 Δ  -4.92 m [ -8.87; -0.98]  AUC 0.533 [0.505;0.563]  P̂ media 0.492
+      GBM        logloss 0.6922 Δ  -4.16 m [ -9.44; +1.11]  AUC 0.524 [0.501;0.549]  P̂ media 0.478
+      LR_horadia logloss 0.6933 Δ  -3.01 m [ -6.01; -0.00]  AUC 0.490 [0.464;0.518]  P̂ media 0.496
+      LR_masa+RD logloss 0.6925 Δ  -3.81 m [ -7.37; -0.25]  AUC 0.502 [0.479;0.528]  P̂ media 0.493
+  calibración LR AJUSTE: [0.48,0.50) n=18 P̂=0.495 real=0.556 | [0.50,0.52) n=68 P̂=0.512 real=0.559 | [0.52,0.54) n=314 P̂=0.533 real=0.494 | [0.54,0.56) n=820 P̂=0.549 real=0.533 | [0.56,0.58) n=594 P̂=0.570 real=0.556 | [0.58,0.60) n=490 P̂=0.590 real=0.539 | [0.60,1.00) n=444 P̂=0.618 real=0.599
+  calibración GBM AJUSTE: [0.45,0.48) n=1 P̂=0.478 real=0.000 | [0.48,0.50) n=14 P̂=0.495 real=0.500 | [0.50,0.52) n=83 P̂=0.512 real=0.470 | [0.52,0.54) n=460 P̂=0.533 real=0.498 | [0.54,0.56) n=751 P̂=0.550 real=0.561 | [0.56,0.58) n=536 P̂=0.569 real=0.541 | [0.58,0.60) n=336 P̂=0.590 real=0.524 | [0.60,1.00) n=567 P̂=0.628 real=0.596
+  calibración LR ELECCION: [0.00,0.45) n=92 P̂=0.437 real=0.457 | [0.45,0.48) n=260 P̂=0.467 real=0.431 | [0.48,0.50) n=470 P̂=0.492 real=0.485 | [0.50,0.52) n=428 P̂=0.507 real=0.523 | [0.52,0.54) n=122 P̂=0.529 real=0.525 | [0.54,0.56) n=20 P̂=0.544 real=0.350
+  calibración GBM ELECCION: [0.00,0.45) n=268 P̂=0.424 real=0.429 | [0.45,0.48) n=337 P̂=0.468 real=0.516 | [0.48,0.50) n=481 P̂=0.490 real=0.462 | [0.50,0.52) n=194 P̂=0.508 real=0.546 | [0.52,0.54) n=84 P̂=0.528 real=0.536 | [0.54,0.56) n=24 P̂=0.548 real=0.500 | [0.56,0.58) n=4 P̂=0.564 real=0.750
+  LR último ajuste, coeficientes estandarizados mayores: pri -0.180, rd_disp +0.131, h2 -0.117, h5 -0.117, n_hoy -0.113, hits_hoy -0.105, h3 -0.099, h1 -0.098, ew_glob -0.095, h4 -0.085, ew_dow +0.082, q +0.076
+  GBM último ajuste, ganancia: ew_dow 14%, pri 8%, ent 8%, p1 7%, ew_hora 7%, q 7%, oe_hoy 7%, masa15 7%, oe_1d 7%, oe_3d 6%
+== Parte 3 · motor PROD: tarde (13-19 h) según aciertos Top-15 de la mañana (8-12 h, 5 sorteos)
+  ANTIGUO  | mañana 0-1: n= 238 tarde 48.3% (esp 52.9) O−E -4.6pp | mañana 2: n= 336 tarde 55.4% (esp 52.9) O−E +2.4pp | mañana 3: n= 581 tarde 53.9% (esp 53.5) O−E +0.4pp | mañana 4-5: n= 329 tarde 50.2% (esp 53.0) O−E -2.9pp | corr(O−E mañana, O−E tarde) +0.005
+  AJUSTE   | mañana 0-1: n= 175 tarde 57.7% (esp 55.5) O−E +2.2pp | mañana 2: n= 420 tarde 56.7% (esp 56.0) O−E +0.6pp | mañana 3: n= 560 tarde 50.2% (esp 55.8) O−E -5.6pp | mañana 4-5: n= 448 tarde 49.8% (esp 55.8) O−E -6.0pp | corr(O−E mañana, O−E tarde) -0.055
+  ELECCION | mañana 0-1: n= 126 tarde 48.4% (esp 52.7) O−E -4.3pp | mañana 2: n= 259 tarde 49.4% (esp 52.9) O−E -3.4pp | mañana 3: n= 287 tarde 44.3% (esp 52.6) O−E -8.3pp | mañana 4-5: n= 140 tarde 47.9% (esp 52.0) O−E -4.2pp | corr(O−E mañana, O−E tarde) -0.003
+  logística walk-forward en la tarde (base = hora, día, masa):
+  [PROD tarde] AJUSTE   n= 1603 acierto 52.6% | logloss base 0.6933
+      +mañana    logloss 0.6933 Δ  -0.01 m [ -0.58; +0.56]  AUC 0.509 [0.486;0.535]  P̂ media 0.546
+      +q,π       logloss 0.6935 Δ  +0.17 m [ -0.57; +0.91]  AUC 0.503 [0.480;0.529]  P̂ media 0.546
+      +q,π+mañana logloss 0.6925 Δ  -0.74 m [ -1.80; +0.31]  AUC 0.513 [0.489;0.538]  P̂ media 0.543
+  [PROD tarde] ELECCION n=  812 acierto 47.2% | logloss base 0.6940
+      +mañana    logloss 0.6933 Δ  -0.68 m [ -2.37; +1.02]  AUC 0.494 [0.459;0.531]  P̂ media 0.490
+      +q,π       logloss 0.6928 Δ  -1.22 m [ -5.38; +2.93]  AUC 0.506 [0.474;0.541]  P̂ media 0.490
+      +q,π+mañana logloss 0.6914 Δ  -2.58 m [ -7.08; +1.93]  AUC 0.530 [0.498;0.566]  P̂ media 0.488
+  [PROD tarde (vs base+q)] AJUSTE   n= 1603 acierto 52.6% | logloss +q,π 0.6935
+      +q,π+mañana logloss 0.6925 Δ  -0.91 m [ -2.33; +0.50]  AUC 0.513 [0.489;0.537]  P̂ media 0.543
+  [PROD tarde (vs base+q)] ELECCION n=  812 acierto 47.2% | logloss +q,π 0.6928
+      +q,π+mañana logloss 0.6914 Δ  -1.35 m [ -2.88; +0.18]  AUC 0.530 [0.490;0.562]  P̂ media 0.488
+== Parte 1 · motor M4: Δ log-loss contra C0 (milésimas de nat por sorteo; negativo = mejor), AUC
+  [M4] AJUSTE   n= 2748 acierto 57.2% | logloss C0 0.6856
+      C0_vm30d   logloss 0.6836 Δ  -2.00 m [ -4.50; +0.49]  AUC 0.499 [0.482;0.516]  P̂ media 0.578
+      C1_masa    logloss 0.6819 Δ  -3.76 m [ -7.78; +0.26]  AUC 0.531 [0.517;0.547]  P̂ media 0.593
+      LR         logloss 0.6821 Δ  -3.55 m [ -8.06; +0.96]  AUC 0.536 [0.519;0.551]  P̂ media 0.590
+      GBM        logloss 0.6826 Δ  -3.05 m [ -7.51; +1.41]  AUC 0.533 [0.513;0.551]  P̂ media 0.587
+      LR_horadia logloss 0.6822 Δ  -3.47 m [ -6.76; -0.18]  AUC 0.524 [0.507;0.540]  P̂ media 0.583
+      LR_masa+RD logloss 0.6830 Δ  -2.64 m [ -6.38; +1.10]  AUC 0.521 [0.504;0.539]  P̂ media 0.588
+  [M4] ELECCION n= 1392 acierto 51.4% | logloss C0 0.6946
+      C0_vm30d   logloss 0.6947 Δ  +0.06 m [ -2.32; +2.45]  AUC 0.485 [0.461;0.510]  P̂ media 0.522
+      C1_masa    logloss 0.6957 Δ  +1.09 m [ -1.45; +3.63]  AUC 0.496 [0.471;0.521]  P̂ media 0.536
+      LR         logloss 0.6948 Δ  +0.16 m [ -4.36; +4.68]  AUC 0.504 [0.479;0.531]  P̂ media 0.505
+      GBM        logloss 0.6961 Δ  +1.46 m [ -3.47; +6.39]  AUC 0.504 [0.483;0.530]  P̂ media 0.503
+      LR_horadia logloss 0.6953 Δ  +0.71 m [ -2.10; +3.53]  AUC 0.470 [0.445;0.496]  P̂ media 0.516
+      LR_masa+RD logloss 0.6948 Δ  +0.18 m [ -2.26; +2.62]  AUC 0.466 [0.439;0.493]  P̂ media 0.520
+  calibración LR AJUSTE: [0.45,0.48) n=15 P̂=0.474 real=0.333 | [0.48,0.50) n=92 P̂=0.491 real=0.424 | [0.50,0.52) n=163 P̂=0.511 real=0.515 | [0.52,0.54) n=223 P̂=0.531 real=0.561 | [0.54,0.56) n=375 P̂=0.550 real=0.600 | [0.56,0.58) n=371 P̂=0.569 real=0.561 | [0.58,0.60) n=295 P̂=0.590 real=0.546 | [0.60,1.00) n=1214 P̂=0.639 real=0.598
+  calibración GBM AJUSTE: [0.00,0.45) n=17 P̂=0.432 real=0.529 | [0.45,0.48) n=52 P̂=0.465 real=0.442 | [0.48,0.50) n=66 P̂=0.491 real=0.515 | [0.50,0.52) n=122 P̂=0.512 real=0.541 | [0.52,0.54) n=250 P̂=0.530 real=0.512 | [0.54,0.56) n=295 P̂=0.551 real=0.597 | [0.56,0.58) n=482 P̂=0.571 real=0.568 | [0.58,0.60) n=372 P̂=0.590 real=0.581 | [0.60,1.00) n=1092 P̂=0.638 real=0.592
+  calibración LR ELECCION: [0.00,0.45) n=98 P̂=0.432 real=0.439 | [0.45,0.48) n=230 P̂=0.466 real=0.526 | [0.48,0.50) n=184 P̂=0.490 real=0.516 | [0.50,0.52) n=407 P̂=0.513 real=0.518 | [0.52,0.54) n=281 P̂=0.527 real=0.548 | [0.54,0.56) n=126 P̂=0.550 real=0.540 | [0.56,0.58) n=52 P̂=0.567 real=0.365 | [0.58,0.60) n=13 P̂=0.585 real=0.308 | [0.60,1.00) n=1 P̂=0.604 real=1.000
+  calibración GBM ELECCION: [0.00,0.45) n=97 P̂=0.403 real=0.474 | [0.45,0.48) n=128 P̂=0.467 real=0.516 | [0.48,0.50) n=336 P̂=0.491 real=0.530 | [0.50,0.52) n=436 P̂=0.511 real=0.500 | [0.52,0.54) n=260 P̂=0.527 real=0.531 | [0.54,0.56) n=66 P̂=0.548 real=0.636 | [0.56,0.58) n=41 P̂=0.568 real=0.439 | [0.58,0.60) n=18 P̂=0.588 real=0.278 | [0.60,1.00) n=10 P̂=0.612 real=0.500
+  LR último ajuste, coeficientes estandarizados mayores: pri -0.166, ew_glob -0.131, hits_hoy -0.103, d6 -0.078, oe_3d +0.076, q +0.073, h5 -0.067, d2 -0.063, h3 -0.057, masa15 +0.056, h2 -0.056, h4 -0.049
+  GBM último ajuste, ganancia: q 13%, ew_dow 12%, masa15 9%, oe_hoy 8%, p1 7%, ent 6%, oe_3d 6%, ew_hora 6%, pri 5%, oe_7d 5%
+== Parte 3 · motor M4: tarde (13-19 h) según aciertos Top-15 de la mañana (8-12 h, 5 sorteos)
+  ANTIGUO  | mañana 0-1: n= 238 tarde 48.3% (esp 52.9) O−E -4.6pp | mañana 2: n= 336 tarde 55.4% (esp 52.9) O−E +2.4pp | mañana 3: n= 581 tarde 53.9% (esp 53.5) O−E +0.4pp | mañana 4-5: n= 329 tarde 50.2% (esp 53.0) O−E -2.9pp | corr(O−E mañana, O−E tarde) +0.005
+  AJUSTE   | mañana 0-1: n= 147 tarde 60.5% (esp 58.0) O−E +2.5pp | mañana 2: n= 343 tarde 57.1% (esp 58.9) O−E -1.7pp | mañana 3: n= 602 tarde 54.8% (esp 58.7) O−E -3.9pp | mañana 4-5: n= 511 tarde 53.8% (esp 59.3) O−E -5.5pp | corr(O−E mañana, O−E tarde) -0.041
+  ELECCION | mañana 0-1: n= 112 tarde 49.1% (esp 53.1) O−E -4.0pp | mañana 2: n= 259 tarde 49.4% (esp 53.9) O−E -4.4pp | mañana 3: n= 266 tarde 53.0% (esp 53.5) O−E -0.5pp | mañana 4-5: n= 175 tarde 53.1% (esp 52.8) O−E +0.4pp | corr(O−E mañana, O−E tarde) +0.033
+  logística walk-forward en la tarde (base = hora, día, masa):
+  [M4 tarde] AJUSTE   n= 1603 acierto 55.5% | logloss base 0.6893
+      +mañana    logloss 0.6888 Δ  -0.47 m [ -0.97; +0.03]  AUC 0.507 [0.482;0.532]  P̂ media 0.572
+      +q,π       logloss 0.6892 Δ  -0.11 m [ -0.97; +0.76]  AUC 0.498 [0.475;0.525]  P̂ media 0.567
+      +q,π+mañana logloss 0.6880 Δ  -1.36 m [ -2.52; -0.19]  AUC 0.517 [0.494;0.543]  P̂ media 0.567
+  [M4 tarde] ELECCION n=  812 acierto 51.4% | logloss base 0.6959
+      +mañana    logloss 0.6970 Δ  +1.05 m [ +0.06; +2.03]  AUC 0.473 [0.442;0.505]  P̂ media 0.507
+      +q,π       logloss 0.6917 Δ  -4.24 m [ -9.56; +1.07]  AUC 0.523 [0.487;0.557]  P̂ media 0.525
+      +q,π+mañana logloss 0.6924 Δ  -3.49 m [ -8.46; +1.47]  AUC 0.523 [0.489;0.557]  P̂ media 0.520
+  [M4 tarde (vs base+q)] AJUSTE   n= 1603 acierto 55.5% | logloss +q,π 0.6892
+      +q,π+mañana logloss 0.6880 Δ  -1.25 m [ -2.22; -0.28]  AUC 0.517 [0.494;0.543]  P̂ media 0.567
+  [M4 tarde (vs base+q)] ELECCION n=  812 acierto 51.4% | logloss +q,π 0.6917
+      +q,π+mañana logloss 0.6924 Δ  +0.75 m [ -0.84; +2.34]  AUC 0.523 [0.486;0.558]  P̂ media 0.520
