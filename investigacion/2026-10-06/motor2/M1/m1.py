@@ -41,14 +41,17 @@ def sig(x): return 1 / (1 + np.exp(-x))
 def logit(p): p = np.clip(p, 1e-4, 1 - 1e-4); return np.log(p / (1 - p))
 
 
-NOMBRES = ["rho", "tau_l", "u_l", "kap_l", "a0", "a1", "a2", "hs_l", "hr_l"]
-INI = np.array([1.0, 1.5, -2.0, -0.5, -1.0, 1.0, 1.0, np.log(4.0), np.log(7.0)])
+NOMBRES = ["r", "tau", "u", "kap", "a0", "a1", "a2", "hs", "hr"]
+# Cotas (2.ª ronda): la 1.ª ronda sin cotas degeneró (r→0 = "más estricto" en vez de relajado, a1→7·10^5 = umbral duro).
+# r ≥ 1 y τ ≤ 1 ya estaban en el pre-registro; a1, a2 ≥ 0 (la memoria empuja en el sentido de la evidencia) y vidas medias acotadas.
+LO = np.array([1.0, 0.3, 0.0, 0.05, -6.0, 0.0, 0.0, 0.5, 1.0])
+HI = np.array([6.0, 1.0, 0.5, 3.0, 4.0, 3.0, 3.0, 26.0, 60.0])
+INI = np.zeros(9)
 
 
 def decodificar(th):
-    rho, tl, ul, kl, a0, a1, a2, hsl, hrl = th
-    return dict(r=float(np.exp(rho)), tau=float(sig(tl)), u=float(sig(ul)), kap=float(np.exp(kl)), a0=float(a0),
-                a1=float(a1), a2=float(a2), hs=float(np.exp(hsl)), hr=float(np.exp(hrl)))
+    x = LO + (HI - LO) * sig(np.asarray(th, float))
+    return dict(zip(NOMBRES, map(float, x)))
 
 
 def motor(seq, th, var, M=None, detalle=False):

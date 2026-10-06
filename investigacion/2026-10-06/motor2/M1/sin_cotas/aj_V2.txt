@@ -1,0 +1,5 @@
+/home/user/lotto-activo/investigacion/2026-10-06/motor2/M1/m1.py:40: RuntimeWarning: overflow encountered in exp
+  def sig(x): return 1 / (1 + np.exp(-x))
+/home/user/lotto-activo/investigacion/2026-10-06/motor2/M1/m1.py:51: RuntimeWarning: overflow encountered in exp
+  a1=float(a1), a2=float(a2), hs=float(np.exp(hsl)), hr=float(np.exp(hrl)))
+V2 284s {"mbits": 166.716, "r": 2.094, "tau": 0.654, "u": 0.0, "kap": 0.732, "a0": 26043.668, "a1": 781539.221, "a2": 47021.657, "hs": 2.56, "hr": Infinity}
