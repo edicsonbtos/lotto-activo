@@ -1,0 +1,82 @@
+== evaluar del arnés (PRUEBA26 contaminada; una sola mirada, registrada) ==
+[S2-S2(w=1)] AJUSTE    n= 2748 mbits +173.4 | Δ vs prod +12.61 [ +0.17;+25.06] | Top-5 20.7 (prod 21.2) | Top-15 55.3 (prod 54.6) | ret Top-5 +26.1% (prod +29.1%)
+[S2-S2(w=1)] ELECCION  n= 1392 mbits  +90.8 | Δ vs prod +11.74 [ -3.60;+27.07] | Top-5 20.6 (prod 20.1) | Top-15 51.7 (prod 48.6) | ret Top-5 +26.1% (prod +23.4%)
+[S2-S2(w=1)] PRUEBA26  n= 1164 mbits +120.7 | Δ vs prod +11.66 [ -4.18;+27.49] | Top-5 19.4 (prod 18.6) | Top-15 52.5 (prod 49.6) | ret Top-5 +17.3% (prod +14.4%)
+[S2-S2+PRODw=0.75] AJUSTE    n= 2748 mbits +182.0 | Δ vs prod +21.21 [+11.86;+30.55] | Top-5 21.4 (prod 21.2) | Top-15 56.0 (prod 54.6) | ret Top-5 +29.2% (prod +29.1%)
+[S2-S2+PRODw=0.75] ELECCION  n= 1392 mbits  +96.9 | Δ vs prod +17.85 [ +6.24;+29.45] | Top-5 21.8 (prod 20.1) | Top-15 51.3 (prod 48.6) | ret Top-5 +30.9% (prod +23.4%)
+[S2-S2+PRODw=0.75] PRUEBA26  n= 1164 mbits +125.8 | Δ vs prod +16.79 [ +4.90;+28.68] | Top-5 19.8 (prod 18.6) | Top-15 53.9 (prod 49.6) | ret Top-5 +22.7% (prod +14.4%)
+
+== Top-15 y plata con regla RD (pareado contra PROD) ==
+PROD             AJUSTE   n= 2748 mbits +160.8 Δ   +0.0 [ +0.0; +0.0] | Top15 55.6 (PROD 55.6) Δ +0.00 [+0.00;+0.00] | T15plano +11.2% (PROD +11.2) T15pond +18.1% (+18.1) T5esc +31.0% (+31.0) Δ +0.0 [+0.0;+0.0]
+                          netas/día: T15plano +20.2 (PROD +20.2) T15pond +49.9 (+49.9) T5esc +29.8 (+29.8) | ΔT15plano +0.0 [+0.0;+0.0] ΔT15pond +0.0 [+0.0;+0.0]
+S2 (w=1)         AJUSTE   n= 2748 mbits +173.4 Δ  +12.6 [ +0.2;+25.1] | Top15 55.6 (PROD 55.6) Δ +0.04 [-1.52;+1.60] | T15plano +11.3% (PROD +11.2) T15pond +17.0% (+18.1) T5esc +27.7% (+31.0) Δ -3.3 [-12.1;+5.5]
+                          netas/día: T15plano +20.3 (PROD +20.2) T15pond +46.9 (+49.9) T5esc +26.6 (+29.8) | ΔT15plano +0.1 [-3.0;+3.2] ΔT15pond -1.1 [-5.1;+2.9]
+S2+PROD w=0.75   AJUSTE   n= 2748 mbits +182.0 Δ  +21.2 [+11.9;+30.6] | Top15 56.4 (PROD 55.6) Δ +0.80 [-0.54;+2.14] | T15plano +12.8% (PROD +11.2) T15pond +19.0% (+18.1) T5esc +30.6% (+31.0) Δ -0.4 [-8.2;+7.3]
+                          netas/día: T15plano +23.1 (PROD +20.2) T15pond +52.4 (+49.9) T5esc +29.4 (+29.8) | ΔT15plano +1.6 [-1.1;+4.3] ΔT15pond +0.9 [-2.4;+4.2]
+S2+PROD w=0.5 (info) AJUSTE   n= 2748 mbits +182.7 Δ  +21.9 [+15.7;+28.2] | Top15 57.0 (PROD 55.6) Δ +1.42 [+0.29;+2.55] | T15plano +14.0% (PROD +11.2) T15pond +19.3% (+18.1) T5esc +29.1% (+31.0) Δ -1.9 [-8.2;+4.3]
+                          netas/día: T15plano +25.3 (PROD +20.2) T15pond +53.2 (+49.9) T5esc +27.9 (+29.8) | ΔT15plano +2.8 [+0.6;+5.1] ΔT15pond +1.2 [-1.4;+3.8]
+M4 final (con RD) AJUSTE   n= 2748 mbits +195.5 Δ  +34.7 [+24.0;+45.4] | Top15 57.2 (PROD 55.6) Δ +1.64 [+0.46;+2.81] | T15plano +14.5% (PROD +11.2) T15pond +21.8% (+18.1) T5esc +35.5% (+31.0) Δ +4.5 [-2.4;+11.4]
+                          netas/día: T15plano +26.1 (PROD +20.2) T15pond +60.2 (+49.9) T5esc +34.1 (+29.8) | ΔT15plano +3.3 [+0.9;+5.6] ΔT15pond +3.7 [+0.6;+6.8]
+M4 V1 sin RD     AJUSTE   n= 2748 mbits +187.3 Δ  +26.5 [+20.0;+33.0] | Top15 57.1 (PROD 55.6) Δ +1.46 [+0.44;+2.47] | T15plano +14.1% (PROD +11.2) T15pond +21.2% (+18.1) T5esc +34.6% (+31.0) Δ +3.5 [-2.7;+9.8]
+                          netas/día: T15plano +25.4 (PROD +20.2) T15pond +58.6 (+49.9) T5esc +33.2 (+29.8) | ΔT15plano +2.9 [+0.9;+4.9] ΔT15pond +3.1 [+0.5;+5.8]
+PROD             ELECCION n= 1392 mbits  +79.0 Δ   +0.0 [ +0.0; +0.0] | Top15 50.1 (PROD 50.1) Δ +0.00 [+0.00;+0.00] | T15plano +0.1% (PROD +0.1) T15pond +8.8% (+8.8) T5esc +25.0% (+25.0) Δ +0.0 [+0.0;+0.0]
+                          netas/día: T15plano +0.3 (PROD +0.3) T15pond +24.3 (+24.3) T5esc +24.0 (+24.0) | ΔT15plano +0.0 [+0.0;+0.0] ΔT15pond +0.0 [+0.0;+0.0]
+S2 (w=1)         ELECCION n= 1392 mbits  +90.8 Δ  +11.7 [ -3.6;+27.1] | Top15 52.5 (PROD 50.1) Δ +2.44 [+0.21;+4.68] | T15plano +5.0% (PROD +0.1) T15pond +12.8% (+8.8) T5esc +27.4% (+25.0) Δ +2.4 [-14.0;+18.9]
+                          netas/día: T15plano +9.1 (PROD +0.3) T15pond +35.4 (+24.3) T5esc +26.3 (+24.0) | ΔT15plano +4.9 [+0.4;+9.4] ΔT15pond +4.0 [-3.1;+11.2]
+S2+PROD w=0.75   ELECCION n= 1392 mbits  +96.9 Δ  +17.8 [ +6.2;+29.5] | Top15 51.9 (PROD 50.1) Δ +1.87 [+0.01;+3.73] | T15plano +3.9% (PROD +0.1) T15pond +14.4% (+8.8) T5esc +34.2% (+25.0) Δ +9.2 [-4.5;+22.8]
+                          netas/día: T15plano +7.0 (PROD +0.3) T15pond +39.8 (+24.3) T5esc +32.8 (+24.0) | ΔT15plano +3.7 [+0.0;+7.5] ΔT15pond +5.6 [+0.1;+11.2]
+S2+PROD w=0.5 (info) ELECCION n= 1392 mbits  +96.9 Δ  +17.8 [+10.0;+25.6] | Top15 52.7 (PROD 50.1) Δ +2.59 [+0.89;+4.28] | T15plano +5.3% (PROD +0.1) T15pond +14.3% (+8.8) T5esc +31.2% (+25.0) Δ +6.2 [-4.2;+16.6]
+                          netas/día: T15plano +9.6 (PROD +0.3) T15pond +39.5 (+24.3) T5esc +29.9 (+24.0) | ΔT15plano +5.2 [+1.8;+8.6] ΔT15pond +5.5 [+1.3;+9.8]
+M4 final (con RD) ELECCION n= 1392 mbits +106.5 Δ  +27.5 [+14.8;+40.2] | Top15 51.4 (PROD 50.1) Δ +1.36 [-0.53;+3.26] | T15plano +2.9% (PROD +0.1) T15pond +9.0% (+8.8) T5esc +20.4% (+25.0) Δ -4.6 [-14.4;+5.2]
+                          netas/día: T15plano +5.2 (PROD +0.3) T15pond +24.8 (+24.3) T5esc +19.6 (+24.0) | ΔT15plano +2.7 [-1.1;+6.5] ΔT15pond +0.2 [-4.4;+4.7]
+M4 V1 sin RD     ELECCION n= 1392 mbits  +86.3 Δ   +7.2 [ -0.4;+14.9] | Top15 50.9 (PROD 50.1) Δ +0.86 [-0.45;+2.18] | T15plano +1.9% (PROD +0.1) T15pond +10.3% (+8.8) T5esc +26.1% (+25.0) Δ +1.1 [-6.9;+9.0]
+                          netas/día: T15plano +3.4 (PROD +0.3) T15pond +28.4 (+24.3) T5esc +25.0 (+24.0) | ΔT15plano +1.7 [-0.9;+4.4] ΔT15pond +1.5 [-1.6;+4.6]
+PROD             PRUEBA26 n= 1164 mbits +109.1 Δ   +0.0 [ +0.0; +0.0] | Top15 50.4 (PROD 50.4) Δ +0.00 [+0.00;+0.00] | T15plano +0.9% (PROD +0.9) T15pond +5.9% (+5.9) T5esc +15.3% (+15.3) Δ +0.0 [+0.0;+0.0]
+                          netas/día: T15plano +1.5 (PROD +1.5) T15pond +16.3 (+16.3) T5esc +14.7 (+14.7) | ΔT15plano +0.0 [+0.0;+0.0] ΔT15pond +0.0 [+0.0;+0.0]
+S2 (w=1)         PRUEBA26 n= 1164 mbits +120.7 Δ  +11.7 [ -4.2;+27.5] | Top15 53.4 (PROD 50.4) Δ +2.92 [+0.30;+5.54] | T15plano +6.7% (PROD +0.9) T15pond +11.0% (+5.9) T5esc +19.2% (+15.3) Δ +3.9 [-11.0;+18.7]
+                          netas/día: T15plano +12.1 (PROD +1.5) T15pond +30.5 (+16.3) T5esc +18.4 (+14.7) | ΔT15plano +5.8 [+0.6;+11.1] ΔT15pond +5.2 [-1.7;+12.0]
+S2+PROD w=0.75   PRUEBA26 n= 1164 mbits +125.8 Δ  +16.8 [ +4.9;+28.7] | Top15 54.3 (PROD 50.4) Δ +3.87 [+1.41;+6.32] | T15plano +8.6% (PROD +0.9) T15pond +14.2% (+5.9) T5esc +24.7% (+15.3) Δ +9.3 [-3.8;+22.5]
+                          netas/día: T15plano +15.5 (PROD +1.5) T15pond +39.2 (+16.3) T5esc +23.7 (+14.7) | ΔT15plano +7.7 [+2.8;+12.6] ΔT15pond +8.3 [+2.4;+14.2]
+S2+PROD w=0.5 (info) PRUEBA26 n= 1164 mbits +125.5 Δ  +16.5 [ +8.5;+24.4] | Top15 53.4 (PROD 50.4) Δ +3.01 [+1.00;+5.02] | T15plano +6.9% (PROD +0.9) T15pond +12.7% (+5.9) T5esc +23.7% (+15.3) Δ +8.4 [-3.8;+20.5]
+                          netas/día: T15plano +12.4 (PROD +1.5) T15pond +35.1 (+16.3) T5esc +22.8 (+14.7) | ΔT15plano +6.0 [+2.0;+10.0] ΔT15pond +6.8 [+1.7;+12.0]
+M4 final (con RD) PRUEBA26 n= 1164 mbits +128.2 Δ  +19.1 [ +5.7;+32.6] | Top15 52.2 (PROD 50.4) Δ +1.80 [-0.26;+3.86] | T15plano +4.5% (PROD +0.9) T15pond +10.7% (+5.9) T5esc +22.4% (+15.3) Δ +7.1 [-2.7;+16.9]
+                          netas/día: T15plano +8.0 (PROD +1.5) T15pond +29.6 (+16.3) T5esc +21.5 (+14.7) | ΔT15plano +3.6 [-0.5;+7.7] ΔT15pond +4.8 [+0.5;+9.2]
+M4 V1 sin RD     PRUEBA26 n= 1164 mbits +110.2 Δ   +1.1 [ -4.2; +6.4] | Top15 51.2 (PROD 50.4) Δ +0.77 [-0.13;+1.67] | T15plano +2.4% (PROD +0.9) T15pond +7.4% (+5.9) T5esc +16.6% (+15.3) Δ +1.3 [-4.6;+7.2]
+                          netas/día: T15plano +4.3 (PROD +1.5) T15pond +20.3 (+16.3) T5esc +16.0 (+14.7) | ΔT15plano +1.5 [-0.3;+3.3] ΔT15pond +1.5 [-1.1;+4.0]
+
+== Top-15 por régimen (mié-vie contra resto), S2 w=1 y mezcla ==
+  AJUSTE   S2 (w=1)         mié-vie  n=1200 Top15 54.4 (PROD 55.4) Δ -1.00 [-3.25;+1.25] Δmbits +20.1
+  AJUSTE   S2 (w=1)         resto    n=1548 Top15 56.6 (PROD 55.7) Δ +0.84 [-1.31;+2.99] Δmbits +6.8
+  AJUSTE   S2+PROD w=0.75   mié-vie  n=1200 Top15 55.9 (PROD 55.4) Δ +0.50 [-1.44;+2.44] Δmbits +26.7
+  AJUSTE   S2+PROD w=0.75   resto    n=1548 Top15 56.8 (PROD 55.7) Δ +1.03 [-0.83;+2.89] Δmbits +17.0
+  ELECCION S2 (w=1)         mié-vie  n= 564 Top15 50.0 (PROD 44.3) Δ +5.67 [+2.47;+8.88] Δmbits +21.6
+  ELECCION S2 (w=1)         resto    n= 828 Top15 54.2 (PROD 54.0) Δ +0.24 [-2.75;+3.24] Δmbits +5.0
+  ELECCION S2+PROD w=0.75   mié-vie  n= 564 Top15 48.2 (PROD 44.3) Δ +3.90 [+1.17;+6.63] Δmbits +26.1
+  ELECCION S2+PROD w=0.75   resto    n= 828 Top15 54.5 (PROD 54.0) Δ +0.48 [-2.01;+2.98] Δmbits +12.2
+  PRUEBA26 S2 (w=1)         mié-vie  n= 504 Top15 46.2 (PROD 44.2) Δ +1.98 [-1.63;+5.60] Δmbits +2.5
+  PRUEBA26 S2 (w=1)         resto    n= 660 Top15 58.8 (PROD 55.2) Δ +3.64 [-0.09;+7.36] Δmbits +18.6
+  PRUEBA26 S2+PROD w=0.75   mié-vie  n= 504 Top15 47.0 (PROD 44.2) Δ +2.78 [-0.68;+6.23] Δmbits +10.2
+  PRUEBA26 S2+PROD w=0.75   resto    n= 660 Top15 59.8 (PROD 55.2) Δ +4.70 [+1.25;+8.14] Δmbits +21.8
+
+== Selector S1 (sin reajustar): jugar solo si P̂ ≥ 0,50 ==
+  AJUSTE: REF Top-5 esc PROD todos +31.0%/ficha, netas/día +29.8
+    jugar_PROD PROD             jugado 99.3% Top15 55.6 T15plano +11.2% [+8;+14] netas/día +20.0 | T15pond +18.0% [+14;+22] netas/día +49.3
+    jugar_PROD S2 (w=1)         jugado 99.3% Top15 55.7 T15plano +11.4% [+8;+15] netas/día +20.4 | T15pond +17.2% [+13;+21] netas/día +47.3
+    jugar_PROD S2+PROD w=0.75   jugado 99.3% Top15 56.5 T15plano +13.0% [+10;+16] netas/día +23.3 | T15pond +19.2% [+15;+23] netas/día +52.7
+    jugar_M4   PROD             jugado 96.1% Top15 56.0 T15plano +12.1% [+9;+15] netas/día +20.9 | T15pond +19.2% [+15;+23] netas/día +51.0
+    jugar_M4   S2 (w=1)         jugado 96.1% Top15 55.9 T15plano +11.8% [+9;+15] netas/día +20.4 | T15pond +17.1% [+13;+21] netas/día +45.4
+    jugar_M4   S2+PROD w=0.75   jugado 96.1% Top15 56.8 T15plano +13.5% [+10;+17] netas/día +23.4 | T15pond +19.2% [+15;+23] netas/día +51.0
+  ELECCION: REF Top-5 esc PROD todos +25.0%/ficha, netas/día +24.0
+    jugar_PROD PROD             jugado 40.9% Top15 52.3 T15plano +4.6% [-3;+12] netas/día +3.4 | T15pond +12.4% [+2;+22] netas/día +14.0
+    jugar_PROD S2 (w=1)         jugado 40.9% Top15 54.7 T15plano +9.5% [+3;+16] netas/día +7.0 | T15pond +21.3% [+11;+31] netas/día +24.1
+    jugar_PROD S2+PROD w=0.75   jugado 40.9% Top15 52.6 T15plano +5.3% [-2;+12] netas/día +3.9 | T15pond +19.7% [+9;+30] netas/día +22.2
+    jugar_M4   PROD             jugado 63.2% Top15 51.2 T15plano +2.5% [-3;+8] netas/día +2.8 | T15pond +10.0% [+2;+18] netas/día +17.4
+    jugar_M4   S2 (w=1)         jugado 63.2% Top15 53.2 T15plano +6.4% [+1;+12] netas/día +7.2 | T15pond +16.4% [+8;+24] netas/día +28.5
+    jugar_M4   S2+PROD w=0.75   jugado 63.2% Top15 52.5 T15plano +5.0% [-1;+11] netas/día +5.7 | T15pond +17.4% [+9;+25] netas/día +30.3
+  PRUEBA26: REF Top-5 esc PROD todos +15.3%/ficha, netas/día +14.7
+    jugar_PROD PROD             jugado 21.6% Top15 48.6 T15plano -2.8% [-12;+6] netas/día -1.1 | T15pond +3.4% [-8;+15] netas/día +2.0
+    jugar_PROD S2 (w=1)         jugado 21.6% Top15 53.4 T15plano +6.8% [-3;+16] netas/día +2.6 | T15pond +14.8% [+2;+28] netas/día +8.8
+    jugar_PROD S2+PROD w=0.75   jugado 21.6% Top15 55.4 T15plano +10.8% [+1;+21] netas/día +4.2 | T15pond +16.4% [+3;+30] netas/día +9.8
+    jugar_M4   PROD             jugado 93.9% Top15 51.3 T15plano +2.7% [-2;+7] netas/día +4.5 | T15pond +7.9% [+2;+14] netas/día +20.4
+    jugar_M4   S2 (w=1)         jugado 93.9% Top15 53.2 T15plano +6.5% [+1;+12] netas/día +11.0 | T15pond +11.1% [+4;+18] netas/día +28.8
+    jugar_M4   S2+PROD w=0.75   jugado 93.9% Top15 54.6 T15plano +9.2% [+4;+15] netas/día +15.6 | T15pond +15.3% [+8;+22] netas/día +39.6

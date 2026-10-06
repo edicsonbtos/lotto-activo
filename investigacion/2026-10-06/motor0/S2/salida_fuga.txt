@@ -1,0 +1,5 @@
+python fuga.py (cortes 9100 = 2025-11-17, 11350 = 2026-06-07; rasgos M4 sin RD + nuevos + reentreno C del mes, recalculados sobre la secuencia alterada)
+matriz guardada = pipeline: OK
+chequear_fuga: OK
+
+hacer_rasgos.py: fuga rasgos nuevos (cortes 6000, 9000, 12000): OK
