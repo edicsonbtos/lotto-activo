@@ -4,7 +4,7 @@ sys.path.insert(0, "/home/user/lotto-activo/investigacion/2026-10-06/motor2"); i
 SP = A.SP
 rdD = A.LE.cargar("/home/user/lotto-activo/rdint_historial.txt")
 rd = {(f, int(h)): int(s) for f, h, s in zip(rdD.fecha, rdD.hora, rdD.seq)}
-M = {"PROD": A.PROD, "M6": np.load(SP + "/motor2_M6.npz")["P"], "M2": np.load(SP + "/motor2_M2.npz")["P"]}
+M = {"PROD": A.PROD, "M6": np.load(SP + "/motor2_M6.npz")["P"], "M2": np.load(SP + "/motor2_M2.npz")["P"], "M4": np.load(SP + "/motor2_M4.npz")["P"]}
 lp = np.log(A.PROD); comb = np.exp(np.log(M["M6"]) + np.log(M["M2"]) - lp); M["M2+M6 (expl.)"] = comb / comb.sum(1, keepdims=True)
 FI = np.array([2, 2, 2, 1, 1])
 def top5(P, i, cambio):

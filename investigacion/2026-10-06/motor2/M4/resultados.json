@@ -1,0 +1,53 @@
+[
+ {
+  "nombre": "M4-final",
+  "tramo": "AJUSTE",
+  "n": 2748,
+  "mbits": 195.5,
+  "dmbits_vs_prod": 34.7,
+  "ic90": [
+   23.97,
+   45.43
+  ],
+  "top5": 22.09,
+  "top5_prod": 21.18,
+  "top15": 57.24,
+  "top15_prod": 54.59,
+  "ret_top5": 35.5,
+  "ret_top5_prod": 29.1
+ },
+ {
+  "nombre": "M4-final",
+  "tramo": "ELECCION",
+  "n": 1392,
+  "mbits": 106.5,
+  "dmbits_vs_prod": 27.48,
+  "ic90": [
+   14.75,
+   40.2
+  ],
+  "top5": 19.97,
+  "top5_prod": 20.11,
+  "top15": 51.44,
+  "top15_prod": 48.64,
+  "ret_top5": 20.4,
+  "ret_top5_prod": 23.4
+ },
+ {
+  "nombre": "M4-final",
+  "tramo": "PRUEBA26",
+  "n": 1164,
+  "mbits": 128.2,
+  "dmbits_vs_prod": 19.12,
+  "ic90": [
+   5.67,
+   32.57
+  ],
+  "top5": 19.93,
+  "top5_prod": 18.56,
+  "top15": 52.23,
+  "top15_prod": 49.57,
+  "ret_top5": 22.4,
+  "ret_top5_prod": 14.4
+ }
+]
