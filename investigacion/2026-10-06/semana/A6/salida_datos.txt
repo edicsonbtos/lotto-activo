@@ -1,0 +1,3 @@
+2025-S2 lun 288 dif 0 falta 0  mar 300 dif 0 falta 0  mié 312 dif 0 falta 0  jue 288 dif 0 falta 0  vie 300 dif 0 falta 0  sáb 288 dif 0 falta 0  dom 276 dif 0 falta 0
+2026 lun 456 dif 0 falta 0  mar 456 dif 0 falta 0  mié 444 dif 3 falta 0  jue 420 dif 0 falta 0  vie 432 dif 1 falta 0  sáb 444 dif 0 falta 0  dom 444 dif 0 falta 0
+fechas de la API: 2025-07-01 .. 2026-09-22

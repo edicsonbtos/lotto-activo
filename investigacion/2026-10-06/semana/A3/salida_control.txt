@@ -1,0 +1,20 @@
+Control de selección: Top-15 O/E y repeticiones del día (O/E motor) para las 7 ternas de días consecutivos, 2026
+  lun-mar-mié  Top-15 O/E 0.94 vs resto 0.94  z +0.1  | repeticiones O/E 1.07 vs resto 1.15
+  mar-mié-jue  Top-15 O/E 0.89 vs resto 0.98  z -3.0  | repeticiones O/E 1.34 vs resto 0.96
+  mié-jue-vie  Top-15 O/E 0.84 vs resto 1.01  z -6.1  | repeticiones O/E 1.68 vs resto 0.73
+  jue-vie-sáb  Top-15 O/E 0.90 vs resto 0.96  z -1.8  | repeticiones O/E 1.33 vs resto 0.97
+  vie-sáb-dom  Top-15 O/E 0.97 vs resto 0.91  z +1.9  | repeticiones O/E 1.05 vs resto 1.17
+  sáb-dom-lun  Top-15 O/E 1.02 vs resto 0.87  z +4.8  | repeticiones O/E 0.70 vs resto 1.46
+  dom-lun-mar  Top-15 O/E 1.00 vs resto 0.89  z +3.5  | repeticiones O/E 0.74 vs resto 1.42
+  min z -6.1: p unilateral 5.4e-10, ×7 = 3.8e-09
+
+Permutación: barajar el día de la semana dentro de cada semana (2000 veces); estadístico = mínimo O/E de las 7 ternas
+  observado 0.837; p perm = 0.0005
+
+Otras loterías (sin motor): repeticiones del día por sorteo, MVF vs SM (O/E contra azar puro con su tablero)
+  Lotto Activo   | pre26 MVF 0.40 (n=3245) | pre26 SM 0.41 (n=4321) | 2026 MVF 0.67 (n=1368) | 2026 SM 0.31 (n=1884)
+  RD Internac.   | pre26 MVF 0.20 (n=3360) | pre26 SM 0.25 (n=4476) | 2026 MVF 0.26 (n=1296) | 2026 SM 0.20 (n=1797)
+  LARD           | pre26 MVF 0.88 (n=1106) | pre26 SM 0.96 (n=1470) | 2026 MVF 1.02 (n=1582) | 2026 SM 1.03 (n=2128)
+  La Granjita    | 2026 MVF 0.73 (n=768) | 2026 SM 0.58 (n=1032)
+  Selva Plus     | 2026 MVF 0.96 (n=735) | 2026 SM 0.87 (n=988)
+  Guácharo       | 2026 MVF 0.36 (n=768) | 2026 SM 0.31 (n=1032)

@@ -1,0 +1,99 @@
+=== 1. Día por día ===
+--- tramo dev ---
+lun        n= 1054 jorn= 91 | Top-15 O/E 1.021 [0.97;1.07] z +0.7 | mbits   +150 [+121;+178] | Top-5 22.2% (O/E 1.04) | ret T5  +36.6% [+21;+52]
+mar        n= 1054 jorn= 91 | Top-15 O/E 1.031 [0.98;1.08] z +1.1 | mbits   +153 [+127;+179] | Top-5 21.4% (O/E 1.01) | ret T5  +34.1% [+20;+48]
+mié        n= 1042 jorn= 90 | Top-15 O/E 0.974 [0.92;1.03] z -0.9 | mbits   +111 [+83;+138] | Top-5 19.2% (O/E 0.90) | ret T5  +17.7% [+3;+31]
+jue        n= 1070 jorn= 93 | Top-15 O/E 1.037 [0.98;1.09] z +1.3 | mbits   +149 [+117;+180] | Top-5 20.0% (O/E 0.95) | ret T5  +26.9% [+9;+46]
+vie        n= 1064 jorn= 92 | Top-15 O/E 1.040 [0.98;1.10] z +1.4 | mbits   +162 [+131;+192] | Top-5 22.1% (O/E 1.05) | ret T5  +33.6% [+17;+50]
+sáb        n= 1054 jorn= 91 | Top-15 O/E 1.038 [0.98;1.10] z +1.3 | mbits   +130 [+97;+162] | Top-5 21.4% (O/E 1.01) | ret T5  +29.2% [+15;+43]
+dom        n= 1019 jorn= 88 | Top-15 O/E 0.823 [0.76;0.88] z -6.1 | mbits     +8 [-33;+49] | Top-5 15.9% (O/E 0.75) | ret T5   -6.5% [-21;+8]
+mié-vie    n= 3176 jorn=275 | Top-15 O/E 1.017 [0.99;1.05] z +1.1 | mbits   +141 [+123;+157] | Top-5 20.4% (O/E 0.97) | ret T5  +26.1% [+17;+36]
+sáb-mar    n= 4181 jorn=361 | Top-15 O/E 0.979 [0.95;1.01] z -1.4 | mbits   +111 [+94;+128] | Top-5 20.3% (O/E 0.96) | ret T5  +23.6% [+16;+31]
+TOTAL      n= 7357 jorn=636 | Top-15 O/E 0.996 [0.97;1.02] z -0.4 | mbits   +124 [+112;+136] | Top-5 20.3% (O/E 0.96) | ret T5  +24.7% [+19;+31]
+--- tramo 2026 ---
+lun        n=  480 jorn= 40 | Top-15 O/E 0.985 [0.91;1.05] z -0.3 | mbits   +135 [+88;+179] | Top-5 20.6% (O/E 1.00) | ret T5  +28.1% [+5;+52]
+mar        n=  468 jorn= 39 | Top-15 O/E 0.980 [0.91;1.05] z -0.5 | mbits   +122 [+75;+167] | Top-5 19.4% (O/E 0.94) | ret T5  +17.0% [+0;+34]
+mié        n=  468 jorn= 39 | Top-15 O/E 0.852 [0.78;0.93] z -3.4 | mbits    +40 [-17;+91] | Top-5 16.7% (O/E 0.83) | ret T5   +4.2% [-20;+29]
+jue        n=  444 jorn= 37 | Top-15 O/E 0.821 [0.77;0.88] z -4.0 | mbits    +44 [+3;+83] | Top-5 15.5% (O/E 0.77) | ret T5   -6.2% [-26;+15]
+vie        n=  456 jorn= 38 | Top-15 O/E 0.838 [0.75;0.92] z -3.6 | mbits    +23 [-24;+67] | Top-5 16.0% (O/E 0.80) | ret T5   +0.3% [-17;+18]
+sáb        n=  468 jorn= 39 | Top-15 O/E 1.050 [0.97;1.14] z +1.1 | mbits   +159 [+117;+195] | Top-5 24.1% (O/E 1.22) | ret T5  +49.8% [+25;+77]
+dom        n=  468 jorn= 39 | Top-15 O/E 1.033 [0.94;1.13] z +0.7 | mbits   +123 [+87;+159] | Top-5 21.2% (O/E 1.05) | ret T5  +24.2% [+3;+46]
+mié-vie    n= 1368 jorn=114 | Top-15 O/E 0.837 [0.80;0.88] z -6.3 | mbits    +36 [+7;+63] | Top-5 16.1% (O/E 0.80) | ret T5   -0.5% [-13;+12]
+sáb-mar    n= 1884 jorn=157 | Top-15 O/E 1.012 [0.97;1.05] z +0.5 | mbits   +135 [+113;+156] | Top-5 21.3% (O/E 1.05) | ret T5  +29.8% [+19;+41]
+TOTAL      n= 3252 jorn=271 | Top-15 O/E 0.939 [0.91;0.97] z -3.7 | mbits    +93 [+75;+111] | Top-5 19.1% (O/E 0.95) | ret T5  +17.0% [+9;+26]
+--- tramo vivo ---
+lun        n=   36 jorn=  3 | Top-15 O/E 0.899 [0.64;1.11] z -0.6 | mbits   +199 [+44;+305] | Top-5 25.0% (O/E 1.26) | ret T5  +45.8% [-38;+150]
+mar        n=   36 jorn=  3 | Top-15 O/E 1.058 [0.94;1.13] z +0.4 | mbits   +212 [+198;+227] | Top-5 30.6% (O/E 1.51) | ret T5  +66.7% [+25;+88]
+mié        n=   36 jorn=  3 | Top-15 O/E 0.532 [0.32;0.81] z -2.9 | mbits   -174 [-549;+27] | Top-5  8.3% (O/E 0.42) | ret T5  -47.9% [-100;+56]
+jue        n=   36 jorn=  3 | Top-15 O/E 0.863 [0.80;0.96] z -0.8 | mbits   +135 [+13;+301] | Top-5 16.7% (O/E 0.85) | ret T5   +4.2% [-69;+119]
+vie        n=   36 jorn=  3 | Top-15 O/E 0.928 [0.82;0.98] z -0.4 | mbits    +67 [-55;+175] | Top-5 13.9% (O/E 0.72) | ret T5   -6.2% [-100;+56]
+sáb        n=   36 jorn=  3 | Top-15 O/E 0.923 [0.81;1.15] z -0.5 | mbits   +122 [+34;+195] | Top-5 16.7% (O/E 0.87) | ret T5   +4.2% [-38;+56]
+dom        n=   36 jorn=  3 | Top-15 O/E 0.968 [0.81;1.14] z -0.2 | mbits    +76 [+43;+139] | Top-5  8.3% (O/E 0.42) | ret T5  -47.9% [-69;-38]
+mié-vie    n=  108 jorn=  9 | Top-15 O/E 0.772 [0.61;0.90] z -2.4 | mbits    +10 [-142;+135] | Top-5 13.0% (O/E 0.66) | ret T5  -16.7% [-65;+35]
+sáb-mar    n=  144 jorn= 12 | Top-15 O/E 0.962 [0.87;1.05] z -0.5 | mbits   +153 [+103;+203] | Top-5 20.1% (O/E 1.02) | ret T5  +17.2% [-17;+56]
+TOTAL      n=  252 jorn= 21 | Top-15 O/E 0.881 [0.79;0.96] z -2.0 | mbits    +91 [+12;+155] | Top-5 17.1% (O/E 0.87) | ret T5   +2.7% [-27;+34]
+
+=== 2. Permutación de etiquetas de día entre jornadas (20.000) ===
+2026: jornadas=271; peor 3-subconjunto = mié-jue-vie
+  S1 peor bloque consecutivo O/E 0.837  p=0.0000  (nulo: mediana 0.915, 1% 0.885)
+  S2 peor 3-subconjunto     O/E 0.837  p=0.0000  (nulo: mediana 0.905, 1% 0.876)
+  S3 chi2 7 días            42.2   p=0.0001  (nulo: mediana 18.5, 99% 28.7)
+  S4 max|z| 63 subconj.     6.31   p=0.0000  (nulo: mediana 3.74, 99% 4.90)
+dev (control: ¿hay estructura por día en otra era?): jornadas=636; peor 3-subconjunto = lun-mié-dom
+  S1 peor bloque consecutivo O/E 0.960  p=0.0149  (nulo: mediana 0.980, 1% 0.958)
+  S2 peor 3-subconjunto     O/E 0.941  p=0.0001  (nulo: mediana 0.972, 1% 0.953)
+  S3 chi2 7 días            45.2   p=0.0000  (nulo: mediana 5.8, 99% 17.4)
+  S4 max|z| 63 subconj.     6.10   p=0.0000  (nulo: mediana 1.83, 99% 3.21)
+
+=== 3. Por mes de 2026: Top-15 O/E mié-vie vs resto ===
+  2026-01: mié-vie 0.860 (jorn 13)  resto 1.024 (jorn 17)  dif -0.164
+  2026-02: mié-vie 0.851 (jorn 12)  resto 0.869 (jorn 16)  dif -0.018
+  2026-03: mié-vie 0.717 (jorn 12)  resto 1.013 (jorn 19)  dif -0.296
+  2026-04: mié-vie 0.881 (jorn 12)  resto 0.966 (jorn 16)  dif -0.086
+  2026-05: mié-vie 0.851 (jorn 13)  resto 1.031 (jorn 18)  dif -0.180
+  2026-06: mié-vie 0.832 (jorn 10)  resto 0.979 (jorn 16)  dif -0.148
+  2026-07: mié-vie 0.899 (jorn 15)  resto 1.108 (jorn 16)  dif -0.209
+  2026-08: mié-vie 0.853 (jorn 12)  resto 1.103 (jorn 19)  dif -0.250
+  2026-09: mié-vie 0.785 (jorn 13)  resto 0.999 (jorn 17)  dif -0.214
+  2026-10: mié-vie 0.823 (jorn  2)  resto 1.026 (jorn  3)  dif -0.203
+  meses con mié-vie < resto: 10/10
+  control dev por mes: meses con mié-vie < resto: 7/22
+
+=== 3b. Vivo (f >= 2026-09-15) ===
+  vivo                                   mié-vie 0.772 (9 jorn) resto 0.962 (12 jorn) dif -0.190 IC95 [-0.366;-0.033] IC90 [-0.328;-0.055]
+
+=== 4. Robustez (2026) ===
+  jornadas 2026 incompletas (<12 en historial): 0  []
+  feriados excluidos presentes en 2026: [np.str_('2026-02-16'), np.str_('2026-02-17'), np.str_('2026-04-19'), np.str_('2026-05-01'), np.str_('2026-06-24'), np.str_('2026-07-05'), np.str_('2026-07-24')] (de ellos mié-vie: [np.str_('2026-05-01'), np.str_('2026-06-24'), np.str_('2026-07-24')])
+  2026 todo                              mié-vie 0.837 (114 jorn) resto 1.012 (157 jorn) dif -0.174 IC95 [-0.232;-0.117] IC90 [-0.222;-0.126]
+  2026 sin incompletas                   mié-vie 0.837 (114 jorn) resto 1.012 (157 jorn) dif -0.174 IC95 [-0.232;-0.116] IC90 [-0.223;-0.123]
+  2026 sin incompletas ni feriados       mié-vie 0.838 (111 jorn) resto 1.009 (153 jorn) dif -0.171 IC95 [-0.227;-0.111] IC90 [-0.217;-0.120]
+  dev (control)                          mié-vie 1.017 (275 jorn) resto 0.979 (361 jorn) dif +0.038 IC95 [-0.006;+0.081] IC90 [+0.001;+0.075]
+  dev sin domingos                       mié-vie 1.017 (275 jorn) resto 1.030 (273 jorn) dif -0.012 IC95 [-0.058;+0.035] IC90 [-0.051;+0.027]
+  2026 sin domingos                      mié-vie 0.837 (114 jorn) resto 1.005 (118 jorn) dif -0.167 IC95 [-0.228;-0.109] IC90 [-0.219;-0.119]
+  Por hora (2026, sin incompletas ni feriados): O/E mié-vie vs resto
+     8:00  mié-vie 0.904  resto 0.977  dif -0.073
+     9:00  mié-vie 0.970  resto 1.153  dif -0.183
+    10:00  mié-vie 1.013  resto 0.891  dif +0.122
+    11:00  mié-vie 0.884  resto 1.029  dif -0.146
+    12:00  mié-vie 0.890  resto 1.033  dif -0.142
+    13:00  mié-vie 0.584  resto 0.973  dif -0.389
+    14:00  mié-vie 0.909  resto 1.063  dif -0.155
+    15:00  mié-vie 0.622  resto 0.995  dif -0.372
+    16:00  mié-vie 0.919  resto 0.908  dif +0.012
+    17:00  mié-vie 0.936  resto 0.962  dif -0.026
+    18:00  mié-vie 0.595  resto 1.008  dif -0.413
+    19:00  mié-vie 0.809  resto 1.132  dif -0.323
+  horas con mié-vie < resto: 10/12; diferencia estratificada por hora (ponderada por E): -0.171
+  IC95 diferencia estratificada: [-0.230;-0.113]
+  2026 limpio mañana 8-13                mié-vie 0.875 (111 jorn) resto 1.009 (153 jorn) dif -0.134 IC95 [-0.225;-0.044] IC90 [-0.211;-0.058]
+  2026 limpio tarde 14-19                mié-vie 0.801 (111 jorn) resto 1.009 (153 jorn) dif -0.208 IC95 [-0.296;-0.118] IC90 [-0.284;-0.132]
+
+2026 limpio (sin incompletas ni feriados): jornadas=264; peor 3-subconjunto = mié-jue-vie
+  S1 peor bloque consecutivo O/E 0.838  p=0.0000  (nulo: mediana 0.914, 1% 0.883)
+  S2 peor 3-subconjunto     O/E 0.838  p=0.0000  (nulo: mediana 0.903, 1% 0.875)
+  S3 chi2 7 días            40.7   p=0.0000  (nulo: mediana 18.6, 99% 28.6)
+  S4 max|z| 63 subconj.     6.22   p=0.0000  (nulo: mediana 3.75, 99% 4.88)
+
+  Masa media del Top-15 del motor por día (2026 / dev):
+   lun 0.533/0.540  mar 0.532/0.536  mié 0.526/0.537  jue 0.524/0.535  vie 0.521/0.534  sáb 0.519/0.535  dom 0.521/0.536

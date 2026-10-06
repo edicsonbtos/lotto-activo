@@ -1,0 +1,12 @@
+2026: Top-15 MVF obs 600 (43.9%), motor 716 (52.4%), contrafactual 676 (49.4%) -> recupera 65% del déficit
+     hoy       ganadores MVF  127 (objetivo   55.1); Top-15 en esa categoría 1.6%
+     ayer      ganadores MVF  376 (objetivo  393.2); Top-15 en esa categoría 60.9%
+     anteayer  ganadores MVF  251 (objetivo  362.5); Top-15 en esa categoría 74.5%
+     resto     ganadores MVF  614 (objetivo  557.2); Top-15 en esa categoría 29.6%
+dev : Top-15 MVF obs 1730 (54.5%), motor 1700 (53.5%), contrafactual 1686 (53.1%) -> recupera 148% del déficit
+     hoy       ganadores MVF  173 (objetivo  182.9); Top-15 en esa categoría 10.4%
+     ayer      ganadores MVF  990 (objetivo  877.1); Top-15 en esa categoría 67.6%
+     anteayer  ganadores MVF  653 (objetivo  633.2); Top-15 en esa categoría 79.9%
+     resto     ganadores MVF 1360 (objetivo 1482.8); Top-15 en esa categoría 38.3%
+dev: si el ganador ya salió hoy, está en el Top-15 el 8.3% (n=409); masa media del motor sobre 'ya salió hoy' 5.7%
+2026: si el ganador ya salió hoy, está en el Top-15 el 5.3% (n=209); masa media del motor sobre 'ya salió hoy' 5.8%

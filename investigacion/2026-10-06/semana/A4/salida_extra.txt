@@ -1,0 +1,26 @@
+(a) Contraste por hora (O/E grupo − O/E resto, contra el motor)
+hora       8      9     10     11     12     13     14     15     16     17     18     19
+C1 2026  -0.06  -0.20  +0.07  -0.11  -0.18  -0.39  -0.15  -0.38  +0.02  -0.03  -0.39  -0.32
+C1 dev   -0.04  -0.09  +0.13  -0.04  -0.01  +0.11  +0.01  -0.00  +0.14  +0.03  +0.08  +0.10
+C2 epis  -0.48  -0.13  -0.33  -0.45  -0.06  -0.51  -0.17  -0.32  -0.46  -0.07  -0.39  -0.50
+C2 2026  +0.08  +0.18  -0.23  +0.03  +0.06  +0.06  -0.09  +0.47  -0.07  +0.21  +0.34  +0.28
+
+(b) Reciclaje (ganador salió ayer o anteayer y no hoy): O/E CRUDO contra uniforme-sin-repetir y O/E contra el motor
+trim      crudo mié-vie  crudo resto  crudo dom |  motor mié-vie  motor resto  motor dom
+2024-T1            1.14         0.91       0.89 |           1.02         0.84       0.82
+2024-T2            1.06         0.98       0.93 |           0.97         0.90       0.86
+2024-T3            1.04         0.97       0.83 |           0.98         0.91       0.79
+2024-T4            1.17         1.03       0.86 |           1.07         0.94       0.78
+2025-T1            1.11         0.99       0.77 |           0.99         0.89       0.71
+2025-T2            1.13         1.02       0.97 |           1.01         0.90       0.86
+2025-T3            1.12         1.10       1.11 |           0.98         0.96       0.96
+2025-T4            1.03         1.13       1.15 |           0.90         0.96       0.99
+2026-T1            0.90         1.20       1.20 |           0.80         1.03       1.04
+2026-T2            1.01         1.03       1.13 |           0.90         0.91       1.00
+2026-T3            0.91         1.17       1.14 |           0.83         1.03       1.03
+
+(c) 'Ya salió esta semana (lun..ayer)' O/E crudo contra uniforme-sin-repetir, por día (martes..domingo)
+dev   mar 1.07 mié 1.05 jue 1.06 vie 1.05 sáb 1.01 dom 0.94
+2026  mar 1.02 mié 0.94 jue 0.93 vie 0.90 sáb 1.06 dom 0.98
+
+(d) 2026, peor bloque de 3 días: -0.174; p_perm con 20000 permutaciones dentro de semana = 0.00005

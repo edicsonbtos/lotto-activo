@@ -1,0 +1,81 @@
+
+== LA dev 2024-25  [2024-01-01..2025-12-31]  N=38  jornadas 694 (mié-vie 298)  sorteos 8005
+  reciclaje real 53.0%  azar E1 47.6%  E0 48.4%  O/E1 global 1.112
+  O/E1 mié-vie 1.166 | resto 1.072   RR_MH 1.088 IC95 [1.044; 1.136]  p_unil 1.0000   (RR con E0 1.073)
+  por día O/E1: lun 1.05  mar 1.06  mié 1.10  jue 1.22  vie 1.18  sáb 1.15  dom 1.03
+  control repetición mismo día: O/E mié-vie 0.396 | resto 0.417  RR_MH 0.949
+  control por día: lun 0.36  mar 0.37  mié 0.46  jue 0.36  vie 0.36  sáb 0.32  dom 0.62
+
+== LA 2026  [2026-01-01..2026-10-05]  N=38  jornadas 265 (mié-vie 113)  sorteos 3180
+  reciclaje real 54.6%  azar E1 48.6%  E0 49.9%  O/E1 global 1.122
+  O/E1 mié-vie 1.022 | resto 1.198   RR_MH 0.853 IC95 [0.804; 0.906]  p_unil 0.0002   (RR con E0 0.870)
+  por día O/E1: lun 1.21  mar 1.16  mié 1.02  jue 1.04  vie 1.00  sáb 1.24  dom 1.19
+  control repetición mismo día: O/E mié-vie 0.669 | resto 0.308  RR_MH 2.169
+  control por día: lun 0.28  mar 0.35  mié 0.67  jue 0.60  vie 0.73  sáb 0.30  dom 0.30
+
+== LA 2026 ventana abr-sep  [2026-04-13..2026-09-13]  N=38  jornadas 148 (mié-vie 64)  sorteos 1776
+  reciclaje real 54.3%  azar E1 48.9%  E0 50.1%  O/E1 global 1.110
+  O/E1 mié-vie 1.036 | resto 1.167   RR_MH 0.888 IC95 [0.820; 0.959]  p_unil 0.0022   (RR con E0 0.898)
+  por día O/E1: lun 1.15  mar 1.12  mié 1.05  jue 1.06  vie 1.00  sáb 1.21  dom 1.19
+  control repetición mismo día: O/E mié-vie 0.596 | resto 0.321  RR_MH 1.860
+  control por día: lun 0.31  mar 0.37  mié 0.59  jue 0.57  vie 0.62  sáb 0.30  dom 0.31
+
+== RD 2024-25  [2024-01-01..2025-12-31]  N=38  jornadas 694 (mié-vie 298)  sorteos 8328
+  reciclaje real 51.6%  azar E1 53.1%  E0 52.6%  O/E1 global 0.973
+  O/E1 mié-vie 0.999 | resto 0.954   RR_MH 1.047 IC95 [0.999; 1.096]  p_unil 0.9780   (RR con E0 1.042)
+  por día O/E1: lun 0.92  mar 0.99  mié 1.03  jue 0.98  vie 0.98  sáb 0.96  dom 0.95
+  control repetición mismo día: O/E mié-vie 0.197 | resto 0.260  RR_MH 0.757
+  control por día: lun 0.24  mar 0.22  mié 0.19  jue 0.23  vie 0.18  sáb 0.16  dom 0.44
+
+== RD 2026  [2026-01-01..2026-09-22]  N=38  jornadas 252 (mié-vie 107)  sorteos 3024
+  reciclaje real 53.8%  azar E1 52.0%  E0 52.2%  O/E1 global 1.034
+  O/E1 mié-vie 1.048 | resto 1.025   RR_MH 1.022 IC95 [0.954; 1.093]  p_unil 0.7391   (RR con E0 1.018)
+  por día O/E1: lun 1.01  mar 1.02  mié 1.05  jue 1.10  vie 0.99  sáb 1.03  dom 1.04
+  control repetición mismo día: O/E mié-vie 0.273 | resto 0.200  RR_MH 1.368
+  control por día: lun 0.17  mar 0.17  mié 0.28  jue 0.28  vie 0.25  sáb 0.17  dom 0.29
+
+== LARD 2025-S2  [2025-07-01..2025-12-31]  N=38  jornadas 182 (mié-vie 78)  sorteos 2548
+  reciclaje real 52.9%  azar E1 54.3%  E0 53.9%  O/E1 global 0.975
+  O/E1 mié-vie 1.019 | resto 0.941   RR_MH 1.083 IC95 [0.996; 1.171]  p_unil 0.9748   (RR con E0 1.071)
+  por día O/E1: lun 0.94  mar 1.00  mié 1.01  jue 1.05  vie 1.00  sáb 0.95  dom 0.88
+  control repetición mismo día: O/E mié-vie 0.896 | resto 0.962  RR_MH 0.930
+  control por día: lun 1.03  mar 0.97  mié 0.89  jue 0.81  vie 0.99  sáb 0.99  dom 0.85
+
+== LARD 2026  [2026-01-01..2026-09-22]  N=38  jornadas 265 (mié-vie 113)  sorteos 3710
+  reciclaje real 52.9%  azar E1 52.1%  E0 52.2%  O/E1 global 1.016
+  O/E1 mié-vie 1.007 | resto 1.023   RR_MH 0.985 IC95 [0.919; 1.053]  p_unil 0.3293   (RR con E0 0.989)
+  por día O/E1: lun 1.04  mar 1.01  mié 1.06  jue 0.97  vie 1.00  sáb 1.02  dom 1.02
+  control repetición mismo día: O/E mié-vie 1.024 | resto 1.029  RR_MH 0.995
+  control por día: lun 1.14  mar 1.14  mié 0.98  jue 1.11  vie 0.98  sáb 0.92  dom 0.91
+
+== La Granjita 2026  [2026-04-13..2026-09-13]  N=37  jornadas 146 (mié-vie 64)  sorteos 1752
+  reciclaje real 49.7%  azar E1 51.3%  E0 50.9%  O/E1 global 0.970
+  O/E1 mié-vie 0.890 | resto 1.033   RR_MH 0.861 IC95 [0.773; 0.959]  p_unil 0.0024   (RR con E0 0.875)
+  por día O/E1: lun 1.05  mar 0.92  mié 0.89  jue 0.94  vie 0.84  sáb 1.12  dom 1.04
+  control repetición mismo día: O/E mié-vie 0.727 | resto 0.601  RR_MH 1.210
+  control por día: lun 0.55  mar 0.53  mié 0.61  jue 0.70  vie 0.88  sáb 0.70  dom 0.62
+
+== Selva Plus 2026  [2026-04-13..2026-09-13]  N=81  jornadas 137 (mié-vie 61)  sorteos 1644
+  reciclaje real 51.5%  azar E1 21.9%  E0 23.7%  O/E1 global 2.348
+  O/E1 mié-vie 2.541 | resto 2.197   RR_MH 1.159 IC95 [1.006; 1.328]  p_unil 0.9808   (RR con E0 1.131)
+  por día O/E1: lun 2.17  mar 2.32  mié 2.42  jue 2.42  vie 2.80  sáb 2.17  dom 2.13
+  control repetición mismo día: O/E mié-vie 0.781 | resto 0.718  RR_MH 1.092
+  control por día: lun 0.27  mar 0.82  mié 0.84  jue 0.94  vie 0.56  sáb 0.87  dom 0.87
+
+== Guácharo 2026  [2026-04-13..2026-09-13]  N=76  jornadas 146 (mié-vie 64)  sorteos 1752
+  reciclaje real 35.6%  azar E1 27.1%  E0 27.7%  O/E1 global 1.313
+  O/E1 mié-vie 1.255 | resto 1.360   RR_MH 0.922 IC95 [0.810; 1.048]  p_unil 0.1098   (RR con E0 0.934)
+  por día O/E1: lun 1.02  mar 1.40  mié 1.16  jue 1.15  vie 1.46  sáb 1.48  dom 1.53
+  control repetición mismo día: O/E mié-vie 0.361 | resto 0.324  RR_MH 1.113
+  control por día: lun 0.17  mar 0.35  mié 0.26  jue 0.44  vie 0.39  sáb 0.50  dom 0.28
+
+== Selva Plus 2026 (sensibilidad N=100)  [2026-04-13..2026-09-13]  N=100  jornadas 137 (mié-vie 61)  sorteos 1644
+  reciclaje real 51.5%  azar E1 17.5%  E0 19.2%  O/E1 global 2.938
+  O/E1 mié-vie 3.179 | resto 2.749   RR_MH 1.159 IC95 [1.022; 1.300]  p_unil 0.9790   (RR con E0 1.131)
+  por día O/E1: lun 2.72  mar 2.91  mié 3.03  jue 3.02  vie 3.50  sáb 2.71  dom 2.67
+  control repetición mismo día: O/E mié-vie 0.965 | resto 0.886  RR_MH 1.092
+  control por día: lun 0.34  mar 1.02  mié 1.03  jue 1.16  vie 0.69  sáb 1.08  dom 1.07
+
+== COMBINADO réplica ciega (5 juegos 2026): RR 0.986 IC95 [0.948; 1.027]  z -0.67  p_unil 0.2523   juegos que pasan (p<0,05): 1/5
+   solo otros operadores (Granjita, Selva, Guácharo): RR 0.950 z -1.41
+   solo familia Lotto Activo (RD, LARD): RR 1.004 z +0.14

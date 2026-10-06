@@ -1,0 +1,25 @@
+n AJUSTE 1776 sorteos (148 días), PRUEBA 1476 (123 días); día placebo C0a = sáb
+  reciclados O/E: mié-vie 0.895  resto 1.048
+  reciclados O/E: mié-vie 0.942  resto 1.032
+  reciclados O/E: mié-vie 1.035  resto 0.966
+
+== C2 placebo: temperatura ajustada en otros grupos de días
+  directa mié-vie : T = 0.560  Δmbits/sorteo  +3.34 [-2.96; +10.25]  por sorteo tocado  +7.89
+  directa sáb-mar : T = 0.965  Δmbits/sorteo  -0.95 [-1.38; -0.51]  por sorteo tocado  -1.65
+  directa todos   : T = 0.780  Δmbits/sorteo  -4.40 [-8.84; +0.17]  por sorteo tocado  -4.40
+  directa 35 ternas (temperatura): prueba mediana -1.31, p90 +0.62; mié-jue-vie +3.34 (puesto 1/35); T de las ternas 0.56..1.01
+  inversa mié-vie : T = 0.675  Δmbits/sorteo  +9.20 [+4.85; +13.59]  por sorteo tocado +21.97
+  inversa sáb-mar : T = 1.345  Δmbits/sorteo  -7.76 [-13.50; -1.94]  por sorteo tocado -13.35
+  inversa todos   : T = 1.020  Δmbits/sorteo  -0.98 [-1.42; -0.55]  por sorteo tocado  -0.98
+  inversa 35 ternas (temperatura): prueba mediana -0.55, p90 +3.52; mié-jue-vie +9.20 (puesto 1/35); T de las ternas 0.68..1.40
+
+  T de todos los días en dev: 1.005  T mié-vie en dev: 1.095
+
+== Plata Top-5 escalonado: retorno/ficha terna − resto, las 35 ternas
+  dev 2024-25 : mié-jue-vie   +2.5 pp (puesto 17/35 por lo malo); ternas: mín -20.4, p10 -15.6, mediana +2.8
+  AJUSTE      : mié-jue-vie  -29.0 pp (puesto 2/35 por lo malo); ternas: mín -29.9, p10 -21.0, mediana -1.2
+  PRUEBA      : mié-jue-vie  -31.7 pp (puesto 1/35 por lo malo); ternas: mín -31.7, p10 -16.7, mediana -0.2
+  2026 entero : mié-jue-vie  -30.3 pp (puesto 1/35 por lo malo); ternas: mín -30.3, p10 -17.9, mediana -1.3
+  dev todos       : retorno  +24.7 %/ficha  n sorteos 7357
+  dev sin mié-vie : retorno  +23.6 %/ficha  n sorteos 4181
+  dev solo mié-vie: retorno  +26.1 %/ficha  n sorteos 3176

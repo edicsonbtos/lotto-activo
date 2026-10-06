@@ -1,0 +1,55 @@
+M2 · Top-15 O/E por hora (2026 y dev). ratio MVF/SM [IC95 días]
+== 2026 ==
+  8:00         MVF 0.91  SM 0.98  ratio 0.93 [0.74; 1.17]   %repite-hoy MVF  0.0 SM  0.0
+  9:00         MVF 0.95  SM 1.15  ratio 0.82 [0.66; 1.03]   %repite-hoy MVF  0.0 SM  0.0
+  10:00        MVF 0.99  SM 0.92  ratio 1.08 [0.84; 1.37]   %repite-hoy MVF  1.8 SM  1.3
+  11:00        MVF 0.89  SM 1.00  ratio 0.89 [0.70; 1.13]   %repite-hoy MVF  2.6 SM  1.3
+  12:00        MVF 0.87  SM 1.04  ratio 0.83 [0.63; 1.07]   %repite-hoy MVF  9.6 SM  3.8
+  13:00        MVF 0.59  SM 0.97  ratio 0.60 [0.42; 0.80]   %repite-hoy MVF 13.2 SM  3.2
+  14:00        MVF 0.92  SM 1.07  ratio 0.86 [0.67; 1.08]   %repite-hoy MVF  2.6 SM  0.6
+  15:00        MVF 0.62  SM 1.00  ratio 0.62 [0.44; 0.83]   %repite-hoy MVF  1.8 SM  1.9
+  16:00        MVF 0.91  SM 0.90  ratio 1.02 [0.79; 1.28]   %repite-hoy MVF  0.9 SM  2.5
+  17:00        MVF 0.95  SM 0.97  ratio 0.97 [0.75; 1.23]   %repite-hoy MVF  7.9 SM 10.2
+  18:00        MVF 0.62  SM 1.01  ratio 0.61 [0.44; 0.80]   %repite-hoy MVF 39.5 SM 12.1
+  19:00        MVF 0.82  SM 1.14  ratio 0.72 [0.55; 0.91]   %repite-hoy MVF 31.6 SM 15.3
+  mañana 8-13  MVF 0.87  SM 1.01  ratio 0.86 [0.78; 0.94]   %repite-hoy MVF  4.5 SM  1.6
+  tarde 14-19  MVF 0.81  SM 1.01  ratio 0.80 [0.72; 0.88]   %repite-hoy MVF 14.0 SM  7.1
+  todas        MVF 0.84  SM 1.01  ratio 0.83 [0.78; 0.88]   %repite-hoy MVF  9.3 SM  4.4
+== dev ==
+  8:00         MVF 1.07  SM 1.11  ratio 0.96 [0.83; 1.12]   %repite-hoy MVF  0.0 SM  0.0
+  9:00         MVF 0.99  SM 1.08  ratio 0.92 [0.79; 1.06]   %repite-hoy MVF  0.0 SM  0.0
+  10:00        MVF 1.13  SM 1.01  ratio 1.13 [0.97; 1.30]   %repite-hoy MVF  0.4 SM  0.3
+  11:00        MVF 1.00  SM 1.04  ratio 0.96 [0.82; 1.11]   %repite-hoy MVF  0.0 SM  2.5
+  12:00        MVF 1.01  SM 1.01  ratio 0.99 [0.86; 1.16]   %repite-hoy MVF  0.7 SM  2.2
+  13:00        MVF 1.04  SM 0.92  ratio 1.12 [0.97; 1.30]   %repite-hoy MVF  2.2 SM  4.4
+  14:00        MVF 0.95  SM 0.93  ratio 1.02 [0.86; 1.20]   %repite-hoy MVF  2.9 SM  1.9
+  15:00        MVF 0.95  SM 0.95  ratio 0.99 [0.84; 1.16]   %repite-hoy MVF  1.1 SM  2.8
+  16:00        MVF 1.02  SM 0.88  ratio 1.16 [1.00; 1.34]   %repite-hoy MVF  2.6 SM  4.7
+  17:00        MVF 0.99  SM 0.96  ratio 1.03 [0.89; 1.20]   %repite-hoy MVF  8.4 SM  6.1
+  18:00        MVF 1.09  SM 1.01  ratio 1.08 [0.94; 1.26]   %repite-hoy MVF 21.2 SM 18.0
+  19:00        MVF 1.01  SM 0.91  ratio 1.11 [0.94; 1.28]   %repite-hoy MVF 23.7 SM 22.4
+  mañana 8-13  MVF 1.04  SM 1.02  ratio 1.01 [0.95; 1.08]   %repite-hoy MVF  0.6 SM  1.7
+  tarde 14-19  MVF 1.00  SM 0.94  ratio 1.06 [1.00; 1.13]   %repite-hoy MVF 10.0 SM  9.3
+  todas        MVF 1.02  SM 0.98  ratio 1.04 [1.00; 1.08]   %repite-hoy MVF  5.4 SM  5.6
+
+2026 log-ratio mañana − tarde = +0.074, z = +0.98
+
+M3 · Concentración por día (solo días completos de 12 sorteos)
+  dev  MVF: días 161  repeticiones/día 0.71 ±0.05 (motor 0.73; azar 1.60)  distintos 11.29  entropía 3.467 bits  días con ≥3 rep 1%
+  dev  SM : días 210  repeticiones/día 0.63 ±0.05 (motor 0.72; azar 1.60)  distintos 11.37  entropía 3.479 bits  días con ≥3 rep 1%
+  2026 MVF: días 114  repeticiones/día 1.11 ±0.06 (motor 0.66; azar 1.60)  distintos 10.89  entropía 3.399 bits  días con ≥3 rep 1%
+  2026 SM : días 157  repeticiones/día 0.52 ±0.04 (motor 0.71; azar 1.60)  distintos 11.48  entropía 3.498 bits  días con ≥3 rep 0%
+
+Repeticiones/día por día de la semana y trimestre (obs/motor)
+  2024     lun 0.86 mar 0.87 mié 1.26 jue 0.89 vie 0.58 sáb 0.69 dom 2.53
+  2025-S1  lun 1.06 mar 0.66 mié 1.04 jue 0.96 vie 0.83 sáb 0.95 dom 1.61
+  2025-S2  lun 0.54 mar 0.94 mié 1.09 jue 0.73 vie 1.26 sáb 0.59 dom 0.21
+  26-T1    lun 0.95 mar 1.06 mié 2.43 jue 1.89 vie 2.92 sáb 0.77 dom 0.94
+  26-T2    lun 0.82 mar 0.82 mié 1.44 jue 1.86 vie 1.49 sáb 0.90 dom 0.89
+  26-T3    lun 0.46 mar 0.68 mié 1.47 jue 1.05 vie 1.37 sáb 0.53 dom 0.34
+
+Ganancia del motor sobre el uniforme (mbits/sorteo) [IC95 días]
+  dev  MVF: +140.6 [+122.7; +158.6]   Top-15 54.5% (azar 39.5)
+  dev  SM : +111.3 [+94.0; +129.8]   Top-15 52.5% (azar 39.5)
+  2026 MVF:  +35.7 [+8.8; +63.3]   Top-15 43.9% (azar 39.5)
+  2026 SM : +134.9 [+112.1; +156.3]   Top-15 53.2% (azar 39.5)

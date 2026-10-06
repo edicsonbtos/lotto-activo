@@ -1,0 +1,10 @@
+dev
+  A ayer/anteayer  mié-vie O/E 1.06 (O 1643, E 1547.8) | resto 0.98 (O 2046, E 2095.4)
+  B semana, antes  mié-vie O/E 0.95 (O 335, E 351.9) | resto 1.06 (O 596, E 563.7)
+  C ya hoy         mié-vie O/E 0.94 (O 173, E 184.6) | resto 0.99 (O 236, E 238.0)
+2026
+  A ayer/anteayer  mié-vie O/E 0.89 (O 627, E 703.9) | resto 1.07 (O 1022, E 952.3)
+  B semana, antes  mié-vie O/E 0.91 (O 158, E 174.6) | resto 0.92 (O 281, E 304.8)
+  C ya hoy         mié-vie O/E 1.68 (O 127, E 75.4) | resto 0.73 (O 82, E 111.7)
+dev repetición mismo día por día: L 52/60.3=0.86  M 50/62.6=0.80  X 67/58.5=1.15  J 55/62.7=0.88  V 51/63.5=0.80  S 47/61.3=0.77  D 87/53.8=1.62
+2026 repetición mismo día por día: L 20/28.1=0.71  M 23/27.5=0.84  X 44/25.9=1.70  J 37/24.4=1.52  V 46/25.1=1.83  S 20/28.0=0.71  D 19/28.2=0.67

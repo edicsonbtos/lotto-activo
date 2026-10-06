@@ -1,0 +1,3 @@
+  dev 2024-25 : motor vs uniforme mié-vie +140.6 [+125.7; +155.6]  resto +111.3 [+96.4; +126.6] mbits/sorteo
+  AJUSTE      : motor vs uniforme mié-vie  +29.2 [-1.8; +58.3]  resto +128.1 [+99.9; +155.5] mbits/sorteo
+  PRUEBA      : motor vs uniforme mié-vie  +43.4 [+7.9; +76.9]  resto +143.2 [+122.8; +163.2] mbits/sorteo

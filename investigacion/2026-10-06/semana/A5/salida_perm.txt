@@ -1,0 +1,4 @@
+Observado mié-jue-vie: plata Δ 2026 -30.3 pp (AJ -29.0, PR -31.7); Top-15 O/E 2026 0.837 (AJ 0.832, PR 0.844)
+Permutación (5000), peor terna de 35 elegida en 2026 entero:
+  plata: P(peor terna ≤ observado) = 0.0056; y además ambas mitades ≤ observadas = 0.0006
+  Top-15 O/E: P(peor terna ≤ observado) = 0.0000; y además ambas mitades ≤ observadas = 0.0000

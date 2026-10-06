@@ -1,0 +1,44 @@
+n AJUSTE 1776 sorteos (148 días), PRUEBA 1476 (123 días); día placebo C0a = sáb
+  reciclados O/E: mié-vie 0.895  resto 1.048
+  reciclados O/E: mié-vie 0.942  resto 1.032
+  reciclados O/E: mié-vie 1.035  resto 0.966
+
+== DIRECTA: ajuste ene-may -> prueba jun-oct
+  parámetros: C1 m = 0.795 | C2 T = 0.560 | C3 m_d = lun 1.040 mar 1.015 mié 0.935 jue 0.935 vie 0.880 sáb 1.055 dom 1.060 | C0a (sáb) m = 1.140
+  C1 mult. reciclados mié-vie        Δmbits/sorteo  +0.52 [IC90  -3.75;  +4.78]  (por sorteo tocado  +1.23) | ΔTop-5 -0.14 pp [-1.02; +0.75]  ΔTop-15 -0.88 pp [-2.10; +0.41]  Δretorno T5 -1.52 %/ficha [-7.37; +4.32]
+  C2 temperatura mié-vie             Δmbits/sorteo  +3.34 [IC90  -2.80; +10.06]  (por sorteo tocado  +7.89) | ΔTop-5 +0.00 pp [+0.00; +0.00]  ΔTop-15 +0.00 pp [+0.00; +0.00]  Δretorno T5 +0.00 %/ficha [+0.00; +0.00]
+  C3 mult. por día (σ=0,10)          Δmbits/sorteo  +1.63 [IC90  -0.43;  +3.66]  (por sorteo tocado  +1.63) | ΔTop-5 +0.07 pp [-0.41; +0.54]  ΔTop-15 +0.61 pp [-0.34; +1.56]  Δretorno T5 +0.00 %/ficha [-2.79; +2.79]
+  C0a placebo C1 en sáb              Δmbits/sorteo  +1.28 [IC90  +0.27;  +2.41]  (por sorteo tocado  +9.26) | ΔTop-5 +0.07 pp [-0.20; +0.41]  ΔTop-15 -0.14 pp [-0.68; +0.41]  Δretorno T5 +0.00 %/ficha [-1.27; +1.27]
+  C0b 35 ternas: Δmbits en ajuste (in-sample) mediana +0.30, máx +3.99; en prueba mediana +0.01, p90 +0.83, máx +0.97
+      terna mié-jue-vie: in-sample +3.99 (puesto 1/35), prueba +0.52 (puesto 7/35)
+      mejores en prueba: mar-sáb-dom m=1.11 +0.97; lun-mié-vie m=0.88 +0.90; lun-mié-jue m=0.92 +0.89; mar-mié-jue m=0.91 +0.85; lun-sáb-dom m=1.14 +0.80
+
+== INVERSA: ajuste jun-oct -> prueba ene-may
+  parámetros: C1 m = 0.880 | C2 T = 0.675 | C3 m_d = lun 0.985 mar 0.995 mié 0.930 jue 0.970 vie 0.970 sáb 1.095 dom 1.035 | C0a (sáb) m = 1.310
+  C1 mult. reciclados mié-vie        Δmbits/sorteo  +3.19 [IC90  +1.21;  +5.20]  (por sorteo tocado  +7.62) | ΔTop-5 +0.34 pp [-0.23; +0.90]  ΔTop-15 +0.11 pp [-0.68; +0.96]  Δretorno T5 +2.32 %/ficha [-1.27; +5.91]
+  C2 temperatura mié-vie             Δmbits/sorteo  +9.20 [IC90  +4.88; +13.78]  (por sorteo tocado +21.97) | ΔTop-5 +0.00 pp [+0.00; +0.00]  ΔTop-15 +0.00 pp [+0.00; +0.00]  Δretorno T5 +0.00 %/ficha [+0.00; +0.00]
+  C3 mult. por día (σ=0,10)          Δmbits/sorteo  +1.79 [IC90  +0.62;  +2.95]  (por sorteo tocado  +1.79) | ΔTop-5 +0.23 pp [-0.28; +0.79]  ΔTop-15 +0.39 pp [-0.23; +1.01]  Δretorno T5 +1.48 %/ficha [-1.48; +4.65]
+  C0a placebo C1 en sáb              Δmbits/sorteo  -0.03 [IC90  -2.06;  +2.10]  (por sorteo tocado  -0.21) | ΔTop-5 -0.23 pp [-0.68; +0.23]  ΔTop-15 +0.45 pp [-0.23; +1.18]  Δretorno T5 -0.84 %/ficha [-3.59; +2.11]
+  C0b 35 ternas: Δmbits en ajuste (in-sample) mediana +0.20, máx +1.27; en prueba mediana +0.09, p90 +1.20, máx +3.19
+      terna mié-jue-vie: in-sample +1.27 (puesto 1/35), prueba +3.19 (puesto 1/35)
+      mejores en prueba: mié-jue-vie m=0.88 +3.19; mar-mié-vie m=0.90 +1.65; lun-mié-vie m=0.90 +1.35; lun-sáb-dom m=1.11 +1.23; mar-jue-vie m=0.94 +1.17
+
+== EXTRA (descriptivo): C1 con m de ene-may aplicado a dev 2024-25
+  C1 m=0.795 en dev                  Δmbits/sorteo  -6.66 [IC90  -8.79;  -4.66]  (por sorteo tocado -15.44) | ΔTop-5 -0.31 pp [-0.69; +0.08]  ΔTop-15 -0.98 pp [-1.51; -0.46]  Δretorno T5 -2.45 %/ficha [-4.74; -0.15]
+  m que habría elegido dev: 1.080
+
+== Estrategia Top-5 escalonado del motor: jugar todos los días vs no jugar mié-vie
+  PRUEBA jun-oct todos los días : fichas jugadas  11808  neto   +1422  retorno  +12.0 %/ficha  máx. caída   258 fichas
+  PRUEBA jun-oct sin mié-vie    : fichas jugadas   6816  neto   +1734  retorno  +25.4 %/ficha  máx. caída   138 fichas
+  PRUEBA jun-oct solo mié-vie   : fichas jugadas   4992  neto    -312  retorno   -6.2 %/ficha  máx. caída   432 fichas
+  PRUEBA jun-oct: retorno/ficha mié-vie − resto: crudo -31.7 pp [IC90 -49.6; -14.1], estratificado por hora -31.7 pp [IC90 -49.6; -14.1]
+  AJUSTE ene-may todos los días : fichas jugadas  14208  neto   +3012  retorno  +21.2 %/ficha  máx. caída   276 fichas
+  AJUSTE ene-may sin mié-vie    : fichas jugadas   8256  neto   +2754  retorno  +33.4 %/ficha  máx. caída   234 fichas
+  AJUSTE ene-may solo mié-vie   : fichas jugadas   5952  neto    +258  retorno   +4.3 %/ficha  máx. caída   360 fichas
+  AJUSTE ene-may: retorno/ficha mié-vie − resto: crudo -29.0 pp [IC90 -49.5; -8.8], estratificado por hora -29.0 pp [IC90 -49.5; -8.8]
+
+== VEREDICTO por candidata (criterio pre-registrado)
+  C1: directa +0.52 [-3.75; +4.78], inversa +3.19 [+1.21; +5.20] -> DUDOSO
+  C2: directa +3.34 [-2.80; +10.06], inversa +9.20 [+4.88; +13.78] -> DUDOSO
+  C3: directa +1.63 [-0.43; +3.66], inversa +1.79 [+0.62; +2.95] -> DUDOSO
+  C0a: directa +1.28 [+0.27; +2.41], inversa -0.03 [-2.06; +2.10] -> DUDOSO

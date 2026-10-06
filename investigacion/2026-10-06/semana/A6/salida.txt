@@ -1,0 +1,158 @@
+
+Cronología por semestre (Top-15 O/E crudo): mié-vie | resto(sin dom) | domingo
+  2024-03-01..2024-08-31: 0.98 | 0.98 | 0.84
+  2024-09-01..2024-12-31: 1.03 | 1.06 | 0.69
+  2025-01-01..2025-04-30: 1.02 | 1.08 | 0.70
+  2025-05-01..2025-08-31: 1.08 | 1.06 | 0.94
+  2025-09-01..2025-12-31: 0.98 | 0.98 | 0.94
+  2026-01-01..2026-03-31: 0.81 | 0.98 | 0.95
+  2026-04-01..2026-06-30: 0.86 | 0.97 | 1.08
+  2026-07-01..2026-10-05: 0.85 | 1.07 | 1.07
+2026: 3252 sorteos, 271 jornadas.  dev: 7357 sorteos, 636 jornadas.
+  sobredispersión diaria 2026 Top-15: Var(Σr día)/E(Σv día) = 0.90
+  sobredispersión diaria 2026 Top-5: Var(Σr día)/E(Σv día) = 0.91
+  sobredispersión diaria 2026 mbits: Var(Σr día)/E(Σv día) = 1.13
+  sobredispersión diaria dev Top-15: Var(Σr día)/E(Σv día) = 1.03
+  sobredispersión diaria dev Top-5: Var(Σr día)/E(Σv día) = 1.00
+  sobredispersión diaria dev mbits: Var(Σr día)/E(Σv día) = 1.06
+
+=== 2026 — Top-15: max |z| por partición (contraste estratificado por hora) ===
+  día semana         max|z| 2.79  (jue, z -2.79)
+  par días consec.   max|z| 4.01  (jue-vie, z -4.01)
+  trío días consec.  max|z| 5.15  (mié-vie, z -5.15)
+  laborable/finde    max|z| 3.91  (lun-vie, z -3.91)
+  día del mes        max|z| 1.91  (día 18, z +1.91)
+  decena             max|z| 0.38  (1-10, z -0.38)
+  semana del mes     max|z| 0.44  (sem 2, z -0.44)
+  mes                max|z| 1.71  (mes 2, z -1.71)
+  quincena           max|z| 0.15  (16-31, z +0.15)
+  par/impar          max|z| 0.17  (par, z +0.17)
+  hora               max|z| 2.25  (hora 9:00, z +2.25)
+  hora×finde         max|z| 3.47  (lab 15:00, z -3.47)
+  OBS: max|z| familia 5.15;  mié-vie vs resto z -5.15;  max|z| un día suelto 2.79
+  NULO max|z| familia: mediana 2.48, p95 3.23, p99 3.68
+  p familiar (max|z|perm ≥ obs) = 0.0000   |  p familiar solo calendario = 0.0000
+  p(max|z| familia nula ≥ |z| del mejor día suelto 2.79) = 0.2237
+  p contraste PRE-FIJADO mié-vie (bilateral, permutación) = 0.0000
+  mié-vie − resto (residuo medio por sorteo, centrado por hora): -9.12 [IC95 jornadas -12.10; -6.04] pp
+
+=== 2026 — Top-5: max |z| por partición (contraste estratificado por hora) ===
+  día semana         max|z| 3.14  (sáb, z +3.14)
+  par días consec.   max|z| 3.41  (sáb-dom, z +3.41)
+  trío días consec.  max|z| 3.58  (sáb-lun, z +3.58)
+  laborable/finde    max|z| 3.41  (sáb-dom, z +3.41)
+  día del mes        max|z| 2.30  (día 4, z -2.30)
+  decena             max|z| 0.15  (11-20, z +0.15)
+  semana del mes     max|z| 1.43  (sem 2, z +1.43)
+  mes                max|z| 1.97  (mes 5, z +1.97)
+  quincena           max|z| 0.86  (1-15, z +0.86)
+  par/impar          max|z| 0.20  (impar, z +0.20)
+  hora               max|z| 1.15  (hora 19:00, z +1.15)
+  hora×finde         max|z| 3.21  (finde 9:00, z +3.21)
+  OBS: max|z| familia 3.58;  mié-vie vs resto z -3.56;  max|z| un día suelto 3.14
+  NULO max|z| familia: mediana 2.48, p95 3.27, p99 3.70
+  p familiar (max|z|perm ≥ obs) = 0.0177   |  p familiar solo calendario = 0.0147
+  p(max|z| familia nula ≥ |z| del mejor día suelto 3.14) = 0.0800
+  p contraste PRE-FIJADO mié-vie (bilateral, permutación) = 0.0010
+  mié-vie − resto (residuo medio por sorteo, centrado por hora): -5.06 [IC95 jornadas -7.65; -2.61] pp
+
+=== 2026 — Top-3: max |z| por partición (contraste estratificado por hora) ===
+  día semana         max|z| 2.78  (sáb, z +2.78)
+  par días consec.   max|z| 2.14  (sáb-dom, z +2.14)
+  trío días consec.  max|z| 2.56  (sáb-lun, z +2.56)
+  laborable/finde    max|z| 2.14  (sáb-dom, z +2.14)
+  día del mes        max|z| 2.58  (día 24, z +2.58)
+  decena             max|z| 0.98  (11-20, z +0.98)
+  semana del mes     max|z| 2.07  (sem 2, z +2.07)
+  mes                max|z| 1.98  (mes 8, z +1.98)
+  quincena           max|z| 0.71  (1-15, z +0.71)
+  par/impar          max|z| 0.01  (impar, z +0.01)
+  hora               max|z| 1.52  (hora 13:00, z -1.52)
+  hora×finde         max|z| 2.49  (finde 18:00, z +2.49)
+  OBS: max|z| familia 2.78;  mié-vie vs resto z -2.27;  max|z| un día suelto 2.78
+  NULO max|z| familia: mediana 2.53, p95 3.39, p99 3.90
+  p familiar (max|z|perm ≥ obs) = 0.2710   |  p familiar solo calendario = 0.2400
+  p(max|z| familia nula ≥ |z| del mejor día suelto 2.78) = 0.2710
+  p contraste PRE-FIJADO mié-vie (bilateral, permutación) = 0.0147
+  mié-vie − resto (residuo medio por sorteo, centrado por hora): -2.67 [IC95 jornadas -4.81; -0.52] pp
+
+=== 2026 — mbits: max |z| por partición (contraste estratificado por hora) ===
+  día semana         max|z| 3.40  (sáb, z +3.40)
+  par días consec.   max|z| 4.04  (jue-vie, z -4.04)
+  trío días consec.  max|z| 5.46  (mié-vie, z -5.46)
+  laborable/finde    max|z| 3.92  (sáb-dom, z +3.92)
+  día del mes        max|z| 2.18  (día 14, z +2.18)
+  decena             max|z| 0.25  (1-10, z +0.25)
+  semana del mes     max|z| 1.28  (sem 3, z -1.28)
+  mes                max|z| 2.54  (mes 7, z +2.54)
+  quincena           max|z| 1.22  (1-15, z +1.22)
+  par/impar          max|z| 1.16  (impar, z +1.16)
+  hora               max|z| 2.32  (hora 9:00, z +2.32)
+  hora×finde         max|z| 3.43  (finde 18:00, z +3.43)
+  OBS: max|z| familia 5.46;  mié-vie vs resto z -5.46;  max|z| un día suelto 3.40
+  NULO max|z| familia: mediana 2.78, p95 3.76, p99 4.32
+  p familiar (max|z|perm ≥ obs) = 0.0000   |  p familiar solo calendario = 0.0000
+  p(max|z| familia nula ≥ |z| del mejor día suelto 3.40) = 0.1360
+  p contraste PRE-FIJADO mié-vie (bilateral, permutación) = 0.0000
+  mié-vie − resto (residuo medio por sorteo, centrado por hora): -95.79 [IC95 jornadas -131.90; -60.87] mbits
+
+=== 2026 — ret_T5: max |z| por partición (contraste estratificado por hora) ===
+  día semana         max|z| 3.18  (sáb, z +3.18)
+  par días consec.   max|z| 3.02  (sáb-dom, z +3.02)
+  trío días consec.  max|z| 3.32  (sáb-lun, z +3.32)
+  laborable/finde    max|z| 3.02  (sáb-dom, z +3.02)
+  día del mes        max|z| 2.40  (día 24, z +2.40)
+  decena             max|z| 0.56  (11-20, z +0.56)
+  semana del mes     max|z| 1.83  (sem 2, z +1.83)
+  mes                max|z| 1.45  (mes 2, z -1.45)
+  quincena           max|z| 0.84  (1-15, z +0.84)
+  par/impar          max|z| 0.13  (impar, z +0.13)
+  hora               max|z| 1.20  (hora 15:00, z -1.20)
+  hora×finde         max|z| 2.94  (finde 9:00, z +2.94)
+  OBS: max|z| familia 3.32;  mié-vie vs resto z -3.17;  max|z| un día suelto 3.18
+  NULO max|z| familia: mediana 2.51, p95 3.35, p99 3.83
+  p familiar (max|z|perm ≥ obs) = 0.0543   |  p familiar solo calendario = 0.0467
+  p(max|z| familia nula ≥ |z| del mejor día suelto 3.18) = 0.0883
+  p contraste PRE-FIJADO mié-vie (bilateral, permutación) = 0.0013
+  mié-vie − resto (residuo medio por sorteo, centrado por hora): -28.98 [IC95 jornadas -45.42; -12.59] % por ficha
+
+Top-15 O/E crudo mié-vie por trimestre (obs): [0.81 0.86 0.85]; resto [0.97 0.99 1.07]
+/home/user/lotto-activo/investigacion/2026-10-06/semana/A6/fantasma.py:132: RuntimeWarning: invalid value encountered in scalar divide
+  def oe_tri(mask): return [Od[mask & (tri == k)].sum() / Ed[mask & (tri == k)].sum() for k in range(3)]
+Nulo (Top-15): la mejor celda va en el mismo sentido en los 3 trimestres en 80% de las permutaciones; con diferencia ≥ 0,10 de O/E en cada trimestre en 27%
+
+=== dev 2024-25 — Top-15: max |z| por partición (contraste estratificado por hora) ===
+  día semana         max|z| 6.42  (dom, z -6.42)
+  par días consec.   max|z| 4.18  (dom-lun, z -4.18)
+  trío días consec.  max|z| 3.42  (jue-sáb, z +3.42)
+  laborable/finde    max|z| 3.69  (lun-vie, z +3.69)
+  día del mes        max|z| 2.23  (día 2, z +2.23)
+  decena             max|z| 1.30  (1-10, z -1.30)
+  semana del mes     max|z| 1.20  (sem 4, z +1.20)
+  mes                max|z| 1.46  (mes 7, z +1.46)
+  quincena           max|z| 0.67  (16-31, z +0.67)
+  par/impar          max|z| 0.58  (impar, z -0.58)
+  hora               max|z| 2.38  (hora 8:00, z +2.38)
+  hora×finde         max|z| 3.53  (finde 16:00, z -3.53)
+  OBS: max|z| familia 6.42;  mié-vie vs resto z +1.74;  max|z| un día suelto 6.42
+  NULO max|z| familia: mediana 2.64, p95 3.42, p99 3.85
+  p familiar (max|z|perm ≥ obs) = 0.0000   |  p familiar solo calendario = 0.0000
+  p(max|z| familia nula ≥ |z| del mejor día suelto 6.42) = 0.0000
+  p contraste PRE-FIJADO mié-vie (bilateral, permutación) = 0.0910
+Potencia 80% (bilateral, α=0,05), efecto 100% del observado (Δ=9.1 pp): 72 jornadas = 859 sorteos (2.4 meses)
+Potencia 80% (unilateral, α=0,05), efecto 100% del observado (Δ=9.1 pp): 56 jornadas = 677 sorteos (1.9 meses)
+Potencia 80% (bilateral, α=0,05), efecto 50% del observado (Δ=4.6 pp): 286 jornadas = 3436 sorteos (9.4 meses)
+Potencia 80% (unilateral, α=0,05), efecto 50% del observado (Δ=4.6 pp): 226 jornadas = 2706 sorteos (7.4 meses)
+Plan en vivo (92 jornadas, 7-oct..6-ene), efecto 100%: potencia unilateral 5% = 0.94; con IC90 (equiv.) igual
+Plan en vivo (92 jornadas, 7-oct..6-ene), efecto 50%: potencia unilateral 5% = 0.48; con IC90 (equiv.) igual
+  rk guardado == rk recalculado con y de hist_0605: 100.00%
+
+vivo_rk.npz: claves ['rk', 't', 'f', 'h', 'P']; 10716 sorteos 2024-03-07..2026-10-03 (ensamble_v2 walk-forward sobre hist_hoy, SIN ajustes de producción).
+  correlación log P con prod_0605: 0.989; mismo #1: 96%; ganador en Top-15 en una y no en otra: 0.6%
+  [2ª reconstr. 2026] Top-15: z por día L+1.1 M+1.1 X-1.7 J-2.6 V-2.4 S+2.4 D+2.0 | mié-vie vs resto z -4.72
+  [2ª reconstr. 2026] Top-5: z por día L+0.5 M-0.2 X-1.1 J-1.5 V-1.7 S+2.8 D+1.3 | mié-vie vs resto z -3.06
+  [2ª reconstr. 2026] mbits: z por día L+1.5 M+0.9 X-2.4 J-1.8 V-3.2 S+3.2 D+1.6 | mié-vie vs resto z -5.18
+     L: O/E 0.90 (17/36)     M: O/E 1.06 (20/36)     X: O/E 0.53 (10/36)     J: O/E 0.86 (16/36)     V: O/E 0.93 (17/36)     S: O/E 0.92 (17/36)     D: O/E 0.97 (18/36)
+  VIVO prod_0605 (desde 15-sep, 252 sorteos, 9 jornadas mié-vie): Top-15 O/E mié-vie 0.77 (43/108), resto 0.96 (72/144)
+     L: O/E 0.80 (10/24)     M: O/E 1.06 (20/36)     X: O/E 0.59 (11/36)     J: O/E 0.87 (16/36)     V: O/E 0.88 (16/36)     S: O/E 0.83 (14/33)     D: O/E 1.05 (13/24)
+  VIVO vivo_rk (desde 15-sep, 225 sorteos, 9 jornadas mié-vie): Top-15 O/E mié-vie 0.78 (43/108), resto 0.94 (57/117)
