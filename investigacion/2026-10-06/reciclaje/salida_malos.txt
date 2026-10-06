@@ -1,0 +1,26 @@
+== domingo 4-oct ==
+8a   31 Lapa      puesto 31  salió hace 52 sorteos / 5 d
+9a   35 Jirafa    puesto 22  salió hace 49 sorteos / 4 d
+10a  30 Caimán    puesto 23  salió hace 70 sorteos / 6 d
+11a  21 Gallo     puesto 13  salió hace 26 sorteos / 2 d
+12p  28 Zamuro    puesto 30  salió hace 12 sorteos / 1 d
+1p   14 Paloma    puesto 17  salió hace 15 sorteos / 1 d
+2p   33 Pescado   puesto  3  salió hace 20 sorteos / 2 d
+3p   13 Mono      puesto  9  salió hace 61 sorteos / 5 d
+4p    3 Ciempiés  puesto 22  salió hace 97 sorteos / 8 d
+5p   26 Vaca      puesto 17  salió hace 60 sorteos / 5 d
+6p   17 Pavo      puesto 13  salió hace 44 sorteos / 3 d
+7p    6 Rana      puesto 10  salió hace 16 sorteos / 1 d
+Top-15 5/12 (esperaba 6.1); reciclados (ayer/anteayer) 5/12
+
+== 2026 (271 días, 2026-01-02..2026-10-05) ==
+Top-15 por día: media 5.92/12 (motor esperaba 6.30); 4 o menos: 46 días (1 cada 5.9); 8 o más: 46
+si el motor dijera la verdad, días ≤4 esperados: 40.9 [30-53]
+distribución: {1: 1, 2: 6, 3: 9, 4: 30, 5: 61, 6: 72, 7: 46, 8: 34, 9: 8, 10: 4}
+  malos ≤4       46 días | reciclados 5.22/12
+  normales 5-7  179 días | reciclados 6.19/12
+  buenos ≥8      46 días | reciclados 6.91/12
+rachas de días malos seguidos: {np.int64(1): np.int64(33), np.int64(2): np.int64(3), np.int64(3): np.int64(1), np.int64(4): np.int64(1)}
+día siguiente a un día malo: 5.91/12 (n=46); tras normal/bueno: 5.92; corr +0.08
+por día de semana (Top-15 medio / % días malos): lun 6.3/12%  mar 6.3/8%  mié 5.4/26%  jue 5.2/30%  vie 5.2/29%  sáb 6.5/5%  dom 6.5/10%
+por mes: 01: 6.3  02: 5.7  03: 5.9  04: 5.8  05: 6.0  06: 5.7  07: 6.1  08: 6.1  09: 5.6  10: 5.8

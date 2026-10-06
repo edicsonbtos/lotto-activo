@@ -8,3 +8,7 @@ R(día) = ganadores del día que habían salido en los 2 días de calendario ant
    va en el mismo sentido con p < 0,05.
 3. ¿Persiste al día siguiente? Correlación de R entre días seguidos y Top-15 del día siguiente tras R ≥ 9.
 Nada de esto cambia la jugada; si algo pasa va a sombra.
+
+## Añadido 2026-10-06 (antes de ver): días malos en 2026
+Día malo = Top-15 ≤ 4 de 12. Solo 2026 (dentro de prueba + vivo): frecuencia, R esos días, rachas de días malos,
+Top-15 del día siguiente, y día de la semana (descriptivo; "domingo" ya falló a ciegas en 2026-09-27).

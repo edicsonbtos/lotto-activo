@@ -1,0 +1,16 @@
+dev (mar-24..dic-25): lun O/E 1.02 (z+0.7)  mar O/E 1.03 (z+1.1)  mié O/E 0.97 (z-0.9)  jue O/E 1.04 (z+1.3)  vie O/E 1.04 (z+1.4)  sáb O/E 1.04 (z+1.3)  dom O/E 0.82 (z-6.1)
+   prueba conjunta 7 días: p = 0.000;  mié-vie 54.5% vs resto 52.5%
+2026 (ene..5-oct): lun O/E 0.99 (z-0.3)  mar O/E 0.98 (z-0.5)  mié O/E 0.85 (z-3.4)  jue O/E 0.82 (z-4.0)  vie O/E 0.84 (z-3.6)  sáb O/E 1.05 (z+1.1)  dom O/E 1.03 (z+0.7)
+   prueba conjunta 7 días: p = 0.000;  mié-vie 43.9% vs resto 53.2%
+dev 2024               mié-vie Top-15 O/E 1.00 | resto 0.96 || reciclados O/E mié-vie 1.05, resto 0.96  (n días mié-vie 126)
+dev 2025-S1            mié-vie Top-15 O/E 1.04 | resto 1.00 || reciclados O/E mié-vie 1.07, resto 0.96  (n días mié-vie 77)
+dev 2025-S2            mié-vie Top-15 O/E 1.02 | resto 0.99 || reciclados O/E mié-vie 0.97, resto 0.99  (n días mié-vie 75)
+2026 ene-mar           mié-vie Top-15 O/E 0.81 | resto 0.97 || reciclados O/E mié-vie 0.87, resto 1.08  (n días mié-vie 37)
+2026 abr-jun           mié-vie Top-15 O/E 0.86 | resto 0.99 || reciclados O/E mié-vie 0.97, resto 0.97  (n días mié-vie 35)
+2026 jul-oct           mié-vie Top-15 O/E 0.85 | resto 1.07 || reciclados O/E mié-vie 0.91, resto 1.07  (n días mié-vie 42)
+2026 mié: Top-15 44.9% (esperaba 52.6) | reciclados 51.3% (motor 56.0)
+2026 jue: Top-15 43.0% (esperaba 52.4) | reciclados 51.1% (motor 54.5)
+2026 vie: Top-15 43.6% (esperaba 52.1) | reciclados 47.6% (motor 53.2)
+2026 resto: Top-15 53.2% (esperaba 52.6) | reciclados 57.5% (motor 55.3)
+dev: mié-vie +26.1% por ficha [IC95 +17; +35]  Top-5 20.4%  |  sáb-mar +23.6% por ficha [IC95 +16; +31]  Top-5 20.3%
+2026: mié-vie  -0.5% por ficha [IC95 -13; +12]  Top-5 16.1%  |  sáb-mar +29.8% por ficha [IC95 +18; +41]  Top-5 21.3%
