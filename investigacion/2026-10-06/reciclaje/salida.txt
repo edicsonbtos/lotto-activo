@@ -1,0 +1,26 @@
+
+===== dev: 372 días =====
+R medio 6.65/12 (el motor esperaba 6.65);  días con R>=9: 38 (10.2 %, 1 cada 10 días)
+  R 0-5   n= 79 días | Top-15  45.6% (esperaba 54.2) = 5.5/12 por día | señal   +32 mbits
+  R 6-7   n=188 días | Top-15  53.9% (esperaba 53.9) = 6.5/12 por día | señal  +132 mbits
+  R 8     n= 67 días | Top-15  61.4% (esperaba 54.0) = 7.4/12 por día | señal  +239 mbits
+  R 9-12  n= 38 días | Top-15  64.0% (esperaba 54.2) = 7.7/12 por día | señal  +239 mbits
+  -- ¿la mañana avisa? (R en 8a-1p -> tarde 2p-7p) --
+  mañana R 0-2:  63 días | tarde Top-15  57.7% vs motor 54.2% O/E 1.06 z +1.4 | tarde reciclados 3.35/6 vs motor 3.46
+  mañana R 3-3: 118 días | tarde Top-15  51.7% vs motor 54.7% O/E 0.94 z -1.6 | tarde reciclados 3.19/6 vs motor 3.44
+  mañana R 4-4: 125 días | tarde Top-15  53.7% vs motor 54.8% O/E 0.98 z -0.6 | tarde reciclados 3.13/6 vs motor 3.37
+  mañana R 5-6:  66 días | tarde Top-15  50.8% vs motor 54.8% O/E 0.93 z -1.6 | tarde reciclados 2.95/6 vs motor 3.27
+  -- día siguiente -- corr(R hoy, R mañana) -0.11;  Top-15 mañana tras R>=9: 6.87/12 (n=38) vs resto 6.50;  R mañana tras R>=9: 6.34 vs 6.68
+
+===== prueba: 261 días =====
+R medio 6.51/12 (el motor esperaba 6.59);  días con R>=9: 23 (8.8 %, 1 cada 11 días)
+  R 0-5   n= 75 días | Top-15  44.6% (esperaba 52.8) = 5.3/12 por día | señal   +21 mbits
+  R 6-7   n=117 días | Top-15  49.4% (esperaba 52.5) = 5.9/12 por día | señal  +101 mbits
+  R 8     n= 46 días | Top-15  51.1% (esperaba 53.2) = 6.1/12 por día | señal  +133 mbits
+  R 9-12  n= 23 días | Top-15  64.5% (esperaba 52.3) = 7.7/12 por día | señal  +225 mbits
+  -- ¿la mañana avisa? (R en 8a-1p -> tarde 2p-7p) --
+  mañana R 0-2:  54 días | tarde Top-15  46.9% vs motor 52.9% O/E 0.89 z -2.1 | tarde reciclados 3.17/6 vs motor 3.25
+  mañana R 3-3:  74 días | tarde Top-15  51.1% vs motor 53.1% O/E 0.96 z -0.9 | tarde reciclados 3.12/6 vs motor 3.19
+  mañana R 4-4:  95 días | tarde Top-15  50.4% vs motor 52.9% O/E 0.95 z -1.2 | tarde reciclados 3.25/6 vs motor 3.16
+  mañana R 5-6:  38 días | tarde Top-15  45.2% vs motor 52.8% O/E 0.86 z -2.3 | tarde reciclados 2.47/6 vs motor 3.10
+  -- día siguiente -- corr(R hoy, R mañana) -0.06;  Top-15 mañana tras R>=9: 6.26/12 (n=23) vs resto 5.92;  R mañana tras R>=9: 6.22 vs 6.54
