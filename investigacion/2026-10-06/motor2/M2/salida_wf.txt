@@ -2,3 +2,4 @@ V1 H=60: AJUSTE Δ +5.98 [np.float64(2.41), np.float64(9.55)] T15 54.51/54.59 | 
 V1 H=120: AJUSTE Δ +1.95 [np.float64(-0.95), np.float64(4.84)] T15 54.0/54.59 | ELECCION Δ +7.20 [np.float64(2.64), np.float64(11.75)] T15 47.92/48.64
 V1 H=None: AJUSTE Δ -5.44 [np.float64(-8.06), np.float64(-2.82)] T15 53.06/54.59 | ELECCION Δ +0.72 [np.float64(-1.41), np.float64(2.85)] T15 49.21/48.64
 V2 H=60: AJUSTE Δ +5.96 [np.float64(1.59), np.float64(10.32)] T15 54.91/54.59 | ELECCION Δ +7.01 [np.float64(-0.09), np.float64(14.12)] T15 49.21/48.64
+V2 H=120: AJUSTE Δ +1.76 [np.float64(-2.11), np.float64(5.62)] T15 53.97/54.59 | ELECCION Δ +6.23 [np.float64(1.18), np.float64(11.28)] T15 48.28/48.64
