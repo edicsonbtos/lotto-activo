@@ -14,7 +14,7 @@ def stat(O, E, g_d, met, dias):
         e = E[dsel][:, col].sum(1) if isinstance(col, list) else E[dsel][:, col]
         if met == "M2_mbits":
             r = o.sum() / e.sum(); return r, ((o - r * e) ** 2).sum() / e.sum() ** 2
-        r = o.sum() / e.sum(); return np.log(r), ((o - r * e) ** 2).sum() / max(o.sum(), 1e-9) ** 2
+        r = (o.sum() + 0.5) / (e.sum() + 0.5); return np.log(r), ((o - r * e) ** 2).sum() / (o.sum() + 0.5) ** 2
     if g_d is None:   # interacción tarde-mvf: mvf en dias
         mv = C._MVF_D
         a1, v1 = lr(dias & mv, 1); a0, v0 = lr(dias & mv, 0); b1, w1 = lr(dias & ~mv, 1); b0, w0 = lr(dias & ~mv, 0)

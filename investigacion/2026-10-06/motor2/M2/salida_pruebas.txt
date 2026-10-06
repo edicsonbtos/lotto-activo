@@ -1,52 +1,74 @@
-/home/user/lotto-activo/investigacion/2026-10-06/motor2/M2/pruebas.py:17: RuntimeWarning: divide by zero encountered in log
-  r = o.sum() / e.sum(); return np.log(r), ((o - r * e) ** 2).sum() / max(o.sum(), 1e-9) ** 2
-/usr/local/lib/python3.11/dist-packages/numpy/_core/_methods.py:188: RuntimeWarning: invalid value encountered in subtract
-  x = um.subtract(arr, arrmean, out=...)
-/home/user/lotto-activo/investigacion/2026-10-06/motor2/M2/pruebas.py:21: RuntimeWarning: invalid value encountered in scalar subtract
-  return (a1 - a0) - (b1 - b0), np.sqrt(v1 + v0 + w1 + w0)   # (aprox: ignora covarianza dentro del día)
-tests 72; max|z| delta AJUSTE inf; p familiar (permutación) 0.730; pasan FDR: 7
+tests 72; max|z| delta AJUSTE 5.46; p familiar (permutación) 0.192; pasan FDR: 8
 grupo        métrica    AJ efecto      z       p FDR | EL efecto      z
-G_pago       M1_top15      1.016x  +0.34  0.7371    |    1.005x  +0.06 
-G_pago       M3_hoy        1.044x  +0.21  0.8365    |    0.636x  -2.05 
-G_pago       M4_ayaa       0.990x  -0.19  0.8487    |    1.002x  +0.02 
-G_pago       M5_fecha      1.000x  -0.00  0.9996    |    0.708x  -0.99 
-G_pago       M6_hora       0.941x   +nan     nan    |    1.035x  +0.07 
+G_pago       M1_top15      1.016x  +0.34  0.7365    |    1.005x  +0.06 
+G_pago       M3_hoy        1.045x  +0.21  0.8313    |    0.642x  -2.09 
+G_pago       M4_ayaa       0.990x  -0.19  0.8486    |    1.002x  +0.02 
+G_pago       M5_fecha      1.006x  +0.03  0.9789    |    0.720x  -0.98 
+G_pago       M6_hora       0.967x  -0.08  0.9375    |    1.044x  +0.09 
 G_pago       M2_mbits     +20.0mb  +0.55  0.5825    |   +40.3mb  +1.10 
-G_q15        M1_top15      1.057x  +0.81  0.4174    |    0.977x  -0.18 
-G_q15        M3_hoy        1.114x  +0.38  0.7067    |    0.819x  -0.85 
-G_q15        M4_ayaa       0.991x  -0.09  0.9269    |    0.865x  -1.59 
-G_q15        M5_fecha      0.799x  -0.58  0.5622    |    0.751x  -0.55 
-G_q15        M6_hora       0.748x   +nan     nan    |    1.471x  +0.81 
+G_q15        M1_top15      1.057x  +0.81  0.4165    |    0.978x  -0.17 
+G_q15        M3_hoy        1.111x  +0.39  0.6954    |    0.818x  -0.92 
+G_q15        M4_ayaa       0.991x  -0.09  0.9268    |    0.866x  -1.59 
+G_q15        M5_fecha      0.819x  -0.56  0.5786    |    0.775x  -0.53 
+G_q15        M6_hora       0.833x  -0.27  0.7839    |    1.425x  +0.85 
 G_q15        M2_mbits      -6.2mb  -0.14  0.8886    |   +47.8mb  +0.87 
-G_q30        M1_top15      0.984x  -0.23  0.8187    |    1.028x  +0.27 
-G_q30        M3_hoy        0.986x  -0.05  0.9611    |    0.530x  -1.78 
-G_q30        M4_ayaa       0.990x  -0.18  0.8598    |    1.125x  +1.28 
-G_q30        M5_fecha      1.201x  +0.64  0.5244    |    0.700x  -0.81 
-G_q30        M6_hora       1.092x   +nan     nan    |    0.707x  -0.36 
+G_q30        M1_top15      0.984x  -0.23  0.8194    |    1.028x  +0.28 
+G_q30        M3_hoy        0.989x  -0.04  0.9682    |    0.547x  -1.85 
+G_q30        M4_ayaa       0.990x  -0.18  0.8596    |    1.124x  +1.28 
+G_q30        M5_fecha      1.208x  +0.69  0.4929    |    0.725x  -0.80 
+G_q30        M6_hora       1.128x  +0.23  0.8199    |    0.765x  -0.35 
 G_q30        M2_mbits     +37.1mb  +0.79  0.4287    |   +28.1mb  +0.63 
-G_vq         M1_top15      0.906x  -0.96  0.3359    |    0.676x  -1.78 
-G_vq         M3_hoy        2.946x  +5.62  0.0000 SÍ |    1.155x  +1.10 
-G_vq         M4_ayaa       0.910x  -1.03  0.3035    |    0.922x  -1.18 
-G_vq         M5_fecha      1.094x  +0.29  0.7730    |    0.810x  -0.25 
-G_vq         M6_hora       2.228x   +nan     nan    |    1.221x  +0.25 
+G_vq         M1_top15      0.907x  -0.96  0.3364    |    0.686x  -1.78 
+G_vq         M3_hoy        2.734x  +5.55  0.0000 SÍ |    1.090x  +0.75 
+G_vq         M4_ayaa       0.911x  -1.03  0.3030    |    0.925x  -1.17 
+G_vq         M5_fecha      1.117x  +0.40  0.6893    |    0.861x  -0.22 
+G_vq         M6_hora       2.115x  +1.56  0.1197    |    1.209x  +0.35 
 G_vq         M2_mbits    -125.2mb  -1.64  0.1012    |   +10.9mb  +0.30 
-G_ini        M1_top15      0.956x  -0.72  0.4721    |    1.061x  +0.57 
-G_ini        M3_hoy        0.829x  -0.71  0.4756    |    1.009x  +0.04 
-G_ini        M4_ayaa       1.050x  +0.76  0.4497    |    0.993x  -0.11 
-G_ini        M5_fecha      1.248x  +0.97  0.3337    |    1.446x  +1.72 
-G_ini        M6_hora       0.632x   +nan     nan    |    0.000x   -inf 
+G_ini        M1_top15      0.956x  -0.72  0.4726    |    1.061x  +0.58 
+G_ini        M3_hoy        0.837x  -0.71  0.4774    |    0.996x  -0.02 
+G_ini        M4_ayaa       1.050x  +0.76  0.4498    |    0.994x  -0.11 
+G_ini        M5_fecha      1.252x  +1.01  0.3129    |    1.431x  +1.73 
+G_ini        M6_hora       0.687x  -0.64  0.5202    |    0.145x  -6.00 
 G_ini        M2_mbits     +17.2mb  +0.45  0.6509    |   +24.5mb  +0.50 
-G_fin        M1_top15      0.970x  -0.63  0.5266    |    0.928x  -0.70 
-G_fin        M3_hoy        1.202x  +0.75  0.4534    |    0.892x  -0.37 
-G_fin        M4_ayaa       0.971x  -0.58  0.5642    |    1.159x  +1.68 
-G_fin        M5_fecha      1.238x  +1.02  0.3059    |    0.748x  -0.67 
-G_fin        M6_hora       1.884x  +1.54  0.1225    |    0.628x  -0.48 
+G_fin        M1_top15      0.970x  -0.63  0.5274    |    0.929x  -0.70 
+G_fin        M3_hoy        1.198x  +0.76  0.4481    |    0.888x  -0.41 
+G_fin        M4_ayaa       0.971x  -0.58  0.5642    |    1.158x  +1.68 
+G_fin        M5_fecha      1.242x  +1.06  0.2876    |    0.765x  -0.66 
+G_fin        M6_hora       1.864x  +1.63  0.1022    |    0.689x  -0.48 
 G_fin        M2_mbits      +1.6mb  +0.04  0.9687    |   -51.7mb  -1.01 
-G_fer        M1_top15      1.078x  +0.92  0.3551    |    0.880x  -0.51 
-G_fer        M3_hoy        0.483x   +nan     nan    |    0.804x  -0.45 
-G_fer        M4_ayaa       1.098x  +0.98  0.3266    |    1.049x  +0.35 
-G_fer        M5_fecha      2.116x  +1.98  0.0481    |    1.025x  +0.03 
-G_fer        M6_hora       0.800x   +nan     nan    |    0.000x   -inf 
+G_fer        M1_top15      1.078x  +0.93  0.3539    |    0.885x  -0.51 
+G_fer        M3_hoy        0.541x  -0.96  0.3376    |    0.804x  -0.56 
+G_fer        M4_ayaa       1.097x  +0.98  0.3269    |    1.048x  +0.36 
+G_fer        M5_fecha      2.067x  +2.04  0.0409    |    1.049x  +0.05 
+G_fer        M6_hora       0.955x  -0.07  0.9466    |    0.364x  -2.35 
 G_fer        M2_mbits     -50.4mb  -1.13  0.2579    |   -51.3mb  -0.58 
-G_lw         M1_top15      0.972x  -0.43  0.6666    |    0.766x  -0.94 
-G_lw         M3_hoy        0.419x   +nan     nan    |    0.990x  -0.04 
+G_lw         M1_top15      0.973x  -0.42  0.6710    |    0.771x  -0.94 
+G_lw         M3_hoy        0.525x  -0.97  0.3312    |    0.967x  -0.14 
+G_lw         M4_ayaa       1.317x  +4.47  0.0000 SÍ |    1.066x  +0.64 
+G_lw         M5_fecha      0.405x  -1.31  0.1892    |    1.098x  +0.19 
+G_lw         M6_hora       0.463x  -5.20  0.0000 SÍ |    0.256x  -7.99 CONFIRMA
+G_lw         M2_mbits      -7.9mb  -0.13  0.8956    |  -131.1mb  -1.57 
+G_finde      M1_top15      0.997x  -0.09  0.9284    |    1.256x  +4.07 
+G_finde      M3_hoy        0.411x  -3.98  0.0001 SÍ |    0.726x  -2.07 CONFIRMA
+G_finde      M4_ayaa       1.126x  +3.24  0.0012 SÍ |    1.120x  +2.43 CONFIRMA
+G_finde      M5_fecha      1.040x  +0.22  0.8232    |    0.783x  -0.98 
+G_finde      M6_hora       0.678x  -1.10  0.2729    |    0.857x  -0.40 
+G_finde      M2_mbits     +30.5mb  +1.36  0.1740    |   +63.4mb  +2.16 
+G_vie        M1_top15      0.976x  -0.48  0.6292    |    0.797x  -2.46 
+G_vie        M3_hoy        2.047x  +4.36  0.0000 SÍ |    1.462x  +2.81 CONFIRMA
+G_vie        M4_ayaa       0.902x  -1.67  0.0956    |    0.889x  -1.48 
+G_vie        M5_fecha      1.071x  +0.32  0.7526    |    0.814x  -0.70 
+G_vie        M6_hora       1.281x  +0.62  0.5363    |    0.990x  -0.02 
+G_vie        M2_mbits     -78.3mb  -2.29  0.0221    |   -62.0mb  -1.64 
+G_mvf        M1_top15      0.996x  -0.12  0.9060    |    0.820x  -3.78 
+G_mvf        M3_hoy        2.105x  +4.91  0.0000 SÍ |    1.918x  +4.77 CONFIRMA
+G_mvf        M4_ayaa       0.938x  -1.70  0.0893    |    0.886x  -2.40 
+G_mvf        M5_fecha      1.060x  +0.35  0.7276    |    1.175x  +0.80 
+G_mvf        M6_hora       1.181x  +0.56  0.5735    |    1.361x  +0.93 
+G_mvf        M2_mbits     -60.7mb  -2.78  0.0055 SÍ |   -76.2mb  -2.94 CONFIRMA
+G_tarde_mvf  M1_top15      1.144x  +1.77  0.0763    |    0.829x  -1.72 
+G_tarde_mvf  M3_hoy        0.440x  -0.95  0.3409    |    1.067x  +0.14 
+G_tarde_mvf  M4_ayaa       0.924x  -1.20  0.2316    |    0.846x  -1.56 
+G_tarde_mvf  M5_fecha      1.496x  +1.23  0.2186    |    2.361x  +2.13 
+G_tarde_mvf  M6_hora       1.049x  +0.08  0.9392    |    3.233x  +1.66 
+G_tarde_mvf  M2_mbits     +15.9mb  +0.35  0.7251    |   -22.1mb  -0.38 
