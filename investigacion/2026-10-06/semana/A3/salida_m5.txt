@@ -1,0 +1,10 @@
+(a) Ablación de 'semana natural' (aporte quitado del log-odds):
+   dev  MVF Top-15 O/E con 1.017 (54.5%)  sin 1.009 (54.4%)
+   dev  SM  Top-15 O/E con 0.979 (52.5%)  sin 0.979 (52.7%)
+   2026 MVF Top-15 O/E con 0.837 (43.9%)  sin 0.849 (44.8%)
+   2026 SM  Top-15 O/E con 1.012 (53.2%)  sin 1.005 (53.1%)
+   cambio medio |Δ log P| por animal: 0.034
+
+(b) Regla simple descriptiva (ajuste 26-T1, prueba 26-T2+T3):
+   MVF: ×2.69 si salió hoy, ×0.68 si salió anteayer → prueba -22.6 mbits [-48.4; +3.6], Top-15 43.6% → 45.2%
+   SM : ×0.97 si salió hoy, ×1.30 si salió anteayer → prueba +7.6 mbits [-0.3; +15.6], Top-15 53.1% → 53.4%
