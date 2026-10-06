@@ -1,0 +1,4 @@
+T elegido en dev-A: 0.920
+dev-B  Δmbits -1.90 [-3.10;-0.69] | Top-15 real 55.1%  prometido 54.3% -> 53.2% | T óptimo de este tramo 1.08
+2026   Δmbits +1.36 [+0.15;+2.58] | Top-15 real 49.3%  prometido 52.5% -> 51.6% | T óptimo de este tramo 0.87
+vivo   Δmbits +0.62 [-4.47;+5.71] | Top-15 real 45.6%  prometido 51.8% -> 50.9% | T óptimo de este tramo 0.91

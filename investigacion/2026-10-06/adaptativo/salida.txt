@@ -1,0 +1,12 @@
+AD (semanal): elegido en dev-A K=26 a=3  (dev-A +6.62 mbits)
+   dev-B         Δmbits  -0.34 [ -2.58; +1.90]  Top-15 55.1->55.2  Top-5 21.4->21.3  plata Top-5 +31.2%->+30.8%
+   2026          Δmbits  +5.33 [ +2.29; +8.37]  Top-15 49.3->50.2  Top-5 19.1->19.2  plata Top-5 +17.0%->+16.9%
+   dom dev-B     Δmbits  +3.98 [ -8.00;+15.96]  Top-15 47.8->48.0  Top-5 18.9->19.1  plata Top-5 +15.9%->+15.1%
+   mié-vie 2026  Δmbits +11.31 [ +5.26;+17.37]  Top-15 43.9->45.8  Top-5 16.1->16.2  plata Top-5 -0.5%->-0.8%
+   resto 2026    Δmbits  +0.99 [ -1.75; +3.72]  Top-15 53.2->53.3  Top-5 21.3->21.3  plata Top-5 +29.8%->+29.8%
+GL (control): elegido en dev-A K=4 a=30  (dev-A +0.02 mbits)
+   dev-B         Δmbits  +2.07 [ +0.93; +3.20]  Top-15 55.1->55.3  Top-5 21.4->21.4  plata Top-5 +31.2%->+31.3%
+   2026          Δmbits  +1.43 [ +0.47; +2.38]  Top-15 49.3->49.3  Top-5 19.1->19.1  plata Top-5 +17.0%->+17.2%
+   dom dev-B     Δmbits  +2.84 [ -0.30; +5.98]  Top-15 47.8->48.0  Top-5 18.9->18.9  plata Top-5 +15.9%->+15.9%
+   mié-vie 2026  Δmbits  +3.61 [ +1.98; +5.25]  Top-15 43.9->44.0  Top-5 16.1->16.1  plata Top-5 -0.5%->-0.5%
+   resto 2026    Δmbits  -0.16 [ -1.27; +0.94]  Top-15 53.2->53.2  Top-5 21.3->21.3  plata Top-5 +29.8%->+30.0%
