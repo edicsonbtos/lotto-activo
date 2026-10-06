@@ -78,3 +78,16 @@ for tr in ("AJUSTE", "ELECCION", "PRUEBA26", "ANTIGUO"):
     for h in range(12):
         k = m & (H == h)
         if k.any(): MBc[k] -= MB[k].mean()
+
+# --- agregados por jornada: O_d, E_d por categoría y por mitad (mañana/tarde) ---
+def agregados(rows_mask):
+    """dict métrica -> (O[ndias, 2], E[ndias, 2]) con columna 0 = mañana, 1 = tarde, sobre filas de rows_mask."""
+    nd = len(UF); out = {}
+    idx = np.where(rows_mask)[0]; d = DAYID[idx]; t = TARDE[idx].astype(int)
+    for k, M in CATS_ALL.items():
+        o = M[idx, Y[idx]].astype(float); e = (PROD[idx] * M[idx]).sum(1)
+        O = np.zeros((nd, 2)); E = np.zeros((nd, 2))
+        np.add.at(O, (d, t), o); np.add.at(E, (d, t), e); out[k] = (O, E)
+    O = np.zeros((nd, 2)); E = np.zeros((nd, 2))
+    np.add.at(O, (d, t), MBc[idx]); np.add.at(E, (d, t), 1.0); out["M2_mbits"] = (O, E)
+    return out

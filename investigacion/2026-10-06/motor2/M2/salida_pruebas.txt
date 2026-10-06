@@ -1,0 +1,4 @@
+/home/user/lotto-activo/investigacion/2026-10-06/motor2/M2/pruebas.py:17: RuntimeWarning: divide by zero encountered in log
+  r = o.sum() / e.sum(); return np.log(r), ((o - r * e) ** 2).sum() / max(o.sum(), 1e-9) ** 2
+/usr/local/lib/python3.11/dist-packages/numpy/_core/_methods.py:188: RuntimeWarning: invalid value encountered in subtract
+  x = um.subtract(arr, arrmean, out=...)
