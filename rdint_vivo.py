@@ -118,11 +118,12 @@ def la_del_dia(fecha):
 
 
 def log_cargar():
-    try:
-        with io.open(RD_LOG, encoding="utf-8") as f:
-            return json.load(f)
-    except (OSError, ValueError):
+    # Archivo ausente = marcador nuevo. JSON corrupto falla en voz alta (como el de LA):
+    # devolver vacío haría que el siguiente guardado pisara el marcador real.
+    if not os.path.exists(RD_LOG):
         return {"registros": []}
+    with io.open(RD_LOG, encoding="utf-8") as f:
+        return json.load(f)
 
 
 def log_guardar(d):
