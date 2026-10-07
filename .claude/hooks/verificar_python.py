@@ -30,6 +30,8 @@ def main():
             src = os.path.join(raiz, f)
             if os.path.exists(src):
                 shutil.copy2(src, tmp)
+        if os.path.isdir(os.path.join(raiz, "static")):   # CSS/JS viven en static/ desde el refactor
+            shutil.copytree(os.path.join(raiz, "static"), os.path.join(tmp, "static"))
         sys.path.insert(0, tmp)
         spec = importlib.util.spec_from_file_location("servidor_smoke", os.path.join(tmp, "servidor.py"))
         mod = importlib.util.module_from_spec(spec)

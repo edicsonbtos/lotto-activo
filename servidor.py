@@ -819,7 +819,7 @@ def chip(i, extra=""):
     return f'<span class="chip {extra}"><b>{POS[i]}</b> {ANIM[POS[i]].title()}</span>'
 
 def _estatico(nombre):
-    with open(os.path.join(RUTA, "static", nombre), encoding="utf-8", newline="") as f:
+    with open(os.path.join(RUTA, "static", nombre), encoding="utf-8") as f:   # modo texto: CRLF de un checkout en Windows -> LF
         return f.read()
 
 CSS = _estatico("app.css")
