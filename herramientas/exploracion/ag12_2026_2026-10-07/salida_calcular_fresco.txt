@@ -1,0 +1,4 @@
+filas 12760 2026-10-07
+control ens viejas: max|dif| 0.0
+control ag12 V1 max|dif| 0.0
+control ag12 V0 max|dif| 0.0

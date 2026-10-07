@@ -1,0 +1,144 @@
+control reproduccion ens: max|dif| contra reciente = 0.00e+00
+control reproduccion ag12V1: max|dif| contra reciente = 0.00e+00
+control reproduccion ag12V0: max|dif| contra reciente = 0.00e+00
+RD: sorteos del archivo 13031 -> con fresco 13204
+filas con RD (h-1):30: 3117 de 3403
+
+=== 1. DESGLOSE ag12 V1 - ensamble congelado (mbits; Top-3/5/15 en pp; Top-5 escalonado en pp/ficha) ===
+REPLICA_2026 (ene-16sep)               n= 2959 j=247 | dMbits +20.09 [+11.82;+28.30] (IC90 [+13.13;+26.96])
+                                         top3 +0.44pp top5 +1.69pp top15 +2.10pp [+0.47;+3.65] | T5esc +7.98 pp/ficha [-0.13;+16.20] | T5esc+regla RD +9.00 [+0.63;+17.21]
+                                         niveles: ens top3/5/15 12.54/19.80/49.68  ag12 12.98/21.49/51.77
+FRESCO (16sep-7oct)                    n=  249 j= 22 | dMbits +22.71 [-6.22;+49.26] (IC90 [-1.89;+44.71])
+                                         top3 +4.82pp top5 +3.61pp top15 +6.43pp [+0.41;+12.06] | T5esc +31.63 pp/ficha [+7.53;+55.40] | T5esc+regla RD +31.63 [+7.10;+55.67]
+                                         niveles: ens top3/5/15 10.44/17.27/46.59  ag12 15.26/20.88/53.01
+2026_TODO (replica+fresco)             n= 3208 j=268 | dMbits +20.29 [+12.47;+28.52] (IC90 [+13.70;+27.36])
+                                         top3 +0.78pp top5 +1.84pp top15 +2.43pp [+0.90;+4.01] | T5esc +9.82 pp/ficha [+2.22;+17.77] | T5esc+regla RD +10.75 [+3.04;+18.71]
+                                         niveles: ens top3/5/15 12.38/19.61/49.44  ag12 13.15/21.45/51.87
+TRIM T1 ene-mar                        n= 1032 j= 86 | dMbits +27.01 [+12.48;+41.69] (IC90 [+14.74;+38.90])
+                                         top3 +0.29pp top5 +1.26pp top15 +4.36pp [+1.45;+7.17] | T5esc +5.81 pp/ficha [-6.54;+17.81] | T5esc+regla RD +4.72 [-7.99;+17.08]
+                                         niveles: ens top3/5/15 12.11/19.09/49.71  ag12 12.40/20.35/54.07
+TRIM T2 abr-jun                        n=  995 j= 83 | dMbits +18.60 [+4.28;+32.96] (IC90 [+6.72;+30.61])
+                                         top3 +0.70pp top5 +1.91pp top15 +1.71pp [-0.70;+4.13] | T5esc +9.80 pp/ficha [-4.90;+24.50] | T5esc+regla RD +12.44 [-2.26;+26.73]
+                                         niveles: ens top3/5/15 12.66/20.60/49.05  ag12 13.37/22.51/50.75
+TRIM T3 jul-sep16                      n=  932 j= 78 | dMbits +14.01 [-0.21;+27.48] (IC90 [+2.04;+25.41])
+                                         top3 +0.32pp top5 +1.93pp top15 +0.00pp [-2.90;+2.90] | T5esc +8.45 pp/ficha [-7.24;+24.14] | T5esc+regla RD +10.06 [-5.66;+25.64]
+                                         niveles: ens top3/5/15 12.88/19.74/50.32  ag12 13.20/21.67/50.32
+MES 2026-01                            n=  324 j= 27 | dMbits +34.47 [+9.83;+59.63] (IC90 [+13.63;+55.67])
+                                         top3 +1.85pp top5 +2.78pp top15 +4.94pp [-0.31;+10.49] | T5esc +17.36 pp/ficha [-2.31;+39.35] | T5esc+regla RD +16.20 [-3.47;+37.04]
+                                         niveles: ens top3/5/15 12.04/20.37/53.09  ag12 13.89/23.15/58.02
+MES 2026-02                            n=  336 j= 28 | dMbits +6.65 [-21.78;+35.40] (IC90 [-17.08;+30.58])
+                                         top3 +0.60pp top5 +0.00pp top15 +2.98pp [-2.08;+7.74] | T5esc +2.23 pp/ficha [-13.39;+18.97] | T5esc+regla RD +0.00 [-15.62;+15.62]
+                                         niveles: ens top3/5/15 10.71/17.56/47.92  ag12 11.31/17.56/50.89
+MES 2026-03                            n=  372 j= 31 | dMbits +38.90 [+18.10;+59.00] (IC90 [+21.36;+55.79])
+                                         top3 -1.34pp top5 +1.08pp top15 +5.11pp [+0.54;+9.68] | T5esc -1.01 pp/ficha [-27.22;+23.19] | T5esc+regla RD -1.01 [-28.23;+24.19]
+                                         niveles: ens top3/5/15 13.44/19.35/48.39  ag12 12.10/20.43/53.49
+MES 2026-04                            n=  312 j= 26 | dMbits +22.37 [-0.25;+44.04] (IC90 [+4.14;+41.04])
+                                         top3 -0.64pp top5 +3.53pp top15 +5.45pp [+2.56;+8.33] | T5esc +10.82 pp/ficha [-13.22;+36.06] | T5esc+regla RD +15.62 [-9.62;+40.87]
+                                         niveles: ens top3/5/15 14.10/20.83/50.32  ag12 13.46/24.36/55.77
+MES 2026-05                            n=  372 j= 31 | dMbits +19.12 [-8.71;+46.36] (IC90 [-3.65;+41.89])
+                                         top3 +1.34pp top5 -0.54pp top15 +0.27pp [-4.03;+4.57] | T5esc +3.02 pp/ficha [-24.19;+31.25] | T5esc+regla RD +5.04 [-21.17;+32.26]
+                                         niveles: ens top3/5/15 12.90/23.39/49.73  ag12 14.25/22.85/50.00
+MES 2026-06                            n=  311 j= 26 | dMbits +14.21 [-9.70;+37.80] (IC90 [-5.87;+34.52])
+                                         top3 +1.29pp top5 +3.22pp top15 -0.32pp [-4.84;+3.85] | T5esc +16.88 pp/ficha [-3.62;+36.17] | T5esc+regla RD +18.09 [-2.40;+37.26]
+                                         niveles: ens top3/5/15 10.93/17.04/46.95  ag12 12.22/20.26/46.62
+MES 2026-07                            n=  372 j= 31 | dMbits +9.31 [-14.47;+32.04] (IC90 [-11.06;+28.67])
+                                         top3 -0.27pp top5 +1.34pp top15 +0.00pp [-5.11;+5.38] | T5esc +4.03 pp/ficha [-15.15;+25.20] | T5esc+regla RD +5.04 [-15.12;+25.20]
+                                         niveles: ens top3/5/15 11.83/19.09/50.27  ag12 11.56/20.43/50.27
+MES 2026-08                            n=  372 j= 31 | dMbits +20.44 [-1.16;+42.14] (IC90 [+2.40;+38.48])
+                                         top3 +0.27pp top5 +2.42pp top15 +0.00pp [-3.76;+3.76] | T5esc +10.08 pp/ficha [-19.15;+39.31] | T5esc+regla RD +11.09 [-18.15;+39.31]
+                                         niveles: ens top3/5/15 15.05/20.43/51.61  ag12 15.32/22.85/51.61
+MES 2026-09                            n=  188 j= 16 | dMbits +10.61 [-17.64;+40.19] (IC90 [-13.47;+35.10])
+                                         top3 +1.60pp top5 +2.13pp top15 +0.00pp [-6.38;+6.38] | T5esc +13.96 pp/ficha [-14.93;+41.02] | T5esc+regla RD +17.95 [-12.24;+47.87]
+                                         niveles: ens top3/5/15 10.64/19.68/47.87  ag12 12.23/21.81/47.87
+MES 2026-09 (16-7oct fresco aparte)    n=  249 j= 22 | dMbits +22.71 [-6.22;+49.26] (IC90 [-1.89;+44.71])
+                                         top3 +4.82pp top5 +3.61pp top15 +6.43pp [+0.41;+12.06] | T5esc +31.63 pp/ficha [+7.53;+55.40] | T5esc+regla RD +31.63 [+7.10;+55.67]
+                                         niveles: ens top3/5/15 10.44/17.27/46.59  ag12 15.26/20.88/53.01
+DIA lun                                n=  480 j= 40 | dMbits +27.84 [+7.00;+48.42] (IC90 [+10.63;+45.37])
+                                         top3 -0.21pp top5 +2.92pp top15 +2.71pp [-0.83;+6.04] | T5esc +10.16 pp/ficha [-7.81;+29.69] | T5esc+regla RD +13.28 [-3.12;+30.47]
+                                         niveles: ens top3/5/15 13.96/21.04/52.92  ag12 13.75/23.96/55.62
+DIA mar                                n=  480 j= 40 | dMbits +16.65 [-5.19;+37.12] (IC90 [-1.34;+33.92])
+                                         top3 +1.04pp top5 +2.50pp top15 -1.46pp [-5.42;+2.50] | T5esc +13.28 pp/ficha [-3.91;+30.47] | T5esc+regla RD +12.50 [-5.47;+30.47]
+                                         niveles: ens top3/5/15 11.88/19.17/51.67  ag12 12.92/21.67/50.21
+DIA mie                                n=  472 j= 40 | dMbits +16.26 [-1.71;+34.66] (IC90 [+0.60;+31.48])
+                                         top3 +1.48pp top5 +1.27pp top15 +0.42pp [-2.76;+3.54] | T5esc +10.33 pp/ficha [-9.58;+29.34] | T5esc+regla RD +13.51 [-7.15;+33.07]
+                                         niveles: ens top3/5/15 10.59/16.95/45.97  ag12 12.08/18.22/46.40
+DIA jue                                n=  444 j= 37 | dMbits +6.93 [-13.51;+27.93] (IC90 [-10.56;+24.43])
+                                         top3 +4.05pp top5 +4.05pp top15 +3.60pp [-0.45;+7.66] | T5esc +30.41 pp/ficha [+13.51;+48.99] | T5esc+regla RD +32.94 [+16.05;+50.68]
+                                         niveles: ens top3/5/15 10.36/16.44/43.69  ag12 14.41/20.50/47.30
+DIA vie                                n=  444 j= 37 | dMbits +27.87 [+9.46;+46.49] (IC90 [+12.28;+43.07])
+                                         top3 +1.58pp top5 +2.03pp top15 +3.83pp [+0.00;+7.66] | T5esc +13.51 pp/ficha [-5.91;+32.94] | T5esc+regla RD +15.20 [-5.07;+35.47]
+                                         niveles: ens top3/5/15 11.04/16.22/43.24  ag12 12.61/18.24/47.07
+DIA sab                                n=  444 j= 37 | dMbits +31.74 [+6.57;+57.12] (IC90 [+10.91;+52.91])
+                                         top3 -0.68pp top5 +0.00pp top15 +6.53pp [+1.80;+11.26] | T5esc -2.53 pp/ficha [-27.87;+22.80] | T5esc+regla RD -5.91 [-31.25;+18.58]
+                                         niveles: ens top3/5/15 15.99/25.45/55.18  ag12 15.32/25.45/61.71
+DIA dom                                n=  444 j= 37 | dMbits +14.69 [-5.95;+34.38] (IC90 [-2.01;+31.55])
+                                         top3 -1.80pp top5 +0.00pp top15 +1.80pp [-2.70;+6.31] | T5esc -6.76 pp/ficha [-28.72;+16.05] | T5esc+regla RD -6.76 [-29.56;+16.05]
+                                         niveles: ens top3/5/15 12.84/22.07/53.15  ag12 11.04/22.07/54.95
+DIA mie-vie                            n= 1360 j=114 | dMbits +17.00 [+5.41;+28.09] (IC90 [+7.34;+26.36])
+                                         top3 +2.35pp top5 +2.43pp top15 +2.57pp [+0.44;+4.75] | T5esc +17.92 pp/ficha [+6.86;+29.23] | T5esc+regla RD +20.40 [+8.87;+31.55]
+                                         niveles: ens top3/5/15 10.66/16.54/44.34  ag12 13.01/18.97/46.91
+DIA resto                              n= 1848 j=154 | dMbits +22.71 [+10.73;+33.86] (IC90 [+12.68;+32.06])
+                                         top3 -0.38pp top5 +1.41pp top15 +2.33pp [+0.05;+4.49] | T5esc +3.86 pp/ficha [-6.49;+14.41] | T5esc+regla RD +3.65 [-6.70;+14.00]
+                                         niveles: ens top3/5/15 13.64/21.86/53.19  ag12 13.26/23.27/55.52
+DIA mie-vie (solo replica)             n= 1255 j=105 | dMbits +14.53 [+2.71;+26.79] (IC90 [+4.77;+24.80])
+                                         top3 +2.15pp top5 +2.07pp top15 +1.43pp [-0.64;+3.52] | T5esc +15.84 pp/ficha [+3.90;+27.40] | T5esc+regla RD +18.23 [+6.25;+29.88]
+                                         niveles: ens top3/5/15 10.60/16.73/44.62  ag12 12.75/18.80/46.06
+DIA resto (solo replica)               n= 1704 j=142 | dMbits +24.19 [+13.19;+35.10] (IC90 [+14.86;+33.59])
+                                         top3 -0.82pp top5 +1.41pp top15 +2.58pp [+0.29;+4.69] | T5esc +2.20 pp/ficha [-8.80;+13.42] | T5esc+regla RD +2.20 [-8.80;+13.20]
+                                         niveles: ens top3/5/15 13.97/22.07/53.40  ag12 13.15/23.47/55.99
+
+=== 1b. Hipotesis declarada: mie-vie vs resto (dMbits ag12V1 - ens) ===
+replica+fresco {"mie_vie": 17.00364094475946, "resto": 22.712755360569133, "n_mv": 1360, "n_resto": 1848, "contraste": -5.7091144158096725, "ic95": [-21.78017221293651, 10.4864164891347], "p_perm": 0.48830233953209357}
+solo replica {"mie_vie": 14.526176624497472, "resto": 24.185831714930845, "n_mv": 1255, "n_resto": 1704, "contraste": -9.659655090433374, "ic95": [-26.28310325727799, 6.754034812713223], "p_perm": 0.26754649070185965}
+
+=== 3. ag12_rd y reglas RD ===
+ag12V1_rd(mult) - ensamble [como la sombra] | REPLICA_2026 (ene-16sep): dMbits +32.18 IC95 [+23.59;+40.37] IC90 [+25.17;+39.06]
+ag12V1_rd(mult) - ensamble [como la sombra] | FRESCO (16sep-7oct): dMbits +28.23 IC95 [-6.96;+60.34] IC90 [-1.10;+56.28]
+ag12V1_rd(mult) - ensamble [como la sombra] | 2026_TODO (replica+fresco): dMbits +31.87 IC95 [+23.82;+40.54] IC90 [+25.16;+39.01]
+ag12V1_rd(mult) - ensamble_rd(mult) [base justa] | REPLICA_2026 (ene-16sep): dMbits +20.24 IC95 [+11.95;+28.51] IC90 [+13.25;+27.07]
+ag12V1_rd(mult) - ensamble_rd(mult) [base justa] | FRESCO (16sep-7oct): dMbits +23.15 IC95 [-5.81;+49.33] IC90 [-1.42;+45.16]
+ag12V1_rd(mult) - ensamble_rd(mult) [base justa] | 2026_TODO (replica+fresco): dMbits +20.47 IC95 [+12.61;+28.71] IC90 [+13.86;+27.57]
+
+-- Top-5 escalonado con regla cambio_rd (la jugada real): ag12 vs ensamble, pp/ficha
+REPLICA_2026 (ene-16sep)     n=2959 ens+regla +22.80 | ag12+regla +31.80 | delta +9.00 [+0.63;+17.21] IC90 [+2.15;+15.73] | efecto de la regla sobre ens +1.52 [+0.13;+2.91]
+FRESCO (16sep-7oct)          n=249 ens+regla +5.42 | ag12+regla +37.05 | delta +31.63 [+7.10;+55.67] IC90 [+11.36;+52.56] | efecto de la regla sobre ens +1.51 [+0.00;+4.67]
+2026_TODO (replica+fresco)   n=3208 ens+regla +21.45 | ag12+regla +32.21 | delta +10.75 [+3.04;+18.71] IC90 [+4.45;+17.37] | efecto de la regla sobre ens +1.52 [+0.23;+2.83]
+TRIM T1 ene-mar              n=1032 ens+regla +18.46 | ag12+regla +23.18 | delta +4.72 [-7.99;+17.08] IC90 [-5.81;+15.26] | efecto de la regla sobre ens +1.45 [-1.45;+4.00]
+TRIM T2 abr-jun              n=995 ens+regla +26.26 | ag12+regla +38.69 | delta +12.44 [-2.26;+26.73] IC90 [+0.38;+24.52] | efecto de la regla sobre ens +1.51 [-0.75;+3.77]
+TRIM T3 jul-sep16            n=932 ens+regla +23.93 | ag12+regla +33.99 | delta +10.06 [-5.66;+25.64] IC90 [-3.21;+23.34] | efecto de la regla sobre ens +1.61 [-0.40;+4.01]
+
+-- Regla RD en Top-15 (con - sin), Top-15 ponderado, pp/ficha
+REPLICA_2026 (ene-16sep)     regla en ens +2.47 [+1.59;+3.36] IC90 [+1.76;+3.22] | regla en ag12 +2.25 [+1.19;+3.26] | ag12+regla vs ens+regla +5.29 [+1.72;+8.85]
+FRESCO (16sep-7oct)          regla en ens +1.57 [+0.00;+3.46] IC90 [+0.49;+3.13] | regla en ag12 +2.10 [+0.00;+4.70] | ag12+regla vs ens+regla +19.91 [+8.15;+30.79]
+2026_TODO (replica+fresco)   regla en ens +2.40 [+1.59;+3.24] IC90 [+1.72;+3.10] | regla en ag12 +2.24 [+1.26;+3.18] | ag12+regla vs ens+regla +6.42 [+3.00;+9.88]
+TRIM T1 ene-mar              regla en ens +2.78 [+0.88;+4.55] IC90 [+1.26;+4.30] | regla en ag12 +0.63 [-1.26;+2.28] | ag12+regla vs ens+regla +5.56 [-0.13;+11.00]
+TRIM T2 abr-jun              regla en ens +2.10 [+0.92;+3.40] IC90 [+1.05;+3.15] | regla en ag12 +3.28 [+1.70;+4.98] | ag12+regla vs ens+regla +6.82 [+0.79;+13.11]
+TRIM T3 jul-sep16            regla en ens +2.52 [+1.11;+4.06] IC90 [+1.39;+3.78] | regla en ag12 +2.94 [+1.11;+4.76] | ag12+regla vs ens+regla +3.36 [-3.22;+10.22]
+
+=== 2. POTENCIA del tramo fresco (y de la replica) ===
+FRESCO (16sep-7oct): n=249 SE=14.26 sd_ef=225 EMD(IC90, 80%)=35.5 mbits; potencia +5:0.10 +10:0.17 +19,4:0.39
+REPLICA_2026 (ene-16sep): n=2959 SE=4.21 sd_ef=229 EMD(IC90, 80%)=10.5 mbits; potencia +5:0.32 +10:0.77 +19,4:1.00
+2026_TODO (replica+fresco): n=3208 SE=4.13 sd_ef=234 EMD(IC90, 80%)=10.3 mbits; potencia +5:0.33 +10:0.78 +19,4:1.00
+n necesario (IC90 unilateral 5 %, 80 % potencia, sd efectiva 234 ): {'5': 13540, '10': 3385, '15': 1505, '19.4': 900}
+
+=== 4. Prueba directa del mecanismo (O/E de repeticion de par, bajo las probabilidades del ENSAMBLE) ===
+REPLICA_2026 (ene-16sep)     T1 O/E 0.26 (z -3.6) | T2 O/E 0.63 (z -4.5) | T3 O/E 0.93 (z -1.7) | R1 O/E 0.51 (z -2.4) | R2 O/E 0.67 (z -4.0) | R3 O/E 0.98 (z -0.5)
+FRESCO (16sep-7oct)          T1 O/E 1.11 (z +0.1) | T2 O/E 0.26 (z -2.6) | T3 O/E 0.70 (z -2.1) | R1 O/E 0.00 (z -1.4) | R2 O/E 1.04 (z +0.2) | R3 O/E 0.75 (z -1.7)
+2026_TODO (replica+fresco)   T1 O/E 0.32 (z -3.5) | T2 O/E 0.60 (z -5.1) | T3 O/E 0.91 (z -2.2) | R1 O/E 0.47 (z -2.7) | R2 O/E 0.70 (z -3.8) | R3 O/E 0.96 (z -0.9)
+TRIM T1 ene-mar              T1 O/E 0.36 (z -1.9) | T2 O/E 0.49 (z -3.8) | T3 O/E 0.93 (z -0.9) | R1 O/E 0.34 (z -2.0) | R2 O/E 0.59 (z -3.0) | R3 O/E 1.09 (z +1.3)
+TRIM T2 abr-jun              T1 O/E 0.13 (z -2.5) | T2 O/E 0.72 (z -2.0) | T3 O/E 0.98 (z -0.3) | R1 O/E 0.64 (z -1.0) | R2 O/E 0.85 (z -1.0) | R3 O/E 0.86 (z -2.0)
+TRIM T3 jul-sep16            T1 O/E 0.28 (z -1.9) | T2 O/E 0.71 (z -1.9) | T3 O/E 0.87 (z -1.7) | R1 O/E 0.59 (z -1.1) | R2 O/E 0.56 (z -2.9) | R3 O/E 0.99 (z -0.2)
+
+=== PLACEBOS ===
+coeficientes de par T1..R3 (congelados): [-0.212, -0.555, -0.287, -0.289, -0.295, -0.052]
+REPLICA_2026 (ene-16sep): volteo de signo p(2 colas)=0.0000, p(uni +)=0.0000 | pares invertidos dMbits -17.24 [-24.84;-9.31] | pares barajados media +0.95 (sd 2.10, max +5.80)
+FRESCO (16sep-7oct): volteo de signo p(2 colas)=0.1381, p(uni +)=0.0695 | pares invertidos dMbits -48.33 [-80.23;-15.90] | pares barajados media -8.84 (sd 7.95, max +6.02)
+2026_TODO (replica+fresco): volteo de signo p(2 colas)=0.0000, p(uni +)=0.0000 | pares invertidos dMbits -19.66 [-27.42;-11.89] | pares barajados media +0.19 (sd 2.10, max +5.35)
+REPLICA_2026 (ene-16sep) regla RD Top-15 sobre ens: real +2.47 pp/ficha | RD barajado media -0.11 sd 0.54 p(uni) 0.0010
+REPLICA_2026 (ene-16sep) regla RD Top-15 sobre ag12V1: real +2.25 pp/ficha | RD barajado media -0.11 sd 0.55 p(uni) 0.0010
+FRESCO (16sep-7oct) regla RD Top-15 sobre ens: real +1.57 pp/ficha | RD barajado media +0.14 sd 1.61 p(uni) 0.1958
+FRESCO (16sep-7oct) regla RD Top-15 sobre ag12V1: real +2.10 pp/ficha | RD barajado media +1.09 sd 1.89 p(uni) 0.3357
+
+=== VEREDICTO segun PREREGISTRO.md ===
+fresco: dMbits +22.71 IC90 [-1.89;+44.71] -> (a) False; trimestres {'T1 ene-mar': 27.008951126982424, 'T2 abr-jun': 18.604406311913213, 'T3 jul-sep16': 14.01114491693881} -> (b) True; replica IC90 inferior +13.13
+VEREDICTO ag12 V1: NO CONCLUYENTE

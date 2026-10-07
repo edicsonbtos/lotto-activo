@@ -94,6 +94,63 @@ def marcador_cambio_rd(res, fichas):
     return m
 
 
+# ------------------------------------------------ regla RD extendida al Top-15
+# PREREGISTRO enjambre_2026-09-30/ag12_top15: PASA dev +0,97 pp/ficha, réplica 2026 +2,47 [+1,59; +3,36]
+# (herramientas/exploracion/ag12_2026_2026-10-07: fresco +1,57, frágil). Adoptada el 2026-10-07 con OK del
+# usuario y medida en vivo aparte. El Top-5 sale IDÉNTICO al de cambiar(): solo cambia del 6º al 16º.
+CAMBIO_RD15_DESDE = "2026-10-07"
+
+
+def cambiar15(orden, cod):
+    """Si `cod` está en el Top-15 se quita, los de abajo suben un puesto, el 16º entra 15º y `cod` pasa al 16º."""
+    r = IDX[cod]
+    if len(orden) < 16 or r not in orden[:15]:
+        return orden
+    return [x for x in orden[:15] if x != r] + [orden[15], r] + list(orden[16:])
+
+
+def cambio_rd15(orden, pf, ph):
+    """Como cambio_rd pero con la regla en el Top-15. info trae tope=5 o 15 según dónde estaba `cod`."""
+    nuevo, info = cambio_rd(orden, pf, ph)
+    if info is None or info["rd"] is None or len(orden) < 16:
+        return nuevo, info
+    cod = info["rd"]
+    n15 = cambiar15(orden, cod)
+    if n15 is orden:
+        return nuevo, info
+    puesto = orden.index(IDX[cod]) + 1
+    info.update(sale=cod, puesto=puesto, tope=5 if puesto <= 5 else 15,
+                entra=POS[orden[5] if puesto <= 5 else orden[15]])
+    return n15, info
+
+
+def marcador_cambio_rd15(res, fichas15):
+    """Top-15 ponderado con y sin la regla, sobre el mismo congelado. `fichas15`: fichas por puesto del ponderado.
+    Cuenta desde CAMBIO_RD15_DESDE; RD (h−1):30 sale antes de LA h:00, así que aplicarla al congelado no usa el futuro."""
+    try:
+        rd = _rd_por_slot()
+    except Exception:  # noqa: BLE001
+        return None
+    m = dict(desde=CAMBIO_RD15_DESDE, n=0, cambios=0, gano_rd=0, gano_16=0, sin=0, con=0)
+    for r in res:
+        orden = r.get("orden_completo")
+        if not orden or r["fecha"] < CAMBIO_RD15_DESDE or r["hora"] <= 0 or r["salio"] not in orden:
+            continue
+        cod = rd.get((r["fecha"], r["hora"] - 1))
+        if cod is None:
+            continue
+        m["n"] += 1
+        m["sin"] += PAGO * fichas15[orden.index(r["salio"]) + 1] - sum(fichas15)
+        nuevo = cambiar15(orden, cod)
+        if nuevo is not orden:
+            m["cambios"] += 1
+            m["gano_rd"] += r["salio"] == IDX[cod]
+            m["gano_16"] += r["salio"] == orden[15]
+        m["con"] += PAGO * fichas15[nuevo.index(r["salio"]) + 1] - sum(fichas15)
+    m["dif"] = m["con"] - m["sin"]
+    return m
+
+
 # ------------------------------------------------ pronósticos en sombra (motor_nuevo)
 # ag12 (pares consecutivos recientes) se guarda junto al congelado del ensamble,
 # pero NO se muestra ni se puntúa en el marcador principal: solo sirve para medirlo
@@ -171,6 +228,46 @@ def ic90_jornadas(pares):
     se = math.sqrt(sum((a[0] - media * a[1]) ** 2 for a in por.values()) * J / (J - 1)) / n
     return dict(n=n, jornadas=J, media=round(media, 2),
                 ic90=[round(media - 1.645 * se, 2), round(media + 1.645 * se, 2)])
+
+
+SOMBRA_AG12_N_DECIDE = 931              # PREREGISTRO ag12_top15, anexo 2026-09-30 (+ anexo 2026-10-07)
+SOMBRA_AG12_N_MAX = 3500                # si a 931 no concluye: seguir hasta aquí (efecto esperado <= +10 mbits)
+
+
+def decision_sombra(res, fichas):
+    """Lo que pide el criterio de ag12 y el marcador no daba: IC 90 % por jornadas de Δ(ag12 − ensamble)
+    en mbits y en Top-5 escalonado (pp por ficha), crudo y con la regla de cambio RD (lo que se juega).
+    Solo lectura: no altera nada guardado."""
+    try:
+        rd = _rd_por_slot()
+    except Exception:  # noqa: BLE001
+        rd = {}
+    sf = sum(fichas)
+    dm, dt, dtr = [], [], []
+    for r in res:
+        s = r.get("sombra"); sc = r.get("scores_sin_8am") or r.get("scores")
+        if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not sc:
+            continue
+        w = r["salio"]; f = r["fecha"]; h = r["hora"]
+        pe, pa = sc, s["ag12"]
+        dm.append((f, 1000 * math.log2((pa[w] / sum(pa)) / (pe[w] / sum(pe)))))
+        netos = []
+        cod = rd.get((f, h - 1)) if h > 0 else None
+        for p in (pe, pa):
+            orden = sorted(range(K), key=lambda i: (-p[i], i))
+            netos.append(100.0 * (PAGO * fichas[orden.index(w) + 1] - sf) / sf)
+            if cod is not None:
+                orden = cambiar15(orden, cod)
+            netos.append(100.0 * (PAGO * fichas[orden.index(w) + 1] - sf) / sf)
+        dt.append((f, netos[2] - netos[0]))             # ag12 − ensamble, sin regla
+        dtr.append((f, netos[3] - netos[1]))            # ag12 − ensamble, ambos con la regla RD
+    n = len(dm)
+    return {"desde": SOMBRA_DESDE, "n": n, "decide_con": SOMBRA_AG12_N_DECIDE, "hasta_si_no_concluye": SOMBRA_AG12_N_MAX,
+            "mbits_ag12_menos_ensamble": ic90_jornadas(dm),
+            "top5_pp_ficha_sin_regla": ic90_jornadas(dt),
+            "top5_pp_ficha_con_regla_rd": ic90_jornadas(dtr),
+            "regla": "PASA si Δ mbits > 0 con límite inferior IC90 > 0 y Top-5 pp/ficha no peor en más de 3 puntos; "
+                     "ver PREREGISTRO ag12_top15 (anexo 2026-10-07)"}
 
 
 def marcador_sombra(res, fichas):

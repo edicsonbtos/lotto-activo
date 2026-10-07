@@ -52,3 +52,18 @@ y exploratorio ag12 + regla Top-15. Sin veredicto propio.
 - σ por sorteo de Δ mbits en la 2.ª ciega = 238 (con bloques 229). N80 (efecto +19,4, α 5 % unilateral) = **931 sorteos**.
 - A ~12 sorteos con sombra por día desde 2026-09-26: **mirada decisoria única el 2026-12-14** (o el primer día con n ≥ 931
   en /api/sombra, lo que llegue después). Si el efecto real es +10 mbits harían falta ~3.500 (~10 meses).
+
+## Anexo 2026-10-07 (antes de que la sombra llegue a n = 931; no cambia el criterio de pasar)
+Motivo: auditoría independiente (auditoria_ag12_2026-10-07.md) y réplica 2026 (ag12_2026_2026-10-07/INFORME.md).
+- **Efecto esperado:** se planifica con **≤ +10 mbits**, no con +19,4. Los tramos son heterogéneos (sellada 2019-2023 −1,2;
+  ciega reciente +19,4; réplica 2026 +20,1; sombra en vivo hoy ≈ +0,5 con n = 135, error típico ~20).
+- **Potencia a n = 931:** 80 % si el efecto es +19,4; 36 % si +10; 16 % si +5. Lo más probable a 931 es "no concluyente".
+- **Si a n ≥ 931 el resultado es no concluyente** (IC90 de Δ mbits incluye 0 y el punto es > 0): se sigue la sombra hasta
+  **n = 3.500** (≈ 10 meses) con una sola mirada más; no se mira entre medias para decidir. Si a 3.500 sigue sin pasar
+  (límite inferior IC90 ≤ 0): ag12 se descarta. Freno por inutilidad (sin cambio): n ≥ 600 y Δ < −10 mbits.
+- **Qué NO justifica pasar ag12 a la jugada:** n < 931; el efecto por día de la semana (mié–vie no se replicó en 2026,
+  contraste −5,7 [−21,8; +10,5]); la réplica 2026 (no es prueba virgen).
+- **Cómo se mide:** `/api/sombra_decision` (IC90 por jornadas de Δ(ag12 − ensamble) en mbits y en Top-5 escalonado pp/ficha,
+  sin y con la regla de cambio RD). Solo lectura; no altera lo guardado.
+- Regla RD en el Top-15: adoptada en vivo el 2026-10-07 con OK del usuario; medida aparte en `/api/cambio_rd15`
+  (desde 2026-10-07). Evidencia: dev +0,97 pp/ficha; réplica 2026 +2,47 [+1,59; +3,36]; fresco +1,57 (frágil, 98 cambios).

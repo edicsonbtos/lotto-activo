@@ -75,3 +75,37 @@ def test_servidor_conserva_sus_nombres_y_da_lo_mismo(datos):
 
 def test_sombra_de_nunca_tumba_el_pronostico():
     assert experimentos.sombra_de(None, "2026-10-04", 3, None) is None
+
+
+def test_cambiar15_top5_identico_a_cambiar_y_mueve_6_a_15():
+    orden = list(range(38))
+    for cod in ("0", "00", "1", "2", "3"):                  # índices 0..4 = puestos 1..5
+        assert experimentos.cambiar15(orden, cod)[:5] == experimentos.cambiar(orden, cod)[:5]
+    n = experimentos.cambiar15(orden, experimentos.POS[9])  # índice 9 = puesto 10
+    assert n[:9] == orden[:9] and n[9:14] == orden[10:15] and n[14] == 15 and n[15] == 9 and n[16:] == orden[16:]
+    assert experimentos.cambiar15(orden, experimentos.POS[20]) is orden   # fuera del Top-15: sin cambio
+
+
+def test_cambio_rd15_marca_el_tope(datos):
+    d, rd = datos
+    o = [r for r in d["registros"] if r["hora"] == 3][0]["orden_completo"]
+    n, info = experimentos.cambio_rd15(o, "2026-09-29", 3)
+    cod = info["rd"]
+    assert sorted(n) == sorted(o) and n[:15] == experimentos.cambiar15(o, cod)[:15]
+    if "sale" in info:
+        assert info["tope"] == (5 if o.index(experimentos.IDX[cod]) < 5 else 15)
+
+
+def test_marcador_cambio_rd15_cuenta(datos):
+    d, _ = datos
+    res = servidor.resueltas(d)
+    m = experimentos.marcador_cambio_rd15(res, servidor.fichas_por_puesto(servidor.PONDERADO))
+    assert m["n"] > 0 and m["dif"] == m["con"] - m["sin"] and m["cambios"] <= m["n"]
+
+
+def test_decision_sombra_cuenta_y_trae_ics(datos):
+    d, _ = datos
+    m = experimentos.decision_sombra(servidor.resueltas(d), servidor.fichas_por_puesto())
+    assert m["n"] > 0 and m["decide_con"] == 931
+    for k in ("mbits_ag12_menos_ensamble", "top5_pp_ficha_sin_regla", "top5_pp_ficha_con_regla_rd"):
+        assert m[k]["n"] == m["n"] and m[k]["ic90"][0] <= m[k]["media"] <= m[k]["ic90"][1]

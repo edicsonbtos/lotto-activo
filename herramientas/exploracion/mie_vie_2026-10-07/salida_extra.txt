@@ -1,0 +1,8 @@
+mbits     mie-vie vs lun,mar,sab (sin dom)       +2.33 [-20.74; +26.71]
+mbits     mie vs lun,mar,jue,vie,sab            -31.27 [-61.15; -2.08]
+Top5 pp   mie-vie vs lun,mar,sab (sin dom)       -1.47 [-3.45; +0.50]
+Top5 pp   mie vs lun,mar,jue,vie,sab             -2.57 [-4.86; -0.20]
+Top15 pp  mie-vie vs lun,mar,sab (sin dom)       -0.53 [-2.97; +1.82]
+Top15 pp  mie vs lun,mar,jue,vie,sab             -2.23 [-5.36; +0.96]
+omnibus 7 dias con domingo: var entre medias 2240.7  p perm = 0.0003
+omnibus 7 dias SIN domingo: var entre medias 272.8  p perm = 0.2659

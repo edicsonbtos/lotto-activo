@@ -65,3 +65,10 @@ def test_guardar_json_es_atomico_y_respeta_indent(tmp_path):
     comun.guardar_json(ruta, {"a": 1}, indent=1)
     assert open(ruta, encoding="utf-8").read().startswith('{\n "a"')
     assert os.listdir(tmp_path) == ["x.json"]                           # sin .tmp huérfano
+
+
+def test_respaldo_zip_solo_incluye_lo_que_existe(tmp_path):
+    import io, zipfile
+    (tmp_path / "a.txt").write_text("hola", encoding="utf-8")
+    z = zipfile.ZipFile(io.BytesIO(comun.respaldo_zip(str(tmp_path), ["a.txt", "no_existe.json"])))
+    assert z.namelist() == ["a.txt"] and z.read("a.txt") == b"hola"

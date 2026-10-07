@@ -74,3 +74,15 @@ def compartir(juego, animales, anti=(), cuando=None):
             f'{op_anti}</select>'
             '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
             '<button type="button" class="sec">Compartir</button></div>')
+
+
+def respaldo_zip(carpeta, archivos):
+    """Zip en memoria con los archivos de datos vivos que existan en `carpeta` (el marcador y los historiales)."""
+    import io as _io, zipfile
+    buf = _io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for nombre in archivos:
+            ruta = os.path.join(carpeta, nombre)
+            if os.path.isfile(ruta):
+                z.write(ruta, nombre)
+    return buf.getvalue()

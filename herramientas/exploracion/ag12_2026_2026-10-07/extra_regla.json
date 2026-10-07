@@ -1,0 +1,71 @@
+{
+ "REPLICA_2026 (ene-16sep)": {
+  "n": 2959,
+  "con_rd": 2710,
+  "cambios": 1067,
+  "gano_el_de_rd": 9,
+  "gano_el_16": 53,
+  "flip_regla_ens": {
+   "p_dos_colas": 0.0,
+   "p_uni_pos": 0.0
+  },
+  "flip_regla_ag12": {
+   "p_dos_colas": 0.0002,
+   "p_uni_pos": 0.0001
+  },
+  "flip_t5r_ag12_vs_ens": {
+   "p_dos_colas": 0.0326,
+   "p_uni_pos": 0.0161
+  },
+  "flip_mbits_ag12_rd_vs_ens_rd": {
+   "p_dos_colas": 0.0,
+   "p_uni_pos": 0.0
+  }
+ },
+ "FRESCO (16sep-7oct)": {
+  "n": 249,
+  "con_rd": 228,
+  "cambios": 98,
+  "gano_el_de_rd": 1,
+  "gano_el_16": 3,
+  "flip_regla_ens": {
+   "p_dos_colas": 0.2431,
+   "p_uni_pos": 0.1245
+  },
+  "flip_regla_ag12": {
+   "p_dos_colas": 0.2482,
+   "p_uni_pos": 0.1291
+  },
+  "flip_t5r_ag12_vs_ens": {
+   "p_dos_colas": 0.0324,
+   "p_uni_pos": 0.0172
+  },
+  "flip_mbits_ag12_rd_vs_ens_rd": {
+   "p_dos_colas": 0.131,
+   "p_uni_pos": 0.0665
+  }
+ },
+ "2026_TODO (replica+fresco)": {
+  "n": 3208,
+  "con_rd": 2938,
+  "cambios": 1165,
+  "gano_el_de_rd": 10,
+  "gano_el_16": 56,
+  "flip_regla_ens": {
+   "p_dos_colas": 0.0,
+   "p_uni_pos": 0.0
+  },
+  "flip_regla_ag12": {
+   "p_dos_colas": 0.0,
+   "p_uni_pos": 0.0
+  },
+  "flip_t5r_ag12_vs_ens": {
+   "p_dos_colas": 0.0089,
+   "p_uni_pos": 0.0038
+  },
+  "flip_mbits_ag12_rd_vs_ens_rd": {
+   "p_dos_colas": 0.0,
+   "p_uni_pos": 0.0
+  }
+ }
+}

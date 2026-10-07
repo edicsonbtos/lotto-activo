@@ -10,7 +10,7 @@
 
 Sin numpy/scipy funciona con el modelo antiguo (solo librería estándar).
 """
-import hashlib, os, sys, json, math, webbrowser, threading, subprocess, time, html
+import hashlib, hmac, os, sys, json, math, webbrowser, threading, subprocess, time, html
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from datetime import date, datetime, timedelta
@@ -964,6 +964,7 @@ CAMBIO_RD_DESDE = experimentos.CAMBIO_RD_DESDE
 SOMBRA_DESDE = experimentos.SOMBRA_DESDE
 SOMBRA_EXP_DESDE = experimentos.SOMBRA_EXP_DESDE
 cambio_rd = experimentos.cambio_rd
+cambio_rd15 = experimentos.cambio_rd15
 _cambiar = experimentos.cambiar
 sombra_de = experimentos.sombra_de
 _con_rd = experimentos.con_rd
@@ -976,6 +977,12 @@ _exposicion = experimentos.exposicion
 def marcador_cambio_rd(d):
     return experimentos.marcador_cambio_rd(resueltas(d), fichas_por_puesto())
 
+def marcador_cambio_rd15(d):
+    return experimentos.marcador_cambio_rd15(resueltas(d), fichas_por_puesto(PONDERADO))
+
+def decision_sombra(d):
+    return experimentos.decision_sombra(resueltas(d), fichas_por_puesto())
+
 def marcador_sombra(d):
     return experimentos.marcador_sombra(resueltas(d), fichas_por_puesto())
 
@@ -984,13 +991,13 @@ def nota_cambio_rd(info):
         return ""
     if info["rd"] is None:
         return (f'<p class="note">RD de las {info["hora_rd"]} aún no está anotado: si el animal que salga ahí '
-                'está en este Top-5, se cambia por el 6º al recargar.</p>')
+                'está en este Top-15, se cambia al recargar.</p>')
     if "sale" not in info:
         return (f'<p class="note">RD de las {info["hora_rd"]}: '
-                f'<b>{esc(info["rd"])} {esc(ANIM[info["rd"]].title())}</b> — no está en el Top-5, sin cambio.</p>')
+                f'<b>{esc(info["rd"])} {esc(ANIM[info["rd"]].title())}</b> — no está en el Top-15, sin cambio.</p>')
     return (f'<div class="tip"><b>Cambio por RD:</b> {esc(info["sale"])} {esc(ANIM[info["sale"]].title())} '
             f'salió en RD a las {info["hora_rd"]} → sale del {info["puesto"]}º, los de abajo suben un puesto y entra '
-            f'<b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b> de 5º. Lotto Activo casi nunca repite lo '
+            f'<b>{esc(info["entra"])} {esc(ANIM[info["entra"]].title())}</b> de {info.get("tope", 5)}º. Lotto Activo casi nunca repite lo '
             'que RD sacó media hora antes (prueba 2026-09-23: +1,4 puntos por ficha, sin confirmar aún).</div>')
 
 def html_banca(e, banca=None):
@@ -1005,7 +1012,7 @@ def html_banca(e, banca=None):
         import gestion_banca as GB
         p = GB.plan_sorteo(banca)
         orden = e.get("orden") or []
-        orden, _ = cambio_rd(orden, e["pf"], e["ph"])
+        orden, _ = cambio_rd15(orden, e["pf"], e["ph"])
         if p.get("solo_top3") or p["apostar"]:
             montos = ([p["solo_top3"]] * 3 + [0, 0]) if p.get("solo_top3") else \
                      [f * p["ficha"] for f in GB.FICHAS]
@@ -1072,7 +1079,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     orden = e["orden"]
     if pend is not None:
         orden = pend.get("orden_completo") or pend["top3"]
-    orden, info_rd = cambio_rd(orden, e["pf"], e["ph"])
+    orden, info_rd = cambio_rd15(orden, e["pf"], e["ph"])
     esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
     def fila(r, i):
         return fila_jugada(r, POS[i], ANIM[POS[i]].title(),
@@ -1328,6 +1335,12 @@ def html_economia(d):
                   f'<span class="dv"><b>{c["dif"]:+,} fichas</b> frente a no cambiar'
                   f'<small>desde {esc(fecha_corta(c["desde"]))}: {c["n"]} sorteos, cambió en {c["cambios"]} · '
                   f'ganó el de RD {c["gano_rd"]}, el 6º que entró {c["gano_6"]}</small></span></div>')
+    c15 = marcador_cambio_rd15(d)
+    if c15 and c15["n"]:
+        filas += (f'<div class="dist"><span class="dl">Regla de cambio RD (Top-15 ponderado)</span>'
+                  f'<span class="dv"><b>{c15["dif"]:+,} fichas</b> frente a no cambiar'
+                  f'<small>desde {esc(fecha_corta(c15["desde"]))}: {c15["n"]} sorteos, cambió en {c15["cambios"]} · '
+                  f'ganó el de RD {c15["gano_rd"]}, el 16º que entró {c15["gano_16"]}</small></span></div>')
     return ('<div style="margin-top:18px"><div class="hh"><h2>Cada forma de jugar, con plata</h2>'
             f'<span>{ec[0]["n"]} sorteos con orden guardado</span></div>{filas}'
             '<p class="note">Regla de cambio RD: en la prueba (377 cambios) ganó el de RD 6 veces y el 6º 14. '
@@ -2013,6 +2026,8 @@ RUTAS_JSON = {
     "/api/mesa_stats": (lambda q: _api(mesa_stats), JSON_UTF8),
     "/api/rdint": (_ruta_rdint, JSON_UTF8),
     "/api/cambio_rd": (lambda q: _api(lambda: marcador_cambio_rd(log_cargar())), JSON_UTF8),
+    "/api/sombra_decision": (lambda q: _api(lambda: decision_sombra(log_cargar())), JSON_UTF8),
+    "/api/cambio_rd15": (lambda q: _api(lambda: marcador_cambio_rd15(log_cargar())), JSON_UTF8),
     "/api/salud": (lambda q: _api(lambda: salud_modelo(log_cargar())), JSON_UTF8),
     "/api/sombra": (lambda q: _api(lambda: marcador_sombra(log_cargar())), JSON_UTF8),
     "/api/datos_publicados": (_ruta_datos_publicados, JSON_UTF8),
@@ -2125,8 +2140,28 @@ class H(BaseHTTPRequestHandler):
         elif ruta in RUTAS_JSON:
             fn, tipo = RUTAS_JSON[ruta]
             self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
+        elif ruta == "/respaldo.zip":
+            self._respaldo(q)
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
+
+    def _respaldo(self, q):
+        """Descarga de los datos vivos de /data. Solo con RESPALDO_CLAVE definida en el entorno y ?clave= igual."""
+        clave = os.environ.get("RESPALDO_CLAVE", "")
+        if not clave or not hmac.compare_digest(clave, (q.get("clave") or [""])[0]):
+            return self._send("No encontrado", "text/plain; charset=utf-8", 404)
+        import rdint_vivo
+        datos = comun.respaldo_zip(DATOS, [os.path.basename(x) for x in (HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)]
+                                   + ["pesos_ensamble.json"])
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Content-Disposition", 'attachment; filename="lotto_respaldo_%s.zip"' % date.today().isoformat())
+            self.send_header("Content-Length", str(len(datos)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers(); self.wfile.write(datos)
+        except OSError:
+            pass
 
     def _post(self):
         try:

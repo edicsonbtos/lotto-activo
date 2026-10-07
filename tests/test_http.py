@@ -60,7 +60,7 @@ def test_registrar_numero_invalido_redirige_y_avisa(web):
 
 def test_tablas_de_rutas():
     assert set(servidor.RUTAS_JSON) == {"/tareas.json", "/listo.json", "/api/mesa", "/api/mesa_stats",
-                                        "/api/rdint", "/api/cambio_rd", "/api/sombra", "/api/salud",
+                                        "/api/rdint", "/api/cambio_rd", "/api/cambio_rd15", "/api/sombra_decision", "/api/sombra", "/api/salud",
                                         "/api/datos_publicados"}
     assert set(servidor.ACCIONES_POST) == {"/auto", "/deshacer", "/registrar", "/", "/tripleta/registrar"}
     for fn, tipo in servidor.RUTAS_JSON.values():
@@ -82,6 +82,8 @@ def test_accion_registrar_invalida_avisa_y_vuelve_arriba():
     ("/api/mesa?offset=2", JSON_UTF8),
     ("/api/mesa_stats", JSON_UTF8),
     ("/api/cambio_rd", JSON_UTF8),
+    ("/api/cambio_rd15", JSON_UTF8),
+    ("/api/sombra_decision", JSON_UTF8),
     ("/api/sombra", JSON_UTF8),
     ("/api/salud", JSON_UTF8),
     ("/api/rdint", JSON_UTF8),
@@ -99,3 +101,13 @@ def test_pagina_principal_y_pestanas(web):
         st, ct, _, cuerpo = pedir(web, "GET", ruta)
         assert (st, ct) == (200, "text/html; charset=utf-8"), ruta
         assert "<html" in cuerpo
+
+
+@pytest.mark.skipif(not HAY_DATOS, reason="falta historial.txt")
+def test_respaldo_cerrado_sin_clave_y_zip_con_clave(web, monkeypatch):
+    import io, zipfile
+    monkeypatch.delenv("RESPALDO_CLAVE", raising=False)
+    assert pedir(web, "GET", "/respaldo.zip?clave=x")[0] == 404
+    monkeypatch.setenv("RESPALDO_CLAVE", "secreta")
+    assert pedir(web, "GET", "/respaldo.zip")[0] == 404
+    assert pedir(web, "GET", "/respaldo.zip?clave=mala")[0] == 404
