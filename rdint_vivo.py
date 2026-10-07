@@ -34,13 +34,10 @@ LA_HIST = os.path.join(DATOS, "historial.txt")
 SEMILLA = os.path.join(RUTA, "datos_multiloteria", "rdint_hist.csv")
 COEF = os.path.join(HERR, "rdint", "coef_b1.json")
 JUEGO_RD = "2"
-PAGO = 30
 DESDE, R = 2000, 250                      # fronteras de reajuste de B0, como en la evaluación
 INTERVALO = 60                            # segundos entre pasadas del bucle
 
-POS = ["0", "00"] + [str(i) for i in range(1, 37)]
-IDX = {p: i for i, p in enumerate(POS)}
-K = len(POS)
+from comun import PAGO, POS, IDX, K
 NOMBRE = {"0": "Delfín", "00": "Ballena", "1": "Carnero", "2": "Toro", "3": "Ciempiés", "4": "Alacrán",
           "5": "León", "6": "Rana", "7": "Perico", "8": "Ratón", "9": "Águila", "10": "Tigre",
           "11": "Gato", "12": "Caballo", "13": "Mono", "14": "Paloma", "15": "Zorro", "16": "Oso",

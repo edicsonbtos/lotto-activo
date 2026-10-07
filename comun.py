@@ -10,6 +10,12 @@ import json
 import os
 
 
+PAGO = 30                                   # cada ficha acertada paga 30
+POS = ["0", "00"] + [str(i) for i in range(1, 37)]
+IDX = {p: i for i, p in enumerate(POS)}
+K = len(POS)
+
+
 def esc(s):
     return _html.escape(str(s))
 
