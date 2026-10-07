@@ -42,6 +42,8 @@ Estas ideas ya se probaron y quedaron cerradas. No se repiten sin una razón nue
 
 - **Enjambre "motor 2" (2026-10-06, `investigacion/2026-10-06/motor2/INFORME.md`, tramos recientes, arnés común `arnes.py`): ninguna mejora EN PLATA sobre la jugada en vivo.** M4 (LightGBM sobre PROD) da +19 mbits contra PROD, pero contra PROD×RD unos +9 y en plata +0,2 fichas por sorteo [−0,2; +0,6]; además no es desplegable (RD llega después del congelado). M6: "pares que se evitan" es real (+2-4 mbits), solo sombra. M1/M3: detectan solos el día relajado, pero no mejoran. M2: 0/48 fugas de calendario. **PRUEBA26 (jul-oct-26) ya se usó 5+ veces: no se vuelve a usar para elegir.**
 
+- **Motor nuevo S2 desde cero (2026-10-06, `investigacion/2026-10-06/motor0/` y `ciego/`): NO CONFIRMADO en las pruebas ciegas.** LightGBM con un experto normal y otro relajado. En 2026 da +12 mbits y +2,4 pp de Top-15. En el tramo antiguo, la mezcla con PROD da +7,4 [+1,5; +13,4] (pasa justo), pero en plata es +1,0 pp [−4,5; +6,4]. En RD Internacional −4,2. Batería Turing: sin fuga, pero con un hueco de 1 mes la ventaja cae un 74 % y un rasgo de ruido entra en el puesto 6 de 38 (sobreajuste). Selector "cuándo jugar el Top-15" (S1): no mejora; la mañana no predice la tarde. El sellado 2019-23 NO está en este servidor (falta `motor_nuevo/sellado/sellado_la.txt`).
+
 Estructura real conocida: el operador **evita repetir el animal el mismo día** y **recicla con 1 a 2,5 días de hueco**. El ensamble ya lo captura. Desde 2026-10-01 se sabe además que **esquiva el número de la fecha (hoy y mañana) y el de la hora**. El ensamble NO lo captura; está pendiente de sombra en vivo.
 
 ## Cómo medir
