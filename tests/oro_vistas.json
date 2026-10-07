@@ -1,0 +1,21 @@
+{
+ "fx_0": "<span class=\"fx z\" aria-label=\"sin fichas\">–</span>",
+ "fx_1": "<span class=\"fx a\" aria-label=\"1 ficha\">1</span>",
+ "fx_3": "<span class=\"fx b\" aria-label=\"3 fichas\">3</span>",
+ "cols": "<li class=\"cols\" aria-hidden=\"true\"><span></span><span></span><span>Animal</span><span>Top-5</span><span>Ponde&shy;rado</span></li>",
+ "nav_la_0": "<nav class=\"histnav\" aria-label=\"Sorteos anteriores\"><a href=\"/?tab=la&amp;atras=1\">‹ Anterior</a><span class=\"pos\">próximo sorteo</span><span class=\"off\">Siguiente ›</span></nav>",
+ "nav_la_2": "<nav class=\"histnav\" aria-label=\"Sorteos anteriores\"><a href=\"/?tab=la&amp;atras=3\">‹ Anterior</a><span class=\"pos\">hace 2 sorteos</span><a href=\"/?tab=la&amp;atras=1\">Siguiente ›</a></nav>",
+ "nav_la_5": "<nav class=\"histnav\" aria-label=\"Sorteos anteriores\"><span class=\"off\">‹ Anterior</span><span class=\"pos\">hace 5 sorteos</span><a href=\"/?tab=la&amp;atras=4\">Siguiente ›</a></nav>",
+ "nav_rd_1": "<nav class=\"histnav\" aria-label=\"Sorteos anteriores\"><a href=\"/?tab=rd&amp;atras=2\">‹ Anterior</a><span class=\"pos\">hace 1 sorteo</span><a href=\"/?tab=rd\">Siguiente ›</a></nav>",
+ "fila_la": "<li><span class=\"rk\">3</span><span class=\"n\">7</span><span class=\"nm\">Perico<small>12,34 % · hace 5 sorteos</small></span><span class=\"fx a\" aria-label=\"2 fichas\">2</span><span class=\"fx b\" aria-label=\"1 ficha\">1</span></li>",
+ "fila_rd": "<li><span class=\"rk\">3</span><span class=\"n\">7</span><span class=\"nm\">Perico<small>12,35 %</small></span><span class=\"fx a\" aria-label=\"2 fichas\">2</span><span class=\"fx b\" aria-label=\"3 fichas\">3</span></li>",
+ "sec": "<details class=\"sec\" id=\"x\" data-rec><summary><span class=\"st\"><h2>Tit</h2><span class=\"meta\">m<eta></span></span><span class=\"chev\" aria-hidden=\"true\"></span></summary><div class=\"cuerpo\"><p>c</p></div></details>",
+ "sec_abierta": "<details class=\"sec\" id=\"x\" data-rec open><summary><span class=\"st\"><h2>Tit</h2><span class=\"meta\">m</span></span><span class=\"chev\" aria-hidden=\"true\"></span></summary><div class=\"cuerpo\">c</div></details>",
+ "sec_rd": "<details class=\"sec\" id=\"x\" data-rec><summary><span class=\"st\"><h2>Tit</h2><span class=\"meta\">m&lt;eta&gt;</span></span><span class=\"chev\" aria-hidden=\"true\"></span></summary><div class=\"cuerpo\"><p>c</p></div></details>",
+ "compartir_la": "<div class=\"compartir\" data-t=\"Lotto &quot;X&quot;\" data-f=\"hoy\" data-a=\"1 A|2 B\" data-x=\"3 C\"><select aria-label=\"Qué compartir\"><option value=\"5\">Top 5</option><option value=\"15\">Top 15</option><option value=\"anti\">Anti Top 15</option><option value=\"ambos\">Top 15 + Anti 15</option></select><input type=\"text\" inputmode=\"decimal\" placeholder=\"$ por animal\" aria-label=\"Monto por animal\"><button type=\"button\" class=\"sec\">Compartir</button></div>",
+ "compartir_la_sin": "<div class=\"compartir\" data-t=\"L\" data-f=\"hoy\" data-a=\"1 A\" data-x=\"\"><select aria-label=\"Qué compartir\"><option value=\"5\">Top 5</option><option value=\"15\">Top 15</option></select><input type=\"text\" inputmode=\"decimal\" placeholder=\"$ por animal\" aria-label=\"Monto por animal\"><button type=\"button\" class=\"sec\">Compartir</button></div>",
+ "compartir_rd": "<div class=\"compartir\" data-t=\"RD &quot;X&quot;\" data-a=\"1 A|2 B\" data-x=\"3 C\"><select aria-label=\"Qué compartir\"><option value=\"5\">Top 5</option><option value=\"15\">Top 15</option><option value=\"anti\">Anti Top 15</option><option value=\"ambos\">Top 15 + Anti 15</option></select><input type=\"text\" inputmode=\"decimal\" placeholder=\"$ por animal\" aria-label=\"Monto por animal\"><button type=\"button\" class=\"sec\">Compartir</button></div>",
+ "compartir_rd_sin": "<div class=\"compartir\" data-t=\"R\" data-a=\"1 A\" data-x=\"\"><select aria-label=\"Qué compartir\"><option value=\"5\">Top 5</option><option value=\"15\">Top 15</option></select><input type=\"text\" inputmode=\"decimal\" placeholder=\"$ por animal\" aria-label=\"Monto por animal\"><button type=\"button\" class=\"sec\">Compartir</button></div>",
+ "esc": "&lt;a&amp;&#x27;&quot;&gt;",
+ "esc_rd": "&lt;a&amp;&#x27;&quot;&gt;"
+}

@@ -19,7 +19,7 @@ CODIGOS = list(rdint_vivo.NOMBRE)
 @pytest.mark.skipif(shutil.which("node") is None, reason="node no está instalado")
 def test_js_compartir_es_sintaxis_valida():
     """Caso del bug 65e7b3c: saltos de línea reales dentro de cadenas JS."""
-    js = re.sub(r"</?script>", "", servidor.JS_COMPARTIR)
+    js = re.sub(r"</?script>", "", servidor.JS.replace("%CALC%", "false"))
     with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf8") as f:
         f.write(js)
     try:
@@ -30,7 +30,9 @@ def test_js_compartir_es_sintaxis_valida():
 
 
 def test_js_compartir_usa_escapes_no_saltos_dentro_de_cadenas():
-    for linea in servidor.JS_COMPARTIR.splitlines():
+    # solo el tramo de Compartir (el resto del JS usa comillas dentro de regex/HTML)
+    js = servidor.JS[servidor.JS.rindex("<script>"):]  # último bloque = Compartir
+    for linea in js.splitlines():
         assert linea.count("'") % 2 == 0, "cadena JS partida en varias líneas: %r" % linea
 
 

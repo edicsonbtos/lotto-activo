@@ -32,13 +32,14 @@ HIST = os.path.join(DATOS, "historial.txt")
 LOG  = os.path.join(DATOS, "predicciones.json")
 HERR = os.path.join(RUTA, "herramientas")
 PUERTO = 8000  # local; en Railway se usa PORT
-PAGO = 30
 PAGO_TRIPLETA = 45
 VENTANA = 12
 
-POS = ["0", "00"] + [str(i) for i in range(1, 37)]
-IDX = {p: i for i, p in enumerate(POS)}
-K = len(POS); P0 = 1.0 / K
+from comun import (PAGO, POS, IDX, K, esc, fx as _fx, fila as fila_jugada, COLS as COLS_JUGADA,
+                   nav as html_nav_hist, sec, guardar_json)
+import comun
+import experimentos
+P0 = 1.0 / K
 ANIM = {"0":"DELFÍN","00":"BALLENA","1":"CARNERO","2":"TORO","3":"CIEMPIÉS","4":"ALACRÁN",
  "5":"LEÓN","6":"RANA","7":"PERICO","8":"RATÓN","9":"ÁGUILA","10":"TIGRE","11":"GATO",
  "12":"CABALLO","13":"MONO","14":"PALOMA","15":"ZORRO","16":"OSO","17":"PAVO","18":"BURRO",
@@ -117,9 +118,7 @@ def log_cargar():
     return d
 
 def log_guardar(d):
-    with open(LOG + ".tmp", "w", encoding="utf-8") as f:
-        json.dump(d, f, ensure_ascii=False, indent=1)
-    os.replace(LOG + ".tmp", LOG)
+    guardar_json(LOG, d, indent=1)
 
 CORRECCION_HIST = os.path.join(HERR, "correccion_historial_2026-09-29.json")
 
@@ -868,9 +867,6 @@ def auto_estado():
     return dict(base, txt=f"automático · revisado {hora} · {AUTO['mensaje']}", clase="on")
 
 # ------------------------------------------------------------------ página
-def esc(s):
-    return html.escape(str(s))
-
 def num(x, dec=1):
     """Número con coma decimal, como se escribe en español."""
     return f"{x:.{dec}f}".replace(".", ",")
@@ -882,305 +878,12 @@ def plural(n, singular, plural_):
 def chip(i, extra=""):
     return f'<span class="chip {extra}"><b>{POS[i]}</b> {ANIM[POS[i]].title()}</span>'
 
-CSS = """
-/* Sistema visual: tokens -> componentes. Claro y oscuro con el MISMO
-   contraste de lectura (texto secundario >= 4.5:1 sobre su fondo).
-   Estructura: cabecera fija con 2 pestañas; en cada pestaña la jugada y el
-   registro arriba, y lo demás en desplegables (details.sec). */
-:root{
-  color-scheme:light dark;
-  --bg:#f4f2ed; --bg-2:#ebe8e0; --card:#fff;
-  --line:#e3dfd6; --line-soft:#efece5; --pista:#efece4;
-  --ink:#17191d; --muted:#5b5e64; --soft:#6d7077;
-  --brand:#b5621b; --brand-ink:#8a4a13; --brand-soft:#fbf0e3; --brand-line:#efd3b4;
-  --ok:#1c6a49; --ok-soft:#e4f2ec; --bad:#96382a; --bad-soft:#f8e9e5;
-  --r1:8px; --r2:14px; --pil:999px;
-  --sh1:0 1px 2px rgba(23,25,29,.05);
-  --sh2:0 1px 2px rgba(23,25,29,.04),0 6px 18px rgba(23,25,29,.06);
-  --gap:14px; --cab:64px;
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --bg:#131419; --bg-2:#1b1d23; --card:#1b1d23;
-    --line:#2c2f38; --line-soft:#24272f; --pista:#262932;
-    --ink:#ecebe7; --muted:#a8acb4; --soft:#959aa3;
-    --brand:#e08b3f; --brand-ink:#f0a75f; --brand-soft:#2c2118; --brand-line:#5a3a1e;
-    --ok:#5fc39a; --ok-soft:#16261f; --bad:#e78a76; --bad-soft:#2b1b17;
-    --sh1:0 1px 2px rgba(0,0,0,.3);
-    --sh2:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35);
-  }
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--cab) + 12px);accent-color:var(--brand);
-  scrollbar-color:var(--line) transparent}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:16px/1.5 "Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
-::selection{background:var(--brand-soft);color:var(--ink)}
-input{caret-color:var(--brand)}
-:where(a,button,input,select,summary):focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:6px}
-.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-[hidden]{display:none !important}
-.w{max-width:1040px;margin:0 auto;padding:16px 16px 40px}
+def _estatico(nombre):
+    with open(os.path.join(RUTA, "static", nombre), encoding="utf-8") as f:   # modo texto: CRLF de un checkout en Windows -> LF
+        return f.read()
 
-/* ---------- cabecera fija con pestañas ---------- */
-.cab{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
-.cab-in{max-width:1040px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:14px}
-.marca{font-weight:700;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
-.marca small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
-.tabs{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg-2);
-  border-radius:12px;max-width:460px;margin-left:auto}
-.tabs a{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:5px 12px;border-radius:9px;
-  text-decoration:none;color:var(--muted);line-height:1.2;transition:background .2s,color .2s,box-shadow .2s}
-.tabs a b{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
-.tabs a small{font-size:11.5px;font-variant-numeric:tabular-nums}
-.tabs a:hover{color:var(--ink)}
-.tabs a[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:var(--sh2)}
-.tabs a[aria-selected=true] small{color:var(--brand-ink)}
-@media (max-width:640px){.marca{display:none}.tabs{max-width:none;margin:0}}
-
-/* ---------- tarjetas ---------- */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px;
-  box-shadow:var(--sh1);min-width:0;overflow-wrap:break-word}
-.duo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:var(--gap);align-items:start;
-  margin-bottom:var(--gap)}
-.duo>*{min-width:0}
-.duo .reg{position:sticky;top:calc(var(--cab) + 14px)}
-@media (max-width:820px){.duo{grid-template-columns:1fr}.duo .reg{position:static}}
-.pila{display:grid;gap:10px}
-
-/* ---------- la jugada ---------- */
-.jh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
-.jh h2{margin:0;font-size:clamp(21px,1rem + 1.2vw,26px);line-height:1.15;letter-spacing:-.02em;font-weight:750}
-.jh h2 span{color:var(--brand-ink);white-space:nowrap}
-.ult{margin:0 0 14px;font-size:13.5px;color:var(--muted)}
-.ult b{color:var(--ink);font-weight:600}
-.pill{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:12px;padding:5px 11px;border-radius:var(--pil);
-  background:var(--ok-soft);color:var(--ok);font-weight:650;line-height:1.2;white-space:nowrap}
-.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
-.pill.warn{background:var(--brand-soft);color:var(--brand-ink)}
-.pill.warn::before{animation:late 1.4s ease-in-out infinite}
-.pill.gris{background:var(--bg-2);color:var(--muted)}
-@keyframes late{50%{opacity:.25}}
-.jug{list-style:none;margin:0;padding:0}
-.jug li{display:grid;grid-template-columns:18px 50px minmax(0,1fr) 38px 38px;align-items:center;gap:8px;
-  padding:8px 0;border-top:1px solid var(--line-soft)}
-@media (max-width:640px){.jug li{padding:6px 0}.jug .n{font-size:25px}.jh h2{font-size:20px}.card{padding:16px}
-  .leyenda{margin-top:10px}}
-.jug li.cols{border-top:none;padding:0 0 6px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
-.jug li.cols span:nth-child(n+4){text-align:center;line-height:1.15}
-.jug.anti li{grid-template-columns:24px 50px minmax(0,1fr)}
-.jug .rk{font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums;text-align:right}
-.jug .n{font-size:28px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
-.jug .nm{font-size:16px;font-weight:600;letter-spacing:-.01em;min-width:0}
-.jug .nm small{display:block;font-size:12px;font-weight:400;color:var(--muted);font-variant-numeric:tabular-nums}
-.fx{justify-self:center;display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 6px;border-radius:8px;
-  font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.fx.a{background:var(--brand);color:#fff}
-@media (prefers-color-scheme:dark){.fx.a{color:#1b1206}}
-.fx.b{background:var(--bg-2);color:var(--ink)}
-.fx.z{color:var(--soft);font-weight:400}
-.jug.resto li{grid-template-columns:18px 50px minmax(0,1fr) 38px 38px}
-.jug.resto .n{font-size:22px;color:var(--muted)}
-.jug.resto .nm{font-size:15px;font-weight:500}
-details.mas{margin-top:2px;border-top:1px solid var(--line-soft)}
-details.mas>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:44px;
-  font-size:13.5px;font-weight:600;color:var(--brand-ink)}
-details.mas>summary::-webkit-details-marker{display:none}
-details.mas[open]>summary{border-bottom:1px solid var(--line-soft)}
-.leyenda{margin:14px 0 0;display:grid;gap:6px;font-size:13px;color:var(--muted)}
-.leyenda p{margin:0}
-.leyenda b{color:var(--ink)}
-.leyenda i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
-.leyenda i.a{background:var(--brand)}.leyenda i.b{background:var(--bg-2);box-shadow:inset 0 0 0 1px var(--line)}
-
-.compartir{display:flex;gap:8px;margin-top:12px}
-.compartir select{padding:0 10px;font:inherit;font-size:15px;color:var(--ink);background:var(--bg-2);
-  border:1px solid var(--line);border-radius:var(--r1)}
-.compartir input[type=text]{font-size:16px;padding:10px 12px}
-
-/* ---------- chevron (dibujado, no un glifo) ---------- */
-.chev{flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
-  transform:translateY(-2px) rotate(45deg);transition:transform .25s cubic-bezier(.22,1,.36,1)}
-details[open]>summary .chev{transform:translateY(2px) rotate(-135deg)}
-
-/* ---------- registrar ---------- */
-.reg h2{margin:0;font-size:17px;letter-spacing:-.01em}
-.reg .rh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.reg p{margin:0 0 12px;font-size:13px;color:var(--muted)}
-form.anotar{display:flex;gap:8px}
-input[type=text]{flex:1;min-width:0;padding:12px 14px;font-size:20px;font-weight:600;color:var(--ink);border:1px solid var(--line);
-  border-radius:var(--r1);background:var(--bg-2);font-variant-numeric:tabular-nums;font-family:inherit}
-input[type=text]::placeholder{color:var(--soft);font-weight:400;font-size:16px}
-input[type=text]:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
-button{min-height:44px;padding:10px 18px;font:inherit;font-size:15px;font-weight:650;border:1px solid transparent;border-radius:var(--r1);
-  background:var(--ink);color:var(--card);cursor:pointer;transition:opacity .15s,background .15s,border-color .15s}
-button:hover{opacity:.88}
-button:active{transform:translateY(1px)}
-button.sec{background:var(--card);color:var(--ink);border-color:var(--line)}
-button.sec:hover{border-color:var(--soft);opacity:1}
-button.link{min-height:44px;background:none;color:var(--bad);padding:8px 2px;font-size:13.5px;font-weight:500;
-  text-decoration:underline;text-underline-offset:3px;border:none}
-.acciones{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin-top:12px}
-.acciones form{margin:0}
-.auto{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ok);
-  background:var(--ok-soft);padding:5px 10px;border-radius:var(--pil);line-height:1.25}
-.auto::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
-.auto.off{color:var(--muted);background:var(--bg-2)}
-
-/* ---------- avisos ---------- */
-.msg{font-size:14px;padding:12px 15px;border-radius:var(--r1);margin:0 0 var(--gap);border:1px solid transparent}
-.msg.ok{background:var(--ok-soft);color:var(--ok)}
-.msg.no{background:var(--bg-2);color:var(--muted)}
-.msg.bad{background:var(--bad-soft);color:var(--bad)}
-.jugada .msg{margin:12px 0 0}
-.tip{font-size:13.5px;color:var(--brand-ink);background:var(--brand-soft);padding:11px 13px;border-radius:var(--r1);margin:12px 0 0}
-.note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
-
-/* ---------- desplegables ---------- */
-details.sec{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--sh1);
-  margin-bottom:10px;min-width:0}
-details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 18px;min-height:60px;
-  border-radius:var(--r2)}
-details.sec>summary::-webkit-details-marker{display:none}
-details.sec>summary:hover .st{color:var(--ink)}
-details.sec>summary .st{flex:1;min-width:0}
-details.sec>summary h2{margin:0;font-size:16px;letter-spacing:-.01em;font-weight:650}
-details.sec>summary .meta{display:block;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:1px}
-details.sec>summary .chev{color:var(--muted)}
-details.sec[open]>summary{border-bottom:1px solid var(--line-soft);border-radius:var(--r2) var(--r2) 0 0}
-.cuerpo{padding:16px 18px 18px}
-details[open]>.cuerpo{animation:abre .28s cubic-bezier(.22,1,.36,1)}
-@keyframes abre{from{opacity:0;transform:translateY(-4px)}}
-
-/* ---------- resultados y puestos ---------- */
-.lista{width:100%;border-collapse:collapse;font-size:14px}
-.lista th,.lista td{padding:8px 6px;text-align:left;font-variant-numeric:tabular-nums}
-.lista thead th{font-size:11.5px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line)}
-.lista tbody th{font-size:12px;color:var(--brand-ink);font-weight:700;letter-spacing:.02em;padding-top:16px;
-  border-bottom:1px solid var(--line)}
-.lista tbody tr:first-child th{padding-top:8px}
-.lista td{border-bottom:1px solid var(--line-soft)}
-.lista td.h{color:var(--muted);white-space:nowrap;width:1%}
-.lista td.s b{font-size:16px;margin-right:6px}
-.lista td.p{text-align:right;width:1%;white-space:nowrap}
-.lista .t3{color:var(--muted);font-size:12.5px}
-.puesto{display:inline-grid;place-items:center;min-width:44px;height:28px;padding:0 8px;border-radius:var(--pil);
-  font-weight:700;font-size:13.5px}
-.puesto.p5{background:var(--brand);color:#fff}
-@media (prefers-color-scheme:dark){.puesto.p5{color:#1b1206}}
-.puesto.p15{background:var(--brand-soft);color:var(--brand-ink);box-shadow:inset 0 0 0 1px var(--brand-line)}
-.puesto.fuera{background:var(--bg-2);color:var(--muted)}
-.clave{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 10px;font-size:12.5px;color:var(--muted)}
-.clave .puesto{min-width:0;height:22px;font-size:11.5px;margin-right:4px}
-
-/* ---------- piezas compartidas (RD) ---------- */
-.chip{display:inline-flex;align-items:baseline;gap:6px;padding:6px 11px;border-radius:var(--pil);background:var(--bg-2);
-  font-size:14px;color:var(--ink)}
-.chip b{color:var(--brand-ink);font-size:15.5px;font-variant-numeric:tabular-nums}
-.chip small{color:var(--muted);font-size:11.5px}
-.tira{display:flex;flex-wrap:wrap;gap:6px}
-.cuerpo h3{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:650}
-.cuerpo h3~h3{margin-top:16px}
-.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:0 0 14px}
-.cifras div{background:var(--bg-2);border-radius:var(--r1);padding:9px 12px}
-.cifras small{display:block;font-size:11.5px;color:var(--muted)}
-.cifras b{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.tabla{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
-.tabla th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;padding:6px 6px;border-bottom:1px solid var(--line)}
-.tabla td{padding:7px 6px;border-bottom:1px solid var(--line-soft)}
-.tabla td.ok{color:var(--ok);font-weight:650}.tabla td.bad{color:var(--bad);font-weight:650}
-.desliza{overflow-x:auto;max-width:100%}
-.cuerpo p{font-size:14px;margin:0 0 10px;max-width:70ch}
-
-footer{font-size:12.5px;color:var(--muted);margin-top:18px;text-align:center}
-
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;scroll-behavior:auto !important}
-}
-"""
-
-JS = """
-<script>
-(function(){
-  var calc = %CALC%;
-  function tareas(){
-    fetch('/tareas.json').then(r=>r.json()).then(function(t){
-      var alguna=false;
-      var a=t._auto;
-      if(a){
-        var el=document.getElementById('auto-est');
-        if(el){ el.textContent=a.txt; el.className='auto '+a.clase; }
-        // Si el resultado acaba de anotarse solo, la página que estás viendo ya
-        // es vieja (hay sorteo nuevo y otra predicción): se recarga sola.
-        if(window.__autoSeq===undefined) window.__autoSeq=a.seq;
-        else if(a.seq>window.__autoSeq){ location.replace(location.pathname + location.search); return; }
-        if(a.corriendo) alguna=true;
-      }
-      Object.keys(t).forEach(function(k){
-        var s=document.getElementById('st-'+k), o=document.getElementById('out-'+k), b=document.getElementById('bt-'+k);
-        if(!s) return;
-        var e=t[k];
-        s.textContent=e.estado+(e.segundos!=null?' · '+e.segundos+' s':'');
-        s.className='st '+(e.estado==='corriendo'?'corriendo':'');
-        if(o && e.salida){o.textContent=e.salida; o.parentNode.open = o.parentNode.open || e.estado==='corriendo';}
-        if(b){b.textContent = e.estado==='corriendo' ? 'Detener' : 'Ejecutar';
-              b.form.action = e.estado==='corriendo' ? '/herramienta/'+k+'/detener' : '/herramienta/'+k;}
-        if(e.estado==='corriendo') alguna=true;
-      });
-      setTimeout(tareas, alguna?2000:8000);
-    }).catch(function(){setTimeout(tareas,8000);});
-  }
-  tareas();
-  // Pestañas: ?tab=la|rd manda; si no viene, la última que abriste.
-  var tabs = [].slice.call(document.querySelectorAll('.tabs [role=tab]'));
-  function ver(t, guardar){
-    if(t !== 'la' && t !== 'rd') return;
-    tabs.forEach(function(a){
-      var on = a.getAttribute('data-tab') === t;
-      a.setAttribute('aria-selected', on ? 'true' : 'false');
-      a.tabIndex = on ? 0 : -1;
-      var p = document.getElementById(a.getAttribute('aria-controls'));
-      if(p) p.hidden = !on;
-    });
-    if(guardar){
-      try{ localStorage.setItem('lotto.tab', t); }catch(e){}
-      try{ var u = new URL(location.href); u.searchParams.set('tab', t);
-           history.replaceState(null, '', u.pathname + u.search + u.hash); }catch(e){}
-    }
-  }
-  tabs.forEach(function(a, i){
-    a.addEventListener('click', function(ev){ ev.preventDefault(); ver(a.getAttribute('data-tab'), true); });
-    a.addEventListener('keydown', function(ev){
-      if(ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
-      ev.preventDefault();
-      var n = tabs[(i + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      n.focus(); ver(n.getAttribute('data-tab'), true);
-    });
-  });
-  var qtab = null;
-  try{ qtab = new URLSearchParams(location.search).get('tab'); }catch(e){}
-  if(qtab){ try{ localStorage.setItem('lotto.tab', qtab); }catch(e){} }
-  else { var s = null; try{ s = localStorage.getItem('lotto.tab'); }catch(e){} if(s) ver(s, false); }
-  // Desplegables: recuerda cuáles dejaste abiertos.
-  [].forEach.call(document.querySelectorAll('details[data-rec]'), function(d){
-    var k = 'lotto.sec.' + d.id;
-    try{ var v = localStorage.getItem(k); if(v === '1') d.open = true; else if(v === '0') d.open = false; }catch(e){}
-    d.addEventListener('toggle', function(){ try{ localStorage.setItem(k, d.open ? '1' : '0'); }catch(e){} });
-  });
-  if(calc){
-    (function listo(){
-      fetch('/listo.json').then(r=>r.json()).then(function(j){
-        var inp=document.getElementById('num');
-        if(j.listo && !(inp && inp.value)) location.replace(location.pathname + location.search);
-        else setTimeout(listo, 2500);
-      }).catch(function(){setTimeout(listo,4000);});
-    })();
-  }
-})();
-</script>
-"""
+CSS = _estatico("app.css")
+JS = _estatico("app.js")
 
 def html_prediccion(e, calculando, pend, aviso_modelo):
     fecha, hora = fecha_corta(e["pf"]), HORAS[e["ph"]]
@@ -1255,221 +958,26 @@ def html_anti_top15(orden, sc, gaps):
             f'sale uno de ellos en ~1 de cada {num(1 / masa, 1)} sorteos. Sirve para <b>descartar</b>, no para '
             'apostar: no cambia la jugada.</p></details>')
 
-def cambio_rd(orden, pf, ph):
-    """Regla de cambio (PREREGISTRO_cambio_rd_top5.md, adoptada sin confirmar el 2026-09-23).
-
-    Si el animal que salió en RD Internacional a las (h−1):30 está en el Top-5 de LA h:00, se
-    intercambia con el 6º. Solo cambia lo que se MUESTRA para jugar: el congelado que se puntúa
-    no se toca. Devuelve (orden, info); info es None en el sorteo de 8:00 o si falla RD."""
-    if ph <= 0 or len(orden) < 6:
-        return orden, None
-    try:
-        import rdint_vivo
-        cod = next((c for f, h, c in rdint_vivo.cargar_rd() if f == pf and h == ph - 1), None)
-        info = {"hora_rd": rdint_vivo.HORAS_RD[ph - 1], "rd": cod}
-    except Exception:  # noqa: BLE001 — RD no debe tumbar la jugada de LA
-        return orden, None
-    nuevo = _cambiar(orden, cod) if cod is not None else orden
-    if nuevo is orden:
-        return orden, info
-    info.update(sale=cod, entra=POS[orden[5]], puesto=orden.index(IDX[cod]) + 1)
-    return nuevo, info
-
-def _cambiar(orden, cod):
-    """Igual que herramientas/rdint/cambio_top5.py (lo validado): se quita del
-    Top-5 el animal `cod`, los de abajo suben un puesto y el 6º entra 5º; `cod`
-    pasa al 6º. Devuelve el MISMO objeto `orden` si no hay cambio."""
-    r = IDX[cod]
-    if len(orden) < 6 or r not in orden[:5]:
-        return orden
-    return [x for x in orden[:5] if x != r] + [orden[5], r] + list(orden[6:])
-
-# Marcador en vivo de la regla: cuenta desde el día en que se adoptó, que la
-# prueba (hasta 2026-09-22) nunca vio. RD de las (h−1):30 siempre sale antes
-# de LA h:00, así que aplicarla al congelado después no usa nada del futuro.
-CAMBIO_RD_DESDE = "2026-09-23"
+# Experimentos en vivo (regla de cambio por RD y pronósticos en sombra): ver experimentos.py.
+# Aquí solo quedan los envoltorios que les pasan los sorteos resueltos y las fichas.
+CAMBIO_RD_DESDE = experimentos.CAMBIO_RD_DESDE
+SOMBRA_DESDE = experimentos.SOMBRA_DESDE
+SOMBRA_EXP_DESDE = experimentos.SOMBRA_EXP_DESDE
+cambio_rd = experimentos.cambio_rd
+_cambiar = experimentos.cambiar
+sombra_de = experimentos.sombra_de
+_con_rd = experimentos.con_rd
+_ic90_jornadas = experimentos.ic90_jornadas
+sc_sombra = experimentos.sc_sombra
+_ventana_8am = experimentos.ventana_8am
+SOMBRA_8AM_DESDE = experimentos.SOMBRA_8AM_DESDE
+_exposicion = experimentos.exposicion
 
 def marcador_cambio_rd(d):
-    """Top-5 escalonado con y sin la regla de cambio, sobre el mismo congelado."""
-    try:
-        import rdint_vivo
-        rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
-    except Exception:  # noqa: BLE001
-        return None
-    f = fichas_por_puesto()
-    m = dict(desde=CAMBIO_RD_DESDE, n=0, cambios=0, gano_rd=0, gano_6=0, sin=0, con=0)
-    for r in resueltas(d):
-        orden = r.get("orden_completo")
-        if not orden or r["fecha"] < CAMBIO_RD_DESDE or r["hora"] <= 0 or r["salio"] not in orden:
-            continue
-        cod = rd.get((r["fecha"], r["hora"] - 1))
-        if cod is None:
-            continue
-        m["n"] += 1
-        p = orden.index(r["salio"]) + 1
-        m["sin"] += PAGO * f[p] - sum(f)
-        nuevo = _cambiar(orden, cod)
-        if nuevo is not orden:
-            m["cambios"] += 1
-            m["gano_rd"] += r["salio"] == IDX[cod]
-            m["gano_6"] += r["salio"] == orden[5]
-        m["con"] += PAGO * f[nuevo.index(r["salio"]) + 1] - sum(f)
-    m["dif"] = m["con"] - m["sin"]
-    return m
-
-# ------------------------------------------------ pronósticos en sombra (motor_nuevo)
-# ag12 (pares consecutivos recientes) se guarda junto al congelado del ensamble,
-# pero NO se muestra ni se puntúa en el marcador principal: solo sirve para medirlo
-# con sorteos futuros (motor_nuevo/RETOMAR.md). ag12_rd NO se congela: RD (h−1):30
-# sale ~25 min después del congelado, así que la regla de RD se aplica al PUNTUAR
-# sobre la sombra ag12, igual que marcador_cambio_rd (RD (h−1):30 y (h−2):30 salen antes de LA h:00).
-SOMBRA_DESDE = "2026-09-26"
-SOMBRA_RD_MULT = {1: 0.50, 2: 0.75}     # r2_a03_rd_produccion (VB)
-_RUTA_AG12 = os.path.join(HERR, "modelos", "ag12")
-
-def sc_sombra(info, sc):
-    """Probabilidades sobre las que se calculan las sombras: sin la corrección de las 8:00 ya encendida."""
-    return info.get("scores_sin_8am") or sc
-
-def sombra_de(filas, pf, ph, sc):
-    """{"ag12": 38 probabilidades} o None. Nunca tumba el pronóstico principal."""
-    try:
-        if _RUTA_AG12 not in sys.path:
-            sys.path.insert(0, _RUTA_AG12)
-        import sombra
-        return {"ag12": sombra.corregir(filas, pf, ph, sc)["ag12"]}
-    except Exception as ex:  # noqa: BLE001
-        print(f"[sombra] {ahora()} fallo: {ex!r}", file=sys.stderr, flush=True)
-        return None
-
-def _con_rd(p, rd, f, h):
-    """ag12 × 0,50 al animal de RD (h−1):30 y × 0,75 al de (h−2):30, si ya salieron."""
-    q = list(p); usado = False
-    for k, mult in SOMBRA_RD_MULT.items():
-        c = rd.get((f, h - k)) if h - k >= 0 else None
-        if c in IDX:
-            q[IDX[c]] *= mult; usado = True
-    return q, usado
-
-SOMBRA_EXP_DESDE = "2026-10-02"         # exposición (fecha/hora): PREREGISTRO_sombra_exposicion.md
-SOMBRA_EXP_N_PRIMERA = 930              # primera mirada (solo para apagar); la decisión de encender es con SOMBRA_EXP_N_FINAL
-SOMBRA_EXP_N_FINAL = 6000               # ~1,5 años: n con potencia ~75-80 % para ~+2,3 mbits (ver el pre-registro)
-_EXPOSICION = []                        # módulo cargado una vez (evita tocar sys.path en cada consulta)
-SOMBRA_8AM_DESDE = "2026-10-04"         # ventana de fecha a las 8:00: investigacion/2026-10-03/enjambre_8am/
-SOMBRA_8AM_N_FRENO = 180                # desde aquí, apagar si O/E de la ventana >= 1,0
-SOMBRA_8AM_N_FINAL = 730                # decisión única (≈ 2 años de primeros sorteos)
-
-def _exposicion(p, f, h, variante="aplicar"):
-    """Multiplicadores congelados por fecha y hora (herramientas/modelos/exposicion.py); solo calendario."""
-    if not _EXPOSICION:
-        ruta = os.path.join(HERR, "modelos")
-        if ruta not in sys.path:
-            sys.path.append(ruta)
-        import exposicion
-        _EXPOSICION.append(exposicion)
-    return getattr(_EXPOSICION[0], variante)(p, f, h)
-
-def _ventana_8am(fecha):
-    d = int(fecha[8:10])
-    return [IDX[str(n)] for n in (d - 1, d, d + 1) if 1 <= n <= 36]
-
-def _ic90_jornadas(pares):
-    """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)]."""
-    por = {}
-    for f, v in pares:
-        a = por.setdefault(f, [0.0, 0]); a[0] += v; a[1] += 1
-    n = sum(a[1] for a in por.values())
-    if n == 0:
-        return None
-    media = sum(a[0] for a in por.values()) / n
-    J = len(por)
-    if J < 2:
-        return dict(n=n, jornadas=J, media=round(media, 2), ic90=None)
-    se = math.sqrt(sum((a[0] - media * a[1]) ** 2 for a in por.values()) * J / (J - 1)) / n
-    return dict(n=n, jornadas=J, media=round(media, 2),
-                ic90=[round(media - 1.645 * se, 2), round(media + 1.645 * se, 2)])
+    return experimentos.marcador_cambio_rd(resueltas(d), fichas_por_puesto())
 
 def marcador_sombra(d):
-    """Ensamble, ag12 y ag12+RD sobre los MISMOS sorteos resueltos (desde SOMBRA_DESDE).
-    Aparte, desde SOMBRA_EXP_DESDE: ensamble, ag12_rd y los dos con la corrección por exposición."""
-    try:
-        import rdint_vivo
-        rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
-    except Exception:  # noqa: BLE001
-        rd = {}
-    fichas = fichas_por_puesto()
-    nombres = ("ensamble", "ag12", "ag12_rd")
-    m = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nombres}
-    nexp = ("ensamble", "ag12_rd", "ensamble_exp", "ag12_rd_exp")
-    mx = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nexp}
-    con_rd = 0
-    dif = {"ensamble": ([], []), "ag12_rd": ([], [])}      # (dif mbits, dif Top-5 en 0/1) por sorteo y jornada
-    fallos_exp = 0
-    v8 = dict(n=0, O=0, E=0.0, top5_exp=0, top5_exp8=0, mbits_dif=[])   # solo 8:00, exp8 contra exp
-    for r in resueltas(d):
-        sc_base = r.get("scores_sin_8am") or r.get("scores")   # sin la corrección de las 8:00 ya encendida
-        if r["fecha"] >= SOMBRA_8AM_DESDE and int(r["hora"]) == 0 and sc_base:
-            try:
-                pe = _exposicion(sc_base, r["fecha"], 0)
-                p8 = _exposicion(sc_base, r["fecha"], 0, "aplicar_8am")
-                w = r["salio"]; ven = _ventana_8am(r["fecha"])
-                v8["n"] += 1; v8["O"] += w in ven; v8["E"] += sum(pe[i] for i in ven)
-                for k, p in (("top5_exp", pe), ("top5_exp8", p8)):
-                    v8[k] += sum(1 for i in range(K) if (-p[i], i) < (-p[w], w)) < 5
-                v8["mbits_dif"].append((r["fecha"], 1000 * math.log2(p8[w] / pe[w])))
-            except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
-                print(f"[sombra] {ahora()} ventana 8:00 falló: {ex!r}", file=sys.stderr, flush=True)
-        s = r.get("sombra")
-        if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not sc_base:
-            continue
-        q, usado = _con_rd(s["ag12"], rd, r["fecha"], r["hora"])
-        con_rd += usado
-        filas = [(m, "ensamble", sc_base), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
-        if r["fecha"] >= SOMBRA_EXP_DESDE:
-            try:
-                filas += [(mx, "ensamble", sc_base), (mx, "ag12_rd", q),
-                          (mx, "ensamble_exp", _exposicion(sc_base, r["fecha"], r["hora"])),
-                          (mx, "ag12_rd_exp", _exposicion(q, r["fecha"], r["hora"]))]
-            except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
-                fallos_exp += 1
-                if fallos_exp == 1:                          # una línea por consulta, no una por sorteo
-                    print(f"[sombra] {ahora()} exposición falló: {ex!r}", file=sys.stderr, flush=True)
-        este = {}
-        for mm, k, p in filas:
-            tot = sum(p)
-            orden = sorted(range(K), key=lambda i: (-p[i], i))
-            pos = orden.index(r["salio"]) + 1
-            x = mm[k]; x["n"] += 1
-            x["top3"] += pos <= 3; x["top5"] += pos <= 5; x["top15"] += pos <= 15
-            mb = 1000 * math.log2(max(p[r["salio"]] / tot, 1e-12) * K)
-            x["mbits"] += mb
-            x["t5_neto"] += PAGO * fichas[pos] - sum(fichas)
-            if mm is mx:
-                este[k] = (mb, pos <= 5)
-        if len(este) == 4:                                  # los 4 modelos del bloque, mismo sorteo
-            for base in dif:
-                dif[base][0].append((r["fecha"], este[base + "_exp"][0] - este[base][0]))
-                dif[base][1].append((r["fecha"], float(este[base + "_exp"][1]) - float(este[base][1])))
-    for x in list(m.values()) + list(mx.values()):
-        if x["n"]:
-            for c in ("top3", "top5", "top15"):
-                x[c + "_pct"] = round(100 * x[c] / x["n"], 2)
-            x["mbits"] = round(x["mbits"] / x["n"], 1)
-    difs = {}
-    for base, (dm, dt) in dif.items():
-        a = _ic90_jornadas(dm); b = _ic90_jornadas(dt)
-        difs[base + "_exp_vs_" + base] = dict(mbits=a, top5_pp=(None if b is None else
-            dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
-                 [round(100 * v, 2) for v in b["ic90"]]))))
-    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": con_rd, "marcador": m,
-            "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
-                           "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
-                           "marcador": mx, "diferencias": difs, "fallos": fallos_exp},
-            "ventana_8am": {"desde": SOMBRA_8AM_DESDE, "freno_n": SOMBRA_8AM_N_FRENO, "decide_con": SOMBRA_8AM_N_FINAL,
-                            "n": v8["n"], "ventana_obs": v8["O"], "ventana_esp": round(v8["E"], 2),
-                            "oe": round(v8["O"] / v8["E"], 3) if v8["E"] else None,
-                            "top5_exp": v8["top5_exp"], "top5_exp8": v8["top5_exp8"],
-                            "mbits_exp8_vs_exp": _ic90_jornadas(v8["mbits_dif"])}}
+    return experimentos.marcador_sombra(resueltas(d), fichas_por_puesto())
 
 def nota_cambio_rd(info):
     if info is None:
@@ -1533,30 +1041,9 @@ def html_registro(e=None):
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último resultado anotado?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
-def _fx(n, clase):
-    """Casilla de fichas: número relleno si se juega, raya tenue si no."""
-    if not n:
-        return '<span class="fx z" aria-label="sin fichas">–</span>'
-    return f'<span class="fx {clase}" aria-label="{n} ficha{"s" if n != 1 else ""}">{n}</span>'
-
-def fila_jugada(r, num_, nombre, sub, f5, fp):
-    return (f'<li><span class="rk">{r}</span><span class="n">{esc(num_)}</span>'
-            f'<span class="nm">{esc(nombre)}<small>{sub}</small></span>'
-            f'{_fx(f5, "a")}{_fx(fp, "b")}</li>')
-
-COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
-               '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
-
 def html_compartir(juego, cuando, animales, anti=()):
     """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 (16º al 30º) o ambos (el monto va solo al Top)."""
-    op_anti = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>'
-               if anti else "")
-    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}"'
-            f' data-x="{esc("|".join(anti))}">'
-            '<select aria-label="Qué compartir"><option value="5">Top 5</option><option value="15">Top 15</option>'
-            f'{op_anti}</select>'
-            '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
-            '<button type="button" class="sec">Compartir</button></div>')
+    return comun.compartir(juego, animales, anti, cuando=cuando)
 
 def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     """La jugada del próximo sorteo: Top-5 a la vista y del 6º al 15º plegado.
@@ -1609,15 +1096,6 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
             f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[15:30]] if len(orden) >= 30 else ())}'
             f'{leyenda}{aviso_modelo}</section>')
-
-def html_nav_hist(tab, atras, total):
-    """Flechas para ver el Top congelado de sorteos anteriores (atras=0: el próximo)."""
-    def enlace(n, txt):
-        return f'<a href="/?tab={tab}' + (f'&amp;atras={n}' if n else '') + f'">{txt}</a>'
-    ant = enlace(atras + 1, "‹ Anterior") if atras < total else '<span class="off">‹ Anterior</span>'
-    sig = enlace(atras - 1, "Siguiente ›") if atras > 0 else '<span class="off">Siguiente ›</span>'
-    pos = "próximo sorteo" if atras == 0 else f"hace {atras} sorteo{'s' if atras > 1 else ''}"
-    return f'<nav class="histnav" aria-label="Sorteos anteriores">{ant}<span class="pos">{pos}</span>{sig}</nav>'
 
 def la_pasados(d):
     return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None and r.get("orden_completo")]
@@ -1721,13 +1199,6 @@ def html_resultados(d, limite=100):
     return (f'{clave}<table class="lista"><thead><tr><th scope="col">Hora</th><th scope="col">Salió</th>'
             f'<th scope="col" style="text-align:right">Puesto</th></tr></thead><tbody>{cuerpo}</tbody></table>{nota}'
             '<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p>')
-
-def sec(id_, titulo, meta, cuerpo, abierto=False):
-    """Desplegable de la página (se recuerda abierto/cerrado en el navegador)."""
-    return (f'<details class="sec" id="{id_}" data-rec{" open" if abierto else ""}>'
-            f'<summary><span class="st"><h2>{titulo}</h2><span class="meta">{meta}</span></span>'
-            f'<span class="chev" aria-hidden="true"></span></summary>'
-            f'<div class="cuerpo">{cuerpo}</div></details>')
 
 def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False, faltan_h=0.0):
     # La ventana que se rotula es la de la tripleta que se muestra, que ya no
@@ -2502,220 +1973,121 @@ def html_mesa():
         'modelo ya calculaba. Solo lectura.</p>'
         '</div>')
 
-CSS_MESA = """
-.mesa-slot{margin:0 0 12px;font-size:14px;color:var(--muted)}
-.mesa-slot b{color:var(--ink)}
-.mesa-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-.mesa-nav{display:flex;align-items:center;gap:8px}
-.mesa-nav button{width:44px;padding:0;display:inline-grid;place-items:center}
-.mesa-nav button[disabled]{opacity:.35;cursor:default}
-.mesa-pos{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:9ch;text-align:center}
-.flecha{width:9px;height:9px;border-left:2px solid currentColor;border-bottom:2px solid currentColor}
-.flecha.izq{transform:translateX(2px) rotate(45deg)}.flecha.der{transform:translateX(-2px) rotate(-135deg)}
-.mesa-modos{display:flex;gap:4px;flex-wrap:wrap;padding:3px;background:var(--bg-2);border-radius:10px}
-.mesa-modos button{flex:1 1 auto;min-height:38px;padding:6px 10px;font-size:13px;font-weight:600;background:transparent;border-color:transparent;color:var(--muted)}
-.mesa-modos button.on{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:var(--sh1)}
-#mesa details.mas{margin-top:14px}
-.mesa-cuerpo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:820px){.mesa-cuerpo{grid-template-columns:1fr}}
-.mseg{border:1px solid var(--line);border-radius:9px;padding:10px 12px}
-.mseg h4{margin:0 0 3px;font-size:13px;font-weight:600}
-.mseg .masa{font-size:12px;color:var(--muted);margin:0 0 8px;font-variant-numeric:tabular-nums}
-.mrow{display:grid;grid-template-columns:38px 1fr 46px;align-items:center;gap:8px;padding:3px 0;font-size:13px}
-.mrow .mn{font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums;font-size:15px}
-.mrow .mb{height:15px;background:var(--pista);border-radius:4px;position:relative;overflow:hidden}
-.mrow .mb i{display:block;height:100%;border-radius:4px;min-width:1px;background:var(--soft)}
-.mrow .mb span{position:absolute;left:6px;top:0;line-height:15px;font-size:11px;color:var(--ink);white-space:nowrap}
-.mrow .mp{text-align:right;font-variant-numeric:tabular-nums;color:var(--soft);font-size:11px}
-.mrow.t15 .mb i{background:var(--brand)}
-.mrow.gana{background:var(--ok-soft);border-radius:5px}
-.mrow.gana .mn{color:var(--ok)}
-.mrow.gana .mb i{background:var(--ok)}
-.mrow .tag{font-style:normal;color:var(--soft);font-size:10px;margin-left:4px}
-.mesa-stats table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-.mesa-stats th{text-align:left;color:var(--muted);font-weight:600;padding:5px 7px;border-bottom:1px solid var(--line)}
-.mesa-stats td{padding:5px 7px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-.mesa-stats h4{margin:14px 0 0;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.histnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-4px 0 12px;font-size:13.5px}
-.histnav a,.histnav .off{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:var(--pil);
-  border:1px solid var(--line);background:var(--bg-2);color:var(--ink);text-decoration:none;font-weight:600}
-.histnav .off{opacity:.4}
-.histnav .pos{color:var(--muted);font-size:12.5px;text-align:center}
-.jug li.gana{background:var(--ok-soft);border-radius:8px}
-.jug li.gana .n{color:var(--ok)}
-.adia{margin-bottom:var(--gap)}
-.adhs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 8px}
-.adh{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:8px;padding:10px 12px;
-  border:1px solid var(--line);border-radius:var(--r2)}
-.adh.si{background:var(--ok-soft)}
-.adh .rk{font-size:12px;color:var(--soft)}
-.adh .n{font-size:28px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;line-height:1}
-.adh .nm{font-size:16px;font-weight:600;min-width:0}
-.adh .nm small{display:block;font-size:12px;font-weight:400;color:var(--muted)}
-.adh .nm small.ok{color:var(--ok);font-weight:600}
-"""
-
-JS_MESA = """
-<script>
-(function(){
-  var off = 0, modo = 'rango', datos = null;
-  var cuerpo = document.getElementById('mesa-cuerpo');
-  if(!cuerpo) return;
-  var slotEl = document.getElementById('mesa-slot'), posEl = document.getElementById('mesa-pos');
-  var avisoEl = document.getElementById('mesa-aviso');
-  var prev = document.getElementById('mesa-prev'), next = document.getElementById('mesa-next');
-
-  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function pct(x){ return (x*100).toFixed(2)+'%'; }
-
-  function fila(a, maxp){
-    var cls = 'mrow' + (a.en_top15 ? ' t15' : '') +
-              (datos.winner !== null && a.idx === datos.winner ? ' gana' : '');
-    var ancho = (a.prob !== null && maxp > 0) ? Math.max(1, a.prob/maxp*100) : 0;
-    var dentro = a.prob !== null ? pct(a.prob) : (a.rank !== null ? 'rank ' + a.rank : '\\u2014');
-    var gap = a.gap_dias === null ? 'nunca' : (a.gap_dias === 0 ? 'hoy' : a.gap_dias + 'd');
-    return '<div class="' + cls + '"><span class="mn">' + esc(a.num) + '</span>' +
-      '<span class="mb"><i style="width:' + ancho.toFixed(1) + '%"></i><span>' + dentro +
-      ' <em class="tag">' + esc(a.nombre) + '</em></span></span>' +
-      '<span class="mp">' + gap + '</span></div>';
-  }
-
-  function bloque(titulo, sub, lista, maxp){
-    var masa = 0, hay = false;
-    lista.forEach(function(a){ if(a.prob !== null){ masa += a.prob; hay = true; } });
-    var orden = lista.slice().sort(function(x, y){
-      if(x.prob !== null && y.prob !== null) return y.prob - x.prob;
-      if(x.rank !== null && y.rank !== null) return x.rank - y.rank;
-      return x.idx - y.idx;
-    });
-    var cab = hay ? ('masa ' + pct(masa) + ' \\u00b7 ' + orden.length + ' animales')
-                  : (orden.length + ' animales');
-    return '<div class="mseg"><h4>' + esc(titulo) + (sub ? ' <em class="tag">' + esc(sub) +
-      '</em>' : '') + '</h4><p class="masa">' + cab + '</p>' +
-      orden.map(function(a){ return fila(a, maxp); }).join('') + '</div>';
-  }
-
-  function pinta(){
-    if(!datos) return;
-    var A = datos.animales, maxp = 0;
-    A.forEach(function(a){ if(a.prob !== null && a.prob > maxp) maxp = a.prob; });
-    var out = '';
-    if(modo === 'rango'){
-      datos.cuadrantes.forEach(function(q){
-        out += bloque(q.clave, q.etiqueta, q.idx.map(function(i){ return A[i]; }), maxp);
-      });
-    } else if(modo === 'rank'){
-      datos.seg_rank.forEach(function(s){
-        var l = A.filter(function(a){ return a.rank !== null && a.rank >= s.desde && a.rank <= s.hasta; });
-        if(l.length) out += bloque('Ranks ' + s.desde + '-' + s.hasta, '', l, maxp);
-      });
-      var sinr = A.filter(function(a){ return a.rank === null; });
-      if(sinr.length) out += bloque('Sin rank guardado', '', sinr, maxp);
-    } else {
-      datos.bins_hueco.forEach(function(b){
-        var l = A.filter(function(a){
-          var g = a.gap_dias === null ? 99999 : a.gap_dias;
-          return g >= b.desde && g <= b.hasta;
-        });
-        if(l.length) out += bloque(b.etiqueta, '', l, maxp);
-      });
-    }
-    cuerpo.innerHTML = out || '<p class="note">Sin datos para este modo.</p>';
-  }
-
-  function carga(){
-    fetch('/api/mesa?offset=' + off).then(function(r){ return r.json(); }).then(function(j){
-      if(j.error){ cuerpo.innerHTML = '<p class="note">' + esc(j.error) + '</p>'; return; }
-      datos = j; off = j.offset;
-      var gan = j.winner !== null
-        ? ' \\u00b7 sali\\u00f3 <b>' + esc(j.winner_num) + ' ' + esc(j.winner_nombre) + '</b>' +
-          (j.winner_rank ? ' (rank ' + j.winner_rank + ')' : '')
-        : ' \\u00b7 pendiente';
-      slotEl.innerHTML = esc(j.fecha_txt) + ' ' + esc(j.hora_txt) + gan;
-      posEl.textContent = (j.offset === 0 ? 'slot actual' : 'hace ' + j.offset) +
-                          ' \\u00b7 ' + (j.offset + 1) + '/' + j.total;
-      prev.disabled = (j.offset >= j.total - 1);
-      next.disabled = (j.offset <= 0);
-      avisoEl.innerHTML = j.vista === 'prob' ? '' :
-        '<div class="tip">' + (j.vista === 'rank'
-          ? 'Registro antiguo: se guard\\u00f3 el orden completo pero no los puntajes. Vista <b>solo rank</b>, sin barras de probabilidad.'
-          : 'Registro antiguo: solo se guard\\u00f3 el Top-3. No hay ranks ni puntajes para los 38.') +
-        '</div>';
-      pinta();
-    }).catch(function(){ cuerpo.innerHTML = '<p class="note">No se pudo cargar la mesa.</p>'; });
-  }
-
-  prev.onclick = function(){ off += 1; carga(); };
-  next.onclick = function(){ if(off > 0){ off -= 1; carga(); } };
-  Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(b){
-    b.onclick = function(){
-      Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(x){
-        x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); });
-      b.classList.add('on'); b.setAttribute('aria-pressed', 'true'); modo = b.getAttribute('data-modo'); pinta();
-    };
-  });
-
-  function tabla(t, titulo, nota){
-    var h = '<h4>' + titulo + '</h4><p class="note">' + nota + ' \\u00b7 n = ' + t.n + '</p>' +
-      '<table><tr><th>segmento</th><th>ganadores</th><th>%</th><th>esperado</th></tr>';
-    t.segmentos.forEach(function(s){
-      h += '<tr><td>' + esc(s.etiqueta) + '</td><td>' + s.n + '</td><td>' +
-           (s.pct === null ? '\\u2014' : s.pct.toFixed(1) + '%') + '</td><td>' +
-           (s.esperado === null ? '\\u2014' : s.esperado.toFixed(1) + '%') + '</td></tr>';
-    });
-    return h + '</table>';
-  }
-  fetch('/api/mesa_stats').then(function(r){ return r.json(); }).then(function(j){
-    var el = document.getElementById('mesa-stats');
-    el.innerHTML =
-      tabla(j.rank, 'Por segmento de rank', 'solo registros con orden completo guardado') +
-      tabla(j.hueco, 'Por bin de hueco', 'esperado = ocupaci\\u00f3n media del bin bajo azar') +
-      '<p class="note">' + j.resueltos + ' sorteos resueltos \\u00b7 ' + j.sin_orden_completo +
-      ' sin orden completo \\u00b7 ' + j.sin_historial + ' sin fila en el historial.</p>';
-  }).catch(function(){});
-
-  carga();
-})();
-</script>
-"""
-
-CSS = CSS + CSS_MESA
-JS_COMPARTIR = r"""
-<script>
-document.addEventListener('click', function(ev){
-  var b = ev.target.closest('.compartir button'); if(!b) return;
-  var c = b.parentNode, v = c.querySelector('select').value;
-  var m = parseFloat(c.querySelector('input').value.replace(',', '.')) || 0;
-  // Formato para WhatsApp: cabecera en negrita y bloques de 5 separados por una línea en blanco.
-  function lista(a, monto, desde){
-    var filas = a.map(function(x, k){
-      var n = (desde || 0) + k + 1;
-      return (n < 10 ? '0' : '') + n + '.  ' + x + (monto ? '  →  $' + monto : '');
-    });
-    var bl = [];
-    for(var i = 0; i < filas.length; i += 5) bl.push(filas.slice(i, i + 5).join('\n'));
-    return bl.join('\n\n');
-  }
-  var top = c.dataset.a.split('|'), anti = c.dataset.x ? c.dataset.x.split('|') : [];
-  var t = '*' + c.dataset.t.toUpperCase() + '*\n' + '📅 ' + c.dataset.f + '\n';
-  if(v === 'anti'){
-    t += '🚫 Anti Top 15 (del 16 al 30, para descartar)\n\n' + lista(anti, 0, 15);
-  } else {
-    var n = v === 'ambos' ? 15 : +v, a = top.slice(0, n);
-    t += '🎯 Top ' + n + (m ? '  ·  $' + m + ' por animal' : '') + '\n\n' + lista(a, m)
-       + (m ? '\n\n💰 *Total: $' + (m * a.length) + '*' : '');
-    if(v === 'ambos') t += '\n\n🚫 Anti Top 15 (del 16 al 30, para descartar)\n\n' + lista(anti, 0, 15);
-  }
-  if(navigator.share) navigator.share({text: t}).catch(function(){});
-  else navigator.clipboard.writeText(t).then(function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Compartir'; }, 1500); });
-});
-</script>
-"""
-
-JS = JS + JS_MESA + JS_COMPARTIR
 
 MAX_POST = 64 * 1024        # los formularios son diminutos; más que esto es basura o abuso
+JSON_UTF8 = "application/json; charset=utf-8"
+
+# ---------------------------------------------------------------- rutas GET (JSON)
+# Cada ruta es (función(q) -> objeto, tipo de contenido); q = parámetros de la consulta.
+def _ruta_tareas(q):
+    est = estado_tareas()
+    est["_auto"] = auto_estado()
+    return est
+
+def _ruta_listo(q):
+    listo = True
+    if PRED is not None:
+        filas = cargar(); e = estado(filas)
+        listo = PRED.obtener(HIST, e["pf"], e["ph"]) is not None
+    return {"listo": listo}
+
+def _ruta_rdint(q):
+    try:
+        import rdint_vivo
+        return rdint_vivo.api()
+    except Exception as ex:  # noqa: BLE001
+        return {"error": f"{type(ex).__name__}: {ex}"}
+
+def _ruta_datos_publicados(q):
+    try:
+        import datos_publicados
+        return datos_publicados.resumen(DATOS)
+    except Exception as ex:  # noqa: BLE001
+        print(f"[datos_publicados] resumen falló: {ex!r}", file=sys.stderr, flush=True)
+        return {"error": "no disponible"}
+
+RUTAS_JSON = {
+    "/tareas.json": (_ruta_tareas, JSON_UTF8),
+    "/listo.json": (_ruta_listo, "application/json"),
+    "/api/mesa": (lambda q: _api(mesa_datos, q.get("offset", ["0"])[0]), JSON_UTF8),
+    "/api/mesa_stats": (lambda q: _api(mesa_stats), JSON_UTF8),
+    "/api/rdint": (_ruta_rdint, JSON_UTF8),
+    "/api/cambio_rd": (lambda q: _api(lambda: marcador_cambio_rd(log_cargar())), JSON_UTF8),
+    "/api/salud": (lambda q: _api(lambda: salud_modelo(log_cargar())), JSON_UTF8),
+    "/api/sombra": (lambda q: _api(lambda: marcador_sombra(log_cargar())), JSON_UTF8),
+    "/api/datos_publicados": (_ruta_datos_publicados, JSON_UTF8),
+}
+
+def _parametros_pagina(q):
+    """(banca, tab, atras) de la consulta, tolerante a basura."""
+    try:
+        banca = float(q.get("banca", [""])[0].replace(",", "."))
+        banca = banca if 0 < banca < 1e9 else None
+    except ValueError:
+        banca = None
+    tab = (q.get("tab", ["la"])[0] or "la").strip().lower()
+    try:
+        atras = max(0, min(int(q.get("atras", ["0"])[0] or 0), 10000))
+    except ValueError:
+        atras = 0
+    return banca, tab, atras
+
+# --------------------------------------------------------------- acciones POST
+# Cada acción recibe el cuerpo del formulario y devuelve el ancla a la que se vuelve.
+def _entero(q, clave):
+    try:
+        return int(q.get(clave, [""])[0])
+    except ValueError:
+        return -1
+
+def _accion_auto(datos):
+    # En segundo plano: consultar la fuente puede tardar varios segundos
+    # y la página debe volver enseguida.
+    if AUTO["corriendo"]:
+        AVISO.update(texto="Ya se está buscando el resultado.", clase="no")
+    else:
+        threading.Thread(target=auto_pasada, daemon=True).start()
+        AVISO.update(texto="Buscando el resultado en la fuente…", clase="no")
+    return "#registrar"
+
+def _accion_deshacer(datos):
+    texto, ok = deshacer()
+    AVISO.update(texto=esc(texto), clase="ok" if ok else "no")
+    return "#registrar"
+
+def _accion_registrar(datos):
+    num = (parse_qs(datos).get("num", [""])[0]).strip()
+    if num not in IDX:
+        AVISO.update(texto=f'«{esc(num) or "vacío"}» no es válido. Usa 0, 00 o 1–36.', clase="bad")
+    else:
+        texto, clase = registrar(num)
+        AVISO.update(texto=texto, clase=clase)
+    return ""
+
+def _accion_tripleta(datos):
+    q = parse_qs(datos)
+    pf = (q.get("pf", [""])[0]).strip()
+    codigos = [(q.get(k, [""])[0]).strip() for k in ("a1", "a2", "a3", "b1", "b2", "b3")]
+    texto, clase = registrar_tripleta(pf, _entero(q, "ph"), _entero(q, "n"), codigos)
+    AVISO.update(texto=esc(texto), clase=clase)
+    return "#tripleta"
+
+ACCIONES_POST = {
+    "/auto": _accion_auto,
+    "/deshacer": _accion_deshacer,
+    "/registrar": _accion_registrar,
+    "/": _accion_registrar,
+    "/tripleta/registrar": _accion_tripleta,
+}
+
+def _accion_herramienta(ruta):
+    """/herramienta/<clave> inicia; /herramienta/<clave>/detener la para. Cualquier otra forma no hace nada."""
+    partes = ruta.strip("/").split("/")
+    if len(partes) == 3 and partes[2] == "detener":
+        detener_tarea(partes[1])
+    elif len(partes) == 2:
+        iniciar_tarea(partes[1])
+    return "#herramientas"
 
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
@@ -2746,61 +2118,13 @@ class H(BaseHTTPRequestHandler):
             self._post()
 
     def _get(self):
-        ruta = self.path.split("?")[0]
+        ruta, _, consulta = self.path.partition("?")
+        q = parse_qs(consulta)
         if ruta in ("/", "/index.html"):
-            q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
-            try:
-                banca = float(q.get("banca", [""])[0].replace(",", "."))
-                banca = banca if 0 < banca < 1e9 else None
-            except ValueError:
-                banca = None
-            tab = (q.get("tab", ["la"])[0] or "la").strip().lower()
-            try:
-                atras = max(0, min(int(q.get("atras", ["0"])[0] or 0), 10000))
-            except ValueError:
-                atras = 0
-            self._send(render(banca, tab, atras))
-        elif ruta == "/tareas.json":
-            est = estado_tareas()
-            est["_auto"] = auto_estado()
-            self._send(json.dumps(est, ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/listo.json":
-            listo = True
-            if PRED is not None:
-                filas = cargar(); e = estado(filas)
-                listo = PRED.obtener(HIST, e["pf"], e["ph"]) is not None
-            self._send(json.dumps({"listo": listo}), "application/json")
-        elif ruta == "/api/mesa":
-            q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
-            self._send(json.dumps(_api(mesa_datos, q.get("offset", ["0"])[0]),
-                                  ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/api/rdint":
-            try:
-                import rdint_vivo
-                cuerpo = rdint_vivo.api()
-            except Exception as ex:  # noqa: BLE001
-                cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
-            self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/api/cambio_rd":
-            self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
-                       "application/json; charset=utf-8")
-        elif ruta == "/api/salud":
-            self._send(json.dumps(_api(lambda: salud_modelo(log_cargar())), ensure_ascii=False),
-                       "application/json; charset=utf-8")
-        elif ruta == "/api/sombra":
-            self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),
-                       "application/json; charset=utf-8")
-        elif ruta == "/api/datos_publicados":
-            try:
-                import datos_publicados
-                cuerpo = datos_publicados.resumen(DATOS)
-            except Exception as ex:  # noqa: BLE001
-                print(f"[datos_publicados] resumen falló: {ex!r}", file=sys.stderr, flush=True)
-                cuerpo = {"error": "no disponible"}
-            self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/api/mesa_stats":
-            self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
-                       "application/json; charset=utf-8")
+            self._send(render(*_parametros_pagina(q)))
+        elif ruta in RUTAS_JSON:
+            fn, tipo = RUTAS_JSON[ruta]
+            self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
@@ -2813,45 +2137,10 @@ class H(BaseHTTPRequestHandler):
             return self._send("Solicitud no válida", "text/plain; charset=utf-8", 400)
         datos = self.rfile.read(n).decode("utf-8", errors="replace") if n else ""
         ruta = self.path.split("?")[0]
-        if ruta == "/auto":
-            # En segundo plano: consultar la fuente puede tardar varios segundos
-            # y la página debe volver enseguida.
-            if AUTO["corriendo"]:
-                AVISO.update(texto="Ya se está buscando el resultado.", clase="no")
-            else:
-                threading.Thread(target=auto_pasada, daemon=True).start()
-                AVISO.update(texto="Buscando el resultado en la fuente…", clase="no")
-            return self._volver("#registrar")
-        if ruta == "/deshacer":
-            texto, ok = deshacer()
-            AVISO.update(texto=esc(texto), clase="ok" if ok else "no")
-            return self._volver("#registrar")
-        if ruta in ("/registrar", "/"):
-            num = (parse_qs(datos).get("num", [""])[0]).strip()
-            if num not in IDX:
-                AVISO.update(texto=f'«{esc(num) or "vacío"}» no es válido. Usa 0, 00 o 1–36.', clase="bad")
-            else:
-                texto, clase = registrar(num)
-                AVISO.update(texto=texto, clase=clase)
-            return self._volver()
-        if ruta == "/tripleta/registrar":
-            q = parse_qs(datos)
-            pf = (q.get("pf", [""])[0]).strip()
-            try: ph = int(q.get("ph", [""])[0])
-            except ValueError: ph = -1
-            try: n = int(q.get("n", [""])[0])
-            except ValueError: n = -1
-            codigos = [(q.get(k, [""])[0]).strip() for k in ("a1", "a2", "a3", "b1", "b2", "b3")]
-            texto, clase = registrar_tripleta(pf, ph, n, codigos)
-            AVISO.update(texto=esc(texto), clase=clase)
-            return self._volver("#tripleta")
+        if ruta in ACCIONES_POST:
+            return self._volver(ACCIONES_POST[ruta](datos))
         if ruta.startswith("/herramienta/"):
-            partes = ruta.strip("/").split("/")
-            if len(partes) == 3 and partes[2] == "detener":
-                detener_tarea(partes[1])
-            elif len(partes) == 2:
-                iniciar_tarea(partes[1])
-            return self._volver("#herramientas")
+            return self._volver(_accion_herramienta(ruta))
         self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
     def log_message(self, fmt, *a):
