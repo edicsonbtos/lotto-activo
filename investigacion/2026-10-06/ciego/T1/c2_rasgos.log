@@ -1,0 +1,11 @@
+rho RD 0.265 reps medias 2025-01..06 0.525 (LA: rho 0,240)
+(13031, 38, 40) 11s
+fuga rasgos corte 9500 2025-11-13 OK
+fuga rasgos corte 12000 2026-06-29 OK
+q_prior medio por dow (2025-07..) [0.101, 0.102, 0.104, 0.107, 0.104, 0.103, 0.114]
+etq media por dow (2025-07..) [0.087, 0.095, 0.113, 0.106, 0.106, 0.094, 0.118]
+total 34s
+
+real	0m48.859s
+user	0m47.379s
+sys	0m6.947s

@@ -1,0 +1,5 @@
+corte 10560 (2026-04-01 h0, mes 2026-04) alteración (+7) mod 38 (100% de seq[t:] cambia): max|ΔP[t]| = 0.00e+00; max|ΔP| filas del mes ≤ t (1) = 0.00e+00 -> OK; filas > t (335): cambian 100% (control) | 18s
+corte 9137 (2025-11-20 h5, mes 2025-11) alteración biyección aleatoria (92% de seq[t:] cambia): max|ΔP[t]| = 0.00e+00; max|ΔP| filas del mes ≤ t (234) = 0.00e+00 -> OK; filas > t (126): cambian 100% (control) | 23s
+corte 11495 (2026-06-19 h11, mes 2026-06) alteración iid uniforme (97% de seq[t:] cambia): max|ΔP[t]| = 0.00e+00; max|ΔP| filas del mes ≤ t (228) = 0.00e+00 -> OK; filas > t (84): cambian 100% (control) | 19s
+FUGA TEMPORAL: OK (P[t] no cambia en los 3 cortes)
+CPU 93s

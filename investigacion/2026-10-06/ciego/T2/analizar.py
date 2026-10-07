@@ -60,6 +60,10 @@ for tr in TR:
       f"| Top-15 {m['top15']:.1f} Δ {m['d15']:+.2f} pp | mezcla Δ {f(m['mix_dmb'])} -> {'PASA' if c else 'FALLA'}")
 bs = [tuple(np.load(f"{SP}/placebo_{mes}.npz")["bs"]) for mes in MESES]; p(f"    árboles del placebo por mes (N, R): {bs}")
 R["placebo"]["PASA"] = bool(ok_a)
+Ppl2, _, _, _ = cargar("placebo2")   # robustez: otra permutación de jornadas (no cambia el umbral)
+for tr in TR:
+    m = met(Ppl2, tr); R["placebo"][tr]["placebo2"] = m
+    p(f"    placebo, 2.ª permutación {tr}: Δ mbits {f(m['dmb'])} {fic(m['dmb_ic'])} | Top-15 Δ {m['d15']:+.2f} pp")
 # (b) retraso
 Pg, _, _, _ = cargar("gap1"); R["gap1"] = {}
 allidx = SUB & (A.TRAMOS["AJUSTE"] | A.TRAMOS["ELECCION"])

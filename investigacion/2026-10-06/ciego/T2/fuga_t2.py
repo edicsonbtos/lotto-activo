@@ -8,6 +8,7 @@ import arnes as A, rasgos_s2 as R, motor_s2 as M
 spec = importlib.util.spec_from_file_location("r4", "/home/user/lotto-activo/investigacion/2026-10-06/motor2/M4/rasgos.py")
 R4 = importlib.util.module_from_spec(spec); spec.loader.exec_module(R4)
 SP = A.SP; z = np.load(SP + "/s2_rasgos.npz"); rho = float(z["rho"]); NM = [str(x) for x in z["nm"]]
+M.PRM = dict(M.PRM, num_threads=2)   # máximo 2 hilos (T1 corre a la vez); con 2 hilos la matriz se reproduce exacta (validar.py)
 D0 = A.D; Pfin = np.load(SP + "/motor0_S2.npz")["P"]
 
 def pipeline_mes(seq, mes):
