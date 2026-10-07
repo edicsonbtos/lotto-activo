@@ -9,6 +9,6 @@ if nombre == "S3":
     cols = [n4.index(k) for k in ("rd1", "rd2", "hay_rd")]
     X = np.concatenate([X, m4["X"][:, :, cols]], 2).astype(np.float32); nm = nm + ["rd1", "rd2", "hay_rd"]
 t0 = time.time()
-P, info, _ = M.correr("C", vida, X, nm, etq, "2025-07", 1, "2026-10", log=lambda *a, **k: None)
+P, info, _ = M.correr("C", vida, X, nm, etq, "2025-07", 1, "2026-10", log=lambda *a, **k: print(*a, flush=True))
 np.savez(f"{SP}/s3run_{nombre}_{int(vida)}.npz", P=P, info=np.array(info, dtype=object))
 print(nombre, vida, round(time.time() - t0), "s", np.isfinite(P[A.TRAMOS["PRUEBA26"]]).all(), flush=True)
