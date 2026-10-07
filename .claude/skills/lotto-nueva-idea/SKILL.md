@@ -58,3 +58,6 @@ Estructura real conocida: el operador **evita repetir el animal el mismo día** 
 
 ## El PC del usuario
 Tiene ~150 MB de RAM libres y numpy/OpenBLAS falla ahí. Scripts cortos (la caché ocupa poco) sí corren. Los largos se añaden a `HERRAMIENTAS` en `servidor.py` para que el usuario los ejecute desde la web de Railway con "Ejecutar".
+
+## 2026-10-07: S2 en la era sellada 2019-2023 (15.166 filas pegadas por el usuario)
+`investigacion/2026-10-07/sellado/INFORME.md`. Mezcla S2 (w 0,75) + ensamble: **CONFIRMADO** (+5,2 mbits [+2,0; +8,4], Top-15 +0,9 pp, 4/4 años positivos), pero S2 solo = +0,0 y la plata (Top-5 esc.) no mejora. La base ya daba +62 mbits en esa era. S2 sigue sin estar en el servidor: candidato a sombra ~90 jornadas, pendiente de decisión del usuario.
