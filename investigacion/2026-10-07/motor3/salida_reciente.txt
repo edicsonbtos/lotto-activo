@@ -1,0 +1,8 @@
+[S3_90-w0.75] PRUEBA26  n= 1164 mbits +135.4 | Δ vs prod +26.38 [+14.10;+38.65] | Top-5 19.7 (prod 18.6) | Top-15 53.6 (prod 49.6) | ret Top-5 +22.4% (prod +14.4%)
+S3_90 w.75 cambio=True PRUEBA26 n= 1164 mbits +135.4 Δ  +26.4 [+14.1;+38.7] | Top15 53.6 (PROD 50.4) Δ +3.18 [+0.71;+5.65] | T15plano +7.2% (PROD +0.9) T15pond +12.5% (+5.9) T5esc +22.4% (+15.3) Δ +7.1 [-5.7;+19.9]
+S3_90 w.75 cambio=False PRUEBA26 n= 1164 mbits +135.4 Δ  +26.4 [+14.1;+38.7] | Top15 53.6 (PROD 49.6) Δ +4.04 [+1.70;+6.37] | T15plano +7.2% (PROD -0.9) T15pond +12.5% (+4.4) T5esc +22.4% (+14.4) Δ +8.1 [-4.9;+21.0]
+S2 mezcla .75 cambio=True PRUEBA26 n= 1164 mbits +125.8 Δ  +16.8 [ +4.9;+28.7] | Top15 54.3 (PROD 50.4) Δ +3.87 [+1.41;+6.32] | T15plano +8.6% (PROD +0.9) T15pond +14.2% (+5.9) T5esc +24.7% (+15.3) Δ +9.3 [-3.8;+22.5]
+S2 mezcla .75 cambio=False PRUEBA26 n= 1164 mbits +125.8 Δ  +16.8 [ +4.9;+28.7] | Top15 53.9 (PROD 49.6) Δ +4.30 [+1.98;+6.61] | T15plano +7.7% (PROD -0.9) T15pond +13.0% (+4.4) T5esc +22.7% (+14.4) Δ +8.4 [-4.7;+21.5]
+ult 30d PROD 360 top5 18.6 top15 46.7
+ult 30d S3 360 top5 21.1 top15 55.3
+ult 30d S2mix 360 top5 20.6 top15 54.7

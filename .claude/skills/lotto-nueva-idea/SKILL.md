@@ -61,3 +61,6 @@ Tiene ~150 MB de RAM libres y numpy/OpenBLAS falla ahí. Scripts cortos (la cach
 
 ## 2026-10-07: S2 en la era sellada 2019-2023 (15.166 filas pegadas por el usuario)
 `investigacion/2026-10-07/sellado/INFORME.md`. Mezcla S2 (w 0,75) + ensamble: **CONFIRMADO** (+5,2 mbits [+2,0; +8,4], Top-15 +0,9 pp, 4/4 años positivos), pero S2 solo = +0,0 y la plata (Top-5 esc.) no mejora. La base ya daba +62 mbits en esa era. S2 sigue sin estar en el servidor: candidato a sombra ~90 jornadas, pendiente de decisión del usuario.
+
+## 2026-10-07: S3 (S2 + RD dentro; vida 45 vs 90) — DUDOSO
+`investigacion/2026-10-07/motor3/INFORME.md`. RD dentro de S2 SÍ mejora (+11,5 mbits [+7,2; +15,7]). Vida corta (45) EMPEORA (−12 mbits con RD): no acortar la memoria. Elegido S3_90 w 0,75: Δ mbits +28 / +32 / +26 (AJUSTE / ELECCION / reciente), Top-15 +0,6 [−0,8; +2,0] / +3,1 / +3,2 (reciente contaminada). Falta Turing y recalcular el pronóstico al llegar RD (arquitectura). No desplegado.
