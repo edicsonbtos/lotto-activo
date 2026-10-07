@@ -1841,6 +1841,118 @@ def html_mesa():
 
 
 MAX_POST = 64 * 1024        # los formularios son diminutos; más que esto es basura o abuso
+JSON_UTF8 = "application/json; charset=utf-8"
+
+# ---------------------------------------------------------------- rutas GET (JSON)
+# Cada ruta es (función(q) -> objeto, tipo de contenido); q = parámetros de la consulta.
+def _ruta_tareas(q):
+    est = estado_tareas()
+    est["_auto"] = auto_estado()
+    return est
+
+def _ruta_listo(q):
+    listo = True
+    if PRED is not None:
+        filas = cargar(); e = estado(filas)
+        listo = PRED.obtener(HIST, e["pf"], e["ph"]) is not None
+    return {"listo": listo}
+
+def _ruta_rdint(q):
+    try:
+        import rdint_vivo
+        return rdint_vivo.api()
+    except Exception as ex:  # noqa: BLE001
+        return {"error": f"{type(ex).__name__}: {ex}"}
+
+def _ruta_datos_publicados(q):
+    try:
+        import datos_publicados
+        return datos_publicados.resumen(DATOS)
+    except Exception as ex:  # noqa: BLE001
+        print(f"[datos_publicados] resumen falló: {ex!r}", file=sys.stderr, flush=True)
+        return {"error": "no disponible"}
+
+RUTAS_JSON = {
+    "/tareas.json": (_ruta_tareas, JSON_UTF8),
+    "/listo.json": (_ruta_listo, "application/json"),
+    "/api/mesa": (lambda q: _api(mesa_datos, q.get("offset", ["0"])[0]), JSON_UTF8),
+    "/api/mesa_stats": (lambda q: _api(mesa_stats), JSON_UTF8),
+    "/api/rdint": (_ruta_rdint, JSON_UTF8),
+    "/api/cambio_rd": (lambda q: _api(lambda: marcador_cambio_rd(log_cargar())), JSON_UTF8),
+    "/api/sombra": (lambda q: _api(lambda: marcador_sombra(log_cargar())), JSON_UTF8),
+    "/api/datos_publicados": (_ruta_datos_publicados, JSON_UTF8),
+}
+
+def _parametros_pagina(q):
+    """(banca, tab, atras) de la consulta, tolerante a basura."""
+    try:
+        banca = float(q.get("banca", [""])[0].replace(",", "."))
+        banca = banca if 0 < banca < 1e9 else None
+    except ValueError:
+        banca = None
+    tab = (q.get("tab", ["la"])[0] or "la").strip().lower()
+    try:
+        atras = max(0, min(int(q.get("atras", ["0"])[0] or 0), 10000))
+    except ValueError:
+        atras = 0
+    return banca, tab, atras
+
+# --------------------------------------------------------------- acciones POST
+# Cada acción recibe el cuerpo del formulario y devuelve el ancla a la que se vuelve.
+def _entero(q, clave):
+    try:
+        return int(q.get(clave, [""])[0])
+    except ValueError:
+        return -1
+
+def _accion_auto(datos):
+    # En segundo plano: consultar la fuente puede tardar varios segundos
+    # y la página debe volver enseguida.
+    if AUTO["corriendo"]:
+        AVISO.update(texto="Ya se está buscando el resultado.", clase="no")
+    else:
+        threading.Thread(target=auto_pasada, daemon=True).start()
+        AVISO.update(texto="Buscando el resultado en la fuente…", clase="no")
+    return "#registrar"
+
+def _accion_deshacer(datos):
+    texto, ok = deshacer()
+    AVISO.update(texto=esc(texto), clase="ok" if ok else "no")
+    return "#registrar"
+
+def _accion_registrar(datos):
+    num = (parse_qs(datos).get("num", [""])[0]).strip()
+    if num not in IDX:
+        AVISO.update(texto=f'«{esc(num) or "vacío"}» no es válido. Usa 0, 00 o 1–36.', clase="bad")
+    else:
+        texto, clase = registrar(num)
+        AVISO.update(texto=texto, clase=clase)
+    return ""
+
+def _accion_tripleta(datos):
+    q = parse_qs(datos)
+    pf = (q.get("pf", [""])[0]).strip()
+    codigos = [(q.get(k, [""])[0]).strip() for k in ("a1", "a2", "a3", "b1", "b2", "b3")]
+    texto, clase = registrar_tripleta(pf, _entero(q, "ph"), _entero(q, "n"), codigos)
+    AVISO.update(texto=esc(texto), clase=clase)
+    return "#tripleta"
+
+ACCIONES_POST = {
+    "/auto": _accion_auto,
+    "/deshacer": _accion_deshacer,
+    "/registrar": _accion_registrar,
+    "/": _accion_registrar,
+    "/tripleta/registrar": _accion_tripleta,
+}
+
+def _accion_herramienta(ruta):
+    """/herramienta/<clave> inicia; /herramienta/<clave>/detener la para. Cualquier otra forma no hace nada."""
+    partes = ruta.strip("/").split("/")
+    if len(partes) == 3 and partes[2] == "detener":
+        detener_tarea(partes[1])
+    elif len(partes) == 2:
+        iniciar_tarea(partes[1])
+    return "#herramientas"
 
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
@@ -1871,58 +1983,13 @@ class H(BaseHTTPRequestHandler):
             self._post()
 
     def _get(self):
-        ruta = self.path.split("?")[0]
+        ruta, _, consulta = self.path.partition("?")
+        q = parse_qs(consulta)
         if ruta in ("/", "/index.html"):
-            q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
-            try:
-                banca = float(q.get("banca", [""])[0].replace(",", "."))
-                banca = banca if 0 < banca < 1e9 else None
-            except ValueError:
-                banca = None
-            tab = (q.get("tab", ["la"])[0] or "la").strip().lower()
-            try:
-                atras = max(0, min(int(q.get("atras", ["0"])[0] or 0), 10000))
-            except ValueError:
-                atras = 0
-            self._send(render(banca, tab, atras))
-        elif ruta == "/tareas.json":
-            est = estado_tareas()
-            est["_auto"] = auto_estado()
-            self._send(json.dumps(est, ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/listo.json":
-            listo = True
-            if PRED is not None:
-                filas = cargar(); e = estado(filas)
-                listo = PRED.obtener(HIST, e["pf"], e["ph"]) is not None
-            self._send(json.dumps({"listo": listo}), "application/json")
-        elif ruta == "/api/mesa":
-            q = parse_qs(self.path.split("?", 1)[1] if "?" in self.path else "")
-            self._send(json.dumps(_api(mesa_datos, q.get("offset", ["0"])[0]),
-                                  ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/api/rdint":
-            try:
-                import rdint_vivo
-                cuerpo = rdint_vivo.api()
-            except Exception as ex:  # noqa: BLE001
-                cuerpo = {"error": f"{type(ex).__name__}: {ex}"}
-            self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/api/cambio_rd":
-            self._send(json.dumps(_api(lambda: marcador_cambio_rd(log_cargar())), ensure_ascii=False),
-                       "application/json; charset=utf-8")
-        elif ruta == "/api/sombra":
-            self._send(json.dumps(_api(lambda: marcador_sombra(log_cargar())), ensure_ascii=False),
-                       "application/json; charset=utf-8")
-        elif ruta == "/api/datos_publicados":
-            try:
-                import datos_publicados
-                cuerpo = datos_publicados.resumen(DATOS)
-            except Exception as ex:  # noqa: BLE001
-                print(f"[datos_publicados] resumen falló: {ex!r}", file=sys.stderr, flush=True)
-                cuerpo = {"error": "no disponible"}
-            self._send(json.dumps(cuerpo, ensure_ascii=False), "application/json; charset=utf-8")
-        elif ruta == "/api/mesa_stats":
-            self._send(json.dumps(_api(mesa_stats), ensure_ascii=False),
-                       "application/json; charset=utf-8")
+            self._send(render(*_parametros_pagina(q)))
+        elif ruta in RUTAS_JSON:
+            fn, tipo = RUTAS_JSON[ruta]
+            self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
@@ -1935,45 +2002,10 @@ class H(BaseHTTPRequestHandler):
             return self._send("Solicitud no válida", "text/plain; charset=utf-8", 400)
         datos = self.rfile.read(n).decode("utf-8", errors="replace") if n else ""
         ruta = self.path.split("?")[0]
-        if ruta == "/auto":
-            # En segundo plano: consultar la fuente puede tardar varios segundos
-            # y la página debe volver enseguida.
-            if AUTO["corriendo"]:
-                AVISO.update(texto="Ya se está buscando el resultado.", clase="no")
-            else:
-                threading.Thread(target=auto_pasada, daemon=True).start()
-                AVISO.update(texto="Buscando el resultado en la fuente…", clase="no")
-            return self._volver("#registrar")
-        if ruta == "/deshacer":
-            texto, ok = deshacer()
-            AVISO.update(texto=esc(texto), clase="ok" if ok else "no")
-            return self._volver("#registrar")
-        if ruta in ("/registrar", "/"):
-            num = (parse_qs(datos).get("num", [""])[0]).strip()
-            if num not in IDX:
-                AVISO.update(texto=f'«{esc(num) or "vacío"}» no es válido. Usa 0, 00 o 1–36.', clase="bad")
-            else:
-                texto, clase = registrar(num)
-                AVISO.update(texto=texto, clase=clase)
-            return self._volver()
-        if ruta == "/tripleta/registrar":
-            q = parse_qs(datos)
-            pf = (q.get("pf", [""])[0]).strip()
-            try: ph = int(q.get("ph", [""])[0])
-            except ValueError: ph = -1
-            try: n = int(q.get("n", [""])[0])
-            except ValueError: n = -1
-            codigos = [(q.get(k, [""])[0]).strip() for k in ("a1", "a2", "a3", "b1", "b2", "b3")]
-            texto, clase = registrar_tripleta(pf, ph, n, codigos)
-            AVISO.update(texto=esc(texto), clase=clase)
-            return self._volver("#tripleta")
+        if ruta in ACCIONES_POST:
+            return self._volver(ACCIONES_POST[ruta](datos))
         if ruta.startswith("/herramienta/"):
-            partes = ruta.strip("/").split("/")
-            if len(partes) == 3 and partes[2] == "detener":
-                detener_tarea(partes[1])
-            elif len(partes) == 2:
-                iniciar_tarea(partes[1])
-            return self._volver("#herramientas")
+            return self._volver(_accion_herramienta(ruta))
         self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
     def log_message(self, fmt, *a):
