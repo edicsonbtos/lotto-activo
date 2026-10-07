@@ -158,12 +158,15 @@ def leer_marcador(ruta=None):
 # ---------------------------------------------------------------- estado
 def cargar_estado():
     if os.path.exists(ESTADO):
-        return json.load(open(ESTADO, encoding="utf-8"))
+        with open(ESTADO, encoding="utf-8") as f:
+            return json.load(f)
     return {}
 
 
 def guardar_estado(e):
-    json.dump(e, open(ESTADO, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+    with open(ESTADO + ".tmp", "w", encoding="utf-8") as f:   # atómico: un corte no deja el JSON truncado
+        json.dump(e, f, indent=1, ensure_ascii=False)
+    os.replace(ESTADO + ".tmp", ESTADO)
 
 
 # ---------------------------------------------------------------- informe
