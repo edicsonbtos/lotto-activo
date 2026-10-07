@@ -26,7 +26,9 @@ def main():
         return
     tmp = tempfile.mkdtemp(prefix="lotto_smoke_")
     try:
-        for f in ("servidor.py", "modelo.py", "historial.txt", "predicciones.json"):
+        # todos los .py de la raíz (servidor, comun, rdint_vivo...) + copias de los datos
+        nombres = [f for f in os.listdir(raiz) if f.endswith(".py")] + ["historial.txt", "predicciones.json"]
+        for f in nombres:
             src = os.path.join(raiz, f)
             if os.path.exists(src):
                 shutil.copy2(src, tmp)

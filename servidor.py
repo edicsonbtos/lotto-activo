@@ -117,9 +117,7 @@ def log_cargar():
     return d
 
 def log_guardar(d):
-    with open(LOG + ".tmp", "w", encoding="utf-8") as f:
-        json.dump(d, f, ensure_ascii=False, indent=1)
-    os.replace(LOG + ".tmp", LOG)
+    guardar_json(LOG, d, indent=1)
 
 CORRECCION_HIST = os.path.join(HERR, "correccion_historial_2026-09-29.json")
 
@@ -804,8 +802,8 @@ def auto_estado():
     return dict(base, txt=f"automático · revisado {hora} · {AUTO['mensaje']}", clase="on")
 
 # ------------------------------------------------------------------ página
-def esc(s):
-    return html.escape(str(s))
+from comun import esc, fx as _fx, fila as fila_jugada, COLS as COLS_JUGADA, nav as html_nav_hist, sec, guardar_json
+import comun
 
 def num(x, dec=1):
     """Número con coma decimal, como se escribe en español."""
@@ -1147,30 +1145,9 @@ def html_registro(e=None):
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último resultado anotado?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
-def _fx(n, clase):
-    """Casilla de fichas: número relleno si se juega, raya tenue si no."""
-    if not n:
-        return '<span class="fx z" aria-label="sin fichas">–</span>'
-    return f'<span class="fx {clase}" aria-label="{n} ficha{"s" if n != 1 else ""}">{n}</span>'
-
-def fila_jugada(r, num_, nombre, sub, f5, fp):
-    return (f'<li><span class="rk">{r}</span><span class="n">{esc(num_)}</span>'
-            f'<span class="nm">{esc(nombre)}<small>{sub}</small></span>'
-            f'{_fx(f5, "a")}{_fx(fp, "b")}</li>')
-
-COLS_JUGADA = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
-               '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
-
 def html_compartir(juego, cuando, animales, anti=()):
     """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 o ambos (el monto va solo al Top)."""
-    op_anti = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>'
-               if anti else "")
-    return (f'<div class="compartir" data-t="{esc(juego)}" data-f="{esc(cuando)}" data-a="{esc("|".join(animales[:15]))}"'
-            f' data-x="{esc("|".join(anti))}">'
-            '<select aria-label="Qué compartir"><option value="5">Top 5</option><option value="15">Top 15</option>'
-            f'{op_anti}</select>'
-            '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
-            '<button type="button" class="sec">Compartir</button></div>')
+    return comun.compartir(juego, animales, anti, cuando=cuando)
 
 def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
     """La jugada del próximo sorteo: Top-5 a la vista y del 6º al 15º plegado.
@@ -1223,15 +1200,6 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
             f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in list(orden[-15:])[::-1]] if len(orden) >= 38 else ())}'
             f'{leyenda}{aviso_modelo}</section>')
-
-def html_nav_hist(tab, atras, total):
-    """Flechas para ver el Top congelado de sorteos anteriores (atras=0: el próximo)."""
-    def enlace(n, txt):
-        return f'<a href="/?tab={tab}' + (f'&amp;atras={n}' if n else '') + f'">{txt}</a>'
-    ant = enlace(atras + 1, "‹ Anterior") if atras < total else '<span class="off">‹ Anterior</span>'
-    sig = enlace(atras - 1, "Siguiente ›") if atras > 0 else '<span class="off">Siguiente ›</span>'
-    pos = "próximo sorteo" if atras == 0 else f"hace {atras} sorteo{'s' if atras > 1 else ''}"
-    return f'<nav class="histnav" aria-label="Sorteos anteriores">{ant}<span class="pos">{pos}</span>{sig}</nav>'
 
 def la_pasados(d):
     return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None and r.get("orden_completo")]
@@ -1335,13 +1303,6 @@ def html_resultados(d, limite=100):
     return (f'{clave}<table class="lista"><thead><tr><th scope="col">Hora</th><th scope="col">Salió</th>'
             f'<th scope="col" style="text-align:right">Puesto</th></tr></thead><tbody>{cuerpo}</tbody></table>{nota}'
             '<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p>')
-
-def sec(id_, titulo, meta, cuerpo, abierto=False):
-    """Desplegable de la página (se recuerda abierto/cerrado en el navegador)."""
-    return (f'<details class="sec" id="{id_}" data-rec{" open" if abierto else ""}>'
-            f'<summary><span class="st"><h2>{titulo}</h2><span class="meta">{meta}</span></span>'
-            f'<span class="chev" aria-hidden="true"></span></summary>'
-            f'<div class="cuerpo">{cuerpo}</div></details>')
 
 def html_tripleta(e, tri_actual, d, filas, calculando=False, sin_modelo=False, faltan_h=0.0):
     # La ventana que se rotula es la de la tripleta que se muestra, que ya no

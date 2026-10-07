@@ -23,6 +23,8 @@ datos_multiloteria/rdint_hist.csv del repo.
 import csv, html as _html, io, json, os, re, sys, threading, time, unicodedata
 from datetime import date, datetime, timedelta
 
+import comun
+
 RUTA = os.path.dirname(os.path.abspath(__file__))
 DATOS = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RUTA
 HERR = os.path.join(RUTA, "herramientas")
@@ -127,10 +129,7 @@ def log_cargar():
 
 
 def log_guardar(d):
-    tmp = RD_LOG + ".tmp"
-    with io.open(tmp, "w", encoding="utf-8") as f:
-        json.dump(d, f, ensure_ascii=False)
-    os.replace(tmp, RD_LOG)
+    comun.guardar_json(RD_LOG, d)
 
 
 def siguiente(filas, hoy=None):
@@ -347,8 +346,7 @@ def api():
             "marcador": marcador(x["d"]), "estado": ESTADO}
 
 
-def _e(s):
-    return _html.escape(str(s))
+_e = comun.esc
 
 
 def _chip(cod, extra=""):
@@ -368,26 +366,12 @@ def _fecha(f):
     return "%s %d/%d" % (_DIAS[d.weekday()], d.day, d.month)
 
 
-def _fx(n, clase):
-    if not n:
-        return '<span class="fx z" aria-label="sin fichas">–</span>'
-    return '<span class="fx %s" aria-label="%d ficha%s">%d</span>' % (clase, n, "s" if n != 1 else "", n)
-
-
 def _fila(k, cod, pct):
-    return ('<li><span class="rk">%d</span><span class="n">%s</span><span class="nm">%s<small>%s %%</small></span>%s%s</li>'
-            % (k, _e(cod), _e(NOMBRE[cod]), ("%.2f" % pct).replace(".", ","),
-               _fx(PLANES[0][1][k - 1], "a"), _fx(PLANES[1][1][k - 1], "b")))
+    return comun.fila(k, cod, NOMBRE[cod], ("%.2f" % pct).replace(".", ",") + " %",
+                      PLANES[0][1][k - 1], PLANES[1][1][k - 1])
 
 
-def _compartir(titulo, animales, anti=()):
-    """Igual que html_compartir de servidor.py (el JS vive allí)."""
-    op = ('<option value="anti">Anti Top 15</option><option value="ambos">Top 15 + Anti 15</option>' if anti else "")
-    return ('<div class="compartir" data-t="%s" data-a="%s" data-x="%s"><select aria-label="Qué compartir">'
-            '<option value="5">Top 5</option><option value="15">Top 15</option>%s</select>'
-            '<input type="text" inputmode="decimal" placeholder="$ por animal" aria-label="Monto por animal">'
-            '<button type="button" class="sec">Compartir</button></div>'
-            % (_e(titulo), _e("|".join(animales)), _e("|".join(anti)), op))
+_compartir = comun.compartir
 
 
 def _anti(o, pr):
@@ -408,13 +392,10 @@ def _anti(o, pr):
 
 
 def _sec(id_, titulo, meta, cuerpo):
-    return ('<details class="sec" id="%s" data-rec><summary><span class="st"><h2>%s</h2><span class="meta">%s</span>'
-            '</span><span class="chev" aria-hidden="true"></span></summary><div class="cuerpo">%s</div></details>'
-            % (id_, titulo, _e(meta), cuerpo))
+    return comun.sec(id_, titulo, _e(meta), cuerpo)    # aquí la meta es texto: se escapa
 
 
-_COLS = ('<li class="cols" aria-hidden="true"><span></span><span></span><span>Animal</span>'
-         '<span>Top-5</span><span>Ponde&shy;rado</span></li>')
+_COLS = comun.COLS
 
 
 def _resultados(d, limite=100):
@@ -448,13 +429,7 @@ def _resultados(d, limite=100):
 
 
 def _nav(atras, total):
-    """Flechas para ver sorteos RD anteriores (mismo estilo .histnav de servidor.py)."""
-    def enlace(n, txt):
-        return '<a href="/?tab=rd%s">%s</a>' % ("&amp;atras=%d" % n if n else "", txt)
-    ant = enlace(atras + 1, "‹ Anterior") if atras < total else '<span class="off">‹ Anterior</span>'
-    sig = enlace(atras - 1, "Siguiente ›") if atras > 0 else '<span class="off">Siguiente ›</span>'
-    pos = "próximo sorteo" if atras == 0 else "hace %d sorteo%s" % (atras, "s" if atras > 1 else "")
-    return '<nav class="histnav" aria-label="Sorteos anteriores">%s<span class="pos">%s</span>%s</nav>' % (ant, pos, sig)
+    return comun.nav("rd", atras, total)
 
 
 def _pasado(vistos, atras):
