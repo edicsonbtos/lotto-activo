@@ -1654,12 +1654,71 @@ def html_rd(atras=0):
         return '<div class="card"><p>RD Internacional se está preparando…</p></div>'
 
 
+def html_sombra(e, d, pend):
+    """Tercera pestaña: el pronóstico del motor en sombra (ag12 con la regla de RD) para el próximo sorteo y su
+    marcador en vivo contra el ensamble. Solo muestra: el pronóstico que se puntúa y se juega sigue siendo el de
+    la pestaña Lotto Activo. Si algo falla, la pestaña lo dice y el resto de la web sigue."""
+    try:
+        sombra = (pend or {}).get("sombra") or {}
+        p = sombra.get("ag12")
+        hora, fecha = HORAS[e["ph"]], fecha_corta(e["pf"])
+        try:
+            rd = experimentos._rd_por_slot()
+        except Exception:  # noqa: BLE001
+            rd = {}
+        if not p:
+            cuerpo = '<div class="tip">El motor en sombra aún no tiene su pronóstico para este sorteo; la página se actualiza sola.</div>'
+        else:
+            q, usado = experimentos.con_rd(p, rd, e["pf"], e["ph"])
+            tot = sum(q) or 1.0
+            orden = sorted(range(K), key=lambda i: (-q[i], i))
+            esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
+            def fila(r, i):
+                return fila_jugada(r, POS[i], ANIM[POS[i]].title(), f"{num(q[i] / tot * 100, 2)} %", esc5[r], pond[r])
+            top5 = "".join(fila(r, i) for r, i in enumerate(orden[:5], 1))
+            resto = "".join(fila(r, i) for r, i in enumerate(orden[5:15], 6))
+            ens = (pend or {}).get("orden_completo") or e["orden"]
+            comunes = len(set(orden[:5]) & set(ens[:5]))
+            nota_rd = ("Con la regla de RD aplicada (el animal de RD de la media hora anterior pesa la mitad)." if usado
+                       else "Sin cambio por RD en este sorteo.")
+            cuerpo = (f'<ol class="jug">{COLS_JUGADA}{top5}</ol>'
+                      f'<details class="mas" id="sombra-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+                      f'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">{resto}</ol></details>'
+                      f'<p class="note">{nota_rd} Coincide en {comunes} de 5 animales con el Top-5 del modelo actual.</p>')
+        m = marcador_sombra(d)["marcador"]
+        dec = decision_sombra(d)
+        def fila_m(nombre, k):
+            v = m.get(k) or {}
+            if not v.get("n"):
+                return ""
+            return (f'<tr><th scope="row">{nombre}</th><td>{v["top3_pct"]:.1f} %</td><td>{v["top5_pct"]:.1f} %</td>'
+                    f'<td>{v["top15_pct"]:.1f} %</td><td>{v["mbits"]:+.0f}</td><td>{v["t5_neto"]:+.0f} $</td></tr>')
+        tabla = (f'<table class="tabla"><thead><tr><th></th><th>Top-3</th><th>Top-5</th><th>Top-15</th><th>Señal</th>'
+                 f'<th>Neto Top-5</th></tr></thead><tbody>'
+                 + fila_m("Modelo actual", "ensamble") + fila_m("En sombra", "ag12") + fila_m("En sombra + RD", "ag12_rd")
+                 + '</tbody></table>')
+        n = (m.get("ag12") or {}).get("n", 0)
+        dm = dec.get("mbits_ag12_menos_ensamble") if isinstance(dec, dict) else None
+        ic = (f'; ventaja {dm["media"]:+.1f} mbits por sorteo, intervalo 90 % de {dm["ic90"][0]:+.1f} a {dm["ic90"][1]:+.1f}'
+              if dm and dm.get("ic90") else "")
+        veredicto = (f'<p class="note">{n} sorteos medidos desde el 26 de septiembre (los mismos para los tres){ic}. '
+                     f'Todavía no se puede afirmar que gane: la decisión oficial es con {dec.get("decide_con", 931)} sorteos '
+                     f'(hacia mediados de diciembre). El pronóstico que se puntúa y se recomienda sigue siendo el de Lotto Activo.</p>')
+        return (f'<section class="card jugada" aria-labelledby="som-t"><div class="jh"><h2 id="som-t">Motor en sombra · '
+                f'<span>{hora}</span></h2><span class="pill warn" title="se mide, aún no se recomienda">en prueba</span></div>'
+                f'<p class="ult">{esc(fecha.capitalize())} · pronóstico del motor nuevo (ag12)</p>{cuerpo}</section>'
+                f'<section class="card"><div class="jh"><h2>Cómo le va frente al modelo actual</h2></div>{tabla}{veredicto}</section>')
+    except Exception as ex:  # noqa: BLE001
+        print(f"[sombra] {ahora()} html: {ex!r}", file=sys.stderr, flush=True)
+        return '<div class="card"><p>El motor en sombra se está preparando…</p></div>'
+
+
 def render(banca=None, tab="la", atras=0):
     x = preparar()
     filas, e, d = x["filas"], x["e"], x["d"]
     calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
     pend = x["pend"]
-    tab = "rd" if tab == "rd" else "la"
+    tab = tab if tab in ("rd", "sombra") else "la"
     atras_la = atras if tab == "la" else 0
     atras_rd = atras if tab == "rd" else 0
 
@@ -1689,6 +1748,7 @@ def render(banca=None, tab="la", atras=0):
            '<nav class="tabs" role="tablist" aria-label="Lotería">'
            + pestana("la", "Lotto Activo", f"próximo {HORAS[e['ph']]}")
            + pestana("rd", "RD Internacional", "sorteos a las y media")
+           + pestana("sombra", "Motor en sombra", "en prueba")
            + '</nav></div></header>')
     cuerpo = (
         f'{cab}<main class="w"><h1 class="sr">Lotto Activo</h1>'
@@ -1696,6 +1756,8 @@ def render(banca=None, tab="la", atras=0):
         f'{panel_la}</section>'
         f'<section class="panel" id="p-rd" role="tabpanel" aria-labelledby="t-rd"{"" if tab == "rd" else " hidden"}>'
         f'{html_rd(atras_rd)}</section>'
+        f'<section class="panel" id="p-sombra" role="tabpanel" aria-labelledby="t-sombra"{"" if tab == "sombra" else " hidden"}>'
+        f'{html_sombra(e, d, pend)}</section>'
         '<footer>Es un juego de azar: ningún modelo garantiza ganar. Juega solo lo que puedas perder.</footer></main>')
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'

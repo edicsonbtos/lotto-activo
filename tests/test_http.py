@@ -97,7 +97,7 @@ def test_rutas_json(web, ruta, tipo):
 
 @pytest.mark.skipif(not HAY_DATOS, reason="falta historial.txt")
 def test_pagina_principal_y_pestanas(web):
-    for ruta in ("/", "/index.html", "/?tab=rd", "/?tab=la&atras=3", "/?banca=300", "/?atras=abc&banca=x"):
+    for ruta in ("/", "/index.html", "/?tab=rd", "/?tab=sombra", "/?tab=la&atras=3", "/?banca=300", "/?atras=abc&banca=x"):
         st, ct, _, cuerpo = pedir(web, "GET", ruta)
         assert (st, ct) == (200, "text/html; charset=utf-8"), ruta
         assert "<html" in cuerpo

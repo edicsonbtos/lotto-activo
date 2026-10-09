@@ -30,10 +30,10 @@
     }).catch(function(){setTimeout(tareas,8000);});
   }
   tareas();
-  // Pestañas: ?tab=la|rd manda; si no viene, la última que abriste.
+  // Pestañas: ?tab=la|rd|sombra manda; si no viene, la última que abriste.
   var tabs = [].slice.call(document.querySelectorAll('.tabs [role=tab]'));
   function ver(t, guardar){
-    if(t !== 'la' && t !== 'rd') return;
+    if(t !== 'la' && t !== 'rd' && t !== 'sombra') return;
     tabs.forEach(function(a){
       var on = a.getAttribute('data-tab') === t;
       a.setAttribute('aria-selected', on ? 'true' : 'false');
