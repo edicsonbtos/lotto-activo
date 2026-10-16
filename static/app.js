@@ -80,12 +80,15 @@
 
 <script>
 (function(){
+ // Una mesa por pestaña: suf '' = Lotto Activo, '-s' = motor en sombra (ids mesa<suf>-..., API con ?modelo=sombra).
+ function mesa(suf, qs){
   var off = 0, modo = 'rango', datos = null;
-  var cuerpo = document.getElementById('mesa-cuerpo');
+  var cuerpo = document.getElementById('mesa' + suf + '-cuerpo');
   if(!cuerpo) return;
-  var slotEl = document.getElementById('mesa-slot'), posEl = document.getElementById('mesa-pos');
-  var avisoEl = document.getElementById('mesa-aviso');
-  var prev = document.getElementById('mesa-prev'), next = document.getElementById('mesa-next');
+  var raiz = document.getElementById('mesa' + suf);
+  var slotEl = document.getElementById('mesa' + suf + '-slot'), posEl = document.getElementById('mesa' + suf + '-pos');
+  var avisoEl = document.getElementById('mesa' + suf + '-aviso');
+  var prev = document.getElementById('mesa' + suf + '-prev'), next = document.getElementById('mesa' + suf + '-next');
 
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -147,7 +150,7 @@
   }
 
   function carga(){
-    fetch('/api/mesa?offset=' + off).then(function(r){ return r.json(); }).then(function(j){
+    fetch('/api/mesa?offset=' + off + qs).then(function(r){ return r.json(); }).then(function(j){
       if(j.error){ cuerpo.innerHTML = '<p class="note">' + esc(j.error) + '</p>'; return; }
       datos = j; off = j.offset;
       var gan = j.winner !== null
@@ -170,9 +173,9 @@
 
   prev.onclick = function(){ off += 1; carga(); };
   next.onclick = function(){ if(off > 0){ off -= 1; carga(); } };
-  Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(b){
+  Array.prototype.forEach.call(raiz.querySelectorAll('.mesa-modos button'), function(b){
     b.onclick = function(){
-      Array.prototype.forEach.call(document.querySelectorAll('.mesa-modos button'), function(x){
+      Array.prototype.forEach.call(raiz.querySelectorAll('.mesa-modos button'), function(x){
         x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); });
       b.classList.add('on'); b.setAttribute('aria-pressed', 'true'); modo = b.getAttribute('data-modo'); pinta();
     };
@@ -188,8 +191,8 @@
     });
     return h + '</table>';
   }
-  fetch('/api/mesa_stats').then(function(r){ return r.json(); }).then(function(j){
-    var el = document.getElementById('mesa-stats');
+  fetch('/api/mesa_stats' + (qs ? '?' + qs.slice(1) : '')).then(function(r){ return r.json(); }).then(function(j){
+    var el = document.getElementById('mesa' + suf + '-stats');
     el.innerHTML =
       tabla(j.rank, 'Por segmento de rank', 'solo registros con orden completo guardado') +
       tabla(j.hueco, 'Por bin de hueco', 'esperado = ocupaci\u00f3n media del bin bajo azar') +
@@ -198,6 +201,9 @@
   }).catch(function(){});
 
   carga();
+ }
+ mesa('', '');
+ mesa('-s', '&modelo=sombra');
 })();
 </script>
 

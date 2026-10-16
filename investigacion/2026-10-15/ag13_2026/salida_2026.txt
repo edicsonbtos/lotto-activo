@@ -1,0 +1,35 @@
+réplica 2026: 2959 sorteos, 247 jornadas, 2026-01-05..2026-09-16
+días con U (las dos fuentes): 242 de 247; sorteos con U: 2899 de 2959
+
+=== M1 / M2: Δ mbits por sorteo (IC por bloques de jornada) ===
+M1  ag13 − ensamble                             +45.60  IC90 [37.79, 53.37]  IC95 [36.15, 54.93]  (n=2899, jornadas=242)
+M2  ag13 − ag12_rd_exp (pronosticadores)         +9.25  IC90 [6.9, 11.58]  IC95 [6.39, 11.95]  (n=2899, jornadas=242)
+    ag12_rd_exp − ag12_rd (exposición)           +3.64  IC90 [1.14, 6.05]  IC95 [0.68, 6.54]  (n=2899, jornadas=242)
+    ag12_rd − ensamble (ag12 + RD)              +32.71  IC90 [25.33, 39.78]  IC95 [23.92, 41.11]  (n=2899, jornadas=242)
+    ag13_nd − ag12_rd_exp (diagnóstico)          +4.89  IC90 [3.67, 6.12]  IC95 [3.45, 6.33]  (n=2899, jornadas=242)
+
+Por trimestre (M1 y M2):
+  T1 ene-mar     M1  +57.24 IC90 [42.93, 71.24]   M2  +13.13 IC90 [9.17, 17.0]  n=1008
+  T2 abr-jun     M1  +43.70 IC90 [29.92, 57.08]   M2   +9.35 IC90 [5.48, 13.36]  n=995
+  T3 jul-sep16   M1  +34.63 IC90 [21.72, 48.1]   M2   +4.78 IC90 [0.5, 8.96]  n=896
+
+=== M3: O/E de U contra ag12_rd_exp (menos de 1 = el operador los esquiva) ===
+  real:    O/E 0.753  IC95 [0.696, 0.809]  (O=493, E=654.5, jornadas=242)
+  placebo d+7: O/E 1.097  IC95 [1.027, 1.165]  (E=632.9)
+  placebo d-7: O/E 1.002  IC95 [0.933, 1.071]  (E=628.5)
+  placebo d+14: O/E 0.968  IC95 [0.905, 1.031]  (E=639.5)
+  placebo d-14: O/E 1.023  IC95 [0.947, 1.099]  (E=604.3)
+
+=== M4: aciertos y retorno por ficha (pago 30, con la regla RD de Top-5 / Top-15), mismos sorteos ===
+  ens          Top-3 12.52%  Top-5 19.63%  Top-15 49.74%   retorno Top-5 esc.  +22.0 pp/ficha   Top-15 pond.   +9.2
+  ag12_rd      Top-3 13.38%  Top-5 22.01%  Top-15 52.54%   retorno Top-5 esc.  +32.7 pp/ficha   Top-15 pond.  +14.7
+  ag12_rd_exp  Top-3 13.59%  Top-5 22.35%  Top-15 53.60%   retorno Top-5 esc.  +34.8 pp/ficha   Top-15 pond.  +16.8
+  ag13         Top-3 14.18%  Top-5 22.53%  Top-15 54.92%   retorno Top-5 esc.  +37.6 pp/ficha   Top-15 pond.  +19.5
+  Δ ag13 − ens, Top-5 escalonado: +15.65 pp/ficha  IC90 [8.29, 22.86]  IC95 [6.87, 24.2]
+  Δ ag13 − ag12_rd_exp, Top-5 escalonado:  +2.85 pp/ficha  IC90 [-0.39, 6.07]  IC95 [-0.91, 6.72]
+  Δ ag13 − ens, Top-15 ponderado: +10.35 pp/ficha  IC90 [7.32, 13.31]  IC95 [6.78, 13.92]
+  Δ ag13 − ag12_rd_exp, Top-15 ponderado:  +2.74 pp/ficha  IC90 [1.22, 4.24]  IC95 [0.99, 4.59]
+
+=== VEREDICTO (reglas del anexo, escritas antes) ===
+pronosticadores: PASA (M2 IC90 inf +6.90; M3 O/E 0.753 IC95 sup 0.809)
+ag13 global: PASA (M1 IC90 inf +37.79; Top-5 pp/ficha +15.65; tres trimestres >0: True)

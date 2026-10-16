@@ -230,6 +230,166 @@ def ic90_jornadas(pares):
                 ic90=[round(media - 1.645 * se, 2), round(media + 1.645 * se, 2)])
 
 
+# ------------------------------------------------ ag13 en sombra (PREREGISTRO_ag13.md)
+# ag12 -> regla RD -> exposición (todas las horas) -> pronosticadores ×0,862. NO entra en el marcador principal.
+AG13_DESDE = "2026-10-15"
+AG13_N_DECIDE = 931          # mirada única, sobre los PRIMEROS 931 sorteos con pron válido
+AG13_N_FRENO = 600           # con n >= 600 y Δ mbits < AG13_FRENO_MBITS se apaga
+AG13_FRENO_MBITS = -10.0
+AG13_E_PRON = 350.0          # aciertos esperados de U a los que se juzga el componente pronosticadores
+AG13_T5_MIN = -3.0           # Top-5 pp/ficha: ag13 no peor que esto contra el ensamble
+_AG13 = []
+_FIN_VENTANA_PRON = "T07:56"    # datos_publicados.pasada solo descarga de 6:00 a 7:55
+_ANTES_DEL_PRIMER_SORTEO = "T08:00:00"
+
+
+def _modulo_ag13():
+    if not _AG13:
+        ruta = os.path.join(HERR, "modelos")
+        if ruta not in sys.path:
+            sys.path.append(ruta)
+        import ag13 as modulo
+        _AG13.append(modulo)
+    return _AG13[0]
+
+
+def pron_del_dia(base, fecha, ahora=None):
+    """Lo que publicaron los pronosticadores el día `fecha`, leído de las páginas que guarda datos_publicados.
+    None si todavía puede llegar (la ventana de descarga sigue abierta); si no, {"u": [...], "fuentes": {...}}
+    o {"falta": motivo}. Una página solo vale si se bajó ANTES de las 8:00 del día: así nada de esto puede depender
+    de un resultado. Hacen falta las dos fuentes."""
+    import json
+    ahora = (ahora or datetime.now()).isoformat(timespec="seconds")
+    carpeta = os.path.join(base, "datos_publicados", fecha)
+    try:
+        with open(os.path.join(carpeta, "meta.json"), encoding="utf-8") as f:
+            meta = json.load(f)
+        meta = meta if isinstance(meta, dict) else {}
+    except (OSError, ValueError):
+        meta = {}
+    ok = {}
+    for f in _modulo_ag13().FUENTES:
+        v = meta.get(f + "_datos") or {}
+        if v.get("ok") and str(v.get("cuando", "")) < fecha + _ANTES_DEL_PRIMER_SORTEO:
+            ok[f] = True
+    if len(ok) < len(_modulo_ag13().FUENTES) and ahora < fecha + _FIN_VENTANA_PRON:
+        return None
+    if len(ok) < len(_modulo_ag13().FUENTES):
+        return {"falta": "páginas no guardadas antes de las 8:00: " + ", ".join(
+            f for f in _modulo_ag13().FUENTES if f not in ok)}
+    return _modulo_ag13().conjunto_del_dia(carpeta, fecha)
+
+
+def completar_pron(registros, base, ahora=None):
+    """Pone `pron` en los registros que aún no lo tienen (también al del 8:00, que se congela la noche anterior).
+    Es solo un insumo de la sombra: no toca scores ni orden. Devuelve True si cambió algo."""
+    cambio, cache = False, {}
+    for r in registros:
+        if r.get("anulado") or "pron" in r or r.get("fecha", "") < AG13_DESDE or not r.get("sombra"):
+            continue
+        try:
+            if r["fecha"] not in cache:
+                cache[r["fecha"]] = pron_del_dia(base, r["fecha"], ahora)
+            v = cache[r["fecha"]]
+        except Exception as ex:  # noqa: BLE001  (nunca tumba el pronóstico principal)
+            print(f"[ag13] {_ahora()} pron {r['fecha']}: {ex!r}", file=sys.stderr, flush=True)
+            continue
+        if v is not None:
+            r["pron"] = v
+            cambio = True
+    return cambio
+
+
+def _oe_jornadas(cols):
+    """O/E de U con IC 95 % por jornadas (razón de sumas; varianza por conglomerados)."""
+    por = {}
+    for x in cols:
+        a = por.setdefault(x["f"], [0.0, 0.0]); a[0] += x["o"]; a[1] += x["e"]
+    O = sum(a[0] for a in por.values()); E = sum(a[1] for a in por.values())
+    if E <= 0:
+        return None
+    R = O / E; J = len(por)
+    out = dict(O=int(O), E=round(E, 1), oe=round(R, 3), jornadas=J, ic95=None)
+    if J >= 2:
+        se = math.sqrt(sum((a[0] - R * a[1]) ** 2 for a in por.values()) * J / (J - 1)) / E
+        out["ic95"] = [round(R - 1.96 * se, 3), round(R + 1.96 * se, 3)]
+    return out
+
+
+def marcador_ag13(res, fichas, rd=None):
+    """Marcador de ag13 y de sus componentes sobre los MISMOS sorteos (los que tienen pron válido). Solo lectura."""
+    try:
+        return _marcador_ag13(res, fichas, rd or {})
+    except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
+        print(f"[ag13] {_ahora()} marcador falló: {ex!r}", file=sys.stderr, flush=True)
+        return {"error": repr(ex)[:200]}
+
+
+def _marcador_ag13(res, fichas, rd):
+    m = _modulo_ag13()
+    sf = sum(fichas)
+    filas, faltas, sin_pron = [], {}, 0
+    for r in sorted(res, key=lambda r: (r["fecha"], r["hora"])):
+        s, pr = r.get("sombra"), r.get("pron")
+        sc = r.get("scores_sin_8am") or r.get("scores")
+        if r["fecha"] < AG13_DESDE or not s or "ag12" not in s or not sc:
+            continue
+        if pr is None:
+            sin_pron += 1
+            continue
+        if "u" not in pr:
+            faltas[r["fecha"]] = pr.get("falta", "?")
+            continue
+        f, h, w = r["fecha"], int(r["hora"]), r["salio"]
+        q, _ = con_rd(s["ag12"], rd, f, h)
+        q_exp, p13, p13nd = m.cadena(q, f, h, pr["u"])
+        pm = {"ensamble": sc, "ag12_rd": q, "ag12_rd_exp": q_exp, "ag13": p13, "ag13_nd": p13nd}
+        mb = {k: 1000 * math.log2(max(p[w] / sum(p), 1e-12) * K) for k, p in pm.items()}
+        cod = rd.get((f, h - 1)) if h > 0 else None
+
+        def neto(p):
+            orden = sorted(range(K), key=lambda i: (-p[i], i))
+            if cod is not None:
+                orden = cambiar15(orden, cod)
+            return 100.0 * (PAGO * fichas[orden.index(w) + 1] - sf) / sf
+        filas.append(dict(f=f, mb=mb, t5={"ensamble": neto(sc), "ag13": neto(p13)},
+                          o=int(w in pr["u"]), e=sum(q_exp[i] for i in pr["u"])))
+
+    def dif(a, b, cols):
+        return ic90_jornadas([(x["f"], x["mb"][a] - x["mb"][b]) for x in cols])
+
+    n = len(filas)
+    p1 = dif("ag13", "ensamble", filas)
+    base = {"desde": AG13_DESDE, "n": n, "decide_con": AG13_N_DECIDE, "freno_n": AG13_N_FRENO,
+            "sin_pron_aun": sin_pron, "dias_sin_pron": faltas}
+    if not n:
+        return dict(base, estado="esperando los primeros sorteos con pronosticadores")
+    medias = {k: round(sum(x["mb"][k] for x in filas) / n, 1) for k in filas[0]["mb"]}
+    estado = "acumulando (%d de %d)" % (n, AG13_N_DECIDE)
+    decision = None
+    if n >= AG13_N_FRENO and p1 and p1["media"] < AG13_FRENO_MBITS:
+        estado = "APAGADO por freno (Δ < %g con n ≥ %d)" % (AG13_FRENO_MBITS, AG13_N_FRENO)
+    elif n >= AG13_N_DECIDE:
+        cols = filas[:AG13_N_DECIDE]                    # mirada única: los primeros 931, no la cola que crece
+        d1 = dif("ag13", "ensamble", cols)
+        d2 = ic90_jornadas([(x["f"], x["t5"]["ag13"] - x["t5"]["ensamble"]) for x in cols])
+        pasa = bool(d1 and d1["ic90"] and d1["ic90"][0] > 0 and d2 and d2["media"] >= AG13_T5_MIN)
+        decision = {"n": AG13_N_DECIDE, "mbits": d1, "top5_pp_ficha": d2, "pasa": pasa}
+        estado = "PASA (solo con tu OK entra a producción)" if pasa else "NO PASA"
+    oe = _oe_jornadas(filas)
+    pron = {"oe_U": oe, "decide_con_E": AG13_E_PRON,
+            "estado": ("esperando E=%g" % AG13_E_PRON) if not oe or oe["E"] < AG13_E_PRON else
+            ("conservar" if oe["ic95"] and oe["ic95"][1] < 1 and dif("ag13", "ag12_rd_exp", filas)["media"] > 0
+             else "quitar pronosticadores")}
+    return dict(base, estado=estado, decision=decision, mbits_medios=medias,
+                p1_ag13_menos_ensamble=p1,
+                ag13_menos_ag12_rd_exp=dif("ag13", "ag12_rd_exp", filas),
+                exposicion_menos_ag12_rd=dif("ag12_rd_exp", "ag12_rd", filas),
+                ag12_rd_menos_ensamble=dif("ag12_rd", "ensamble", filas),
+                ag13_nd_menos_ag12_rd_exp=dif("ag13_nd", "ag12_rd_exp", filas),
+                componente_pronosticadores=pron)
+
+
 SOMBRA_AG12_N_DECIDE = 931              # PREREGISTRO ag12_top15, anexo 2026-09-30 (+ anexo 2026-10-07)
 SOMBRA_AG12_N_MAX = 3500                # si a 931 no concluye: seguir hasta aquí (efecto esperado <= +10 mbits)
 
@@ -341,6 +501,7 @@ def marcador_sombra(res, fichas):
             dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
                  [round(100 * v, 2) for v in b["ic90"]]))))
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": n_con_rd, "marcador": m,
+            "ag13": marcador_ag13(res, fichas, rd),
             "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
                            "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
                            "marcador": mx, "diferencias": difs, "fallos": fallos_exp},

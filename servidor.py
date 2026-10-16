@@ -939,7 +939,7 @@ def html_top15(e, pend=None):
             'Prueba ciega ≈ +6% (el Top-15 plano, −1%).</p>')
     return (f'<details style="margin-top:12px"><summary>Ver Top-15 completo (y el ponderado)</summary>{nota}{filas}</details>')
 
-def html_anti_top15(orden, sc, gaps):
+def html_anti_top15(orden, sc, gaps, id_="la-anti"):
     """Los animales del puesto 16 al 30 (justo después del Top-15), en orden.
     Mismo orden congelado que se puntúa. Solo informativo: no cambia la jugada."""
     if len(orden) < 30:
@@ -951,7 +951,7 @@ def html_anti_top15(orden, sc, gaps):
         f'<span class="nm">{esc(ANIM[POS[i]].title())}'
         f'<small>{num(sc[i] * 100, 2)} % · hace {gaps[i] + 1} sorteos</small></span></li>'
         for k, i in enumerate(lista))
-    return ('<details class="mas" id="la-anti" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+    return (f'<details class="mas" id="{id_}" data-rec><summary><span class="chev" aria-hidden="true"></span>'
             'Anti Top-15 · del 16º al 30º</summary>'
             f'<ol class="jug resto anti" start="16">{filas}</ol>'
             f'<p class="note">Entre los 15 suman <b>{num(masa * 100, 1)} %</b> (el azar daría {num(15 / K * 100, 1)} %): '
@@ -973,6 +973,25 @@ sc_sombra = experimentos.sc_sombra
 _ventana_8am = experimentos.ventana_8am
 SOMBRA_8AM_DESDE = experimentos.SOMBRA_8AM_DESDE
 _exposicion = experimentos.exposicion
+
+def sombra_registros(d):
+    """Pronósticos de ag12 con la forma de un registro (fecha, hora, salio, scores, orden_completo, top3), con la regla
+    de RD aplicada al leerlos (igual que marcador_sombra). Incluye el pendiente. Solo lectura: no toca el marcador."""
+    try:
+        rd = experimentos._rd_por_slot()
+    except Exception:  # noqa: BLE001
+        rd = {}
+    out = []
+    for r in d["registros"]:
+        p = (r.get("sombra") or {}).get("ag12")
+        if not vigente(r) or not p or r["fecha"] < SOMBRA_DESDE:
+            continue
+        q, _ = experimentos.con_rd(p, rd, r["fecha"], r["hora"])
+        orden = sorted(range(K), key=lambda i: (-q[i], i))
+        out.append({"fecha": r["fecha"], "hora": r["hora"], "salio": r.get("salio"), "scores": q,
+                    "orden_completo": orden, "top3": orden[:3], "modelo": "ag12+RD"})
+    out.sort(key=lambda r: (r["fecha"], r["hora"]))
+    return out
 
 def marcador_cambio_rd(d):
     return experimentos.marcador_cambio_rd(resueltas(d), fichas_por_puesto())
@@ -1107,9 +1126,10 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
 def la_pasados(d):
     return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None and r.get("orden_completo")]
 
-def html_pasado_la(d, atras):
+def html_pasado_la(d, atras, vistos=None, tab="la"):
     """Top-15 congelado de un sorteo ya jugado, con el ganador marcado."""
-    vistos = la_pasados(d)
+    if vistos is None:
+        vistos = la_pasados(d)
     atras = max(1, min(atras, len(vistos)))
     r = vistos[-atras]
     orden, sc = r["orden_completo"], r.get("scores")
@@ -1129,17 +1149,17 @@ def html_pasado_la(d, atras):
     top5 = "".join(fila(k, i) for k, i in enumerate(orden[:5], 1))
     resto = "".join(fila(k, i) for k, i in enumerate(orden[5:15], 6))
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
-            f'{html_nav_hist("la", atras, len(vistos))}{cab}'
+            f'{html_nav_hist(tab, atras, len(vistos))}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol><ol class="jug resto" start="6">{resto}</ol>'
             '<p class="note">Es el Top congelado antes del sorteo, el mismo que se puntúa en el marcador.</p></section>')
 
 # Prueba ciega del "animal del día" (herramientas/exploracion/animal_dia.py, 254 días no vistos):
 # Top-1 al abrir el día sale el 38,6 % de los días (azar 29,5 %); alguno del Top-2, el 60,6 % (azar 50,9 %).
-def html_animales_hoy(d, filas, e):
+def html_animales_hoy(d, filas, e, regs=None, nota=None):
     """Los 2 animales del día: Top-2 del pronóstico congelado de las 8:00 de ese día."""
     fecha = e["pf"]
-    r = next((x for x in d["registros"] if vigente(x) and x["fecha"] == fecha and x["hora"] == 0
-              and x.get("orden_completo")), None)
+    r = next((x for x in (d["registros"] if regs is None else regs) if vigente(x) and x["fecha"] == fecha
+              and x["hora"] == 0 and x.get("orden_completo")), None)
     if r is None:
         return ""
     salidos = {v: h for f, h, v in filas if f == fecha}
@@ -1153,17 +1173,17 @@ def html_animales_hoy(d, filas, e):
     return (f'<section class="card adia" aria-labelledby="adia-t"><div class="jh"><h2 id="adia-t">'
             f'Animales para {esc(cuando)}</h2><span class="pill gris">todo el día</span></div>'
             f'<div class="adhs">{chips}</div>'
-            '<p class="note">Elegidos antes del primer sorteo. En prueba ciega (254 días) al menos uno de los dos '
+            + (nota or '<p class="note">Elegidos antes del primer sorteo. En prueba ciega (254 días) al menos uno de los dos '
             'salió el 61 % de los días (al azar, 51 %) y el 1º solo, el 39 % (azar 30 %). No es seguro y no '
-            'reemplaza la jugada de cada hora.</p></section>')
+            'reemplaza la jugada de cada hora.</p>') + '</section>')
 
 def _clase_puesto(p):
     if p is None: return "fuera"
     return "p5" if p <= 5 else "p15" if p <= TOP_N else "fuera"
 
-def resumen_resultados(d, ultimos=48):
+def resumen_resultados(d, ultimos=48, regs=None):
     """Línea corta para el desplegable: último puesto y Top-15 reciente."""
-    vistos = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    vistos = [r for r in (d["registros"] if regs is None else regs) if vigente(r) and r.get("salio") is not None]
     if not vistos:
         return "aún no hay resultados con pronóstico"
     p = puesto_ganador(vistos[-1])
@@ -1174,12 +1194,12 @@ def resumen_resultados(d, ultimos=48):
                       f"{sum(1 for x in puestos if x <= TOP_N)} de los últimos {len(puestos)}")
     return " · ".join(partes)
 
-def html_resultados(d, limite=100):
+def html_resultados(d, limite=100, regs=None):
     """Una sola lista: cada resultado y en qué puesto del Top quedó el ganador.
 
     Sustituye en la página al histórico en tabla y a «Últimas 48» (que era
     un resumen del mismo dato); el resumen corto va en la línea del desplegable."""
-    vistos = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    vistos = [r for r in (d["registros"] if regs is None else regs) if vigente(r) and r.get("salio") is not None]
     if not vistos:
         return '<p class="note">Todavía no hay resultados con pronóstico guardado antes del sorteo.</p>'
     cuerpo = ""; dia = None
@@ -1603,6 +1623,8 @@ def preparar():
                 if sombra:
                     pend["sombra"] = sombra
             d["registros"].append(pend); cambio = True
+    # ag13 en sombra: lo que publicaron los pronosticadores esa mañana (solo insumo; no toca el pronóstico ni el marcador).
+    cambio = experimentos.completar_pron(d["registros"], DATOS) or cambio
     # Lo que se muestra es SIEMPRE el pronóstico congelado que se puntúa: tras
     # un deshacer o un reinicio el cálculo del momento puede no coincidir.
     if pend is not None:
@@ -1654,39 +1676,59 @@ def html_rd(atras=0):
         return '<div class="card"><p>RD Internacional se está preparando…</p></div>'
 
 
-def html_sombra(e, d, pend):
-    """Tercera pestaña: el pronóstico del motor en sombra (ag12 con la regla de RD) para el próximo sorteo y su
-    marcador en vivo contra el ensamble. Solo muestra: el pronóstico que se puntúa y se juega sigue siendo el de
-    la pestaña Lotto Activo. Si algo falla, la pestaña lo dice y el resto de la web sigue."""
+def html_sombra(e, d, pend, filas=None, atras=0):
+    """Tercera pestaña: el motor en sombra (ag12 con la regla de RD) con lo mismo que la principal: animales del día,
+    próximo sorteo y sorteos pasados, historial de cuadrantes, resultados y puestos, y su marcador contra el ensamble.
+    Solo muestra: el pronóstico que se puntúa y se juega sigue siendo el de la pestaña Lotto Activo. Si algo falla,
+    la pestaña lo dice y el resto de la web sigue."""
     try:
-        sombra = (pend or {}).get("sombra") or {}
-        p = sombra.get("ag12")
+        regs = sombra_registros(d)
+        pasados = [r for r in regs if r.get("salio") is not None]
         hora, fecha = HORAS[e["ph"]], fecha_corta(e["pf"])
-        try:
-            rd = experimentos._rd_por_slot()
-        except Exception:  # noqa: BLE001
-            rd = {}
-        if not p:
-            cuerpo = '<div class="tip">El motor en sombra aún no tiene su pronóstico para este sorteo; la página se actualiza sola.</div>'
+        if atras > 0 and pasados:
+            jugada = html_pasado_la(d, atras, pasados, "sombra")
         else:
-            q, usado = experimentos.con_rd(p, rd, e["pf"], e["ph"])
-            tot = sum(q) or 1.0
-            orden = sorted(range(K), key=lambda i: (-q[i], i))
-            esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
-            def fila(r, i):
-                return fila_jugada(r, POS[i], ANIM[POS[i]].title(), f"{num(q[i] / tot * 100, 2)} %", esc5[r], pond[r])
-            top5 = "".join(fila(r, i) for r, i in enumerate(orden[:5], 1))
-            resto = "".join(fila(r, i) for r, i in enumerate(orden[5:15], 6))
-            ens = (pend or {}).get("orden_completo") or e["orden"]
-            comunes = len(set(orden[:5]) & set(ens[:5]))
-            nota_rd = ("Con la regla de RD aplicada (el animal de RD de la media hora anterior pesa la mitad)." if usado
-                       else "Sin cambio por RD en este sorteo.")
-            cuerpo = (f'<ol class="jug">{COLS_JUGADA}{top5}</ol>'
-                      f'<details class="mas" id="sombra-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
-                      f'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">{resto}</ol></details>'
-                      f'<p class="note">{nota_rd} Coincide en {comunes} de 5 animales con el Top-5 del modelo actual.</p>')
+            p = ((pend or {}).get("sombra") or {}).get("ag12")
+            cab = (f'<div class="jh"><h2 id="som-t">Próximo sorteo · <span>{hora}</span></h2>'
+                   '<span class="pill warn" title="se mide, aún no se recomienda">en prueba</span></div>'
+                   f'<p class="ult">{esc(fecha.capitalize())} · pronóstico del motor nuevo (ag12)</p>')
+            if not p:
+                cuerpo = '<div class="tip">El motor en sombra aún no tiene su pronóstico para este sorteo; la página se actualiza sola.</div>'
+            else:
+                try:
+                    rd = experimentos._rd_por_slot()
+                except Exception:  # noqa: BLE001
+                    rd = {}
+                q, usado = experimentos.con_rd(p, rd, e["pf"], e["ph"])
+                tot = sum(q) or 1.0
+                orden = sorted(range(K), key=lambda i: (-q[i], i))
+                esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
+
+                def fila(r, i):
+                    return fila_jugada(r, POS[i], ANIM[POS[i]].title(),
+                                       f'{num(q[i] / tot * 100, 2)} % · hace {e["gaps"][i] + 1} sorteos', esc5[r], pond[r])
+                top5 = "".join(fila(r, i) for r, i in enumerate(orden[:5], 1))
+                resto = "".join(fila(r, i) for r, i in enumerate(orden[5:15], 6))
+                ens = (pend or {}).get("orden_completo") or e["orden"]
+                comunes = len(set(orden[:5]) & set(ens[:5]))
+                nota_rd = ("Con la regla de RD aplicada (el animal de RD de la media hora anterior pesa la mitad)." if usado
+                           else "Sin cambio por RD en este sorteo.")
+                anti = html_anti_top15(orden, [x / tot for x in q], e["gaps"], "sombra-anti")
+                nombres = [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden]
+                comp = html_compartir("Motor en sombra", f"{fecha} · {hora}", nombres[:15], nombres[15:30] if len(nombres) >= 30 else ())
+                cuerpo = (f'<ol class="jug">{COLS_JUGADA}{top5}</ol>'
+                          f'<details class="mas" id="sombra-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+                          f'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">{resto}</ol></details>'
+                          f'<p class="note">{nota_rd} Coincide en {comunes} de 5 animales con el Top-5 del modelo actual.</p>{anti}{comp}')
+            jugada = (f'<section class="card jugada" aria-labelledby="som-t">'
+                      f'{html_nav_hist("sombra", 0, len(pasados))}{cab}{cuerpo}</section>')
+        hoy = html_animales_hoy(d, filas, e, regs,
+                                '<p class="note">Top-2 del motor en sombra a las 8:00, elegido antes del primer sorteo. '
+                                'Solo se mide: no reemplaza la jugada de Lotto Activo.</p>') if filas is not None else ""
+
         m = marcador_sombra(d)["marcador"]
         dec = decision_sombra(d)
+
         def fila_m(nombre, k):
             v = m.get(k) or {}
             if not v.get("n"):
@@ -1704,10 +1746,13 @@ def html_sombra(e, d, pend):
         veredicto = (f'<p class="note">{n} sorteos medidos desde el 26 de septiembre (los mismos para los tres){ic}. '
                      f'Todavía no se puede afirmar que gane: la decisión oficial es con {dec.get("decide_con", 931)} sorteos '
                      f'(hacia mediados de diciembre). El pronóstico que se puntúa y se recomienda sigue siendo el de Lotto Activo.</p>')
-        return (f'<section class="card jugada" aria-labelledby="som-t"><div class="jh"><h2 id="som-t">Motor en sombra · '
-                f'<span>{hora}</span></h2><span class="pill warn" title="se mide, aún no se recomienda">en prueba</span></div>'
-                f'<p class="ult">{esc(fecha.capitalize())} · pronóstico del motor nuevo (ag12)</p>{cuerpo}</section>'
-                f'<section class="card"><div class="jh"><h2>Cómo le va frente al modelo actual</h2></div>{tabla}{veredicto}</section>')
+        marcador = (f'<section class="card"><div class="jh"><h2>Cómo le va frente al modelo actual</h2></div>{tabla}{veredicto}</section>')
+        return (f'{hoy}{jugada}{marcador}'
+                + sec("sec-mesa-s", "Historial de cuadrantes",
+                      f"los 38 animales por cuadrante, puesto o días sin salir · "
+                      f"{format(len(regs), ',').replace(',', '.')} sorteos del motor en sombra", html_mesa("-s"))
+                + sec("historico-s", "Resultados y puestos en el Top", esc(resumen_resultados(d, regs=regs)),
+                      html_resultados(d, regs=regs)))
     except Exception as ex:  # noqa: BLE001
         print(f"[sombra] {ahora()} html: {ex!r}", file=sys.stderr, flush=True)
         return '<div class="card"><p>El motor en sombra se está preparando…</p></div>'
@@ -1721,6 +1766,7 @@ def render(banca=None, tab="la", atras=0):
     tab = tab if tab in ("rd", "sombra") else "la"
     atras_la = atras if tab == "la" else 0
     atras_rd = atras if tab == "rd" else 0
+    atras_s = atras if tab == "sombra" else 0
 
     aviso = ""
     if AVISO["texto"]:
@@ -1757,7 +1803,7 @@ def render(banca=None, tab="la", atras=0):
         f'<section class="panel" id="p-rd" role="tabpanel" aria-labelledby="t-rd"{"" if tab == "rd" else " hidden"}>'
         f'{html_rd(atras_rd)}</section>'
         f'<section class="panel" id="p-sombra" role="tabpanel" aria-labelledby="t-sombra"{"" if tab == "sombra" else " hidden"}>'
-        f'{html_sombra(e, d, pend)}</section>'
+        f'{html_sombra(e, d, pend, filas, atras_s)}</section>'
         '<footer>Es un juego de azar: ningún modelo garantiza ganar. Juega solo lo que puedas perder.</footer></main>')
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -1879,17 +1925,18 @@ def mesa_huecos(filas, fecha, hora):
     base = date.fromisoformat(fecha)
     return [(base - date.fromisoformat(ult[i])).days if i in ult else None for i in range(K)]
 
-def mesa_slots_hist(d, actual):
+def mesa_slots_hist(d, actual, regs=None):
     """Registros navegables (sin el slot actual), del más reciente al más antiguo."""
-    h = [r for r in d["registros"] if vigente(r) and (r["fecha"], r["hora"]) != actual]
+    h = [r for r in (d["registros"] if regs is None else regs) if vigente(r) and (r["fecha"], r["hora"]) != actual]
     h.sort(key=lambda r: (r["fecha"], r["hora"]), reverse=True)
     return h
 
-def mesa_datos(offset=0):
-    """Distribución completa del slot en offset (0 = actual). Solo lectura."""
+def mesa_datos(offset=0, modelo="la"):
+    """Distribución completa del slot en offset (0 = actual). Solo lectura. modelo="sombra": ag12 con la regla de RD."""
     filas = cargar(); e = estado(filas); d = log_cargar()
     actual = (e["pf"], e["ph"])
-    hist = mesa_slots_hist(d, actual)
+    regs = sombra_registros(d) if modelo == "sombra" else None
+    hist = mesa_slots_hist(d, actual, regs)
     total = 1 + len(hist)
     try: offset = int(offset)
     except (TypeError, ValueError): offset = 0
@@ -1898,8 +1945,10 @@ def mesa_datos(offset=0):
     if offset == 0:
         fecha, hora = actual
         winner = None
-        pend = next((r for r in d["registros"]
+        pend = next((r for r in (d["registros"] if regs is None else regs)
                      if vigente(r) and (r["fecha"], r["hora"]) == actual), None)
+        if regs is not None and pend is None:
+            return {"error": "El motor en sombra aún no tiene su pronóstico para este sorteo."}
         modelo = (pend or {}).get("modelo", "—")
         scores = (pend or {}).get("scores")
         orden = (pend or {}).get("orden_completo")
@@ -1966,11 +2015,12 @@ def mesa_datos(offset=0):
         "bins_hueco": [{"desde": a, "hasta": b, "etiqueta": t} for a, b, t in MESA_BINS_HUECO],
     }
 
-def mesa_stats():
+def mesa_stats(modelo="la"):
     """Dónde cayó el ganador, sobre TODOS los registros resueltos. Solo lectura.
     Muestra en vivo y pequeña: NO es validación (para eso, walk-forward en desarrollo)."""
     filas = cargar(); d = log_cargar()
-    res = [r for r in d["registros"] if vigente(r) and r.get("salio") is not None]
+    res = [r for r in (sombra_registros(d) if modelo == "sombra" else d["registros"])
+           if vigente(r) and r.get("salio") is not None]
     quiero = {(r["fecha"], r["hora"]) for r in res}
     snap = {}; ult = {}
     for f, h, v in filas:
@@ -2020,26 +2070,27 @@ def _api(fn, *args):
         traceback.print_exc(file=sys.stderr)
         return {"error": "%s: %s" % (type(ex).__name__, ex)}
 
-def html_mesa():
+def html_mesa(suf=""):
+    """suf="" es la mesa de Lotto Activo; "-s", la del motor en sombra (ids propios, mismos estilos)."""
     return (
-        '<div id="mesa">'
-        '<p class="mesa-slot" id="mesa-slot" aria-live="polite">cargando…</p>'
+        f'<div id="mesa{suf}" class="mesa-raiz">'
+        f'<p class="mesa-slot" id="mesa{suf}-slot" aria-live="polite">cargando…</p>'
         '<div class="mesa-bar">'
-        '<div class="mesa-nav"><button type="button" class="sec" id="mesa-prev" aria-label="Sorteo anterior">'
+        f'<div class="mesa-nav"><button type="button" class="sec" id="mesa{suf}-prev" aria-label="Sorteo anterior">'
         '<span class="flecha izq" aria-hidden="true"></span></button>'
-        '<span id="mesa-pos" class="mesa-pos"></span>'
-        '<button type="button" class="sec" id="mesa-next" aria-label="Sorteo siguiente">'
+        f'<span id="mesa{suf}-pos" class="mesa-pos"></span>'
+        f'<button type="button" class="sec" id="mesa{suf}-next" aria-label="Sorteo siguiente">'
         '<span class="flecha der" aria-hidden="true"></span></button></div>'
         '<div class="mesa-modos" role="group" aria-label="Agrupar por">'
         '<button type="button" class="sec on" aria-pressed="true" data-modo="rango">Cuadrantes</button>'
         '<button type="button" class="sec" aria-pressed="false" data-modo="rank">Puesto</button>'
         '<button type="button" class="sec" aria-pressed="false" data-modo="hueco">Días sin salir</button>'
         '</div></div>'
-        '<div id="mesa-aviso"></div>'
-        '<div id="mesa-cuerpo" class="mesa-cuerpo"></div>'
-        '<details class="mas" id="mesa-dist" data-rec><summary><span class="chev" aria-hidden="true"></span>'
+        f'<div id="mesa{suf}-aviso"></div>'
+        f'<div id="mesa{suf}-cuerpo" class="mesa-cuerpo"></div>'
+        f'<details class="mas" id="mesa{suf}-dist" data-rec><summary><span class="chev" aria-hidden="true"></span>'
         'Dónde cayó el ganador (muestra en vivo)</summary>'
-        '<div id="mesa-stats" class="mesa-stats">cargando…</div>'
+        f'<div id="mesa{suf}-stats" class="mesa-stats">cargando…</div>'
         '<p class="tip"><b>Muestra en vivo, n pequeño: esto NO es validación.</b> Es un termómetro '
         'de lo que pasa ahora, no evidencia. Cualquier cambio de apuesta necesita validación '
         'walk-forward en desarrollo.</p>'
@@ -2084,8 +2135,8 @@ def _ruta_datos_publicados(q):
 RUTAS_JSON = {
     "/tareas.json": (_ruta_tareas, JSON_UTF8),
     "/listo.json": (_ruta_listo, "application/json"),
-    "/api/mesa": (lambda q: _api(mesa_datos, q.get("offset", ["0"])[0]), JSON_UTF8),
-    "/api/mesa_stats": (lambda q: _api(mesa_stats), JSON_UTF8),
+    "/api/mesa": (lambda q: _api(mesa_datos, q.get("offset", ["0"])[0], q.get("modelo", ["la"])[0]), JSON_UTF8),
+    "/api/mesa_stats": (lambda q: _api(mesa_stats, q.get("modelo", ["la"])[0]), JSON_UTF8),
     "/api/rdint": (_ruta_rdint, JSON_UTF8),
     "/api/cambio_rd": (lambda q: _api(lambda: marcador_cambio_rd(log_cargar())), JSON_UTF8),
     "/api/sombra_decision": (lambda q: _api(lambda: decision_sombra(log_cargar())), JSON_UTF8),

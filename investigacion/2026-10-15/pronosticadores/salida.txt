@@ -1,0 +1,39 @@
+cobertura LA lotoven: 652 días, 3.19 animales/día
+cobertura LA loteriadehoy: 669 días, 5.45 animales/día
+cobertura RD lotoven: 643 días, 3.10 animales/día
+cobertura RD loteriadehoy: 668 días, 5.45 animales/día
+descargas con error: 0
+fuga? lotoven: de 1948 datos, salieron ese día 0.241, salieron la víspera 0.268 (azar con ~11 distintos por día ≈ 0,29)
+fuga? loteriadehoy: de 3412 datos, salieron ese día 0.274, salieron la víspera 0.201 (azar con ~11 distintos por día ≈ 0,29)
+
+== LA desarrollo (2024-03-07 .. 2025-02-03)
+  U: días 327 sorteos 3653 obs 681 esp 681.6 O/E 0.999 [IC95 0.93; 1.07] z -0.02
+  S1: días 306 sorteos 3422 obs 292 esp 296.4 O/E 0.985 [IC95 0.88; 1.09] z -0.26
+  S2: días 327 sorteos 3653 obs 492 esp 475.6 O/E 1.034 [IC95 0.95; 1.12] z +0.75
+  S3: días 330 sorteos 3688 obs 588 esp 647.0 O/E 0.909 [IC95 0.84; 0.97] z -2.32
+  U sin día/día+1/hora12: días 327 sorteos 3653 obs 646 esp 644.4 O/E 1.002 [IC95 0.93; 1.08] z +0.06
+
+== LA confirmacion1 (2025-02-04 .. 2025-12-05)
+  U: días 297 sorteos 3564 obs 684 esp 793.2 O/E 0.862 [IC95 0.80; 0.92] z -3.88
+  S1: días 297 sorteos 3564 obs 208 esp 291.3 O/E 0.714 [IC95 0.62; 0.81] z -4.88
+  S2: días 296 sorteos 3552 obs 501 esp 546.3 O/E 0.917 [IC95 0.85; 0.99] z -1.94
+  S3: días 303 sorteos 3636 obs 473 esp 650.4 O/E 0.727 [IC95 0.67; 0.79] z -6.96
+  U sin día/día+1/hora12: días 297 sorteos 3564 obs 648 esp 739.0 O/E 0.877 [IC95 0.81; 0.94] z -3.35
+
+== Explotar: p×0.999 sobre U (x del desarrollo) en confirmación 1
+  U×x: días 297 sorteos 3564 obs 684 esp 793.2 O/E 0.862 [IC95 0.80; 0.92] z -3.88  ganancia +0.04 mbits [+0.02; +0.06]
+
+== RD réplica dev (2024-03-01 .. 2025-06-30)
+  U: días 476 sorteos 5712 obs 1063 esp 1097.3 O/E 0.969 [IC95 0.92; 1.02] z -1.04
+  S1: días 446 sorteos 5352 obs 420 esp 442.7 O/E 0.949 [IC95 0.86; 1.04] z -1.08
+  S2: días 475 sorteos 5700 obs 764 esp 785.8 O/E 0.972 [IC95 0.91; 1.03] z -0.78
+  S3: días 482 sorteos 5784 obs 970 esp 999.6 O/E 0.970 [IC95 0.92; 1.03] z -0.94
+
+== LA confirmación 2, vivo (2026-09-18 .. 2026-10-14, 310 sorteos)
+  U: días 27 sorteos 310 obs 47 esp 66.7 O/E 0.704 [IC95 0.51; 0.92] z -2.42
+  S1: días 27 sorteos 310 obs 21 esp 25.1 O/E 0.838 [IC95 0.46; 1.27] z -0.81
+  S2: días 26 sorteos 298 obs 30 esp 44.6 O/E 0.673 [IC95 0.48; 0.87] z -2.18
+  S3: días 27 sorteos 310 obs 51 esp 55.9 O/E 0.913 [IC95 0.71; 1.11] z -0.65
+  U×x: días 27 sorteos 310 obs 47 esp 66.7 O/E 0.704 [IC95 0.51; 0.92] z -2.42  ganancia +0.09 mbits [+0.02; +0.16]
+
+VEREDICTO (U en LA, confirmación 1 + réplica RD): PASA

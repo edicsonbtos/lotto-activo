@@ -1,0 +1,41 @@
+
+== LA desarrollo
+  U: obs 681 esp 681.6 O/E 0.999 [IC95 0.93; 1.07]
+  placebo U(d-7): obs 706 esp 669.6 O/E 1.054 [IC95 0.99; 1.12]
+  placebo U(d+7): obs 845 esp 679.3 O/E 1.244 [IC95 1.17; 1.32]
+  placebo U(d-14): obs 643 esp 656.4 O/E 0.980 [IC95 0.92; 1.04]
+  placebo U(d+14): obs 791 esp 693.7 O/E 1.140 [IC95 1.07; 1.22]
+  U sin nada derivado de la fecha ni hora: obs 369 esp 362.2 O/E 1.019 [IC95 0.92; 1.12]
+  U ∩ derivados de la fecha: obs 299 esp 310.6 O/E 0.963 [IC95 0.86; 1.07]
+  derivados de la fecha (todos): obs 1677 esp 1744.7 O/E 0.961 [IC95 0.93; 0.99]
+  derivados de la fecha fuera de U: obs 1378 esp 1434.2 O/E 0.961 [IC95 0.92; 1.00]
+
+== LA confirmacion1
+  U: obs 684 esp 793.2 O/E 0.862 [IC95 0.80; 0.92]
+  placebo U(d-7): obs 812 esp 781.9 O/E 1.038 [IC95 0.97; 1.10]
+  placebo U(d+7): obs 811 esp 802.7 O/E 1.010 [IC95 0.95; 1.07]
+  placebo U(d-14): obs 783 esp 788.7 O/E 0.993 [IC95 0.93; 1.05]
+  placebo U(d+14): obs 815 esp 780.2 O/E 1.045 [IC95 0.99; 1.10]
+  U sin nada derivado de la fecha ni hora: obs 387 esp 419.0 O/E 0.924 [IC95 0.84; 1.02]
+  U ∩ derivados de la fecha: obs 293 esp 364.4 O/E 0.804 [IC95 0.72; 0.89]
+  derivados de la fecha (todos): obs 1524 esp 1737.2 O/E 0.877 [IC95 0.85; 0.91]
+  derivados de la fecha fuera de U: obs 1231 esp 1372.8 O/E 0.897 [IC95 0.86; 0.94]
+
+== LA vivo
+  U: obs 47 esp 66.7 O/E 0.704 [IC95 0.51; 0.92]
+  U sin nada derivado de la fecha ni hora: obs 22 esp 34.4 O/E 0.640 [IC95 0.35; 0.95]
+  derivados de la fecha (todos): obs 145 esp 151.5 O/E 0.957 [IC95 0.83; 1.08]
+
+== U por trimestre (dev + confirmación 1)
+  2024T1: U O/E 1.13 [0.83; 1.46] (obs 38, esp 33.6) | U sin fecha 1.14 [0.67; 1.71]
+  2024T2: U O/E 1.07 [0.91; 1.24] (obs 159, esp 149.2) | U sin fecha 1.10 [0.89; 1.34]
+  2024T3: U O/E 0.89 [0.78; 0.99] (obs 181, esp 203.7) | U sin fecha 0.91 [0.74; 1.08]
+  2024T4: U O/E 0.99 [0.87; 1.12] (obs 210, esp 212.0) | U sin fecha 1.06 [0.88; 1.25]
+  2025T1: U O/E 0.97 [0.87; 1.08] (obs 224, esp 230.6) | U sin fecha 0.95 [0.79; 1.12]
+  2025T2: U O/E 0.94 [0.83; 1.04] (obs 209, esp 223.4) | U sin fecha 0.96 [0.80; 1.11]
+  2025T3: U O/E 0.86 [0.75; 0.97] (obs 208, esp 242.2) | U sin fecha 0.98 [0.82; 1.15]
+  2025T4: U O/E 0.76 [0.64; 0.89] (obs 136, esp 180.1) | U sin fecha 0.80 [0.62; 1.01]
+
+== Explotar (exploratorio): x de confirmación 1 aplicado al vivo y a la propia confirmación 1
+  U: x=0.862  en conf1 (dentro de muestra) +3.83 mbits [1.08, 6.53]  | en vivo +11.06 mbits [1.03, 20.84]
+  U sin nada derivado de la fecha ni hora: x=0.924  en conf1 (dentro de muestra) +0.56 mbits [-0.63, 1.73]  | en vivo +4.12 mbits [0.15, 8.18]
