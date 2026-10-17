@@ -49,7 +49,13 @@ def main():
         rd()
         return
     banca = float(sys.argv[1]) if len(sys.argv) > 1 else None
-    m = leer("/api/mesa?offset=0")
+    # Desde 2026-10-16 el motor principal es ag12 + RD (?modelo=principal); si la web es anterior, cae al ensamble.
+    try:
+        m = leer("/api/mesa?offset=0&modelo=principal")
+        if "error" in m:
+            raise ValueError(m["error"])
+    except ValueError:
+        m = leer("/api/mesa?offset=0")
     if m.get("vista") != "prob" or not any(a["rank"] for a in m["animales"]):
         print("La web todavía está calculando el pronóstico (pasa 1-2 min tras cada despliegue). "
               "Vuelve a intentarlo en un minuto.")
@@ -69,7 +75,9 @@ def main():
             print("OJO: RD de la media hora anterior aún no está anotado; vuelve a pedir la jugada cuando salga.")
         else:
             k = next((i for i, a in enumerate(orden[:5]) if a["num"] == c), None)
-            if k is not None and len(orden) > 5:
+            if m["modelo"] == "ag12+RD":
+                print(f"RD media hora antes: {c}; el motor ag12 + RD ya lo tiene en cuenta (pesa la mitad).")
+            elif k is not None and len(orden) > 5:
                 print(f"Cambio por RD: {c} {orden[k]['nombre']} salió en RD media hora antes -> "
                       f"sale del {k + 1}º, los de abajo suben y entra {orden[5]['num']} {orden[5]['nombre']} de 5º.")
                 orden = orden[:k] + orden[k + 1:6] + [orden[k]] + orden[6:]

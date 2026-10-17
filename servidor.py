@@ -312,6 +312,11 @@ def sello(info):
 
 # -------------------------------------------------------------- marcadores
 MODELO_MARCADOR = "ensamble_v2"
+# Motor que se MUESTRA y se recomienda en la pestaña Lotto Activo (decisión del usuario, 2026-10-16):
+# "ag12_rd" = ag12 con la regla de RD (antes "motor en sombra"); "ensamble" = el de antes. Los dos se siguen
+# congelando en cada registro (scores = ensamble, sombra.ag12 = ag12) y midiendo en /api/sombra, así que
+# volver atrás es poner MOTOR_PRINCIPAL=ensamble en Railway, sin perder datos.
+MOTOR_PRINCIPAL = os.environ.get("MOTOR_PRINCIPAL", "ag12_rd").strip().lower()
 TOP_N = 15
 P_AZAR_T15 = TOP_N / K          # 39,47%: un Top-15 al azar ya acierta 2 de cada 5
 
@@ -1071,7 +1076,7 @@ def html_compartir(juego, cuando, animales, anti=()):
     """Compartir la jugada como texto: Top 5, Top 15, Anti Top-15 (16º al 30º) o ambos (el monto va solo al Top)."""
     return comun.compartir(juego, animales, anti, cuando=cuando)
 
-def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
+def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0, tab="la"):
     """La jugada del próximo sorteo: Top-5 a la vista y del 6º al 15º plegado.
 
     El orden es SIEMPRE el congelado que se puntúa (pend), como antes."""
@@ -1118,7 +1123,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0):
                '<p><i class="b"></i><b>Top-15 ponderado</b> (alternativa): 23 fichas, cobra ~1 de cada 2 '
                '(+67, +37 o +7).</p></div>')
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
-            f'{html_nav_hist("la", 0, n_pasados)}{cab}'
+            f'{html_nav_hist(tab, 0, n_pasados)}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
             f'{html_compartir("Lotto Activo", f"{fecha} · {hora}",[f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[:15]], [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden[15:30]] if len(orden) >= 30 else ())}'
             f'{leyenda}{aviso_modelo}</section>')
@@ -1676,7 +1681,7 @@ def html_rd(atras=0):
         return '<div class="card"><p>RD Internacional se está preparando…</p></div>'
 
 
-def html_sombra(e, d, pend, filas=None, atras=0):
+def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, registro=""):
     """Tercera pestaña: el motor en sombra (ag12 con la regla de RD) con lo mismo que la principal: animales del día,
     próximo sorteo y sorteos pasados, historial de cuadrantes, resultados y puestos, y su marcador contra el ensamble.
     Solo muestra: el pronóstico que se puntúa y se juega sigue siendo el de la pestaña Lotto Activo. Si algo falla,
@@ -1686,12 +1691,13 @@ def html_sombra(e, d, pend, filas=None, atras=0):
         pasados = [r for r in regs if r.get("salio") is not None]
         hora, fecha = HORAS[e["ph"]], fecha_corta(e["pf"])
         if atras > 0 and pasados:
-            jugada = html_pasado_la(d, atras, pasados, "sombra")
+            jugada = html_pasado_la(d, atras, pasados, tab)
         else:
             p = ((pend or {}).get("sombra") or {}).get("ag12")
             cab = (f'<div class="jh"><h2 id="som-t">Próximo sorteo · <span>{hora}</span></h2>'
-                   '<span class="pill warn" title="se mide, aún no se recomienda">en prueba</span></div>'
-                   f'<p class="ult">{esc(fecha.capitalize())} · pronóstico del motor nuevo (ag12)</p>')
+                   + ('<span class="pill" title="congelado antes del sorteo; la regla de RD se aplica al salir RD">motor principal</span></div>'
+                      if principal else '<span class="pill warn" title="se mide, aún no se recomienda">en prueba</span></div>')
+                   + f'<p class="ult">{esc(fecha.capitalize())} · motor ag12 + regla de RD</p>')
             if not p:
                 cuerpo = '<div class="tip">El motor en sombra aún no tiene su pronóstico para este sorteo; la página se actualiza sola.</div>'
             else:
@@ -1715,16 +1721,19 @@ def html_sombra(e, d, pend, filas=None, atras=0):
                            else "Sin cambio por RD en este sorteo.")
                 anti = html_anti_top15(orden, [x / tot for x in q], e["gaps"], "sombra-anti")
                 nombres = [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden]
-                comp = html_compartir("Motor en sombra", f"{fecha} · {hora}", nombres[:15], nombres[15:30] if len(nombres) >= 30 else ())
+                comp = html_compartir("Lotto Activo" if principal else "Motor en sombra", f"{fecha} · {hora}", nombres[:15], nombres[15:30] if len(nombres) >= 30 else ())
                 cuerpo = (f'<ol class="jug">{COLS_JUGADA}{top5}</ol>'
                           f'<details class="mas" id="sombra-resto" data-rec><summary><span class="chev" aria-hidden="true"></span>'
                           f'Del 6º al 15º · solo para el ponderado</summary><ol class="jug resto" start="6">{resto}</ol></details>'
-                          f'<p class="note">{nota_rd} Coincide en {comunes} de 5 animales con el Top-5 del modelo actual.</p>{anti}{comp}')
+                          f'<p class="note">{nota_rd} Coincide en {comunes} de 5 animales con el Top-5 del '
+                          f'{"modelo anterior (ensamble)" if principal else "modelo actual"}.</p>{anti}{comp}')
             jugada = (f'<section class="card jugada" aria-labelledby="som-t">'
-                      f'{html_nav_hist("sombra", 0, len(pasados))}{cab}{cuerpo}</section>')
+                      f'{html_nav_hist(tab, 0, len(pasados))}{cab}{cuerpo}</section>')
         hoy = html_animales_hoy(d, filas, e, regs,
-                                '<p class="note">Top-2 del motor en sombra a las 8:00, elegido antes del primer sorteo. '
-                                'Solo se mide: no reemplaza la jugada de Lotto Activo.</p>') if filas is not None else ""
+                                ('<p class="note">Top-2 del motor ag12 + RD a las 8:00, elegido antes del primer sorteo.</p>'
+                                 if principal else
+                                 '<p class="note">Top-2 del motor en sombra a las 8:00, elegido antes del primer sorteo. '
+                                 'Solo se mide: no reemplaza la jugada de Lotto Activo.</p>')) if filas is not None else ""
 
         m = marcador_sombra(d)["marcador"]
         dec = decision_sombra(d)
@@ -1737,7 +1746,9 @@ def html_sombra(e, d, pend, filas=None, atras=0):
                     f'<td>{v["top15_pct"]:.1f} %</td><td>{v["mbits"]:+.0f}</td><td>{v["t5_neto"]:+.0f} $</td></tr>')
         tabla = (f'<table class="tabla"><thead><tr><th></th><th>Top-3</th><th>Top-5</th><th>Top-15</th><th>Señal</th>'
                  f'<th>Neto Top-5</th></tr></thead><tbody>'
-                 + fila_m("Modelo actual", "ensamble") + fila_m("En sombra", "ag12") + fila_m("En sombra + RD", "ag12_rd")
+                 + (fila_m("Ensamble (anterior)", "ensamble") + fila_m("ag12 sin RD", "ag12") + fila_m("ag12 + RD (principal)", "ag12_rd")
+                    if principal else
+                    fila_m("Modelo actual", "ensamble") + fila_m("En sombra", "ag12") + fila_m("En sombra + RD", "ag12_rd"))
                  + '</tbody></table>')
         n = (m.get("ag12") or {}).get("n", 0)
         dm = dec.get("mbits_ag12_menos_ensamble") if isinstance(dec, dict) else None
@@ -1746,11 +1757,18 @@ def html_sombra(e, d, pend, filas=None, atras=0):
         veredicto = (f'<p class="note">{n} sorteos medidos desde el 26 de septiembre (los mismos para los tres){ic}. '
                      f'Todavía no se puede afirmar que gane: la decisión oficial es con {dec.get("decide_con", 931)} sorteos '
                      f'(hacia mediados de diciembre). El pronóstico que se puntúa y se recomienda sigue siendo el de Lotto Activo.</p>')
-        marcador = (f'<section class="card"><div class="jh"><h2>Cómo le va frente al modelo actual</h2></div>{tabla}{veredicto}</section>')
-        return (f'{hoy}{jugada}{marcador}'
+        if principal:
+            veredicto = (f'<p class="note">{n} sorteos medidos desde el 26 de septiembre (los mismos para los tres){ic}. '
+                         f'Es el motor que se muestra desde el 16 de octubre por decisión tuya; la prueba estadística '
+                         f'preregistrada sigue en pie y se decide con {dec.get("decide_con", 931)} sorteos (mediados de diciembre). '
+                         f'El ensamble se sigue guardando y midiendo en la pestaña «Modelo anterior».</p>')
+        marcador = (f'<section class="card"><div class="jh"><h2>'
+                    f'{"Cómo le va frente al modelo anterior" if principal else "Cómo le va frente al modelo actual"}'
+                    f'</h2></div>{tabla}{veredicto}</section>')
+        return ((f'{hoy}<div class="duo">{jugada}{registro}</div>{marcador}' if registro else f'{hoy}{jugada}{marcador}')
                 + sec("sec-mesa-s", "Historial de cuadrantes",
                       f"los 38 animales por cuadrante, puesto o días sin salir · "
-                      f"{format(len(regs), ',').replace(',', '.')} sorteos del motor en sombra", html_mesa("-s"))
+                      f"{format(len(regs), ',').replace(',', '.')} sorteos del motor ag12 + RD", html_mesa("-s"))
                 + sec("historico-s", "Resultados y puestos en el Top", esc(resumen_resultados(d, regs=regs)),
                       html_resultados(d, regs=regs)))
     except Exception as ex:  # noqa: BLE001
@@ -1764,6 +1782,10 @@ def render(banca=None, tab="la", atras=0):
     calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
     pend = x["pend"]
     tab = tab if tab in ("rd", "sombra") else "la"
+    # Motor principal ag12 + RD: va en la pestaña Lotto Activo ("la") y el ensamble pasa a la tercera ("sombra",
+    # rotulada «Modelo anterior»). Si este sorteo no tiene pronóstico de ag12 (falló sombra_de), la principal
+    # vuelve a mostrar el ensamble para que nunca quede sin jugada.
+    principal_ag12 = MOTOR_PRINCIPAL == "ag12_rd" and bool(((pend or {}).get("sombra") or {}).get("ag12"))
     atras_la = atras if tab == "la" else 0
     atras_rd = atras if tab == "rd" else 0
     atras_s = atras if tab == "sombra" else 0
@@ -1774,16 +1796,28 @@ def render(banca=None, tab="la", atras=0):
         AVISO["texto"] = ""
 
     n_mesa = sum(1 for r in d["registros"] if vigente(r))
-    jugada = (html_pasado_la(d, atras_la) if atras_la > 0 and la_pasados(d)
-              else html_jugada(e, calculando, pend, aviso_modelo, modelo, len(la_pasados(d))))
-    panel_la = (
-        f'{aviso}{html_animales_hoy(d, filas, e)}<div class="duo">{jugada}'
-        f'{html_registro(e)}</div>'
+    # Pestaña del ensamble: "la" si sigue siendo el principal, "sombra" (Modelo anterior) si manda ag12 + RD.
+    t_ens = "sombra" if principal_ag12 else "la"
+    atras_ens = atras_s if principal_ag12 else atras_la
+    jugada = (html_pasado_la(d, atras_ens, tab=t_ens) if atras_ens > 0 and la_pasados(d)
+              else html_jugada(e, calculando, pend, aviso_modelo, modelo, len(la_pasados(d)), tab=t_ens))
+    if MOTOR_PRINCIPAL == "ag12_rd" and not principal_ag12 and not calculando:
+        aviso += ('<div class="tip">El motor ag12 + RD no tiene pronóstico para este sorteo: '
+                  'se muestra el del ensamble (modelo anterior).</div>')
+    panel_ens = (
+        f'{aviso if not principal_ag12 else ""}{html_animales_hoy(d, filas, e)}'
+        + (f'{jugada}' if principal_ag12 else f'<div class="duo">{jugada}{html_registro(e)}</div>')
         + sec("sec-mesa", "Historial de cuadrantes",
               f"los 38 animales por cuadrante, puesto o días sin salir · "
               f"{format(n_mesa, ',').replace(',', '.')} sorteos guardados",
               html_mesa())
         + sec("historico", "Resultados y puestos en el Top", esc(resumen_resultados(d)), html_resultados(d)))
+    if principal_ag12:
+        panel_la = aviso + html_sombra(e, d, pend, filas, atras_la, tab="la", principal=True, registro=html_registro(e))
+        panel_s = panel_ens
+    else:
+        panel_la = panel_ens
+        panel_s = html_sombra(e, d, pend, filas, atras_s)
 
     def pestana(clave, nombre, sub):
         on = clave == tab
@@ -1794,7 +1828,8 @@ def render(banca=None, tab="la", atras=0):
            '<nav class="tabs" role="tablist" aria-label="Lotería">'
            + pestana("la", "Lotto Activo", f"próximo {HORAS[e['ph']]}")
            + pestana("rd", "RD Internacional", "sorteos a las y media")
-           + pestana("sombra", "Motor en sombra", "en prueba")
+           + (pestana("sombra", "Modelo anterior", "ensamble, se sigue midiendo") if principal_ag12
+              else pestana("sombra", "Motor en sombra", "en prueba"))
            + '</nav></div></header>')
     cuerpo = (
         f'{cab}<main class="w"><h1 class="sr">Lotto Activo</h1>'
@@ -1803,7 +1838,7 @@ def render(banca=None, tab="la", atras=0):
         f'<section class="panel" id="p-rd" role="tabpanel" aria-labelledby="t-rd"{"" if tab == "rd" else " hidden"}>'
         f'{html_rd(atras_rd)}</section>'
         f'<section class="panel" id="p-sombra" role="tabpanel" aria-labelledby="t-sombra"{"" if tab == "sombra" else " hidden"}>'
-        f'{html_sombra(e, d, pend, filas, atras_s)}</section>'
+        f'{panel_s}</section>'
         '<footer>Es un juego de azar: ningún modelo garantiza ganar. Juega solo lo que puedas perder.</footer></main>')
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -1931,8 +1966,16 @@ def mesa_slots_hist(d, actual, regs=None):
     h.sort(key=lambda r: (r["fecha"], r["hora"]), reverse=True)
     return h
 
+def modelo_api(modelo):
+    """"principal" -> el motor que se muestra en Lotto Activo; "ensamble" -> "la". Lo demás queda igual."""
+    if modelo == "principal":
+        return "sombra" if MOTOR_PRINCIPAL == "ag12_rd" else "la"
+    return "la" if modelo == "ensamble" else modelo
+
 def mesa_datos(offset=0, modelo="la"):
-    """Distribución completa del slot en offset (0 = actual). Solo lectura. modelo="sombra": ag12 con la regla de RD."""
+    """Distribución completa del slot en offset (0 = actual). Solo lectura. modelo="sombra": ag12 con la regla de RD;
+    "principal": el que manda MOTOR_PRINCIPAL; "la" o "ensamble": el ensamble."""
+    modelo = modelo_api(modelo)
     filas = cargar(); e = estado(filas); d = log_cargar()
     actual = (e["pf"], e["ph"])
     regs = sombra_registros(d) if modelo == "sombra" else None
@@ -2018,6 +2061,7 @@ def mesa_datos(offset=0, modelo="la"):
 def mesa_stats(modelo="la"):
     """Dónde cayó el ganador, sobre TODOS los registros resueltos. Solo lectura.
     Muestra en vivo y pequeña: NO es validación (para eso, walk-forward en desarrollo)."""
+    modelo = modelo_api(modelo)
     filas = cargar(); d = log_cargar()
     res = [r for r in (sombra_registros(d) if modelo == "sombra" else d["registros"])
            if vigente(r) and r.get("salio") is not None]
