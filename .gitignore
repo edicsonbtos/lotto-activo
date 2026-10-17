@@ -21,3 +21,11 @@ rdint_predicciones.json
 herramientas/rdint/*.npz
 .coverage
 .pytest_cache/
+
+# Worktrees de Claude Code (copias del repo) y descargas crudas del scraping (se regeneran)
+.claude/worktrees/
+scraping/crudos/
+scraping/__pycache__/
+
+# Página de relleno de Railway, no es parte del producto
+railway-public-page/
