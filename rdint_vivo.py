@@ -276,7 +276,8 @@ def preparar(calcular=False):
             p = b1(p0, la, h)
             orden = sorted(POS, key=lambda c: (-p[IDX[c]], IDX[c]))
             nuevo = {"fecha": f, "hora": h, "orden": orden,
-                     "prob": {c: round(p[IDX[c]], 5) for c in orden[:15]},
+                     # Las 38 (antes solo el Top-15): así RD se puede medir en mbits en vivo, como LA.
+                     "prob": {c: round(p[IDX[c]], 5) for c in orden},
                      "con_la_h": con_la, "la_h": la.get(h), "la_h1": la.get(h - 1),
                      "creado": (pend or {}).get("creado") or ahora.isoformat(timespec="seconds"),
                      "actualizado": ahora.isoformat(timespec="seconds"),
