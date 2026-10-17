@@ -1,0 +1,29 @@
+{
+  "tipo": "captura_estado_pre_sorteo_no_puntuacion",
+  "sorteo": {
+    "fecha": "2026-10-17",
+    "hora": "08:00 America/Caracas",
+    "hora_utc": "2026-10-17T12:00:00Z"
+  },
+  "fuentes": [
+    {
+      "nombre": "API producción Lotto Activo",
+      "url": "https://lotto-activo-production.up.railway.app/api/mesa?offset=0&modelo=la",
+      "archivo": "api_mesa_pendiente.json",
+      "capturado_utc": "2026-10-17T03:39:53.350Z",
+      "sha256": "0a3aba5d16993a911c238cf75a6f116be242e5b0f613ac6267abb1dc15685a2a",
+      "ganador": null,
+      "fecha_respuesta": "2026-10-17",
+      "hora_respuesta": "8:00 AM"
+    },
+    {
+      "nombre": "TuAzar",
+      "url": "https://tuazar.com.ve/loteria/animalitos/resultados/semana/",
+      "archivo": "tuazar_semana.html",
+      "capturado_utc": "2026-10-17T03:39:54.103Z",
+      "sha256": "26bcd957d238be2c569d9e2d0aef77df821f589b6fb559b7a06ad8114b732e87",
+      "contiene_lotto_activo": true,
+      "contiene_fecha_sorteo": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "capturado_utc": "2026-10-17T20:53:39Z",
+  "fuentes": [
+    {
+      "archivo": "sombra.json",
+      "url": "https://lotto-activo-production.up.railway.app/api/sombra",
+      "sha256": "667284db01a5f75c6a977c025a451955eb068c745e7dae7d99fb6f7a1199d0e3"
+    },
+    {
+      "archivo": "datos_publicados.json",
+      "url": "https://lotto-activo-production.up.railway.app/api/datos_publicados",
+      "sha256": "5e5963d582f3a66ac74ac74ad8b7cff8438ec01475d9a5614b97089f25dace3a"
+    },
+    {
+      "archivo": "mesa_offset1_la.json",
+      "url": "https://lotto-activo-production.up.railway.app/api/mesa?offset=1&modelo=la",
+      "sha256": "e169a1c3532f055b388e0b103bf86795aed43adef6437ad00e5354122542c28c"
+    },
+    {
+      "archivo": "lotoactivo_oficial.html",
+      "url": "https://lottoactivo.com/resultados/lotto_activo/",
+      "sha256": "6fdb11272df783dab3a7e69c3ec35d537b381eb3c5d56dbaf7bc031888878eda"
+    },
+    {
+      "archivo": "tuazar_independiente.html",
+      "url": "https://tuazar.com.ve/loteria/animalitos/resultados/semana/",
+      "sha256": "8d929de503535f704a6912c0f97913a77cd9503adc6e0cd3555aa929f6efa015"
+    }
+  ]
+}

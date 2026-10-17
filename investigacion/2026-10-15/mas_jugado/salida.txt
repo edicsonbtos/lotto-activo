@@ -1,0 +1,40 @@
+Desarrollo: 7357 sorteos (2024-03-07..2025-12-19); dev-A 3688, dev-B 3669; filas con fecha corregida 155
+Criterio: dev-A O/E<1 con p<0,05 Y dev-B O/E<1 con p<0,005 (Bonferroni 10)
+
+M1_dia_invertido: válidos A/B 897/849, tamaño medio 1.00
+   dev-A O/E 0.756 [0.44; 1.14] (O 18, E 23.8, p 0.091)
+   dev-B O/E 0.800 [IC99 0.41; 1.25] (O 19, E 23.8, p 0.1220)   placebo+7 dev-B 1.16   chi2 horas dev-B 12.6  => NO PASA
+M2_terminal_dia: válidos A/B 3688/3669, tamaño medio 2.73
+   dev-A O/E 1.035 [0.92; 1.16] (O 272, E 262.9, p 0.717)
+   dev-B O/E 0.901 [IC99 0.76; 1.07] (O 244, E 270.8, p 0.0535)   placebo+7 dev-B 0.98   chi2 horas dev-B 10.7  => NO PASA
+M3_terminal_hora: válidos A/B 3688/3669, tamaño medio 2.72
+   dev-A O/E 1.032 [0.92; 1.15] (O 273, E 264.4, p 0.703)
+   dev-B O/E 0.967 [IC99 0.82; 1.12] (O 252, E 260.5, p 0.2919)   placebo+7 dev-B 1.11   chi2 horas dev-B 11.8  => NO PASA
+M4_hora_invertida: válidos A/B 1548/1441, tamaño medio 1.00
+   dev-A O/E 1.062 [0.77; 1.37] (O 43, E 40.5, p 0.644)
+   dev-B O/E 1.168 [IC99 0.77; 1.61] (O 44, E 37.7, p 0.8425)   placebo+7 dev-B 0.90   chi2 horas dev-B 4.2  => NO PASA
+M5_invertido_ultimo: válidos A/B 1093/1090, tamaño medio 1.00
+   dev-A O/E 0.813 [0.49; 1.16] (O 24, E 29.5, p 0.132)
+   dev-B O/E 0.338 [IC99 0.10; 0.64] (O 10, E 29.6, p 0.0002)   placebo+7 dev-B 0.93   chi2 horas dev-B 15.1  => NO PASA
+M6_terminal_ultimo: válidos A/B 3683/3664, tamaño medio 2.68
+   dev-A O/E 0.896 [0.79; 1.00] (O 238, E 265.5, p 0.028)
+   dev-B O/E 0.870 [IC99 0.74; 1.02] (O 231, E 265.5, p 0.0117)   placebo+7 dev-B 0.95   chi2 horas dev-B 9.1  => NO PASA
+M7_suma_fecha: válidos A/B 3333/3423, tamaño medio 1.00
+   dev-A O/E 0.919 [0.73; 1.12] (O 82, E 89.3, p 0.208)
+   dev-B O/E 0.813 [IC99 0.57; 1.07] (O 75, E 92.2, p 0.0280)   placebo+7 dev-B 1.23   chi2 horas dev-B 18.7  => NO PASA
+M8_vispera_festiva: válidos A/B 195/149, tamaño medio 1.00
+   dev-A O/E 0.812 [0.18; 1.74] (O 4, E 4.9, p 0.327)
+   dev-B O/E 0.269 [IC99 0.00; 1.27] (O 1, E 3.7, p 0.0147)   placebo+7 dev-B 1.30   chi2 horas dev-B 4.6  => NO PASA
+M9_quincena_15_30: válidos A/B 1773/1728, tamaño medio 1.73
+   dev-A O/E 0.969 [0.78; 1.17] (O 78, E 80.5, p 0.365)
+   dev-B O/E 1.084 [IC99 0.83; 1.37] (O 85, E 78.4, p 0.7871)   placebo+7 dev-B 1.12   chi2 horas dev-B 9.7  => NO PASA
+M10_pago_x_fecha (animal D0, días de pago vs resto):
+   dev-A: O/E pago 0.92 (O 11, E 11.9) vs resto 0.69 (O 60, E 86.8); R 1.33 [IC95 0.58; 2.44] p 0.780
+   dev-B: O/E pago 0.21 (O 3, E 14.2) vs resto 0.54 (O 46, E 84.5); R 0.39 [IC95 0.00; 0.95] p 0.017
+   => NO PASA
+
+Ganancia (m ajustado en dev-A, medido en dev-B):
+   ninguna hipótesis pasa: no se estima ganancia.
+   referencia D0/D+1/H12 (ya conocida, mismo método): m = [0.706, 0.599, 0.914]; dev-B +7.43 mbits [+3.65; +11.28]
+
+PASAN: ninguna

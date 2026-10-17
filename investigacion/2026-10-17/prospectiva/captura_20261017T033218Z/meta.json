@@ -1,0 +1,44 @@
+{
+  "capturado_utc": "2026-10-17T03:32:18Z",
+  "capturado_local": "2026-10-16T23:32:18-04:00",
+  "sources": [
+    {
+      "name": "sombra",
+      "url": "https://lotto-activo-production.up.railway.app/api/sombra",
+      "http": 200,
+      "file": "sombra.json",
+      "sha256": "eed3d223e7f54f186169b7f9ec607be96c3bcd7e2cbbff0d84f8fe01d56de983"
+    },
+    {
+      "name": "mesa_proximo_ensamble",
+      "url": "https://lotto-activo-production.up.railway.app/api/mesa?offset=0&modelo=la",
+      "http": 200,
+      "file": "mesa_proximo_ensamble.json",
+      "sha256": "0a3aba5d16993a911c238cf75a6f116be242e5b0f613ac6267abb1dc15685a2a"
+    },
+    {
+      "name": "mesa_proximo_sombra",
+      "url": "https://lotto-activo-production.up.railway.app/api/mesa?offset=0&modelo=sombra",
+      "http": 200,
+      "file": "mesa_proximo_sombra.json",
+      "sha256": "2efa5978b72071a48407496d64e25b1cdfec32e8c326b4201ba8455ee8b9acc1"
+    },
+    {
+      "name": "datos_publicados",
+      "url": "https://lotto-activo-production.up.railway.app/api/datos_publicados",
+      "http": 200,
+      "file": "datos_publicados.json",
+      "sha256": "f8ec95515521a9706c9795eb760d8311194235934c3efc46a9f7e51a13b3884d"
+    }
+  ],
+  "status": {
+    "ensamble_fecha": "2026-10-17",
+    "ensamble_hora": "8:00 AM",
+    "ensamble_ganador": null,
+    "sombra_fecha": "2026-10-17",
+    "sombra_hora": "8:00 AM",
+    "sombra_error": null,
+    "ag13_n": 24,
+    "ag13_estado": "acumulando (24 de 931)"
+  }
+}

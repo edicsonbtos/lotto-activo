@@ -1,0 +1,56 @@
+{
+  "capturado_utc": "2026-10-17T03:28:59Z",
+  "nota": "Captura GET de solo lectura de API pública de producción; no altera modelo ni datos.",
+  "fuentes": {
+    "mesa_ultimo_sombra": {
+      "url": "https://lotto-activo-production.up.railway.app/api/mesa?offset=1&modelo=sombra",
+      "status": 200,
+      "file": "mesa_ultimo_sombra.json",
+      "sha256": "c37f309fdebe91996030c0709ecb6c18a401854ed54944e4d255892974946fe9"
+    },
+    "sombra": {
+      "url": "https://lotto-activo-production.up.railway.app/api/sombra",
+      "status": 200,
+      "file": "sombra.json",
+      "sha256": "eed3d223e7f54f186169b7f9ec607be96c3bcd7e2cbbff0d84f8fe01d56de983"
+    },
+    "mesa_ultimo_ensamble": {
+      "url": "https://lotto-activo-production.up.railway.app/api/mesa?offset=1&modelo=la",
+      "status": 200,
+      "file": "mesa_ultimo_ensamble.json",
+      "sha256": "7b49cec5b1d20a0fca6ad9769ce6490324e2944e97311ef3b7d7ea45d2cf9992"
+    },
+    "datos_publicados": {
+      "url": "https://lotto-activo-production.up.railway.app/api/datos_publicados",
+      "status": 200,
+      "file": "datos_publicados.json",
+      "sha256": "f8ec95515521a9706c9795eb760d8311194235934c3efc46a9f7e51a13b3884d",
+      "capturado_utc": "2026-10-17T03:29:37Z"
+    }
+  },
+  "resumen": {
+    "ultimo_sorteo": "2026-10-16",
+    "ultimo_hora": "7:00 PM",
+    "ganador": "19",
+    "ag12_n": 250,
+    "ag12rd_n": 250,
+    "exposicion_n": 179,
+    "ag13_n": 24,
+    "ag13_estado": "acumulando (24 de 931)",
+    "ag13_delta_vs_ag12rdexp": {
+      "n": 24,
+      "jornadas": 2,
+      "media": -8.49,
+      "ic90": [
+        -14.45,
+        -2.53
+      ]
+    }
+  },
+  "cobertura_ag13": {
+    "dias_publicados": 15,
+    "dias_con_ambas_fuentes": 15,
+    "ultimo_dia": "2026-10-16",
+    "limitacion": "La API muestra disponibilidad por fuente/día, no expone HTML ni hora exacta; el marcador de producción reporta sin_pron_aun=0 para sus 24 filas."
+  }
+}

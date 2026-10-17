@@ -1,0 +1,89 @@
+======================================================================
+1. SECUENCIAL ag12 (regla: n=931, IC90 inferior de Δmbits > 0, Top-5 pp/ficha punto >= -3)
+producción: n=226 media=16.92 IC90=[-7.57, 41.4] -> EE=14.88, σ efectiva por sorteo (con jornadas)=223.8
+z actual = 1.14  (p unilateral 0.128)
+a n=931 pasa si media final > 12.06 mbits; los 705 sorteos restantes deben promediar > 10.51
+Potencia condicional (efecto verdadero fijo):
+  δ=  0.0: P(pasar a 931) = 0.11
+  δ=  5.0: P(pasar a 931) = 0.26
+  δ= 10.0: P(pasar a 931) = 0.48
+  δ= 16.9: P(pasar a 931) = 0.78
+  δ= 19.4: P(pasar a 931) = 0.85
+Predictiva bayesiana (prior normal sobre δ; verosimilitud = lo observado):
+  plano: posterior δ ~ N(16.9, 14.9²) -> P(pasar a 931) = 0.65
+  escéptico N(0,10²): posterior δ ~ N(5.3, 8.3²) -> P(pasar a 931) = 0.33
+  planificación N(10,10²): posterior δ ~ N(12.2, 8.3²) -> P(pasar a 931) = 0.56
+  evidencia previa N(6,8²) (sellada −1,2 / ciega +19,4 / réplica +20): posterior δ ~ N(8.4, 7.0²) -> P(pasar a 931) = 0.43
+Simulación por bloques de jornada (observados, re-centrados a δ; Top-5 tal cual se observó):
+  δ=  0.0: pasa a 931 = 0.13; pasa luego a 3.500 = 0.05; total = 0.18; frenado por Top-5 = 0.00
+  δ=  5.0: pasa a 931 = 0.29; pasa luego a 3.500 = 0.23; total = 0.52; frenado por Top-5 = 0.00
+  δ= 10.0: pasa a 931 = 0.48; pasa luego a 3.500 = 0.40; total = 0.88; frenado por Top-5 = 0.00
+  δ= 19.2: pasa a 931 = 0.82; pasa luego a 3.500 = 0.18; total = 1.00; frenado por Top-5 = 0.00
+O'Brien-Fleming (Lan-DeMets, α=0,05 unilateral) en t=0.243: frontera z ≈ 3.98 (hoy z = 1.14); Pocock ≈ 2,2
+Fecha n=931: faltan 705 -> 58.8 días desde 2026-10-14 (cierre) -> ~2026-12-12; preregistro: 2026-12-14
+======================================================================
+2. ensamble_exp (freno a 930 si n>=600 y Δ<−5; decide a 6.000 con IC90 inf > 0 y Top-5 IC90 inf > −3 pp)
+n=155 media=7.72 EE=4.35 σ efectiva=54.2 (preregistro suponía ~78)
+  freno 930, δ=0: P(se apaga) = 0.000
+  freno 930, δ=2.3: P(se apaga) = 0.000
+  freno 930, δ=7.72: P(se apaga) = 0.000
+  decisión 6.000, δ=0: P(pasa mbits) = 0.08
+  decisión 6.000, δ=2.3: P(pasa mbits) = 0.97
+  decisión 6.000, δ=7.72: P(pasa mbits) = 1.00
+  decisión 6.000, predictiva plano: δ~N(7.7,4.3²) -> P(pasa mbits) = 0.94
+  decisión 6.000, predictiva preregistro N(2,3; 2,6²): δ~N(3.7,2.2²) -> P(pasa mbits) = 0.88
+  Fechas: 930 -> faltan 775 = 65 días (~2026-12-18); 6.000 -> 487 días (~2028-02)
+ventana_8am: n=11 mañanas, obs 0 vs esp 0.72; 730 -> ~719 días más (~2028-10)
+  OJO: IC90 de mbits [35.53, 43.24] es artefacto: 0 aciertos en la ventana -> todas las mañanas suman lo mismo; un acierto en la ventana resta ~-761 mbits
+======================================================================
+3. PLATA (mismos 226 sorteos desde 2026-09-26; IC por bootstrap de jornadas, 10.000)
+  vivo congelado (con 8:00)                     Top-5 2-2-2-1-1              neto    +82 u  ( +4.5 %)  IC90 [-352; +546]  IC95 [-426; +636]
+  vivo congelado (con 8:00)                     Top-15 pond. 3-3-3-2-2+1x10  neto   -128 u  ( -2.5 %)  IC90 [-726; +532]  IC95 [-818; +682]
+  vivo como se juega (regla RD Top-5/Top-15)    Top-5 2-2-2-1-1              neto   +142 u  ( +7.9 %)  IC90 [-324; +652]  IC95 [-412; +756]
+  vivo como se juega (regla RD Top-5/Top-15)    Top-15 pond. 3-3-3-2-2+1x10  neto   -158 u  ( -3.0 %)  IC90 [-774; +532]  IC95 [-890; +682]
+  ensamble sin 8:00 (base de la decisión)       Top-5 2-2-2-1-1              neto    +52 u  ( +2.9 %)  IC90 [-380; +516]  IC95 [-444; +606]
+  ensamble sin 8:00 (base de la decisión)       Top-15 pond. 3-3-3-2-2+1x10  neto   -158 u  ( -3.0 %)  IC90 [-758; +502]  IC95 [-864; +652]
+  ag12                                          Top-5 2-2-2-1-1              neto   +502 u  (+27.8 %)  IC90 [+68; +998]  IC95 [+6; +1116]
+  ag12                                          Top-15 pond. 3-3-3-2-2+1x10  neto   +652 u  (+12.5 %)  IC90 [+38; +1342]  IC95 [-54; +1506]
+  ag12 + RD ×0,5/×0,75                          Top-5 2-2-2-1-1              neto   +502 u  (+27.8 %)  IC90 [+22; +1056]  IC95 [-54; +1178]
+  ag12 + RD ×0,5/×0,75                          Top-15 pond. 3-3-3-2-2+1x10  neto   +652 u  (+12.5 %)  IC90 [-22; +1416]  IC95 [-114; +1582]
+  ag12 + regla RD Top-15                        Top-5 2-2-2-1-1              neto   +502 u  (+27.8 %)  IC90 [+68; +996]  IC95 [+8; +1102]
+  ag12 + regla RD Top-15                        Top-15 pond. 3-3-3-2-2+1x10  neto   +622 u  (+12.0 %)  IC90 [+22; +1342]  IC95 [-84; +1506]
+  Diferencias pareadas ag12 − vivo como se juega:
+    Top-5: +360 u IC90 [+0; +720] IC95 [-60; +780]
+    Top-15 pond.: +810 u IC90 [+240; +1410] IC95 [+120; +1530]
+  Exposición (desde 2026-10-02, n=154):
+    ensamble      Top-5           +208 u (+16.9 %) IC90 [-168; +614]
+    ensamble      Top-15 pond.    +148 u ( +4.2 %) IC90 [-422; +748]
+    ensamble_exp  Top-5           +208 u (+16.9 %) IC90 [-198; +644]
+    ensamble_exp  Top-15 pond.    +208 u ( +5.9 %) IC90 [-332; +824]
+    ag12_rd       Top-5           +538 u (+43.7 %) IC90 [+102; +1048]
+    ag12_rd       Top-15 pond.    +748 u (+21.1 %) IC90 [+120; +1468]
+    ag12_rd_exp   Top-5           +568 u (+46.1 %) IC90 [+58; +1152]
+    ag12_rd_exp   Top-15 pond.    +748 u (+21.1 %) IC90 [+88; +1530]
+    exp − ens Top-5: (0, (-150, 150), (-180, 180))
+    exp − ens Top-15 pond.: (60, (-180, 270), (-210, 300))
+======================================================================
+4. REGLA RD EN TOP-15 (desde 2026-10-07, h>0, RD (h−1):30 conocido)
+n=88 cambios (orden distinto donde cayó el ganador) = 14; sin -194 con -224 dif -30  (API: n=88 sin −194 con −224 dif −30)
+   2026-10-07 h7: ganador puesto 14 -> 13  Δ +0  (RD previo=6, ganó el de RD: False)
+   2026-10-07 h8: ganador puesto 9 -> 8  Δ +0  (RD previo=28, ganó el de RD: False)
+   2026-10-09 h4: ganador puesto 7 -> 6  Δ +0  (RD previo=4, ganó el de RD: False)
+   2026-10-09 h11: ganador puesto 3 -> 2  Δ +0  (RD previo=22, ganó el de RD: False)
+   2026-10-10 h1: ganador puesto 8 -> 7  Δ +0  (RD previo=24, ganó el de RD: False)
+   2026-10-10 h9: ganador puesto 9 -> 8  Δ +0  (RD previo=11, ganó el de RD: False)
+   2026-10-11 h6: ganador puesto 3 -> 2  Δ +0  (RD previo=21, ganó el de RD: False)
+   2026-10-11 h8: ganador puesto 10 -> 9  Δ +0  (RD previo=31, ganó el de RD: False)
+   2026-10-12 h3: ganador puesto 13 -> 12  Δ +0  (RD previo=1, ganó el de RD: False)
+   2026-10-12 h4: ganador puesto 7 -> 6  Δ +0  (RD previo=0, ganó el de RD: False)
+   2026-10-12 h11: ganador puesto 6 -> 16  Δ -30  (RD previo=35, ganó el de RD: True)
+   2026-10-13 h1: ganador puesto 11 -> 10  Δ +0  (RD previo=31, ganó el de RD: False)
+   2026-10-13 h3: ganador puesto 11 -> 10  Δ +0  (RD previo=10, ganó el de RD: False)
+   2026-10-14 h8: ganador puesto 15 -> 14  Δ +0  (RD previo=24, ganó el de RD: False)
+dif con−sin: -30 u = -1.48 pp/ficha  IC90 [-90; +0]  IC95 [-90; +0]
+  parte nueva (6º-16º) frente a solo regla Top-5: (-30, (-90, 0), (-90, 0))
+  esperado con +1.57 pp/ficha en 88 sorteos: +32 u
+  esperado con +2.47 pp/ficha en 88 sorteos: +50 u
+  desde 26-sep, ensamble sin 8:00: n=208 dif +30 u = +0.63 pp/ficha IC90 [-60; +120]
+  desde 26-sep, ag12: n=208 dif -30 u = -0.63 pp/ficha IC90 [-120; +60]
+  LA h repite el animal de RD (h−1):30: 5/208 = 2.40 % (azar 2,63 %)
