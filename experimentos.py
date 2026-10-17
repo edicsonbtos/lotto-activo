@@ -325,6 +325,78 @@ def marcador_ag13(res, fichas, rd=None):
         return {"error": repr(ex)[:200]}
 
 
+# ------------------------------------------------ ag14 prospectivo en sombra
+AG14_DESDE = "2026-10-17"
+AG14_N_DECIDE = 931          # mirada única: primeros 931 sorteos válidos desde el inicio prospectivo
+AG14_T5_MIN = -3.0           # tolerancia congelada en pp/ficha frente al ensamble
+_AG14 = []
+
+
+def _modulo_ag14():
+    if not _AG14:
+        ruta = os.path.join(HERR, "modelos")
+        if ruta not in sys.path:
+            sys.path.append(ruta)
+        import ag14 as modulo
+        _AG14.append(modulo)
+    return _AG14[0]
+
+
+def marcador_ag14(res, fichas, rd=None):
+    """Evalúa ag12 -> RD disponible -> exposición en sorteos prospectivos, sin requerir pron."""
+    try:
+        return _marcador_ag14(res, fichas, rd or {})
+    except Exception as ex:  # noqa: BLE001; un fallo en sombra no interrumpe el motor
+        print(f"[ag14] {_ahora()} marcador falló: {ex!r}", file=sys.stderr, flush=True)
+        return {"error": repr(ex)[:200]}
+
+
+def _marcador_ag14(res, fichas, rd):
+    m = _modulo_ag14()
+    filas, sin_ag12 = [], 0
+    for r in sorted(res, key=lambda x: (x["fecha"], x["hora"])):
+        if r.get("anulado") or r["fecha"] < AG14_DESDE:
+            continue
+        s = r.get("sombra") or {}
+        sc = r.get("scores_sin_8am") or r.get("scores")
+        if "ag12" not in s or not sc or r.get("salio") is None:
+            sin_ag12 += 1
+            continue
+        f, h, w = r["fecha"], int(r["hora"]), int(r["salio"])
+        q, _ = con_rd(s["ag12"], rd, f, h)
+        p14 = m.cadena(q, f, h)
+        mb = lambda p: 1000 * math.log2(max(p[w] / sum(p), 1e-12) * K)
+        orden = sorted(range(K), key=lambda i: (-p14[i], i))
+        orden_base = sorted(range(K), key=lambda i: (-sc[i], i))
+        cod = rd.get((f, h - 1)) if h > 0 else None
+        if cod in IDX:
+            orden = cambiar15(orden, cod)
+            orden_base = cambiar15(orden_base, cod)
+        neto = lambda o: 100.0 * (PAGO * fichas[o.index(w) + 1] - sum(fichas)) / sum(fichas)
+        filas.append({"f": f, "mb": mb(p14) - mb(sc), "t5": neto(orden) - neto(orden_base),
+                      "top3": orden.index(w) < 3, "top5": orden.index(w) < 5,
+                      "top15": orden.index(w) < 15})
+
+    n = len(filas)
+    dm = ic90_jornadas([(x["f"], x["mb"]) for x in filas])
+    dt = ic90_jornadas([(x["f"], x["t5"]) for x in filas])
+    base = {"version": m.VERSION, "desde": AG14_DESDE, "n": n, "sin_ag12": sin_ag12,
+            "decide_con": AG14_N_DECIDE}
+    if not n:
+        return dict(base, estado="esperando sorteos prospectivos")
+    estado, decision = f"acumulando ({n} de {AG14_N_DECIDE})", None
+    if n >= AG14_N_DECIDE:
+        cols = filas[:AG14_N_DECIDE]
+        d1 = ic90_jornadas([(x["f"], x["mb"]) for x in cols])
+        d2 = ic90_jornadas([(x["f"], x["t5"]) for x in cols])
+        pasa = bool(d1 and d1["ic90"] and d1["ic90"][0] > 0 and d2 and d2["media"] >= AG14_T5_MIN)
+        decision = {"n": AG14_N_DECIDE, "mbits": d1, "top5_pp_ficha": d2, "pasa": pasa}
+        estado = "PASA (sombra; requiere revisión antes de producción)" if pasa else "NO PASA"
+    return dict(base, estado=estado, decision=decision,
+                top3=sum(x["top3"] for x in filas), top5=sum(x["top5"] for x in filas),
+                top15=sum(x["top15"] for x in filas), delta_mbits=dm, top5_pp_ficha=dt)
+
+
 def _marcador_ag13(res, fichas, rd):
     m = _modulo_ag13()
     sf = sum(fichas)
@@ -502,6 +574,7 @@ def marcador_sombra(res, fichas):
                  [round(100 * v, 2) for v in b["ic90"]]))))
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": n_con_rd, "marcador": m,
             "ag13": marcador_ag13(res, fichas, rd),
+            "ag14": marcador_ag14(res, fichas, rd),
             "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,
                            "decide_con": SOMBRA_EXP_N_FINAL, "primaria": "ensamble_exp_vs_ensamble",
                            "marcador": mx, "diferencias": difs, "fallos": fallos_exp},

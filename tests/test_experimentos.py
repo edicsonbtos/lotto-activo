@@ -47,8 +47,9 @@ def test_marcadores_reproducen_lo_de_antes(datos):
     d, _ = datos
     res, fichas = servidor.resueltas(d), servidor.fichas_por_puesto()
     assert experimentos.marcador_cambio_rd(res, fichas) == ORO["marcador_cambio_rd"]
-    # "ag13" es una clave nueva (PREREGISTRO_ag13.md): todo lo demás tiene que seguir idéntico al oro.
-    assert {k: v for k, v in experimentos.marcador_sombra(res, fichas).items() if k != "ag13"} == ORO["marcador_sombra"]
+    # Los marcadores candidatos son claves nuevas; el resultado previo debe seguir idéntico al oro.
+    assert {k: v for k, v in experimentos.marcador_sombra(res, fichas).items()
+            if k not in ("ag13", "ag14")} == ORO["marcador_sombra"]
 
 
 def test_el_oro_cubre_exposicion_y_cambios():
@@ -70,7 +71,8 @@ def test_con_rd_y_ic90_reproducen_lo_de_antes(datos):
 def test_servidor_conserva_sus_nombres_y_da_lo_mismo(datos):
     d, _ = datos
     assert servidor.marcador_cambio_rd(d) == ORO["marcador_cambio_rd"]
-    assert {k: v for k, v in servidor.marcador_sombra(d).items() if k != "ag13"} == ORO["marcador_sombra"]
+    assert {k: v for k, v in servidor.marcador_sombra(d).items()
+            if k not in ("ag13", "ag14")} == ORO["marcador_sombra"]
     assert servidor.cambio_rd(list(range(38)), "2031-01-01", 2)[1] == ORO["cambio_rd"]["sin_rd"]
 
 

@@ -1,0 +1,174 @@
+{
+  "estado": "RETROSPECTIVO_DESCRIPTIVO_NO_PRUEBA_VIRGEN",
+  "metodo": "Ag12 V1 congelado -> con_rd existente -> exposicion.aplicar existente",
+  "nota": "El tramo fresco ya fue revisado para ag12/RD y se solapa con la sombra de exposición desde 2026-10-02. No cuenta como decisión prospectiva Ag14 ni permite reajustar parámetros.",
+  "fuentes_sha256": {
+    "herramientas\\exploracion\\ag12_2026_2026-10-07\\P_ens_fresco.npy": "56d1f2a8c7f20d94f81a634f328bc0eced6a0d2cb2a11193135539d6f542755c",
+    "herramientas\\exploracion\\ag12_2026_2026-10-07\\P_ag12_V1_fresco.npy": "cee12fc7c097003bf10749aeddc62bbcd38bceb67c122d3623cfcca32f532b9a",
+    "herramientas\\exploracion\\ag12_2026_2026-10-07\\hist_ext.txt": "ea63c5e6df582a06ceb5794c62e7d94276d3208b4f2d6631bbaccb1dc41029e0",
+    "herramientas\\exploracion\\ag12_2026_2026-10-07\\fresco_rd.csv": "d9691dbea5d837242ac06b4a3a00270700db69edc2cb2bafb7f65087d54b7434",
+    "datos_multiloteria\\rdint_hist.csv": "31a494ab20210f8de2c430b5bb244bb1be12bf1941e6fcc24b6001b63f828aee",
+    "herramientas\\correccion_historial_2026-09-29.json": "69bd32b7f06d43b16b4e84e7c19e7b770c75a4c69c72203cf1b12e7e718f6d4c"
+  },
+  "replica_ya_observada": {
+    "tramo": "Réplica 2026, enero–16 septiembre (ya observada)",
+    "n": 2959,
+    "jornadas": 247,
+    "ensamble_v2": {
+      "mbits_medios": 91.93,
+      "top3": 371,
+      "top5": 586,
+      "top15": 1470,
+      "retorno_top5_pp_ficha": 22.8
+    },
+    "ag12+RD": {
+      "mbits_medios": 124.11,
+      "top3": 397,
+      "top5": 651,
+      "top15": 1556,
+      "retorno_top5_pp_ficha": 32.82
+    },
+    "ag14": {
+      "mbits_medios": 127.64,
+      "top3": 404,
+      "top5": 661,
+      "top15": 1586,
+      "retorno_top5_pp_ficha": 34.97
+    },
+    "delta_mbits_ag14_menos_ens": {
+      "n": 2959,
+      "jornadas": 247,
+      "media": 35.71,
+      "ic90": [
+        28.0,
+        43.43
+      ]
+    },
+    "delta_mbits_ag14_menos_ag12rd": {
+      "n": 2959,
+      "jornadas": 247,
+      "media": 3.53,
+      "ic90": [
+        1.1,
+        5.97
+      ]
+    },
+    "delta_top3_pp_ag14_menos_ensamble": {
+      "n": 2959,
+      "jornadas": 247,
+      "media": 1.0,
+      "ic90": [
+        0.0,
+        2.0
+      ]
+    },
+    "delta_top5_pp_ag14_menos_ensamble": {
+      "n": 2959,
+      "jornadas": 247,
+      "media": 3.0,
+      "ic90": [
+        1.0,
+        4.0
+      ]
+    },
+    "delta_top15_pp_ag14_menos_ensamble": {
+      "n": 2959,
+      "jornadas": 247,
+      "media": 4.0,
+      "ic90": [
+        3.0,
+        5.0
+      ]
+    },
+    "delta_retorno_top5_pp_ficha_ag14_menos_ensamble": {
+      "n": 2959,
+      "jornadas": 247,
+      "media": 12.17,
+      "ic90": [
+        5.11,
+        19.22
+      ]
+    }
+  },
+  "fresco_ya_reportado": {
+    "tramo": "Fresco, 16 septiembre–7 octubre (ya reportado)",
+    "n": 249,
+    "jornadas": 22,
+    "ensamble_v2": {
+      "mbits_medios": 117.51,
+      "top3": 26,
+      "top5": 43,
+      "top15": 116,
+      "retorno_top5_pp_ficha": 5.42
+    },
+    "ag12+RD": {
+      "mbits_medios": 145.75,
+      "top3": 40,
+      "top5": 51,
+      "top15": 136,
+      "retorno_top5_pp_ficha": 37.05
+    },
+    "ag14": {
+      "mbits_medios": 157.58,
+      "top3": 43,
+      "top5": 54,
+      "top15": 141,
+      "retorno_top5_pp_ficha": 46.08
+    },
+    "delta_mbits_ag14_menos_ens": {
+      "n": 249,
+      "jornadas": 22,
+      "media": 40.07,
+      "ic90": [
+        10.97,
+        69.17
+      ]
+    },
+    "delta_mbits_ag14_menos_ag12rd": {
+      "n": 249,
+      "jornadas": 22,
+      "media": 11.84,
+      "ic90": [
+        7.01,
+        16.66
+      ]
+    },
+    "delta_top3_pp_ag14_menos_ensamble": {
+      "n": 249,
+      "jornadas": 22,
+      "media": 7.0,
+      "ic90": [
+        4.0,
+        9.0
+      ]
+    },
+    "delta_top5_pp_ag14_menos_ensamble": {
+      "n": 249,
+      "jornadas": 22,
+      "media": 4.0,
+      "ic90": [
+        1.0,
+        8.0
+      ]
+    },
+    "delta_top15_pp_ag14_menos_ensamble": {
+      "n": 249,
+      "jornadas": 22,
+      "media": 10.0,
+      "ic90": [
+        6.0,
+        14.0
+      ]
+    },
+    "delta_retorno_top5_pp_ficha_ag14_menos_ensamble": {
+      "n": 249,
+      "jornadas": 22,
+      "media": 40.66,
+      "ic90": [
+        20.52,
+        60.8
+      ]
+    }
+  },
+  "regla_prospectiva": "No se decide con estos tramos; el preregistro Ag14 exige una sola mirada con n=931 sorteos futuros válidos."
+}

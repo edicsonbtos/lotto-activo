@@ -147,3 +147,4 @@ def test_marcador_sombra_expone_ag13():
     import servidor as s
     m = s.marcador_sombra({"registros": []})
     assert "ag13" in m and m["ag13"]["n"] == 0
+    assert "ag14" in m and m["ag14"]["n"] == 0

@@ -1,0 +1,15 @@
+{
+  "capturado_utc": "2026-10-17T03:06:10+00:00",
+  "capturado_local": "2026-10-16T23:06:10-04:00",
+  "fecha_sorteo": "2026-10-17",
+  "hora_sorteo": "08:00 America/Caracas",
+  "hashes": {
+    "historial.txt": "6136e9f29b22051701ad96892f1a129dbc08dbedd102cd67a6ba4b90d6f26770",
+    "datos_multiloteria/oficial_multi.csv": "54eb258c1954b6cf840b555412b6edf9efbdee2e480c1d494d2e84a58b40630a",
+    "herramientas/correccion_historial_2026-09-29.json": "69bd32b7f06d43b16b4e84e7c19e7b770c75a4c69c72203cf1b12e7e718f6d4c",
+    "investigacion/2026-10-16/motor_iteraciones/prospectiva_2026-10-17/lotoven_datos.html": "b3fef1969e3c0d4020c14302a06bc803841acbee1e0515b10d2b87ac85477bf1",
+    "investigacion/2026-10-16/motor_iteraciones/prospectiva_2026-10-17/loteriadehoy_datos.html": "e62f4881e1c6488a7fe139de653ed65660a1d4258ccc5eada223a1cd16d7d525",
+    "investigacion/2026-10-16/motor_iteraciones/prospectiva_2026-10-17/pronostico_ensamble.json": "0a3aba5d16993a911c238cf75a6f116be242e5b0f613ac6267abb1dc15685a2a",
+    "investigacion/2026-10-16/motor_iteraciones/prospectiva_2026-10-17/api_resultados_2026-10-08_a_16.json": "7148247770daeee07c9ad58db5427e29c418b656456cb051c4333b1261a30571"
+  }
+}
