@@ -1,0 +1,76 @@
+{
+  "nota": "Estado al 2026-10-08. Los datos ya existen en datos_multiloteria/ (no se re-scrapean). Esta carpeta solo describe y referencia. El filtro 'maximo 4 animales por sorteo' NO está definido todavía: ver campo filtro_animales.",
+  "filtro_animales": "PENDIENTE. Los operadores conocidos publican 1 animal por sorteo, 12 sorteos/dia. Hay que confirmar a qué se refiere 'maximo 4 animales' antes de excluir nada.",
+  "operadores": [
+    {
+      "id": "lotto_activo",
+      "nombre": "Lotto Activo",
+      "prioridad": 1,
+      "horarios": "08:00 a 19:00 (12 sorteos)",
+      "fuente_local": "datos_multiloteria/lottoactivo.csv",
+      "rango_local": "2026-04-13 a 2026-09-13 (150 dias, 1800 sorteos)",
+      "formato_local": "fecha,hora,n_sorteo_dia,numero,animal,n_tablero,fuente",
+      "estado": "datos locales completos (150 dias)"
+    },
+    {
+      "id": "rd_internacional",
+      "nombre": "RD Internacional",
+      "prioridad": 2,
+      "horarios": "08:30 a 19:30 (12 sorteos, en :30)",
+      "fuente_local": "datos_multiloteria/rdint_hist.csv (historico) y datos_multiloteria/lottoactivordint.csv (150 dias)",
+      "rango_local": "rdint_hist: 2023-09-04 a 2026-09-22 (13031 filas); lottoactivordint: 2026-04-13 a 2026-09-13",
+      "formato_local": "rdint_hist: fecha,hora,animal (sin numero)",
+      "estado": "datos locales completos; ya medido (hilo 7: copia de LA cruzada, confirmada a ciegas)"
+    },
+    {
+      "id": "guacharo_activo",
+      "nombre": "Guacharo Activo",
+      "prioridad": 3,
+      "horarios": "similar a LA",
+      "fuente_local": "datos_multiloteria/guacharoactivo.csv",
+      "rango_local": "2026-04-13 a 2026-09-13 (150 dias)",
+      "estado": "datos locales completos; medido en ronda 3 (no pasa, depende del pago)"
+    },
+    {
+      "id": "selva_plus",
+      "nombre": "Selva Plus",
+      "prioridad": 4,
+      "horarios": "08:15 a 20:15 (12 sorteos, en :15)",
+      "fuente_local": "datos_multiloteria/selvaplus.csv",
+      "rango_local": "2026-04-13 a 2026-09-13 (143 dias, 1723 sorteos)",
+      "estado": "datos locales; tablero de 100 animales (0-99), no 38: revisar antes de usar"
+    },
+    {
+      "id": "la_granjita",
+      "nombre": "La Granjita",
+      "prioridad": 5,
+      "horarios": "similar a LA",
+      "fuente_local": "datos_multiloteria/lagranjita.csv",
+      "rango_local": "2026-04-13 a 2026-09-13 (150 dias)",
+      "estado": "datos locales completos"
+    },
+    {
+      "id": "lard",
+      "nombre": "Lotto Activo Republica Dominicana (LARD)",
+      "prioridad": "extra",
+      "fuente_local": "datos_multiloteria/oficial_multi.csv (juegos 1, 2 y 3, API oficial)",
+      "rango_local": "2025-07-01 a 2026-09-22",
+      "estado": "datos locales; independiente de LA (hilo 8)"
+    },
+    {
+      "id": "loteria_de_hoy",
+      "nombre": "Loteria de Hoy",
+      "prioridad": 6,
+      "fuente_local": null,
+      "estado": "NO DESCARGADO. Agregador, no confirmado que siga vigente"
+    },
+    {
+      "id": "tuazar",
+      "nombre": "TuAzar",
+      "prioridad": 7,
+      "fuente_local": null,
+      "estado": "NO DESCARGADO, pero usado como fuente de verificacion en los CSV de LA (fuente 'TZ')"
+    }
+  ],
+  "operadores_pendientes_de_confirmar": "La busqueda web de 2026-10-08 no encontro una lista vigente y verificada de operadores de animalitos. Los resultados son de 2023-2024. Hay que confirmar con CONALOT o con la fuente del usuario antes de incorporar nuevos operadores."
+}

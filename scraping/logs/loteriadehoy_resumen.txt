@@ -1,0 +1,8 @@
+la-ricachona           sorteos=  2112 dias= 176 desde=2026-04-11 hasta=2026-10-07
+cazaloton              sorteos=  1936 dias= 176 desde=2026-04-11 hasta=2026-10-07
+centenaplus            sorteos=  2288 dias= 177 desde=2026-04-11 hasta=2026-10-07
+centenaanimalitos      sorteos=  2289 dias= 177 desde=2026-04-11 hasta=2026-10-07
+ruletaactiva           sorteos=  1936 dias= 176 desde=2026-04-11 hasta=2026-10-07
+lottoactivordominicana sorteos=  2517 dias= 180 desde=2026-04-11 hasta=2026-10-07
+lottoactivordint       sorteos=  2112 dias= 176 desde=2026-04-11 hasta=2026-10-07
+lottoactivo2(monjemillonario) sorteos=  2112 dias= 176 desde=2026-04-11 hasta=2026-10-07

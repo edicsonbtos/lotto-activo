@@ -1,0 +1,24 @@
+Descarga 2026-04-11 a 2026-10-07 (tuazar, 27 semanas)
+juego                   sorteos   dias  max/dia  dias_ok        desde        hasta vigente
+adobichitos                1760    176       10      176   2026-04-11   2026-10-07 SI
+adofieras                  1760    176       10      176   2026-04-11   2026-10-07 SI
+adomascotas                1760    176       10      176   2026-04-11   2026-10-07 SI
+chancea                    1936    176       11      176   2026-04-11   2026-10-07 SI
+chanceb                    1936    176       11      176   2026-04-11   2026-10-07 SI
+elarrejuntao                781    177        5      151   2026-04-11   2026-10-07 SI
+elguacharitomillonario     2112    176       12      176   2026-04-11   2026-10-07 SI
+gatazo                     1760    176       10      176   2026-04-11   2026-10-07 SI
+granjamillionaria           190     19       10       19   2026-09-19   2026-10-07 SI
+granjazo                    190     19       10       19   2026-09-19   2026-10-07 SI
+guacharoactivo             2112    176       12      176   2026-04-11   2026-10-07 SI
+lagranjita                 2112    176       12      176   2026-04-11   2026-10-07 SI
+lotochaima                 2112    176       12      176   2026-04-11   2026-10-07 SI
+lottoactivo                2111    176       12      175   2026-04-11   2026-10-07 SI
+lottoactivo2(monjemillonario)      372     31       12       31   2026-09-07   2026-10-07 SI
+lottoactivordint            372     31       12       31   2026-09-07   2026-10-07 SI
+lottogato                  1760    176       10      176   2026-04-11   2026-10-07 SI
+megaanimal40               1990    166       12      164   2026-04-21   2026-10-07 SI
+ruletaroyal                2281    176       13      175   2026-04-11   2026-10-07 SI
+selvaplus                   399     31       13       27   2026-09-07   2026-10-07 SI
+triplepopular              1988    176       13      151   2026-04-11   2026-10-07 SI
+tropigana                  1936    176       11      176   2026-04-11   2026-10-07 SI

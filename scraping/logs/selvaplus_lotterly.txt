@@ -1,0 +1,5 @@
+Selva Plus: tuazar + lotterly
+dias sin tuazar: 149 (descargados o en cache: 149, fallos: 0)
+sorteos finales: 2055 en 169 dias
+numeros con nombre unico en tuazar: 99; sin nombre (no mapeados): [0]
+numeros con nombres en conflicto en tuazar (no usados): {0: ['BALLENA', 'DELFÍN']}
