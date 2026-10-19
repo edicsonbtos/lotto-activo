@@ -13,6 +13,7 @@ Sin numpy/scipy funciona con el modelo antiguo (solo librería estándar).
 import hashlib, hmac, os, sys, json, math, webbrowser, threading, subprocess, time, html
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
+from http.cookies import SimpleCookie, CookieError
 from datetime import date, datetime, timedelta
 from math import comb
 
@@ -226,6 +227,9 @@ def agregar_faltantes():
 
 def ahora():
     return datetime.now().isoformat(timespec="seconds")
+
+def _ahora_dt():
+    return datetime.now()
 
 def vigente(r):
     return not r.get("anulado")
@@ -991,7 +995,7 @@ def sombra_registros(d):
         p = (r.get("sombra") or {}).get("ag12")
         if not vigente(r) or not p or r["fecha"] < SOMBRA_DESDE:
             continue
-        q, _ = experimentos.con_rd(p, rd, r["fecha"], r["hora"])
+        q, _ = experimentos.con_rd(p, experimentos.rd_de_registro(r, rd), r["fecha"], r["hora"])
         orden = sorted(range(K), key=lambda i: (-q[i], i))
         out.append({"fecha": r["fecha"], "hora": r["hora"], "salio": r.get("salio"), "scores": q,
                     "orden_completo": orden, "top3": orden[:3], "modelo": "ag12+RD"})
@@ -1056,14 +1060,20 @@ def html_banca(e, banca=None):
     return ('<section class="card" id="banca"><div class="hh"><h2>¿Cuánto apuesto?</h2></div>'
             f'{cuerpo}{form}</section>')
 
-def html_registro(e=None):
+def html_registro(e=None, autorizado=True):
     a = auto_estado()
     cuando = f' de las {HORAS[e["ph"]]}' if e else ""
+    entrar = ("" if autorizado else
+              '<form class="anotar" method="post" action="/entrar">'
+              '<label class="sr" for="clave">Clave para modificar</label>'
+              '<input type="password" id="clave" name="clave" placeholder="Clave para modificar" '
+              'autocomplete="current-password" inputmode="numeric"><button type="submit">Entrar</button></form>'
+              '<p class="note">Anotar y deshacer piden la clave una vez en este navegador.</p>')
     return ('<section class="card reg" id="registrar" aria-labelledby="reg-t">'
             f'<div class="rh"><h2 id="reg-t">¿Qué salió{cuando}?</h2>'
             f'<span class="auto {a["clase"]}" id="auto-est">{esc(a["txt"])}</span></div>'
             '<p>Se anota solo unos 10 min después del sorteo. Escríbelo aquí solo para adelantarlo.</p>'
-            '<form class="anotar" method="post" action="/registrar">'
+            f'{entrar}<form class="anotar" method="post" action="/registrar">'
             '<label class="sr" for="num">Número del animal que salió</label>'
             '<input type="text" id="num" name="num" placeholder="0, 00 o 1-36" autocomplete="off" '
             'inputmode="numeric" enterkeyhint="send"><button type="submit">Anotar</button></form>'
@@ -1628,6 +1638,19 @@ def preparar():
                 if sombra:
                     pend["sombra"] = sombra
             d["registros"].append(pend); cambio = True
+    if (pend is not None and pend.get("modelo") == MODELO_MARCADOR and not pend.get("sombra")
+            and not pend.get("correcciones") and _ahora_dt() < experimentos.hora_sorteo(pend["fecha"], pend["hora"])):
+        # ag12 falló al congelar: se reintenta solo ANTES del sorteo y nunca en uno reabierto con «deshacer»
+        # (ahí ya se conoce el resultado y meterlo sería elegir qué sorteos entran a su marcador).
+        sombra = sombra_de(filas, e["pf"], e["ph"], pend.get("scores_sin_8am") or pend["scores"])
+        if sombra:
+            pend["sombra"] = sombra; cambio = True
+    if pend is not None:
+        # El RD con que se juega ag12+RD queda fijado tal como se conocía antes de LA h:00.
+        try:
+            cambio = experimentos.congelar_rd(pend, experimentos._rd_por_slot(), _ahora_dt()) or cambio
+        except Exception as ex:  # noqa: BLE001  (RD nunca tumba el pronóstico de LA)
+            print(f"[rd] {ahora()} congelar: {ex!r}", file=sys.stderr, flush=True)
     # ag13 en sombra: lo que publicaron los pronosticadores esa mañana (solo insumo; no toca el pronóstico ni el marcador).
     cambio = experimentos.completar_pron(d["registros"], DATOS) or cambio
     # Lo que se muestra es SIEMPRE el pronóstico congelado que se puntúa: tras
@@ -1705,7 +1728,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
                     rd = experimentos._rd_por_slot()
                 except Exception:  # noqa: BLE001
                     rd = {}
-                q, usado = experimentos.con_rd(p, rd, e["pf"], e["ph"])
+                q, usado = experimentos.con_rd(p, experimentos.rd_de_registro(pend, rd), e["pf"], e["ph"])
                 tot = sum(q) or 1.0
                 orden = sorted(range(K), key=lambda i: (-q[i], i))
                 esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
@@ -1776,7 +1799,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
         return '<div class="card"><p>El motor en sombra se está preparando…</p></div>'
 
 
-def render(banca=None, tab="la", atras=0):
+def render(banca=None, tab="la", atras=0, autorizado=True):
     x = preparar()
     filas, e, d = x["filas"], x["e"], x["d"]
     calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
@@ -1806,14 +1829,14 @@ def render(banca=None, tab="la", atras=0):
                   'se muestra el del ensamble (modelo anterior).</div>')
     panel_ens = (
         f'{aviso if not principal_ag12 else ""}{html_animales_hoy(d, filas, e)}'
-        + (f'{jugada}' if principal_ag12 else f'<div class="duo">{jugada}{html_registro(e)}</div>')
+        + (f'{jugada}' if principal_ag12 else f'<div class="duo">{jugada}{html_registro(e, autorizado)}</div>')
         + sec("sec-mesa", "Historial de cuadrantes",
               f"los 38 animales por cuadrante, puesto o días sin salir · "
               f"{format(n_mesa, ',').replace(',', '.')} sorteos guardados",
               html_mesa())
         + sec("historico", "Resultados y puestos en el Top", esc(resumen_resultados(d)), html_resultados(d)))
     if principal_ag12:
-        panel_la = aviso + html_sombra(e, d, pend, filas, atras_la, tab="la", principal=True, registro=html_registro(e))
+        panel_la = aviso + html_sombra(e, d, pend, filas, atras_la, tab="la", principal=True, registro=html_registro(e, autorizado))
         panel_s = panel_ens
     else:
         panel_la = panel_ens
@@ -1872,6 +1895,10 @@ def registrar(num):
                     "orden_completo": orden, "salio": None,
                     "scores": [round(float(x), 6) for x in sc],
                     "creado": ahora(), "modelo": modelo_de(info), **sello(info)}
+            if pend["modelo"] == MODELO_MARCADOR:
+                sombra = sombra_de(filas, e["pf"], e["ph"], sc_sombra(info, sc))
+                if sombra:
+                    pend["sombra"] = sombra
             d["registros"].append(pend)
     if pend is not None:
         pend["salio"] = IDX[num]; pend["resuelto"] = ahora()
@@ -2145,6 +2172,38 @@ def html_mesa(suf=""):
 
 
 MAX_POST = 64 * 1024        # los formularios son diminutos; más que esto es basura o abuso
+
+# ------------------------------------------------------------ clave para escribir
+# Anotar, deshacer, buscar, tripleta y herramientas cambian el historial o gastan la máquina, y el enlace de
+# Railway es público. Con CLAVE_ESCRITURA (variable de Railway, nunca en el repo) se escribe una vez en la página
+# y queda una cookie con su FIRMA, no la clave. En Railway sin la variable no se escribe nada; en local, sí.
+CLAVE_ESCRITURA = os.environ.get("CLAVE_ESCRITURA", "").strip()
+COOKIE_CLAVE = "la_escritura"
+
+def _en_railway():
+    return any(os.environ.get(v) for v in ("RAILWAY_ENVIRONMENT", "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_PROJECT_ID"))
+
+def _firma_clave():
+    return hmac.new(CLAVE_ESCRITURA.encode("utf-8"), b"lotto-activo-escritura", hashlib.sha256).hexdigest()
+
+def _cookie_de(cabecera):
+    try:
+        m = SimpleCookie(cabecera or "").get(COOKIE_CLAVE)
+    except CookieError:
+        return ""
+    return m.value if m else ""
+
+def permiso_escritura(cabecera_cookie, clave=""):
+    """(puede escribir, hay que dejar la cookie): por la clave del formulario o por la cookie firmada."""
+    if not CLAVE_ESCRITURA:
+        return not _en_railway(), False
+    if clave and hmac.compare_digest(clave.encode("utf-8"), CLAVE_ESCRITURA.encode("utf-8")):
+        return True, True
+    return hmac.compare_digest(_cookie_de(cabecera_cookie).encode("utf-8"), _firma_clave().encode("utf-8")), False
+
+def cookie_escritura():
+    return (f"{COOKIE_CLAVE}={_firma_clave()}; Max-Age=31536000; Path=/; HttpOnly; SameSite=Strict"
+            + ("; Secure" if _en_railway() else ""))
 JSON_UTF8 = "application/json; charset=utf-8"
 
 # ---------------------------------------------------------------- rutas GET (JSON)
@@ -2273,9 +2332,12 @@ class H(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionAbortedError, ConnectionResetError, OSError):
             pass
 
-    def _volver(self, ancla=""):
+    def _volver(self, ancla="", cookie=None):
         try:
-            self.send_response(303); self.send_header("Location", "/" + ancla); self.end_headers()
+            self.send_response(303); self.send_header("Location", "/" + ancla)
+            if cookie:
+                self.send_header("Set-Cookie", cookie)
+            self.end_headers()
         except OSError:
             pass
 
@@ -2293,7 +2355,8 @@ class H(BaseHTTPRequestHandler):
         ruta, _, consulta = self.path.partition("?")
         q = parse_qs(consulta)
         if ruta in ("/", "/index.html"):
-            self._send(render(*_parametros_pagina(q)))
+            self._send(render(*_parametros_pagina(q),
+                              autorizado=permiso_escritura(self.headers.get("Cookie"))[0]))
         elif ruta in RUTAS_JSON:
             fn, tipo = RUTAS_JSON[ruta]
             self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
@@ -2329,11 +2392,21 @@ class H(BaseHTTPRequestHandler):
             return self._send("Solicitud no válida", "text/plain; charset=utf-8", 400)
         datos = self.rfile.read(n).decode("utf-8", errors="replace") if n else ""
         ruta = self.path.split("?")[0]
+        if ruta != "/entrar" and ruta not in ACCIONES_POST and not ruta.startswith("/herramienta/"):
+            return self._send("No encontrado", "text/plain; charset=utf-8", 404)
+        clave = (parse_qs(datos).get("clave", [""])[0]).strip()
+        puede, dejar = permiso_escritura(self.headers.get("Cookie"), clave)
+        cookie = cookie_escritura() if dejar else None
+        if ruta == "/entrar":
+            AVISO.update(texto="Clave correcta: ya puedes anotar y deshacer desde este navegador." if puede
+                         else "Clave incorrecta.", clase="ok" if puede else "bad")
+            return self._volver("#registrar", cookie)
+        if not puede:
+            AVISO.update(texto="Hace falta la clave para modificar: escríbela en «¿Qué salió?».", clase="bad")
+            return self._volver("#registrar")
         if ruta in ACCIONES_POST:
-            return self._volver(ACCIONES_POST[ruta](datos))
-        if ruta.startswith("/herramienta/"):
-            return self._volver(_accion_herramienta(ruta))
-        self._send("No encontrado", "text/plain; charset=utf-8", 404)
+            return self._volver(ACCIONES_POST[ruta](datos), cookie)
+        return self._volver(_accion_herramienta(ruta), cookie)
 
     def log_message(self, fmt, *a):
         # Silenciado antes: el servidor corría sordo y un traceback en

@@ -78,7 +78,7 @@ def marcador_cambio_rd(res, fichas):
         orden = r.get("orden_completo")
         if not orden or r["fecha"] < CAMBIO_RD_DESDE or r["hora"] <= 0 or r["salio"] not in orden:
             continue
-        cod = rd.get((r["fecha"], r["hora"] - 1))
+        cod = rd_de_registro(r, rd).get((r["fecha"], r["hora"] - 1))
         if cod is None:
             continue
         m["n"] += 1
@@ -136,7 +136,7 @@ def marcador_cambio_rd15(res, fichas15):
         orden = r.get("orden_completo")
         if not orden or r["fecha"] < CAMBIO_RD15_DESDE or r["hora"] <= 0 or r["salio"] not in orden:
             continue
-        cod = rd.get((r["fecha"], r["hora"] - 1))
+        cod = rd_de_registro(r, rd).get((r["fecha"], r["hora"] - 1))
         if cod is None:
             continue
         m["n"] += 1
@@ -195,6 +195,37 @@ def con_rd(p, rd, f, h):
         if c in IDX:
             q[IDX[c]] *= mult; usado = True
     return q, usado
+
+
+def hora_sorteo(f, h):
+    """Hora de Caracas en que se juega LA (f, h): h=0 es las 8:00."""
+    return datetime.fromisoformat(f).replace(hour=8 + int(h))
+
+
+def congelar_rd(r, rd, ahora):
+    """Guarda en r["sombra"]["rd"] el RD de (h−1):30 y (h−2):30 tal como se conocía ANTES de LA h:00.
+
+    Mientras el sorteo no se juega se actualiza (un RD corregido entra); desde la hora del sorteo no se toca.
+    Sin esto, ag12+RD se recalculaba al leer con el RD de hoy: un RD anotado tarde cambiaba hacia atrás el Top
+    que se mostró para jugar. Devuelve True si cambió algo."""
+    s = r.get("sombra")
+    if not s or "ag12" not in s or r.get("salio") is not None or ahora >= hora_sorteo(r["fecha"], r["hora"]):
+        return False
+    f, h = r["fecha"], int(r["hora"])
+    nuevo = {str(k): (rd.get((f, h - k)) if h - k >= 0 else None) for k in SOMBRA_RD_MULT}
+    if s.get("rd") == nuevo:
+        return False
+    s["rd"] = nuevo
+    return True
+
+
+def rd_de_registro(r, rd):
+    """El RD con que se puntúa ag12+RD en r: el congelado si existe; si no (registros viejos), el anotado."""
+    fijo = (r.get("sombra") or {}).get("rd")
+    if not isinstance(fijo, dict):
+        return rd
+    f, h = r["fecha"], int(r["hora"])
+    return {(f, h - int(k)): c for k, c in fijo.items() if c}
 
 
 def exposicion(p, f, h, variante="aplicar"):
@@ -363,12 +394,13 @@ def _marcador_ag14(res, fichas, rd):
             sin_ag12 += 1
             continue
         f, h, w = r["fecha"], int(r["hora"]), int(r["salio"])
-        q, _ = con_rd(s["ag12"], rd, f, h)
+        rr = rd_de_registro(r, rd)
+        q, _ = con_rd(s["ag12"], rr, f, h)
         p14 = m.cadena(q, f, h)
         mb = lambda p: 1000 * math.log2(max(p[w] / sum(p), 1e-12) * K)
         orden = sorted(range(K), key=lambda i: (-p14[i], i))
         orden_base = sorted(range(K), key=lambda i: (-sc[i], i))
-        cod = rd.get((f, h - 1)) if h > 0 else None
+        cod = rr.get((f, h - 1)) if h > 0 else None
         if cod in IDX:
             orden = cambiar15(orden, cod)
             orden_base = cambiar15(orden_base, cod)
@@ -413,11 +445,12 @@ def _marcador_ag13(res, fichas, rd):
             faltas[r["fecha"]] = pr.get("falta", "?")
             continue
         f, h, w = r["fecha"], int(r["hora"]), r["salio"]
-        q, _ = con_rd(s["ag12"], rd, f, h)
+        rr = rd_de_registro(r, rd)
+        q, _ = con_rd(s["ag12"], rr, f, h)
         q_exp, p13, p13nd = m.cadena(q, f, h, pr["u"])
         pm = {"ensamble": sc, "ag12_rd": q, "ag12_rd_exp": q_exp, "ag13": p13, "ag13_nd": p13nd}
         mb = {k: 1000 * math.log2(max(p[w] / sum(p), 1e-12) * K) for k, p in pm.items()}
-        cod = rd.get((f, h - 1)) if h > 0 else None
+        cod = rr.get((f, h - 1)) if h > 0 else None
 
         def neto(p):
             orden = sorted(range(K), key=lambda i: (-p[i], i))
@@ -484,7 +517,7 @@ def decision_sombra(res, fichas):
         pe, pa = sc, s["ag12"]
         dm.append((f, 1000 * math.log2((pa[w] / sum(pa)) / (pe[w] / sum(pe)))))
         netos = []
-        cod = rd.get((f, h - 1)) if h > 0 else None
+        cod = rd_de_registro(r, rd).get((f, h - 1)) if h > 0 else None
         for p in (pe, pa):
             orden = sorted(range(K), key=lambda i: (-p[i], i))
             netos.append(100.0 * (PAGO * fichas[orden.index(w) + 1] - sf) / sf)
@@ -533,7 +566,7 @@ def marcador_sombra(res, fichas):
         s = r.get("sombra")
         if not s or "ag12" not in s or r["fecha"] < SOMBRA_DESDE or not sc_base:
             continue
-        q, usado = con_rd(s["ag12"], rd, r["fecha"], r["hora"])
+        q, usado = con_rd(s["ag12"], rd_de_registro(r, rd), r["fecha"], r["hora"])
         n_con_rd += usado
         filas = [(m, "ensamble", sc_base), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
         if r["fecha"] >= SOMBRA_EXP_DESDE:
