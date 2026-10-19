@@ -405,6 +405,7 @@
    }
   },
   "sorteos_con_rd": 55,
+  "sorteos_rd_vacio": 0,
   "ventana_8am": {
    "decide_con": 730,
    "desde": "2026-10-04",

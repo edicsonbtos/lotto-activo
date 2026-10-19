@@ -207,11 +207,25 @@ def congelar_rd(r, rd, ahora):
 
     Mientras el sorteo no se juega se actualiza (un RD corregido entra); desde la hora del sorteo no se toca.
     Sin esto, ag12+RD se recalculaba al leer con el RD de hoy: un RD anotado tarde cambiaba hacia atrás el Top
-    que se mostró para jugar. Devuelve True si cambió algo."""
+    que se mostró para jugar. rd=None: RD no se pudo leer (la página tampoco aplicó nada); se congela vacío sin
+    borrar lo ya congelado. Pasada la hora avisa UNA vez si el RD de (h−1):30 quedó vacío (RD atrasado), porque
+    ese sorteo sale de los marcadores de la regla. Devuelve True si cambió algo."""
     s = r.get("sombra")
-    if not s or "ag12" not in s or r.get("salio") is not None or ahora >= hora_sorteo(r["fecha"], r["hora"]):
+    if not s or "ag12" not in s or r.get("salio") is not None:
         return False
     f, h = r["fecha"], int(r["hora"])
+    if ahora >= hora_sorteo(f, h):
+        fijo = s.get("rd")
+        if h < 1 or not isinstance(fijo, dict) or fijo.get("1") is not None or s.get("rd_vacio_avisado"):
+            return False
+        s["rd_vacio_avisado"] = True
+        print(f"[rd] {_ahora()} LA {f} {8 + h}:00: el RD de las {8 + h - 1}:30 no estaba anotado antes del sorteo; "
+              "ag12+RD se jugó sin esa regla", file=sys.stderr, flush=True)
+        return True
+    if rd is None:
+        if "rd" in s:
+            return False
+        rd = {}
     nuevo = {str(k): (rd.get((f, h - k)) if h - k >= 0 else None) for k in SOMBRA_RD_MULT}
     if s.get("rd") == nuevo:
         return False
@@ -547,6 +561,7 @@ def marcador_sombra(res, fichas):
     nexp = ("ensamble", "ag12_rd", "ensamble_exp", "ag12_rd_exp")
     mx = {k: dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0) for k in nexp}
     n_con_rd = 0
+    n_rd_vacio = 0                          # RD (h−1):30 congelado vacío: RD iba atrasado al sorteo
     dif = {"ensamble": ([], []), "ag12_rd": ([], [])}      # (dif mbits, dif Top-5 en 0/1) por sorteo y jornada
     fallos_exp = 0
     v8 = dict(n=0, O=0, E=0.0, top5_exp=0, top5_exp8=0, mbits_dif=[])   # solo 8:00, exp8 contra exp
@@ -568,6 +583,7 @@ def marcador_sombra(res, fichas):
             continue
         q, usado = con_rd(s["ag12"], rd_de_registro(r, rd), r["fecha"], r["hora"])
         n_con_rd += usado
+        n_rd_vacio += isinstance(s.get("rd"), dict) and int(r["hora"]) >= 1 and s["rd"].get("1") is None
         filas = [(m, "ensamble", sc_base), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
         if r["fecha"] >= SOMBRA_EXP_DESDE:
             try:
@@ -605,7 +621,7 @@ def marcador_sombra(res, fichas):
         difs[base + "_exp_vs_" + base] = dict(mbits=a, top5_pp=(None if b is None else
             dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
                  [round(100 * v, 2) for v in b["ic90"]]))))
-    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": n_con_rd, "marcador": m,
+    return {"desde": SOMBRA_DESDE, "sorteos_con_rd": n_con_rd, "sorteos_rd_vacio": n_rd_vacio, "marcador": m,
             "ag13": marcador_ag13(res, fichas, rd),
             "ag14": marcador_ag14(res, fichas, rd),
             "exposicion": {"desde": SOMBRA_EXP_DESDE, "primera_mirada_n": SOMBRA_EXP_N_PRIMERA,

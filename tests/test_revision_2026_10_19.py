@@ -239,3 +239,48 @@ def test_no_reintenta_ag12_en_un_sorteo_reabierto_con_deshacer(motor, monkeypatc
 def test_no_reintenta_ag12_despues_de_la_hora_del_sorteo(motor, monkeypatch):
     _antes_del_sorteo(monkeypatch, minutos=+1)
     assert "sombra" not in _pendiente_sin_ag12(monkeypatch)
+
+
+# ------------------------------------------------------------------ RD vacío al congelar
+def test_si_rd_no_se_puede_leer_se_congela_vacio_y_no_se_aplica_tarde():
+    r = _reg_sombra()
+    assert experimentos.congelar_rd(r, None, datetime(2026, 10, 19, 10, 45)) is True
+    assert r["sombra"]["rd"] == {"1": None, "2": None}       # la página tampoco aplicó nada
+
+
+def test_rd_que_no_se_pudo_leer_no_borra_lo_ya_congelado():
+    r = _reg_sombra(sombra={"ag12": list(AG12), "rd": {"1": C5, "2": None}})
+    assert experimentos.congelar_rd(r, None, datetime(2026, 10, 19, 10, 59)) is False
+    assert r["sombra"]["rd"] == {"1": C5, "2": None}
+
+
+def test_al_cerrar_el_sorteo_avisa_una_vez_si_rd_quedo_vacio(capsys):
+    r = _reg_sombra(sombra={"ag12": list(AG12), "rd": {"1": None, "2": None}})
+    assert experimentos.congelar_rd(r, {}, datetime(2026, 10, 19, 11, 1)) is True
+    assert "RD de las 10:30 no estaba anotado" in capsys.readouterr().err
+    assert experimentos.congelar_rd(r, {}, datetime(2026, 10, 19, 11, 2)) is False
+    assert capsys.readouterr().err == ""
+
+
+def test_a_las_8_no_avisa_porque_no_hay_rd_previo(capsys):
+    r = _reg_sombra(hora=0, sombra={"ag12": list(AG12), "rd": {"1": None, "2": None}})
+    assert experimentos.congelar_rd(r, {}, datetime(2026, 10, 19, 8, 1)) is False
+    assert capsys.readouterr().err == ""
+
+
+def test_marcador_sombra_cuenta_los_sorteos_con_rd_vacio(monkeypatch):
+    regs = [_reg_sombra(salio=5, sombra={"ag12": list(AG12), "rd": {"1": None, "2": None}}),
+            _reg_sombra(salio=5, hora=0, sombra={"ag12": list(AG12), "rd": {"1": None, "2": None}}),
+            _reg_sombra(salio=5, sombra={"ag12": list(AG12), "rd": {"1": C6, "2": None}})]
+    monkeypatch.setattr(experimentos, "_rd_por_slot", lambda: {})
+    assert experimentos.marcador_sombra(regs, s.fichas_por_puesto())["sorteos_rd_vacio"] == 1
+
+
+# ------------------------------------------------------------------ Herramientas plegadas
+def test_la_pagina_trae_herramientas_plegadas_en_lotto_activo(datos, monkeypatch):
+    monkeypatch.setattr(experimentos, "completar_pron", lambda *a, **k: False)
+    h = s.render()
+    panel = h.split('id="p-la"')[1].split('id="p-rd"')[0]
+    assert '<details class="sec" id="herramientas"' in panel and " open" not in panel.split('id="herramientas"')[1][:5]
+    assert 'action="/herramienta/tripleta"' in panel
+    assert h.count('id="herramientas"') == 1

@@ -38,4 +38,3 @@ def test_pocos_datos_y_ventana_de_7_dias():
     w = s.salud_modelo(d)["ventanas"]
     assert w[0]["n"] == 84 and w[2]["n"] == 120
     assert s.salud_modelo(_regs([1] * 10))["ventanas"][0]["estado"] == "pocos datos"
-    assert "Salud del modelo" in s.html_salud(d)
