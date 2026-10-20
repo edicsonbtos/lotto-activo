@@ -16,11 +16,13 @@ def test_carga_y_puntua_pronosticos_sellados_sin_alterar_archivos(tmp_path):
         "fecha_sorteo": "2026-10-17",
         "hora_sorteo": "08:00 America/Caracas",
         "candidata": "ag12 + exposición",
+        "capturado_utc": "2026-10-17T03:06:10+00:00",
         "probabilidades_candidata": probabilities,
     }
     ens = {
         "fecha": "2026-10-17",
         "hora": 0,
+        "capturado_utc": "2026-10-17T03:06:10Z",
         "winner": None,
         "animales": [{"idx": i, "prob": 1 / 38} for i in range(38)],
     }
@@ -82,11 +84,11 @@ def test_sello_ag14_enlaza_huella_y_probabilidades(tmp_path):
     seal_path = tmp_path / "ag14.json"
     pred_path.write_text(json.dumps({
         "estado": "SELLADO_PENDIENTE_DE_RESULTADO", "fecha_sorteo": "2026-10-17",
-        "hora_sorteo": "08:00 America/Caracas",
+        "hora_sorteo": "08:00 America/Caracas", "capturado_utc": "2026-10-17T03:06:10Z",
         "probabilidades_candidata": probabilities,
     }), encoding="utf-8")
     ens_path.write_text(json.dumps({
-        "fecha": "2026-10-17", "hora": 0, "winner": None,
+        "fecha": "2026-10-17", "hora": 0, "winner": None, "capturado_utc": "2026-10-17T03:06:10Z",
         "animales": [{"idx": i, "prob": 1 / 38} for i in range(38)],
     }), encoding="utf-8")
     digest = hashlib.sha256(pred_path.read_bytes()).hexdigest()
@@ -165,3 +167,60 @@ def test_resultado_requiere_dos_dominios_y_capturas_con_hash(tmp_path):
     }), encoding="utf-8")
     with pytest.raises(ValueError, match="mismo ganador"):
         ep.validate_result_evidence(outcome_path, forecasts)
+
+
+# ---------------------------------------------------------- auditoría 2026-10-20 (P1: sellos tardíos)
+def _par(tmp_path, capturado_pred, ens_extra=None):
+    pred = {"estado": "SELLADO_PROSPECTIVO", "fecha_sorteo": "2026-10-17",
+            "hora_sorteo": "08:00 America/Caracas", "probabilidades_candidata": [1 / 38] * 38}
+    if capturado_pred is not None:
+        pred["capturado_utc"] = capturado_pred
+    ens = {"fecha": "2026-10-17", "hora": 0, "winner": None,
+           "animales": [{"idx": i, "prob": 1 / 38} for i in range(38)], **(ens_extra or {})}
+    pred_path, ens_path = tmp_path / "prediccion_ciega.json", tmp_path / "pronostico_ensamble.json"
+    pred_path.write_text(json.dumps(pred), encoding="utf-8")
+    ens_path.write_text(json.dumps(ens), encoding="utf-8")
+    return pred_path, ens_path
+
+
+def _sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize("capturado", [None, "2026-10-17T03:00:00", "2026-10-17T12:00:00Z",
+                                       "2026-10-17T12:01:00Z", "2026-10-17T08:01:00-04:00"])
+def test_rechaza_candidata_sin_hora_sin_zona_o_tardia(tmp_path, capturado):
+    pred_path, ens_path = _par(tmp_path, capturado, {"capturado_utc": "2026-10-17T03:00:00Z"})
+    with pytest.raises(ValueError, match="captura|ciego"):
+        ep.load_sealed_forecasts(pred_path, ens_path)
+
+
+def test_rechaza_ensamble_sin_hora_verificable_o_tardio(tmp_path):
+    pred_path, ens_path = _par(tmp_path, "2026-10-17T03:00:00Z")
+    with pytest.raises(ValueError, match="ensamble"):
+        ep.load_sealed_forecasts(pred_path, ens_path)
+    pred_path, ens_path = _par(tmp_path, "2026-10-17T03:00:00Z", {"capturado_utc": "2026-10-17T12:00:01Z"})
+    with pytest.raises(ValueError, match="ensamble"):
+        ep.load_sealed_forecasts(pred_path, ens_path)
+
+
+def test_el_manifiesto_del_sello_acredita_la_hora_del_ensamble(tmp_path):
+    pred_path, ens_path = _par(tmp_path, "2026-10-17T03:00:00Z")
+    manifiesto = tmp_path / "sello.json"
+    hashes = {"pronostico_ensamble.json": _sha(ens_path), "prediccion_ciega.json": _sha(pred_path)}
+    manifiesto.write_text(json.dumps({"capturado_utc": "2026-10-17T03:00:05Z",
+                                      "hashes_archivos": hashes}), encoding="utf-8")
+    par = ep.load_sealed_forecasts(pred_path, ens_path)
+    assert par["capturas_utc"]["manifiesto"] == "sello.json"
+    assert par["capturas_utc"]["ensamble"] == "2026-10-17T03:00:05+00:00"
+
+    manifiesto.write_text(json.dumps({"capturado_utc": "2026-10-17T12:30:00Z",
+                                      "hashes_archivos": hashes}), encoding="utf-8")
+    with pytest.raises(ValueError, match="ensamble"):
+        ep.load_sealed_forecasts(pred_path, ens_path)
+
+    hashes["prediccion_ciega.json"] = "0" * 64      # el manifiesto enlaza otra candidata
+    manifiesto.write_text(json.dumps({"capturado_utc": "2026-10-17T03:00:05Z",
+                                      "hashes_archivos": hashes}), encoding="utf-8")
+    with pytest.raises(ValueError, match="manifiesto"):
+        ep.load_sealed_forecasts(pred_path, ens_path)

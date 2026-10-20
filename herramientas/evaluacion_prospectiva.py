@@ -46,8 +46,58 @@ def validate_probabilities(probabilities, label="pronóstico"):
     return values
 
 
-def load_sealed_forecasts(prediction_path, ensemble_path, candidate_seal_path=None):
-    """Carga el par sellado y valida su fecha, estructura y huellas de origen."""
+MANIFIESTOS = ("sello.json", "meta_captura.json")
+
+
+def _instante_utc(valor, etiqueta):
+    """Hora ISO con zona -> UTC. Sin zona no se sabe qué instante es, así que no se acepta."""
+    try:
+        instante = datetime.fromisoformat(str(valor).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        raise ValueError(f"{etiqueta}: falta una hora de captura válida (capturado_utc)")
+    if instante.tzinfo is None:
+        raise ValueError(f"{etiqueta}: la hora de captura debe llevar zona horaria")
+    return instante.astimezone(timezone.utc)
+
+
+def _hora_sorteo_utc(date, hour):
+    return datetime.fromisoformat(f"{date}T{hour:02d}:00:00-04:00").astimezone(timezone.utc)
+
+
+def _exigir_antes(instante, sorteo_utc, etiqueta):
+    if instante >= sorteo_utc:
+        raise ValueError(f"{etiqueta} se capturó a la hora del sorteo o después; no es un pronóstico ciego")
+
+
+def _captura_ensamble(ensemble, ensemble_path, prediction_path, manifest_path):
+    """Hora de captura del vector comparador: la suya propia o la de un manifiesto que lista su SHA-256.
+
+    El archivo del ensamble (copia de /api/mesa) no trae hora; la acredita el manifiesto escrito al sellar
+    (sello.json o meta_captura.json en la misma carpeta). Si el manifiesto también lista la candidata, su
+    huella debe coincidir. Nunca se completa una hora que falte."""
+    if ensemble.get("capturado_utc") is not None:
+        return _instante_utc(ensemble["capturado_utc"], "ensamble"), None
+    candidatos = ([Path(manifest_path)] if manifest_path is not None
+                  else [ensemble_path.parent / nombre for nombre in MANIFIESTOS])
+    huella_ens, huella_pred = _sha256(ensemble_path), _sha256(prediction_path)
+    for ruta in candidatos:
+        if not ruta.is_file():
+            continue
+        manifiesto = _leer_json(ruta)
+        hashes = manifiesto.get("hashes_archivos") or manifiesto.get("hashes") or {}
+        por_nombre = {Path(k).name: v for k, v in hashes.items()}
+        if huella_ens not in por_nombre.values():
+            continue
+        if prediction_path.name in por_nombre and por_nombre[prediction_path.name] != huella_pred:
+            raise ValueError("la huella del pronóstico candidato no coincide con el manifiesto del sello")
+        return _instante_utc(manifiesto.get("capturado_utc"), f"manifiesto {ruta.name}"), ruta
+    raise ValueError("el pronóstico del ensamble no tiene hora de captura verificable "
+                     "(ni capturado_utc propio ni un manifiesto que liste su SHA-256)")
+
+
+def load_sealed_forecasts(prediction_path, ensemble_path, candidate_seal_path=None, manifest_path=None):
+    """Carga el par sellado y valida su fecha, estructura, huellas de origen y que AMBOS vectores se
+    capturaron antes del sorteo."""
     prediction_path = Path(prediction_path)
     ensemble_path = Path(ensemble_path)
     prediction = _leer_json(prediction_path)
@@ -66,8 +116,13 @@ def load_sealed_forecasts(prediction_path, ensemble_path, candidate_seal_path=No
             raise ValueError
     except (KeyError, TypeError, ValueError):
         raise ValueError("la hora del pronóstico candidato y del ensamble debe coincidir")
+    draw_utc = _hora_sorteo_utc(date, scheduled_hour)
+    candidate_time = _instante_utc(prediction.get("capturado_utc"), "candidata")
+    _exigir_antes(candidate_time, draw_utc, "el pronóstico candidato")
+    ensemble_time, manifest_used = _captura_ensamble(ensemble, ensemble_path, prediction_path, manifest_path)
+    _exigir_antes(ensemble_time, draw_utc, "el pronóstico del ensamble")
 
-    candidate = validate_probabilities(prediction.get("probabilidades_candidata"), "candidata")
+    candidate =validate_probabilities(prediction.get("probabilidades_candidata"), "candidata")
     animals = ensemble.get("animales")
     if not isinstance(animals, list) or len(animals) != K:
         raise ValueError(f"el pronóstico del ensamble debe incluir {K} animales")
@@ -95,10 +150,14 @@ def load_sealed_forecasts(prediction_path, ensemble_path, candidate_seal_path=No
         sealed_candidate = validate_probabilities(seal.get("probabilidades_ag14"), "Ag14 sellado")
         if any(abs(a - b) > 1e-12 for a, b in zip(candidate, sealed_candidate)):
             raise ValueError("las probabilidades candidatas difieren del sello Ag14")
+        if seal.get("capturado_utc") is not None:
+            _exigir_antes(_instante_utc(seal["capturado_utc"], "sello Ag14"), draw_utc, "el sello Ag14")
 
     return {
         "fecha_sorteo": date,
         "hora_sorteo": prediction.get("hora_sorteo"),
+        "capturas_utc": {"candidata": candidate_time.isoformat(), "ensamble": ensemble_time.isoformat(),
+                         **({"manifiesto": manifest_used.name} if manifest_used else {})},
         "candidata_nombre": prediction.get("candidata", "candidata"),
         "candidata": candidate,
         "ensamble_v2": baseline,
@@ -216,7 +275,8 @@ def score_evidenced_result(forecasts, outcome_path):
     return {"estado": "PUNTUADO_CON_EVIDENCIA_ADJUNTA", **scored,
             "hora": evidence["hora"], "fuentes": evidence["fuentes"],
             "huella_resultado": evidence["huella_resultado"],
-            "huellas_pronostico": forecasts["huellas"]}
+            "huellas_pronostico": forecasts["huellas"],
+            **({"capturas_pronostico": forecasts["capturas_utc"]} if forecasts.get("capturas_utc") else {})}
 
 
 def main(argv=None):
@@ -227,11 +287,14 @@ def main(argv=None):
                         help="JSON con ganador y dos capturas (URL, hora y SHA-256)")
     parser.add_argument("--sello-candidata", type=Path,
                         help="sello Ag14 opcional para validar origen y probabilidades")
+    parser.add_argument("--manifiesto", type=Path,
+                        help="sello.json/meta_captura.json que lista el SHA-256 del ensamble y su hora de "
+                             "captura (por defecto se busca en la carpeta del ensamble)")
     parser.add_argument("--salida", required=True, type=Path)
     args = parser.parse_args(argv)
     if args.salida.exists():
         parser.error(f"la salida ya existe y no se sobrescribirá: {args.salida}")
-    forecasts = load_sealed_forecasts(args.prediccion, args.ensamble, args.sello_candidata)
+    forecasts = load_sealed_forecasts(args.prediccion, args.ensamble, args.sello_candidata, args.manifiesto)
     scored = score_evidenced_result(forecasts, args.resultado)
     args.salida.parent.mkdir(parents=True, exist_ok=True)
     args.salida.write_text(json.dumps(scored, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

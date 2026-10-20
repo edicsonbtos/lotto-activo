@@ -11,7 +11,8 @@
 Sin numpy/scipy funciona con el modelo antiguo (solo librería estándar).
 """
 import hashlib, hmac, os, sys, json, math, webbrowser, threading, subprocess, time, html
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import io
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from http.cookies import SimpleCookie, CookieError
 from datetime import date, datetime, timedelta
@@ -320,7 +321,21 @@ P_AZAR_T15 = TOP_N / K          # 39,47%: un Top-15 al azar ya acierta 2 de cada
 def resueltas(d):
     """Pronósticos del modelo en uso, con resultado y sin anular."""
     return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None
-            and r.get("modelo") == MODELO_MARCADOR]
+            and r.get("modelo") == MODELO_MARCADOR and not creado_tarde(r)]
+
+# Antes del 21-sep la hora del servidor no era fiable (problema de zona horaria): esos `creado` no se
+# clasifican y siguen contando tal como estaban. Desde entonces un pronóstico creado a la hora del sorteo o
+# después no era jugable antes y no entra en el marcador (el registro se conserva).
+CREADO_FIABLE_DESDE = "2026-09-21"
+
+def creado_tarde(r):
+    if r["fecha"] < CREADO_FIABLE_DESDE or not r.get("creado"):
+        return False
+    try:
+        creado = datetime.fromisoformat(r["creado"]).replace(tzinfo=None)
+    except ValueError:
+        return False
+    return creado >= experimentos.hora_sorteo(r["fecha"], r["hora"])
 
 def puesto_ganador(r):
     """Puesto (1..38) en que quedó el ganador dentro del orden congelado.
@@ -1076,7 +1091,9 @@ def preparar():
                     pend = r
                 else:
                     r["anulado"] = {"cuando": ahora(), "motivo": "pendiente obsoleto"}; cambio = True
-        if pend is None and not conocido:
+        # Pasada la hora del sorteo (p. ej. el historial va atrasado) ya no se congela un pronóstico que cuente:
+        # sería una reconstrucción tardía, no una jugada posible antes del sorteo.
+        if pend is None and not conocido and _ahora_dt() < experimentos.hora_sorteo(e["pf"], e["ph"]):
             pend = {"fecha": e["pf"], "hora": e["ph"], "top3": e["orden"][:3],
                     "orden_completo": list(e["orden"]), "salio": None,
                     "scores": [round(float(x), 6) for x in e["sc"]],
@@ -1773,6 +1790,12 @@ def _accion_herramienta(ruta):
         iniciar_tarea(partes[1])
     return "#herramientas"
 
+class Servidor(ThreadingHTTPServer):
+    """Una conexión por hilo: un cliente lento ya no deja esperando a los demás (antes HTTPServer atendía
+    de a una). Los datos siguen serializados por CERROJO."""
+    daemon_threads = True
+
+
 class H(BaseHTTPRequestHandler):
     def _send(self, cuerpo, tipo="text/html; charset=utf-8", codigo=200):
         b = cuerpo.encode("utf-8")
@@ -1794,15 +1817,55 @@ class H(BaseHTTPRequestHandler):
         except OSError:
             pass
 
+    # Un cliente que no termina de mandar (o de leer) corta a los 15 s y, como cada conexión va en su hilo
+    # (Servidor), nunca deja esperando a las demás.
+    timeout = 15
+
     # CERROJO: el hilo del anotado automático puede estar escribiendo justo
     # ahora. Serializar aquí evita que un render y una anotación se pisen.
+    # Solo el trabajo con los datos va dentro: el cuerpo se lee antes y la
+    # respuesta se manda después, así la red lenta de un cliente no retiene el cerrojo.
+    def _bajo_cerrojo(self, fn, *a):
+        red, self.wfile = self.wfile, io.BytesIO()
+        try:
+            with CERROJO:
+                fn(*a)
+            salida = self.wfile.getvalue()
+        finally:
+            self.wfile = red
+        try:
+            red.write(salida)
+        except OSError:
+            pass
+
     def do_GET(self):
-        with CERROJO:
-            self._get()
+        if self.path.partition("?")[0] == "/vivo":
+            return self._vivo()
+        self._bajo_cerrojo(self._get)
 
     def do_POST(self):
-        with CERROJO:
-            self._post()
+        try:
+            n = int(self.headers.get("Content-Length", 0) or 0)
+        except ValueError:
+            n = -1
+        if n < 0 or n > MAX_POST:
+            return self._send("Solicitud no válida", "text/plain; charset=utf-8", 400)
+        try:
+            crudo = self.rfile.read(n) if n else b""
+        except OSError:                      # incluye el timeout: el cliente no mandó lo que anunció
+            self.close_connection = True
+            return
+        if len(crudo) < n:
+            return self._send("Solicitud incompleta", "text/plain; charset=utf-8", 400)
+        self._bajo_cerrojo(self._post, crudo.decode("utf-8", errors="replace"))
+
+    def _vivo(self):
+        """Salud técnica para el healthcheck: el proceso responde y el cerrojo de datos no está trabado.
+        (/api/salud mide el rendimiento del modelo, no la disponibilidad.)"""
+        if CERROJO.acquire(timeout=5):
+            CERROJO.release()
+            return self._send("ok", "text/plain; charset=utf-8")
+        return self._send("cerrojo ocupado", "text/plain; charset=utf-8", 503)
 
     def _get(self):
         ruta, _, consulta = self.path.partition("?")
@@ -1836,14 +1899,7 @@ class H(BaseHTTPRequestHandler):
         except OSError:
             pass
 
-    def _post(self):
-        try:
-            n = int(self.headers.get("Content-Length", 0) or 0)
-        except ValueError:
-            n = -1
-        if n < 0 or n > MAX_POST:
-            return self._send("Solicitud no válida", "text/plain; charset=utf-8", 400)
-        datos = self.rfile.read(n).decode("utf-8", errors="replace") if n else ""
+    def _post(self, datos):
         ruta = self.path.split("?")[0]
         if ruta != "/entrar" and ruta not in ACCIONES_POST and not ruta.startswith("/herramienta/"):
             return self._send("No encontrado", "text/plain; charset=utf-8", 404)
@@ -1922,6 +1978,6 @@ if __name__ == "__main__":
     if not EN_NUBE:
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
     try:
-        HTTPServer((HOST, PUERTO), H).serve_forever()
+        Servidor((HOST, PUERTO), H).serve_forever()
     except KeyboardInterrupt:
         print("\n  Servidor detenido.\n")

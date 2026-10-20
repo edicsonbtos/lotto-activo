@@ -10,7 +10,7 @@ import servidor
 
 
 class _FalsoH:
-    """Lo mínimo de H que usa _post antes de leer el cuerpo."""
+    """Lo mínimo de H que usa do_POST antes de leer el cuerpo."""
     def __init__(self, content_length, cuerpo=b""):
         self.headers = {"Content-Length": content_length}
         self.rfile = io.BytesIO(cuerpo)
@@ -23,19 +23,19 @@ class _FalsoH:
 
 def test_post_content_length_no_numerico_da_400():
     h = _FalsoH("abc")
-    servidor.H._post(h)
+    servidor.H.do_POST(h)
     assert h.enviado == 400
 
 
 def test_post_content_length_negativo_da_400():
     h = _FalsoH("-5")
-    servidor.H._post(h)
+    servidor.H.do_POST(h)
     assert h.enviado == 400
 
 
 def test_post_demasiado_grande_da_400_sin_leer():
     h = _FalsoH(str(servidor.MAX_POST + 1), b"x" * 10)
-    servidor.H._post(h)
+    servidor.H.do_POST(h)
     assert h.enviado == 400
     assert h.rfile.tell() == 0
 

@@ -219,12 +219,14 @@ def test_registrar_desde_cache_tambien_guarda_ag12(motor, monkeypatch):
     assert r["sombra"]["ag12"] == AG12
 
 
-def _pendiente_sin_ag12(monkeypatch, **extra):
+def _pendiente_sin_ag12(monkeypatch, despues=None, **extra):
     monkeypatch.setattr(s, "sombra_de", lambda *a: None)
     s.preparar()
     d = s.log_cargar()
     pend = [r for r in d["registros"] if r.get("salio") is None][0]
     pend.update(extra); s.log_guardar(d)
+    if despues is not None:
+        _antes_del_sorteo(monkeypatch, minutos=despues)
     monkeypatch.setattr(s, "sombra_de", lambda *a: {"ag12": list(AG12)})
     s.preparar()
     return [r for r in s.log_cargar()["registros"] if r.get("salio") is None][0]
@@ -237,8 +239,8 @@ def test_no_reintenta_ag12_en_un_sorteo_reabierto_con_deshacer(motor, monkeypatc
 
 
 def test_no_reintenta_ag12_despues_de_la_hora_del_sorteo(motor, monkeypatch):
-    _antes_del_sorteo(monkeypatch, minutos=+1)
-    assert "sombra" not in _pendiente_sin_ag12(monkeypatch)
+    _antes_del_sorteo(monkeypatch)           # se congela antes (después ya no se crea: ver test_auditoria)
+    assert "sombra" not in _pendiente_sin_ag12(monkeypatch, despues=+1)
 
 
 # ------------------------------------------------------------------ RD vacío al congelar

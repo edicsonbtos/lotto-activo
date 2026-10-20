@@ -258,8 +258,13 @@ def ventana_8am(fecha):
     return [IDX[str(n)] for n in (d - 1, d, d + 1) if 1 <= n <= 36]
 
 
-def ic90_jornadas(pares):
-    """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)]."""
+def ic90_jornadas(pares, escala=1):
+    """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)].
+
+    escala multiplica ANTES de redondear (fracción 0/1 -> pp con escala=100): redondear la fracción a dos
+    decimales y luego pasarla a pp convertía −0,45 pp en «−0,00»."""
+    if escala != 1:
+        pares = [(f, v * escala) for f, v in pares]
     por = {}
     for f, v in pares:
         a = por.setdefault(f, [0.0, 0]); a[0] += v; a[1] += 1
@@ -397,8 +402,13 @@ def marcador_ag14(res, fichas, rd=None):
 
 
 def _marcador_ag14(res, fichas, rd):
+    """rd (el historial RD de HOY) no se usa: puntuar con él hacía que un RD anotado tarde cambiara hacia atrás
+    el marcador. Cada sorteo se puntúa solo con el RD congelado en su registro. Entran a la cohorte que decide
+    los de las 8:00 (no usan RD) y los intradía con RD congelado; los intradía sin RD congelado (17–19 oct, antes
+    de congelarlo) quedan en «historico_sin_rd_posterior», puntuados sin RD, y NO deciden. La elegibilidad es por
+    procedencia, nunca por aciertos."""
     m = _modulo_ag14()
-    filas, sin_ag12 = [], 0
+    filas, todas, sin_ag12, rd_no_congelado = [], [], 0, 0
     for r in sorted(res, key=lambda x: (x["fecha"], x["hora"])):
         if r.get("anulado") or r["fecha"] < AG14_DESDE:
             continue
@@ -408,7 +418,9 @@ def _marcador_ag14(res, fichas, rd):
             sin_ag12 += 1
             continue
         f, h, w = r["fecha"], int(r["hora"]), int(r["salio"])
-        rr = rd_de_registro(r, rd)
+        elegible = h == 0 or isinstance(s.get("rd"), dict)
+        rd_no_congelado += not elegible
+        rr = rd_de_registro(r, {})
         q, _ = con_rd(s["ag12"], rr, f, h)
         p14 = m.cadena(q, f, h)
         mb = lambda p: 1000 * math.log2(max(p[w] / sum(p), 1e-12) * K)
@@ -419,15 +431,23 @@ def _marcador_ag14(res, fichas, rd):
             orden = cambiar15(orden, cod)
             orden_base = cambiar15(orden_base, cod)
         neto = lambda o: 100.0 * (PAGO * fichas[o.index(w) + 1] - sum(fichas)) / sum(fichas)
-        filas.append({"f": f, "mb": mb(p14) - mb(sc), "t5": neto(orden) - neto(orden_base),
-                      "top3": orden.index(w) < 3, "top5": orden.index(w) < 5,
-                      "top15": orden.index(w) < 15})
+        fila = {"f": f, "mb": mb(p14) - mb(sc), "t5": neto(orden) - neto(orden_base),
+                "top3": orden.index(w) < 3, "top5": orden.index(w) < 5, "top15": orden.index(w) < 15}
+        todas.append(fila)
+        if elegible:
+            filas.append(fila)
 
     n = len(filas)
     dm = ic90_jornadas([(x["f"], x["mb"]) for x in filas])
     dt = ic90_jornadas([(x["f"], x["t5"]) for x in filas])
     base = {"version": m.VERSION, "desde": AG14_DESDE, "n": n, "sin_ag12": sin_ag12,
-            "decide_con": AG14_N_DECIDE}
+            "rd_no_congelado": rd_no_congelado, "decide_con": AG14_N_DECIDE,
+            "elegibilidad": "8:00, o intradía con RD congelado antes del sorteo",
+            "historico_sin_rd_posterior": {
+                "n": len(todas), "top3": sum(x["top3"] for x in todas), "top5": sum(x["top5"] for x in todas),
+                "top15": sum(x["top15"] for x in todas),
+                "delta_mbits": ic90_jornadas([(x["f"], x["mb"]) for x in todas]),
+                "nota": "todos los sorteos desde AG14_DESDE, solo con RD congelado; diagnóstico, no decide"}}
     if not n:
         return dict(base, estado="esperando sorteos prospectivos")
     estado, decision = f"acumulando ({n} de {AG14_N_DECIDE})", None
@@ -617,10 +637,7 @@ def marcador_sombra(res, fichas):
             x["mbits"] = round(x["mbits"] / x["n"], 1)
     difs = {}
     for base, (dm, dt) in dif.items():
-        a = ic90_jornadas(dm); b = ic90_jornadas(dt)
-        difs[base + "_exp_vs_" + base] = dict(mbits=a, top5_pp=(None if b is None else
-            dict(b, media=round(100 * b["media"], 2), ic90=(None if b["ic90"] is None else
-                 [round(100 * v, 2) for v in b["ic90"]]))))
+        difs[base + "_exp_vs_" + base] = dict(mbits=ic90_jornadas(dm), top5_pp=ic90_jornadas(dt, escala=100))
     return {"desde": SOMBRA_DESDE, "sorteos_con_rd": n_con_rd, "sorteos_rd_vacio": n_rd_vacio, "marcador": m,
             "ag13": marcador_ag13(res, fichas, rd),
             "ag14": marcador_ag14(res, fichas, rd),
