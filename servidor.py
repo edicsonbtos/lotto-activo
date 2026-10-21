@@ -649,7 +649,15 @@ CERROJO = threading.RLock()
 AUTO_INTERVALO = 5 * 60          # cada cuanto revisa, en horario de sorteo
 AUTO_ACTIVO = os.environ.get("AUTO_RESULTADO", "1") not in ("0", "no", "off")
 AUTO = {"activo": AUTO_ACTIVO, "revisado": None, "anotados": 0, "seq": 0,
-        "mensaje": "aún no se ha revisado", "corriendo": False}
+        "mensaje": "aún no se ha revisado", "corriendo": False, "pausa_hasta": None}
+# Tras un «deshacer» el automático espera a que se anote a mano: si no, en la
+# siguiente pasada vuelve a escribir el número de la fuente en ese sorteo y lo
+# que el usuario anota después cae en la hora SIGUIENTE (historial corrido).
+AUTO_PAUSA_DESHACER = 60 * 60    # segundos; anotar a mano o «Buscar ahora» la levantan antes
+
+def auto_pausado(t=None):
+    hasta = AUTO["pausa_hasta"]
+    return hasta is not None and (t or datetime.now()) < hasta
 
 def _auto_hora_util(t=None):
     """True entre las 8:05 y las 20:30 de Caracas (jornada + margen)."""
@@ -686,7 +694,7 @@ def auto_pasada():
 def auto_bucle():
     while True:
         try:
-            if AUTO["activo"] and _auto_hora_util():
+            if AUTO["activo"] and _auto_hora_util() and not auto_pausado():
                 auto_pasada()
         except Exception as ex:  # noqa: BLE001
             print(f"[auto] {ahora()} bucle: {ex!r}", file=sys.stderr, flush=True)
@@ -715,6 +723,9 @@ def auto_estado():
     hora = AUTO["revisado"][11:16] if AUTO["revisado"] else ""
     if not AUTO["activo"]:
         return dict(base, txt="Anotado automático apagado", clase="off")
+    if auto_pausado():
+        return dict(base, txt=f"automático en pausa tras deshacer (hasta {AUTO['pausa_hasta']:%H:%M}): "
+                              "anota el número correcto", clase="off")
     if AUTO["corriendo"]:
         return dict(base, txt="buscando el resultado…", clase="on")
     if not hora:
@@ -827,6 +838,8 @@ def html_registro(e=None, autorizado=True):
             f'<span class="auto {a["clase"]}" id="auto-est">{esc(a["txt"])}</span></div>'
             '<p>Se anota solo unos 10 min después del sorteo. Escríbelo aquí solo para adelantarlo.</p>'
             f'{entrar}<form class="anotar" method="post" action="/registrar">'
+            + (f'<input type="hidden" name="pf" value="{esc(e["pf"])}"><input type="hidden" name="ph" value="{e["ph"]}">'
+               if e else '') +
             '<label class="sr" for="num">Número del animal que salió</label>'
             '<input type="text" id="num" name="num" placeholder="0, 00 o 1-36" autocomplete="off" '
             'inputmode="numeric" enterkeyhint="send"><button type="submit">Anotar</button></form>'
@@ -1744,6 +1757,7 @@ def _entero(q, clave):
 def _accion_auto(datos):
     # En segundo plano: consultar la fuente puede tardar varios segundos
     # y la página debe volver enseguida.
+    AUTO["pausa_hasta"] = None            # pedirlo a mano es aceptar el número de la fuente
     if AUTO["corriendo"]:
         AVISO.update(texto="Ya se está buscando el resultado.", clase="no")
     else:
@@ -1753,16 +1767,33 @@ def _accion_auto(datos):
 
 def _accion_deshacer(datos):
     texto, ok = deshacer()
+    if ok and AUTO["activo"]:
+        AUTO["pausa_hasta"] = datetime.now() + timedelta(seconds=AUTO_PAUSA_DESHACER)
+        texto += " El anotado automático queda en pausa hasta que lo anotes (máx. 1 h)."
     AVISO.update(texto=esc(texto), clase="ok" if ok else "no")
     return "#registrar"
 
 def _accion_registrar(datos):
-    num = (parse_qs(datos).get("num", [""])[0]).strip()
+    q = parse_qs(datos)
+    num = (q.get("num", [""])[0]).strip()
     if num not in IDX:
         AVISO.update(texto=f'«{esc(num) or "vacío"}» no es válido. Usa 0, 00 o 1–36.', clase="bad")
-    else:
-        texto, clase = registrar(num)
-        AVISO.update(texto=texto, clase=clase)
+        return ""
+    # El formulario dice para qué sorteo se escribió. Si entretanto el automático
+    # ya lo anotó, registrar() llenaría el hueco SIGUIENTE: la hora equivocada.
+    pf = (q.get("pf", [""])[0]).strip()
+    if pf:
+        e = estado(cargar())
+        if (pf, _entero(q, "ph")) != (e["pf"], e["ph"]):
+            AVISO.update(texto=("Ese sorteo ya estaba anotado (lo anotó el automático o otra pestaña) y "
+                                f"NO se guardó «{esc(num)}» para no correr el historial a las {HORAS[e['ph']]}. "
+                                "Revisa el último resultado; si está mal, usa «Deshacer el último» y vuelve a anotar."),
+                         clase="bad")
+            return "#registrar"
+    texto, clase = registrar(num)
+    if clase != "bad":
+        AUTO["pausa_hasta"] = None
+    AVISO.update(texto=texto, clase=clase)
     return ""
 
 def _accion_tripleta(datos):
