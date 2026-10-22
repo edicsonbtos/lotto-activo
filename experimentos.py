@@ -662,8 +662,9 @@ def marcador_sombra(res, fichas):
         if isinstance(s.get("capas"), dict):       # desde que hay capas: lo que se muestra como principal
             try:                                    # clave aditiva: solo aparece cuando hay registros con capas
                 qc = capas(q, r)
-                m.setdefault("principal", dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0))
-                filas.append((m, "principal", qc))
+                for k in ("principal", "ag12_rd_mismos"):   # ag12_rd sobre los MISMOS sorteos: comparación pareada
+                    m.setdefault(k, dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0))
+                filas += [(m, "principal", qc), (m, "ag12_rd_mismos", q)]
             except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
                 print(f"[sombra] {_ahora()} capas fallaron: {ex!r}", file=sys.stderr, flush=True)
         if r["fecha"] >= SOMBRA_EXP_DESDE:

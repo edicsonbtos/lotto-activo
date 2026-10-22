@@ -70,3 +70,5 @@ def test_marcador_principal_solo_cuenta_registros_con_capas():
     assert "principal" not in m
     m = x.marcador_sombra([sin, con], [0] + [1] * 38)["marcador"]
     assert m["principal"]["n"] == 1 and m["ag12_rd"]["n"] == 2
+    assert m["ag12_rd_mismos"]["n"] == 1                # comparación pareada sobre los mismos sorteos
+    assert "ag12_rd_mismos" not in x.marcador_sombra([sin], [0] + [1] * 38)["marcador"]

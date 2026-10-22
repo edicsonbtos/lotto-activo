@@ -1203,7 +1203,9 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
             cab = (f'<div class="jh"><h2 id="som-t">Próximo sorteo · <span>{hora}</span></h2>'
                    + ('<span class="pill" title="congelado antes del sorteo; la regla de RD se aplica al salir RD">motor principal</span></div>'
                       if principal else '<span class="pill warn" title="se mide, aún no se recomienda">en prueba</span></div>')
-                   + f'<p class="ult">{esc(fecha.capitalize())} · motor ag12 + regla de RD</p>')
+                   + f'<p class="ult">{esc(fecha.capitalize())} · motor ag12 + regla de RD'
+                   + (' + capas de fecha y rueda' if isinstance(((pend or {}).get("sombra") or {}).get("capas"), dict) else '')
+                   + '</p>')
             if not p:
                 cuerpo = '<div class="tip">El motor en sombra aún no tiene su pronóstico para este sorteo; la página se actualiza sola.</div>'
             else:
@@ -1242,7 +1244,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
             jugada = (f'<section class="card jugada" aria-labelledby="som-t">'
                       f'{html_nav_hist(tab, 0, len(pasados))}{cab}{cuerpo}</section>')
         hoy = html_animales_hoy(d, filas, e, regs,
-                                ('<p class="note">Top-2 del motor ag12 + RD a las 8:00, elegido antes del primer sorteo.</p>'
+                                ('<p class="note">Top-2 del motor principal a las 8:00 (con la capa de fecha desde el 22 de octubre), elegido antes del primer sorteo.</p>'
                                  if principal else
                                  '<p class="note">Top-2 del motor en sombra a las 8:00, elegido antes del primer sorteo. '
                                  'Solo se mide: no reemplaza la jugada de Lotto Activo.</p>')) if filas is not None else ""
@@ -1259,7 +1261,8 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
         tabla = (f'<table class="tabla"><thead><tr><th></th><th>Top-3</th><th>Top-5</th><th>Top-15</th><th>Señal</th>'
                  f'<th>Neto Top-5</th></tr></thead><tbody>'
                  + (fila_m("Ensamble (anterior)", "ensamble") + fila_m("ag12 sin RD", "ag12") + fila_m("ag12 + RD", "ag12_rd")
-                    + fila_m("ag12 + RD + fecha + rueda (principal)", "principal")
+                    + fila_m("Principal (+ fecha + rueda)", "principal")
+                    + fila_m("ag12 + RD en esos mismos sorteos", "ag12_rd_mismos")
                     if principal else
                     fila_m("Modelo actual", "ensamble") + fila_m("En sombra", "ag12") + fila_m("En sombra + RD", "ag12_rd"))
                  + '</tbody></table>')
@@ -1271,8 +1274,13 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
                      f'Todavía no se puede afirmar que gane: la decisión oficial es con {dec.get("decide_con", 931)} sorteos '
                      f'(hacia mediados de diciembre). El pronóstico que se puntúa y se recomienda sigue siendo el de Lotto Activo.</p>')
         if principal:
-            veredicto = (f'<p class="note">{n} sorteos medidos desde el 26 de septiembre (los mismos para los tres){ic}. '
-                         f'Es el motor que se muestra desde el 16 de octubre por decisión tuya; la prueba estadística '
+            nc = (m.get("principal") or {}).get("n", 0)
+            veredicto = (f'<p class="note">Las tres primeras filas: {n} sorteos desde el 26 de septiembre (los mismos para '
+                         f'las tres){ic}. '
+                         + (f'Las dos últimas: {nc} sorteos desde que el principal lleva las capas de fecha y rueda (22 de '
+                            'octubre), comparadas sobre los mismos sorteos; con tan pocos no se puede afirmar nada. '
+                            if nc else '')
+                         + f'Es el motor que se muestra desde el 16 de octubre por decisión tuya; la prueba estadística '
                          f'preregistrada sigue en pie y se decide con {dec.get("decide_con", 931)} sorteos (mediados de diciembre). '
                          f'El ensamble se sigue guardando y midiendo en la pestaña «Modelo anterior».</p>')
         marcador = (f'<section class="card"><div class="jh"><h2>'

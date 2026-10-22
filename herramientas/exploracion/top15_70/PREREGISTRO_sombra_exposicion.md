@@ -41,3 +41,7 @@ exista un solo sorteo en la cuenta, y la versión original queda arriba como his
    datos oficiales de LA): día R = 0,77 [0,60; 0,95], día+1 R = 0,73 [0,55; 0,90], hora 12 h R = 0,77 [0,58; 0,97];
    las tres PASAN. Es consistente en dirección con los multiplicadores congelados, pero D0 se debilita de
    may a sep (R = 0,92) y día−1, día+2 y mes no están replicados.
+
+## Desviación (2026-10-22)
+Por decisión del usuario, la exposición se aplica al motor principal (ag12+RD) desde el 2026-10-22 con n ≈ 240, antes del
+n ≥ 6.000 fijado aquí. La sombra de exposición sigue midiéndose igual. Detalle: `investigacion/2026-10-22/bateria/INFORME.md` §7.

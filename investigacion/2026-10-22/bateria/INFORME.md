@@ -57,3 +57,15 @@ El Top-15 realista queda en el 53-55 %.
 ## 6. Siguiente paso propuesto (no hecho: toca producción)
 Poner en sombra, junto con la fecha, la corrección H1 (×0,807 a d=1) y medir en vivo con el marcador de sombra
 (decisión a n ≥ 1.000). Antes, pasar `revisor-sesgo`. El "opuesto" (d19) entra solo en sombra como diagnóstico.
+
+## 7. Desviación de los preregistros (decisión del usuario, 2026-10-22)
+El usuario decidió aplicar al motor principal las capas 4 (exposición) y 5 (rueda) **sin pasar por sombra**
+(commit bef95c0 y siguiente). Queda escrito que esto se aparta de:
+- `herramientas/exploracion/top15_70/PREREGISTRO_sombra_exposicion.md` (encender la exposición con n ≥ 6.000; había ~240);
+- la §6 de este informe (rueda en sombra y decisión a n ≥ 1.000).
+Hay que tener en cuenta además que la decisión se tomó viendo el vivo, que exposición + ventana ya se habían mirado en el
+tramo de prueba (registro_final.jsonl, 2026-10-03), y que el combinado ag12+RD+exposición+rueda nunca se evaluó walk-forward
+como unidad (0,807 es O/E frente al ensamble). Los factores sí son limpios: MULT en dev-A y 0,807 en [2000, 9357).
+**La única evidencia limpia desde ahora es la fila «principal» del marcador frente a «ag12 + RD en esos mismos sorteos»**
+(empieza en n = 0). La prueba preregistrada de ag12 (14-dic) no cambia. Revisión: `revisor-sesgo`, «aceptar con cambios»;
+los cambios pedidos (comparación pareada, textos, esta constancia) están aplicados.
