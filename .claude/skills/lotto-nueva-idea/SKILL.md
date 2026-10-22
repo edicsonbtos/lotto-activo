@@ -38,6 +38,8 @@ Estas ideas ya se probaron y quedaron cerradas. No se repiten sin una razón nue
   - **"Salió ayer o anteayer" ×1,3 en el primer sorteo:** prueba O/E 1,12, p ≈ 0,09; solo vigilancia.
   - **RD esquiva su propio primero de ayer** (O/E 0,32): hilo pendiente para el motor de RD.
 
+- **SEÑAL (2026-10-22, `investigacion/2026-10-22/bateria/`): el operador esquiva los VECINOS DE RUEDA (americana, ±1) del ganador anterior del MISMO día.** Preregistrado entre 7 rasgos (color, docena, consecutivo, mes, día de semana y aves no pasan). Desarrollo O/E 0,807 [0,72; 0,90], z −3,8; **ciega en vivo 0,61** (+5,0 mbits, p = 0,03; ag12+RD 0,68). No replica en LARD (0,93) ni en RD (0,98). Solo el sorteo inmediatamente anterior; el opuesto en la rueda (d19) también sale 0,81 (post-hoc). Vale ~+1,5 a +5 mbits, invisible en aciertos. Pendiente: sombra en vivo. El vivo 14-sep..22-oct ya quedó gastado para esta idea.
+
 Estructura real conocida: el operador **evita repetir el animal el mismo día** y **recicla con 1 a 2,5 días de hueco**. El ensamble ya lo captura. Desde 2026-10-01 se sabe además que **esquiva el número de la fecha (hoy y mañana) y el de la hora**. El ensamble NO lo captura; está pendiente de sombra en vivo.
 
 ## Cómo medir

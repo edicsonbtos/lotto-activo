@@ -1,0 +1,4 @@
+LA desarrollo (base simple)                  n= 6729 obs   294 esp  368.3 O/E 0.798 IC95 [0.71;0.89] p(O/E≥1) 0.0000
+LARD ciega 2026-02-01..09-22  (DECIDE)       n= 3042 obs   153 esp  165.2 O/E 0.926 IC95 [0.78;1.07] p(O/E≥1) 0.1614
+RD nombres sin mapear: 0
+RD desarrollo 2024-03..2025-06 (descriptivo) n= 5302 obs   280 esp  286.3 O/E 0.978 IC95 [0.87;1.09] p(O/E≥1) 0.3506

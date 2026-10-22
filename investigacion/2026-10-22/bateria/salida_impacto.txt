@@ -1,0 +1,8 @@
+Desarrollo (in-sample: el factor se estimó aquí)
+  ensamble  motor     n=7357  Top-3 12.89%  Top-5 20.25%  Top-15 53.07%  mbits +120.1  Top-5 esc +24.3%  Top-15 pond +12.4%
+  ensamble  motor+H1  n=7357  Top-3 13.05%  Top-5 20.54%  Top-15 53.43%  mbits +121.6  Top-5 esc +26.0%  Top-15 pond +13.5%
+Vivo (ciega: factor fijado en desarrollo)
+  ensamble  motor     n=395  Top-3 11.39%  Top-5 18.48%  Top-15 49.11%  mbits  +98.1  Top-5 esc +12.0%  Top-15 pond  +3.0%
+  ensamble  motor+H1  n=395  Top-3 11.65%  Top-5 17.97%  Top-15 48.86%  mbits +102.7  Top-5 esc +11.1%  Top-15 pond  +2.4%
+  principal motor     n=311  Top-3 14.47%  Top-5 20.90%  Top-15 53.05%  mbits  +99.0  Top-5 esc +32.6%  Top-15 pond +15.3%
+  principal motor+H1  n=311  Top-3 14.47%  Top-5 20.26%  Top-15 52.73%  mbits +102.6  Top-5 esc +30.2%  Top-15 pond +14.1%
