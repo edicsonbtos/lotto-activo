@@ -83,6 +83,25 @@ def test_respaldo_por_clave_sigue_funcionando(datos, web, monkeypatch):
     assert pedir(web, "/historial.zip?clave=secreta")[0] == 200
 
 
-def test_el_boton_se_ve_siempre():
-    assert 'action="/historial.zip"' in s.html_registro(None, autorizado=True)
-    assert 'action="/historial.zip"' in s.html_registro(None, autorizado=False)
+def test_boton_arriba_baja_un_txt_sin_clave(datos, web):
+    reg = {"fecha": "2026-10-20", "hora": 0, "salio": 12, "orden_completo": [12, 0], "scores": [0.1] * 38}
+    (datos / "predicciones.json").write_text(json.dumps({"registros": [reg]}), encoding="utf-8")
+    st, tipo, disp, cuerpo = pedir(web, "/historial.txt?")                    # sin cookie ni clave
+    assert (st, tipo) == (200, "text/plain; charset=utf-8")
+    assert disp.startswith("attachment;") and ".txt" in disp
+    texto = cuerpo.decode("utf-8")
+    assert "historial.txt (Lotto Activo, sorteos h:00): 2 sorteos" in texto
+    assert "===== historial.txt =====\n2026-10-20 8:00 12\n2026-10-20 9:00 0" in texto
+    assert "===== rdint_historial.txt =====\n2026-10-20 8:30 5" in texto
+    linea = texto.split("===== predicciones.jsonl =====\n")[1].split("\n")[0]
+    assert json.loads(linea) == {k: v for k, v in reg.items() if k != "scores"}   # sin los 38 puntajes
+    assert "rdint_predicciones (RD Internacional): no existe" in texto
+
+
+@pytest.mark.skipif(not os.path.exists(s.HIST), reason="falta historial.txt")
+def test_el_boton_esta_al_inicio_de_la_pagina():
+    html = s.render()
+    i = html.index('<main class="w">')
+    assert html.index('action="/historial.txt"') - i < 120                  # lo primero dentro de la página
+    assert ">Descargar historial</button>" in html
+    assert 'action="/historial.zip"' not in html                             # un solo botón, el simple

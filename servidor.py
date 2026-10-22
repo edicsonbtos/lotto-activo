@@ -845,9 +845,6 @@ def html_registro(e=None, autorizado=True):
             'inputmode="numeric" enterkeyhint="send"><button type="submit">Anotar</button></form>'
             '<div class="acciones">'
             '<form method="post" action="/auto"><button class="sec" type="submit">Buscar ahora</button></form>'
-            '<form method="get" action="/historial.zip"><button class="sec" type="submit" '
-            'title="Zip con historiales, pronósticos congelados y pesos, para analizarlos aparte">'
-            'Descargar historial</button></form>'
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último resultado anotado?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
@@ -1342,6 +1339,9 @@ def render(banca=None, tab="la", atras=0, autorizado=True):
            + '</nav></div></header>')
     cuerpo = (
         f'{cab}<main class="w"><h1 class="sr">Lotto Activo</h1>'
+        '<form method="get" action="/historial.txt"><button class="sec" type="submit" '
+        'title="Un solo archivo de texto con los dos historiales y los pronósticos congelados">'
+        'Descargar historial</button></form>'
         f'<section class="panel" id="p-la" role="tabpanel" aria-labelledby="t-la"{"" if tab == "la" else " hidden"}>'
         f'{panel_la}</section>'
         f'<section class="panel" id="p-rd" role="tabpanel" aria-labelledby="t-rd"{"" if tab == "rd" else " hidden"}>'
@@ -1687,6 +1687,10 @@ def permiso_escritura(cabecera_cookie, clave=""):
         return True, True
     return hmac.compare_digest(_cookie_de(cabecera_cookie).encode("utf-8"), _firma_clave().encode("utf-8")), False
 
+def historial_txt():
+    import rdint_vivo, historial_txt as ht
+    return ht.exportar(HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)
+
 def respaldo_historial():
     """Zip con todo lo que hace falta para analizar fuera: historiales, pronósticos congelados (con sombra),
     pesos, el resumen de las páginas publicadas guardadas y un LEEME con conteos."""
@@ -1939,13 +1943,29 @@ class H(BaseHTTPRequestHandler):
         elif ruta in RUTAS_JSON:
             fn, tipo = RUTAS_JSON[ruta]
             self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
+        elif ruta == "/historial.txt":
+            self._historial_txt()
         elif ruta in ("/historial.zip", "/respaldo.zip"):
             self._respaldo(q)
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
+    def _historial_txt(self):
+        """Botón «Descargar historial»: un .txt sin clave (solo resultados y pronósticos, lo mismo que ya muestra la web)."""
+        datos = historial_txt().encode("utf-8")
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Content-Disposition",
+                             'attachment; filename="lotto_historial_%s.txt"' % date.today().isoformat())
+            self.send_header("Content-Length", str(len(datos)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers(); self.wfile.write(datos)
+        except OSError:
+            pass
+
     def _respaldo(self, q):
-        """Descarga de los datos vivos de /data (botón «Descargar historial»). Pide lo mismo que anotar: la cookie
+        """Zip completo de los datos vivos de /data (con puntajes y pesos). Pide lo mismo que anotar: la cookie
         de la clave en este navegador, o ?clave= igual a RESPALDO_CLAVE (para bajarlo sin navegador)."""
         clave = os.environ.get("RESPALDO_CLAVE", "")
         por_clave = bool(clave) and hmac.compare_digest(clave.encode("utf-8"),
