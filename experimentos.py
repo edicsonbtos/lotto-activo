@@ -197,6 +197,60 @@ def con_rd(p, rd, f, h):
     return q, usado
 
 
+# Capas del motor principal (decisión del usuario 2026-10-22; investigacion/2026-10-22/bateria/INFORME.md).
+# Sobre ag12+RD: (4) exposición por fecha y hora (herramientas/modelos/exposicion.py, multiplicadores congelados)
+# y (5) × RUEDA_MULT a los dos vecinos en la rueda americana del ganador anterior del MISMO día (no a las 8:00).
+# Solo en registros con sombra["capas"], que se congela antes del sorteo con el anterior ya conocido: lo jugado
+# antes se sigue mostrando y puntuando como ag12+RD, y el marcador "ag12_rd" (prueba preregistrada) no cambia.
+CAPAS_VERSION = "fecha_rueda_2026-10-22"
+RUEDA_MULT = 0.807      # O/E en desarrollo [2000, 9357); ciega en vivo 0,61. CONGELADO
+RUEDA = ["0", "28", "9", "26", "30", "11", "7", "20", "32", "17", "5", "22", "34", "15", "3", "24", "36", "13", "1",
+         "00", "27", "10", "25", "29", "12", "8", "19", "31", "18", "6", "21", "33", "16", "4", "23", "35", "14", "2"]
+
+
+def vecinos_rueda(cod):
+    """Índices de los dos vecinos inmediatos de cod en la rueda americana."""
+    j = RUEDA.index(cod)
+    return [IDX[RUEDA[(j - 1) % K]], IDX[RUEDA[(j + 1) % K]]]
+
+
+def congelar_capas(r, filas, ahora):
+    """Fija en r["sombra"]["capas"] el ganador anterior del mismo día tal como estaba en el historial ANTES del
+    sorteo (filas = historial con que se calculó el pendiente). Una sola vez y solo antes de la hora del sorteo:
+    un registro viejo o reabierto no recibe capas. Devuelve True si cambió algo."""
+    s = r.get("sombra")
+    if not s or "ag12" not in s or "capas" in s or r.get("salio") is not None:
+        return False
+    f, h = r["fecha"], int(r["hora"])
+    if ahora >= hora_sorteo(f, h):
+        return False
+    prev = None
+    if h > 0 and filas and (filas[-1][0], int(filas[-1][1])) == (f, h - 1):
+        prev = POS[filas[-1][2]]
+    s["capas"] = {"v": CAPAS_VERSION, "prev": prev}
+    return True
+
+
+def capas(q, r):
+    """Aplica las capas congeladas en r a q (ag12+RD). Sin capas devuelve q tal cual."""
+    c = (r.get("sombra") or {}).get("capas")
+    if not isinstance(c, dict):
+        return q
+    q = list(exposicion(q, r["fecha"], int(r["hora"])))
+    if c.get("prev") in IDX and int(r["hora"]) > 0:
+        for i in vecinos_rueda(c["prev"]):
+            q[i] *= RUEDA_MULT
+        t = sum(q)
+        q = [x / t for x in q]
+    return q
+
+
+def principal(r, rd):
+    """Motor principal: ag12 + RD congelado + capas congeladas. -> (q, usó RD)."""
+    q, usado = con_rd(r["sombra"]["ag12"], rd_de_registro(r, rd), r["fecha"], r["hora"])
+    return capas(q, r), usado
+
+
 def hora_sorteo(f, h):
     """Hora de Caracas en que se juega LA (f, h): h=0 es las 8:00."""
     return datetime.fromisoformat(f).replace(hour=8 + int(h))
@@ -605,6 +659,13 @@ def marcador_sombra(res, fichas):
         n_con_rd += usado
         n_rd_vacio += isinstance(s.get("rd"), dict) and int(r["hora"]) >= 1 and s["rd"].get("1") is None
         filas = [(m, "ensamble", sc_base), (m, "ag12", s["ag12"]), (m, "ag12_rd", q)]
+        if isinstance(s.get("capas"), dict):       # desde que hay capas: lo que se muestra como principal
+            try:                                    # clave aditiva: solo aparece cuando hay registros con capas
+                qc = capas(q, r)
+                m.setdefault("principal", dict(n=0, top3=0, top5=0, top15=0, mbits=0.0, t5_neto=0.0))
+                filas.append((m, "principal", qc))
+            except Exception as ex:  # noqa: BLE001  (la sombra nunca tumba la web)
+                print(f"[sombra] {_ahora()} capas fallaron: {ex!r}", file=sys.stderr, flush=True)
         if r["fecha"] >= SOMBRA_EXP_DESDE:
             try:
                 filas += [(mx, "ensamble", sc_base), (mx, "ag12_rd", q),

@@ -781,7 +781,7 @@ _exposicion = experimentos.exposicion
 
 def sombra_registros(d):
     """Pronósticos de ag12 con la forma de un registro (fecha, hora, salio, scores, orden_completo, top3), con la regla
-    de RD aplicada al leerlos (igual que marcador_sombra). Incluye el pendiente. Solo lectura: no toca el marcador."""
+    de RD y, si el registro las congeló, las capas de fecha y rueda aplicadas al leerlos (experimentos.principal). Incluye el pendiente. Solo lectura: no toca el marcador."""
     try:
         rd = experimentos._rd_por_slot()
     except Exception:  # noqa: BLE001
@@ -791,10 +791,11 @@ def sombra_registros(d):
         p = (r.get("sombra") or {}).get("ag12")
         if not vigente(r) or not p or r["fecha"] < SOMBRA_DESDE:
             continue
-        q, _ = experimentos.con_rd(p, experimentos.rd_de_registro(r, rd), r["fecha"], r["hora"])
+        q, _ = experimentos.principal(r, rd)
         orden = sorted(range(K), key=lambda i: (-q[i], i))
+        capas = isinstance(r["sombra"].get("capas"), dict)
         out.append({"fecha": r["fecha"], "hora": r["hora"], "salio": r.get("salio"), "scores": q,
-                    "orden_completo": orden, "top3": orden[:3], "modelo": "ag12+RD"})
+                    "orden_completo": orden, "top3": orden[:3], "modelo": "ag12+RD+capas" if capas else "ag12+RD"})
     out.sort(key=lambda r: (r["fecha"], r["hora"]))
     return out
 
@@ -1131,6 +1132,8 @@ def preparar():
             print(f"[rd] {ahora()} congelar: {ex!r}", file=sys.stderr, flush=True)
             rd_vivo = None
         cambio = experimentos.congelar_rd(pend, rd_vivo, _ahora_dt()) or cambio
+        # Capas del motor principal (fecha y rueda): el ganador anterior queda fijado tal como estaba antes del sorteo.
+        cambio = experimentos.congelar_capas(pend, filas, _ahora_dt()) or cambio
     # ag13 en sombra: lo que publicaron los pronosticadores esa mañana (solo insumo; no toca el pronóstico ni el marcador).
     cambio = experimentos.completar_pron(d["registros"], DATOS) or cambio
     # Lo que se muestra es SIEMPRE el pronóstico congelado que se puntúa: tras
@@ -1208,7 +1211,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
                     rd = experimentos._rd_por_slot()
                 except Exception:  # noqa: BLE001
                     rd = {}
-                q, usado = experimentos.con_rd(p, experimentos.rd_de_registro(pend, rd), e["pf"], e["ph"])
+                q, usado = experimentos.principal(pend, rd)
                 tot = sum(q) or 1.0
                 orden = sorted(range(K), key=lambda i: (-q[i], i))
                 esc5, pond = fichas_por_puesto(), fichas_por_puesto(PONDERADO)
@@ -1222,6 +1225,12 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
                 comunes = len(set(orden[:5]) & set(ens[:5]))
                 nota_rd = ("Con la regla de RD aplicada (el animal de RD de la media hora anterior pesa la mitad)." if usado
                            else "Sin cambio por RD en este sorteo.")
+                cp = (pend.get("sombra") or {}).get("capas")
+                if isinstance(cp, dict):
+                    nota_rd += (" Con las capas de fecha (el operador esquiva el número del día y de la hora)"
+                                + (f' y de rueda (los vecinos en la ruleta de {esc(cp["prev"])} '
+                                   f'{esc(ANIM[cp["prev"]].title())}, que salió antes, pesan menos).'
+                                   if cp.get("prev") in IDX and e["ph"] > 0 else "."))
                 anti = html_anti_top15(orden, [x / tot for x in q], e["gaps"], "sombra-anti")
                 nombres = [f"{POS[i]} {ANIM[POS[i]].title()}" for i in orden]
                 comp = html_compartir("Lotto Activo" if principal else "Motor en sombra", f"{fecha} · {hora}", nombres[:15], nombres[15:30] if len(nombres) >= 30 else ())
@@ -1249,7 +1258,8 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
                     f'<td>{v["top15_pct"]:.1f} %</td><td>{v["mbits"]:+.0f}</td><td>{v["t5_neto"]:+.0f} $</td></tr>')
         tabla = (f'<table class="tabla"><thead><tr><th></th><th>Top-3</th><th>Top-5</th><th>Top-15</th><th>Señal</th>'
                  f'<th>Neto Top-5</th></tr></thead><tbody>'
-                 + (fila_m("Ensamble (anterior)", "ensamble") + fila_m("ag12 sin RD", "ag12") + fila_m("ag12 + RD (principal)", "ag12_rd")
+                 + (fila_m("Ensamble (anterior)", "ensamble") + fila_m("ag12 sin RD", "ag12") + fila_m("ag12 + RD", "ag12_rd")
+                    + fila_m("ag12 + RD + fecha + rueda (principal)", "principal")
                     if principal else
                     fila_m("Modelo actual", "ensamble") + fila_m("En sombra", "ag12") + fila_m("En sombra + RD", "ag12_rd"))
                  + '</tbody></table>')
