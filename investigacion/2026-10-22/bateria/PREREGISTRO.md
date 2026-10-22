@@ -37,3 +37,18 @@ Sobre los pronósticos congelados en vivo (ensamble y ag12+RD):
 3. Prueba de permutación: barajar ganadores entre sorteos de la misma hora (1.000 veces) para comprobar que la señal
    en mbits no es un artefacto.
 4. Probabilidad, según el modelo, de rachas como la de los últimos 13 sorteos (3 en el Top-15).
+
+## Adenda (escrita tras ver SOLO el desarrollo, antes de cualquier ciega)
+Desarrollo: pasa únicamente H1 (rueda): O/E 0,807 [0,72; 0,90], z −3,78 (dev-A 0,826, dev-B 0,790).
+Exploratorio post-hoc (no decide): el perfil por distancia al anterior es d0 0,69, d1 0,81, d2..d18 ≈ 1, d19 (opuesto,
+= número consecutivo en la rueda americana) 0,81; con 2-3 sorteos de distancia ≈ 1; 8:00 contra el último de ayer 0,98.
+
+Ciegas de H1 (exactamente la hipótesis preregistrada: distancia 1, mismo día, sorteo inmediatamente anterior):
+1. **En vivo** (como arriba): corrección ×0,807 en los 2 vecinos, renormalizada; Δmbits en el ensamble congelado,
+   p unilateral < 0,05 por bootstrap de jornadas; mismo sentido (O/E < 1) en ag12+RD.
+2. **Réplica en otros juegos de 38 casillas** (sin modelo; línea base = uniforme sobre los animales que aún no han salido
+   ese día): O/E de los vecinos de rueda del anterior.
+   - LARD (juego 3 de `oficial_multi.csv`), su tramo ciego 2026-02-01..2026-09-22, nunca mirado. Pasa si O/E < 1 con
+     p unilateral < 0,05.
+   - RD Internacional (`rdint_hist.csv`), tramo de desarrollo de RD 2024-03-01..2025-06-30: solo descriptivo.
+   La misma línea base se calcula también en el desarrollo de LA para comparar escalas.
