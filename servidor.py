@@ -845,9 +845,9 @@ def html_registro(e=None, autorizado=True):
             'inputmode="numeric" enterkeyhint="send"><button type="submit">Anotar</button></form>'
             '<div class="acciones">'
             '<form method="post" action="/auto"><button class="sec" type="submit">Buscar ahora</button></form>'
-            + ('<form method="get" action="/historial.zip"><button class="sec" type="submit" '
-               'title="Zip con historiales, pronósticos congelados y pesos, para analizarlos aparte">'
-               'Descargar historial</button></form>' if autorizado else '') +
+            '<form method="get" action="/historial.zip"><button class="sec" type="submit" '
+            'title="Zip con historiales, pronósticos congelados y pesos, para analizarlos aparte">'
+            'Descargar historial</button></form>'
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último resultado anotado?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
@@ -1951,6 +1951,9 @@ class H(BaseHTTPRequestHandler):
         por_clave = bool(clave) and hmac.compare_digest(clave.encode("utf-8"),
                                                         (q.get("clave") or [""])[0].encode("utf-8"))
         if not (por_clave or permiso_escritura(self.headers.get("Cookie"))[0]):
+            if self.path.partition("?")[0] == "/historial.zip":     # el botón: que diga qué falta en vez de un 404
+                AVISO.update(texto="Para descargar el historial escribe primero la clave en «¿Qué salió?».", clase="bad")
+                return self._volver("#registrar")
             return self._send("No encontrado", "text/plain; charset=utf-8", 404)
         datos = respaldo_historial()
         try:

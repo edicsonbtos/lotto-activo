@@ -52,8 +52,12 @@ def _cookie():
 
 
 def test_sin_cookie_ni_clave_no_hay_descarga(datos, web):
-    assert pedir(web, "/historial.zip")[0] == 404
-    assert pedir(web, "/historial.zip", cookie=f"{s.COOKIE_CLAVE}=falsa")[0] == 404
+    for cookie in (None, f"{s.COOKIE_CLAVE}=falsa"):
+        st, tipo, _, cuerpo = pedir(web, "/historial.zip", cookie=cookie)
+        assert st == 303 and tipo != "application/zip"                       # vuelve a la página y pide la clave
+    assert "clave" in s.AVISO["texto"]
+    s.AVISO["texto"] = ""
+    assert pedir(web, "/respaldo.zip")[0] == 404                               # la ruta sin botón sigue muda
 
 
 def test_con_cookie_baja_el_zip_con_todo_y_leeme(datos, web):
@@ -79,6 +83,6 @@ def test_respaldo_por_clave_sigue_funcionando(datos, web, monkeypatch):
     assert pedir(web, "/historial.zip?clave=secreta")[0] == 200
 
 
-def test_el_boton_sale_solo_con_permiso():
+def test_el_boton_se_ve_siempre():
     assert 'action="/historial.zip"' in s.html_registro(None, autorizado=True)
-    assert 'action="/historial.zip"' not in s.html_registro(None, autorizado=False)
+    assert 'action="/historial.zip"' in s.html_registro(None, autorizado=False)
