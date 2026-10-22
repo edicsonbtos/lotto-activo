@@ -106,6 +106,7 @@ def test_pagina_principal_y_pestanas(web):
 @pytest.mark.skipif(not HAY_DATOS, reason="falta historial.txt")
 def test_respaldo_cerrado_sin_clave_y_zip_con_clave(web, monkeypatch):
     import io, zipfile
+    monkeypatch.setattr(servidor, "CLAVE_ESCRITURA", "110593")   # sin ella, en local cualquiera puede escribir (y bajar)
     monkeypatch.delenv("RESPALDO_CLAVE", raising=False)
     assert pedir(web, "GET", "/respaldo.zip?clave=x")[0] == 404
     monkeypatch.setenv("RESPALDO_CLAVE", "secreta")

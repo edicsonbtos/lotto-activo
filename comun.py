@@ -76,13 +76,16 @@ def compartir(juego, animales, anti=(), cuando=None):
             '<button type="button" class="sec">Compartir</button></div>')
 
 
-def respaldo_zip(carpeta, archivos):
-    """Zip en memoria con los archivos de datos vivos que existan en `carpeta` (el marcador y los historiales)."""
+def respaldo_zip(carpeta, archivos, extra=None):
+    """Zip en memoria con los archivos de datos vivos que existan en `carpeta` (el marcador y los historiales);
+    `extra` = {nombre: texto} se agrega tal cual (p. ej. un LEEME)."""
     import io as _io, zipfile
     buf = _io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
         for nombre in archivos:
             ruta = os.path.join(carpeta, nombre)
             if os.path.isfile(ruta):
-                z.write(ruta, nombre)
+                z.write(ruta, nombre.replace(os.sep, "/"))
+        for nombre, texto in (extra or {}).items():
+            z.writestr(nombre, texto)
     return buf.getvalue()

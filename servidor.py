@@ -845,6 +845,9 @@ def html_registro(e=None, autorizado=True):
             'inputmode="numeric" enterkeyhint="send"><button type="submit">Anotar</button></form>'
             '<div class="acciones">'
             '<form method="post" action="/auto"><button class="sec" type="submit">Buscar ahora</button></form>'
+            + ('<form method="get" action="/historial.zip"><button class="sec" type="submit" '
+               'title="Zip con historiales, pronósticos congelados y pesos, para analizarlos aparte">'
+               'Descargar historial</button></form>' if autorizado else '') +
             '<form method="post" action="/deshacer" onsubmit="return confirm(\'¿Deshacer el último resultado anotado?\')">'
             '<button class="link" type="submit">Deshacer el último</button></form></div></section>')
 
@@ -1684,6 +1687,35 @@ def permiso_escritura(cabecera_cookie, clave=""):
         return True, True
     return hmac.compare_digest(_cookie_de(cabecera_cookie).encode("utf-8"), _firma_clave().encode("utf-8")), False
 
+def respaldo_historial():
+    """Zip con todo lo que hace falta para analizar fuera: historiales, pronósticos congelados (con sombra),
+    pesos, el resumen de las páginas publicadas guardadas y un LEEME con conteos."""
+    import rdint_vivo
+    nombres = [os.path.basename(x) for x in (HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)] + ["pesos_ensamble.json"]
+    raiz = os.path.join(DATOS, "datos_publicados")
+    if os.path.isdir(raiz):
+        nombres += sorted(os.path.join("datos_publicados", d, "meta.json") for d in os.listdir(raiz)
+                          if os.path.isfile(os.path.join(raiz, d, "meta.json")))
+    lineas = [f"Respaldo de Lotto Activo generado {datetime.now().isoformat(timespec='seconds')} (hora de Caracas)", ""]
+    for n in nombres[:5]:
+        ruta = os.path.join(DATOS, n)
+        if not os.path.isfile(ruta):
+            lineas.append(f"{n}: no existe"); continue
+        if n.endswith(".txt"):
+            with open(ruta, encoding="utf-8", errors="replace") as f:
+                lineas.append(f"{n}: {sum(1 for x in f if x.strip())} sorteos")
+        else:
+            try:
+                with open(ruta, encoding="utf-8") as f:
+                    reg = json.load(f).get("registros")
+                lineas.append(f"{n}: {len(reg)} pronósticos congelados" if isinstance(reg, list) else f"{n}: pesos del ensamble")
+            except (ValueError, AttributeError):
+                lineas.append(f"{n}: no se pudo leer")
+    lineas += ["", "historial.txt / rdint_historial.txt: un sorteo por línea (Lotto Activo h:00 / RD Internacional h:30).",
+               "predicciones.json / rdint_predicciones.json: el orden congelado antes de cada sorteo, con lo que salió.",
+               "datos_publicados/*/meta.json: qué páginas de pronosticadores se guardaron cada mañana."]
+    return comun.respaldo_zip(DATOS, nombres, {"LEEME.txt": "\n".join(lineas) + "\n"})
+
 def cookie_escritura():
     return (f"{COOKIE_CLAVE}={_firma_clave()}; Max-Age=31536000; Path=/; HttpOnly; SameSite=Strict"
             + ("; Secure" if _en_railway() else ""))
@@ -1907,19 +1939,20 @@ class H(BaseHTTPRequestHandler):
         elif ruta in RUTAS_JSON:
             fn, tipo = RUTAS_JSON[ruta]
             self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
-        elif ruta == "/respaldo.zip":
+        elif ruta in ("/historial.zip", "/respaldo.zip"):
             self._respaldo(q)
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
     def _respaldo(self, q):
-        """Descarga de los datos vivos de /data. Solo con RESPALDO_CLAVE definida en el entorno y ?clave= igual."""
+        """Descarga de los datos vivos de /data (botón «Descargar historial»). Pide lo mismo que anotar: la cookie
+        de la clave en este navegador, o ?clave= igual a RESPALDO_CLAVE (para bajarlo sin navegador)."""
         clave = os.environ.get("RESPALDO_CLAVE", "")
-        if not clave or not hmac.compare_digest(clave, (q.get("clave") or [""])[0]):
+        por_clave = bool(clave) and hmac.compare_digest(clave.encode("utf-8"),
+                                                        (q.get("clave") or [""])[0].encode("utf-8"))
+        if not (por_clave or permiso_escritura(self.headers.get("Cookie"))[0]):
             return self._send("No encontrado", "text/plain; charset=utf-8", 404)
-        import rdint_vivo
-        datos = comun.respaldo_zip(DATOS, [os.path.basename(x) for x in (HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)]
-                                   + ["pesos_ensamble.json"])
+        datos = respaldo_historial()
         try:
             self.send_response(200)
             self.send_header("Content-Type", "application/zip")
