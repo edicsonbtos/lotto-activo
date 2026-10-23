@@ -1,0 +1,56 @@
+sorteos validos 7324; dev-A 3688 dev-B 3636; dias 633
+
+[R1a_ya_salio_hoy fin(vie-dom) vs inicio(lun-mar)]
+  dev-A: RR 1.364 [1.05;1.80] z +2.29 | g1 O/E 1.229 (O 103/E 83.8) g0 O/E 0.903 (O 53/E 58.7)
+  dev-B: RR 1.127 [0.82;1.57] z +0.72 | g1 O/E 0.866 (O 81/E 93.5) g0 O/E 0.770 (O 50/E 65.0)
+  total: RR 1.248 [1.02;1.56] z +2.05 | g1 O/E 1.038 (O 184/E 177.3) g0 O/E 0.833 (O 103/E 123.7)
+  veredicto: NO PASA
+  descriptivo F1: O/E por posicion (inicio/mitad/fin) y por dia lun..dom, total / A / B
+   total pos: 0.83(E124) 1.00(E122) 1.04(E177) | dow: 0.87 0.79 1.12 0.89 0.81 0.82 1.57
+   A     pos: 0.90(E59) 1.12(E57) 1.23(E84) | dow: 0.92 0.88 1.25 1.00 0.70 0.86 2.40
+   B     pos: 0.77(E65) 0.90(E65) 0.87(E94) | dow: 0.83 0.72 1.00 0.79 0.92 0.78 0.90
+
+[R1b_numero_fecha fin(vie-dom) vs inicio(lun-mar)]
+  dev-A: RR 0.983 [0.66;1.48] z -0.09 | g1 O/E 0.578 (O 50/E 86.5) g0 O/E 0.588 (O 34/E 57.9)
+  dev-B: RR 0.873 [0.58;1.37] z -0.62 | g1 O/E 0.577 (O 47/E 81.4) g0 O/E 0.659 (O 37/E 56.2)
+  total: RR 0.926 [0.69;1.26] z -0.50 | g1 O/E 0.577 (O 97/E 168.0) g0 O/E 0.623 (O 71/E 114.0)
+  veredicto: NO PASA
+  descriptivo F2: O/E por posicion (inicio/mitad/fin) y por dia lun..dom, total / A / B
+   total pos: 0.62(E114) 0.71(E114) 0.58(E168) | dow: 0.63 0.61 0.73 0.69 0.59 0.52 0.63
+   A     pos: 0.59(E58) 0.81(E56) 0.58(E87) | dow: 0.59 0.59 0.83 0.80 0.68 0.43 0.63
+   B     pos: 0.66(E56) 0.61(E58) 0.58(E81) | dow: 0.68 0.64 0.63 0.58 0.49 0.62 0.62
+
+[R2a_tras_pago_sorteo_anterior (g1=pago, g0=no pago)]
+  dev-A: RR 1.086 [0.90;1.30] z +0.88 | g1 O/E 1.071 (O 119/E 111.1) g0 O/E 0.985 (O 502/E 509.5)
+  dev-B: RR 1.014 [0.83;1.21] z +0.15 | g1 O/E 0.884 (O 114/E 128.9) g0 O/E 0.865 (O 515/E 595.6)
+  total: RR 1.051 [0.92;1.19] z +0.75 | g1 O/E 0.971 (O 233/E 240.0) g0 O/E 0.920 (O 1017/E 1105.0)
+  veredicto: NO PASA
+
+[R2b_perdida_ayer>=2 pagos (g1=perdida ayer)]
+  dev-A: RR 1.025 [0.74;1.48] z +0.14 | g1 O/E 1.103 (O 134/E 121.4) g0 O/E 1.078 (O 31/E 28.8)
+  dev-B: RR 0.935 [0.82;1.08] z -0.95 | g1 O/E 0.839 (O 468/E 557.8) g0 O/E 0.897 (O 198/E 220.7)
+  total: RR 0.965 [0.85;1.10] z -0.54 | g1 O/E 0.886 (O 602/E 679.3) g0 O/E 0.918 (O 229/E 249.5)
+  veredicto: NO PASA
+  distribucion de pagos por dia (0,1,2,3,4+): [18, 77, 110, 86, 70]
+
+[R3a_top5_lunes_vs_resto] (semanas completas: 84)
+  A     sem  44 O/E lunes 1.104 resto 0.902 T +0.202 p_perm 0.0288
+  B     sem  40 O/E lunes 1.001 resto 1.007 T -0.006 p_perm 0.9452
+  total sem  84 O/E lunes 1.052 resto 0.955 T +0.097 p_perm 0.1394
+  veredicto: NO PASA
+  descriptivo: O/E semanal media 0.968 sd 0.213 (sd esperada Poisson ~0.243), autocorr lag1 -0.087
+
+[R3b_ya_salio_hoy_lunes_vs_resto] (semanas completas: 84)
+  A     sem  44 O/E lunes 0.939 resto 1.154 T -0.215 p_perm 0.2692
+  B     sem  40 O/E lunes 0.818 resto 0.822 T -0.004 p_perm 0.9803
+  total sem  84 O/E lunes 0.875 resto 0.979 T -0.104 p_perm 0.3972
+  veredicto: NO PASA
+  descriptivo: O/E semanal media 0.990 sd 0.432 (sd esperada Poisson ~0.467), autocorr lag1 +0.282
+
+=== Resumen familia (Bonferroni m=6, |z|>=2,64) ===
+  R1a_ya_salio_hoy fin(vie-dom) vs inicio(lun-mar): NO PASA
+  R1b_numero_fecha fin(vie-dom) vs inicio(lun-mar): NO PASA
+  R2a_tras_pago_sorteo_anterior (g1=pago, g0=no pago): NO PASA
+  R2b_perdida_ayer>=2 pagos (g1=perdida ayer): NO PASA
+  R3a_top5_lunes_vs_resto: NO PASA
+  R3b_ya_salio_hoy_lunes_vs_resto: NO PASA
