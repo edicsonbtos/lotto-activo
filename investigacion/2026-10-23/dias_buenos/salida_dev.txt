@@ -1,0 +1,30 @@
+sorteos 7357, días 636; Top-15 real 0.531, esperado por el modelo 0.534
+
+[1] Dispersión por día φ = 1.070  (azar puro: 1.001, IC95 0.899-1.104; P(sim>=obs) = 0.097)
+    φ > 1 significaría días buenos/malos reales. φ ≈ 1 o < 1: el día bueno es suerte.
+    aciertos/día: 1:4 2:9 3:31 4:74 5:108 6:141 7:120 8:92 9:41 10:14 11:2
+
+[2] ¿Qué anticipa un día bueno? (correlación con el residuo del día; z ≈ r·√n)
+    residuo de ayer                  r = -0.082  z = -2.07  (n = 635)
+    masa Top-15 prevista del día     r = -0.104  z = -2.63  (n = 636)
+    lun: real 6.35/día  esperado 6.24  (O/E 1.018, días 92)
+    mar: real 6.36/día  esperado 6.19  (O/E 1.027, días 92)
+    mié: real 6.08/día  esperado 6.19  (O/E 0.982, días 92)
+    jue: real 6.25/día  esperado 6.13  (O/E 1.019, días 92)
+    vie: real 6.42/día  esperado 6.16  (O/E 1.043, días 92)
+    sáb: real 6.30/día  esperado 6.17  (O/E 1.021, días 91)
+    dom: real 5.14/día  esperado 6.17  (O/E 0.833, días 85)
+
+[3] Durante el día: acierto del siguiente sorteo según cómo va el día (O/E contra el modelo)
+    el sorteo anterior ACERTÓ                  n= 3584  real 0.537  modelo 0.532  O/E 1.010  z +0.63
+    el sorteo anterior FALLÓ                   n= 3137  real 0.518  modelo 0.535  O/E 0.969  z -1.85
+    va ≥60 % en el día (≥4 sorteos)            n= 1889  real 0.528  modelo 0.539  O/E 0.980  z -0.95
+    va ≤25 % en el día (≥4 sorteos)            n=  472  real 0.532  modelo 0.533  O/E 0.998  z -0.06
+    lleva ≥3 fallos seguidos hoy               n=  588  real 0.524  modelo 0.542  O/E 0.967  z -0.88
+
+[4] Reglas para 'evitar días malos' (Top-15 plano; retorno por ficha; IC95 bootstrap por día)
+    jugar siempre                                  sorteos jugados  7357  retorno +6.130%  IC [+3.8%; +8.4%]
+    parar el día tras 3 fallos seguidos            sorteos jugados  5611  retorno +5.970%  IC [+3.3%; +8.6%]
+    jugar solo si el anterior acertó               sorteos jugados  3584  retorno +7.478%  IC [+4.2%; +10.6%]
+    seguir solo si el día va ≥40 %                 sorteos jugados  6330  retorno +6.445%  IC [+4.0%; +8.9%]
+    solo sorteos con masa Top-15 alta (tercil sup.) sorteos jugados  2502  retorno +9.033%  IC [+4.9%; +13.3%]
