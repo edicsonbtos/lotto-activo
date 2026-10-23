@@ -1,0 +1,10 @@
+loteriadehoy | Lotto Activo | igual: 22
+loteriadehoy | Lotto Activo RD Int | igual: 22
+lotoven | Lotto Activo | distinto: 1
+lotoven | Lotto Activo | igual: 21
+lotoven | Lotto Activo RD Int | distinto: 1
+lotoven | Lotto Activo RD Int | igual: 21
+
+Diferencias:
+{"fecha": "2026-10-08", "fuente": "lotoven", "juego": "Lotto Activo", "fecha_pag_manana": "2026-10-08", "manana": ["36", "3", "24"], "archivo_hoy": ["36", "3", "3", "24"], "archivo_15oct": ["36", "3", "3", "24"], "igual_hoy": false, "igual_15oct": false, "quitados_que_salieron": [], "agregados_que_salieron": []}
+{"fecha": "2026-10-18", "fuente": "lotoven", "juego": "Lotto Activo RD Int", "fecha_pag_manana": "2026-10-18", "manana": ["12", "22", "27"], "archivo_hoy": ["12", "22", "22", "27"], "archivo_15oct": null, "igual_hoy": false, "igual_15oct": null, "quitados_que_salieron": [], "agregados_que_salieron": []}

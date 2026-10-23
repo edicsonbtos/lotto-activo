@@ -1,0 +1,2413 @@
+{
+ "filas": [
+  {
+   "fecha": "2026-10-02",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-02",
+   "manana": [
+    "35",
+    "2",
+    "31"
+   ],
+   "archivo_hoy": [
+    "35",
+    "2",
+    "31"
+   ],
+   "archivo_15oct": [
+    "35",
+    "2",
+    "31"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-02",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-02",
+   "manana": [
+    "5",
+    "12",
+    "0"
+   ],
+   "archivo_hoy": [
+    "5",
+    "12",
+    "0"
+   ],
+   "archivo_15oct": [
+    "5",
+    "12",
+    "0"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-02",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-02",
+   "manana": [
+    "5",
+    "4",
+    "22",
+    "36",
+    "19",
+    "25"
+   ],
+   "archivo_hoy": [
+    "5",
+    "4",
+    "22",
+    "36",
+    "19",
+    "25"
+   ],
+   "archivo_15oct": [
+    "5",
+    "4",
+    "22",
+    "36",
+    "19",
+    "25"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-02",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-02",
+   "manana": [
+    "12",
+    "14",
+    "7",
+    "22",
+    "0",
+    "5"
+   ],
+   "archivo_hoy": [
+    "12",
+    "14",
+    "7",
+    "22",
+    "0",
+    "5"
+   ],
+   "archivo_15oct": [
+    "12",
+    "14",
+    "7",
+    "22",
+    "0",
+    "5"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-03",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-03",
+   "manana": [
+    "23",
+    "26",
+    "14"
+   ],
+   "archivo_hoy": [
+    "23",
+    "26",
+    "14"
+   ],
+   "archivo_15oct": [
+    "23",
+    "26",
+    "14"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-03",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-03",
+   "manana": [
+    "6",
+    "10",
+    "34"
+   ],
+   "archivo_hoy": [
+    "6",
+    "10",
+    "34"
+   ],
+   "archivo_15oct": [
+    "6",
+    "10",
+    "34"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-03",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-03",
+   "manana": [
+    "27",
+    "31",
+    "00",
+    "10",
+    "36",
+    "2"
+   ],
+   "archivo_hoy": [
+    "27",
+    "31",
+    "00",
+    "10",
+    "36",
+    "2"
+   ],
+   "archivo_15oct": [
+    "27",
+    "31",
+    "00",
+    "10",
+    "36",
+    "2"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-03",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-03",
+   "manana": [
+    "27",
+    "36",
+    "30",
+    "7",
+    "21",
+    "14"
+   ],
+   "archivo_hoy": [
+    "27",
+    "36",
+    "30",
+    "7",
+    "21",
+    "14"
+   ],
+   "archivo_15oct": [
+    "27",
+    "36",
+    "30",
+    "7",
+    "21",
+    "14"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-04",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-04",
+   "manana": [
+    "34",
+    "13",
+    "1"
+   ],
+   "archivo_hoy": [
+    "34",
+    "13",
+    "1"
+   ],
+   "archivo_15oct": [
+    "34",
+    "13",
+    "1"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-04",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-04",
+   "manana": [
+    "24",
+    "31",
+    "23"
+   ],
+   "archivo_hoy": [
+    "24",
+    "31",
+    "23"
+   ],
+   "archivo_15oct": [
+    "24",
+    "31",
+    "23"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-04",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-04",
+   "manana": [
+    "15",
+    "27",
+    "00",
+    "10",
+    "35",
+    "23"
+   ],
+   "archivo_hoy": [
+    "15",
+    "27",
+    "00",
+    "10",
+    "35",
+    "23"
+   ],
+   "archivo_15oct": [
+    "15",
+    "27",
+    "00",
+    "10",
+    "35",
+    "23"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-04",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-04",
+   "manana": [
+    "21",
+    "27",
+    "35",
+    "23",
+    "30",
+    "17"
+   ],
+   "archivo_hoy": [
+    "21",
+    "27",
+    "35",
+    "23",
+    "30",
+    "17"
+   ],
+   "archivo_15oct": [
+    "21",
+    "27",
+    "35",
+    "23",
+    "30",
+    "17"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-05",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-05",
+   "manana": [
+    "35",
+    "31",
+    "1"
+   ],
+   "archivo_hoy": [
+    "35",
+    "31",
+    "1"
+   ],
+   "archivo_15oct": [
+    "35",
+    "31",
+    "1"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-05",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-05",
+   "manana": [
+    "12",
+    "1",
+    "28"
+   ],
+   "archivo_hoy": [
+    "12",
+    "1",
+    "28"
+   ],
+   "archivo_15oct": [
+    "12",
+    "1",
+    "28"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-05",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-05",
+   "manana": [
+    "24",
+    "23",
+    "7",
+    "15",
+    "22",
+    "1"
+   ],
+   "archivo_hoy": [
+    "24",
+    "23",
+    "7",
+    "15",
+    "22",
+    "1"
+   ],
+   "archivo_15oct": [
+    "24",
+    "23",
+    "7",
+    "15",
+    "22",
+    "1"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-05",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-05",
+   "manana": [
+    "20",
+    "3",
+    "2",
+    "30",
+    "13",
+    "23"
+   ],
+   "archivo_hoy": [
+    "20",
+    "3",
+    "2",
+    "30",
+    "13",
+    "23"
+   ],
+   "archivo_15oct": [
+    "20",
+    "3",
+    "2",
+    "30",
+    "13",
+    "23"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-06",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-06",
+   "manana": [
+    "34",
+    "26",
+    "25"
+   ],
+   "archivo_hoy": [
+    "34",
+    "26",
+    "25"
+   ],
+   "archivo_15oct": [
+    "34",
+    "26",
+    "25"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-06",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-06",
+   "manana": [
+    "7",
+    "3",
+    "16"
+   ],
+   "archivo_hoy": [
+    "7",
+    "3",
+    "16"
+   ],
+   "archivo_15oct": [
+    "7",
+    "3",
+    "16"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-06",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-06",
+   "manana": [
+    "1",
+    "24",
+    "12",
+    "5",
+    "00",
+    "7"
+   ],
+   "archivo_hoy": [
+    "1",
+    "24",
+    "12",
+    "5",
+    "00",
+    "7"
+   ],
+   "archivo_15oct": [
+    "1",
+    "24",
+    "12",
+    "5",
+    "00",
+    "7"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-06",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-06",
+   "manana": [
+    "30",
+    "18",
+    "23",
+    "8",
+    "31",
+    "34"
+   ],
+   "archivo_hoy": [
+    "30",
+    "18",
+    "23",
+    "8",
+    "31",
+    "34"
+   ],
+   "archivo_15oct": [
+    "30",
+    "18",
+    "23",
+    "8",
+    "31",
+    "34"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-07",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-07",
+   "manana": [
+    "31",
+    "13",
+    "15"
+   ],
+   "archivo_hoy": [
+    "31",
+    "13",
+    "15"
+   ],
+   "archivo_15oct": [
+    "31",
+    "13",
+    "15"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-07",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-07",
+   "manana": [
+    "25",
+    "11",
+    "20"
+   ],
+   "archivo_hoy": [
+    "25",
+    "11",
+    "20"
+   ],
+   "archivo_15oct": [
+    "25",
+    "11",
+    "20"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-07",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-07",
+   "manana": [
+    "1",
+    "16",
+    "2",
+    "15",
+    "32",
+    "30"
+   ],
+   "archivo_hoy": [
+    "1",
+    "16",
+    "2",
+    "15",
+    "32",
+    "30"
+   ],
+   "archivo_15oct": [
+    "1",
+    "16",
+    "2",
+    "15",
+    "32",
+    "30"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-07",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-07",
+   "manana": [
+    "23",
+    "25",
+    "30",
+    "4",
+    "0",
+    "26"
+   ],
+   "archivo_hoy": [
+    "23",
+    "25",
+    "30",
+    "4",
+    "0",
+    "26"
+   ],
+   "archivo_15oct": [
+    "23",
+    "25",
+    "30",
+    "4",
+    "0",
+    "26"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-08",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-08",
+   "manana": [
+    "36",
+    "3",
+    "24"
+   ],
+   "archivo_hoy": [
+    "36",
+    "3",
+    "3",
+    "24"
+   ],
+   "archivo_15oct": [
+    "36",
+    "3",
+    "3",
+    "24"
+   ],
+   "igual_hoy": false,
+   "igual_15oct": false,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-08",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-08",
+   "manana": [
+    "20",
+    "19",
+    "12"
+   ],
+   "archivo_hoy": [
+    "20",
+    "19",
+    "12"
+   ],
+   "archivo_15oct": [
+    "20",
+    "19",
+    "12"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-08",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-08",
+   "manana": [
+    "30",
+    "31",
+    "33",
+    "21",
+    "14",
+    "17"
+   ],
+   "archivo_hoy": [
+    "30",
+    "31",
+    "33",
+    "21",
+    "14",
+    "17"
+   ],
+   "archivo_15oct": [
+    "30",
+    "31",
+    "33",
+    "21",
+    "14",
+    "17"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-08",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-08",
+   "manana": [
+    "11",
+    "21",
+    "4",
+    "9",
+    "0",
+    "34"
+   ],
+   "archivo_hoy": [
+    "11",
+    "21",
+    "4",
+    "9",
+    "0",
+    "34"
+   ],
+   "archivo_15oct": [
+    "11",
+    "21",
+    "4",
+    "9",
+    "0",
+    "34"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-09",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-09",
+   "manana": [
+    "3",
+    "0",
+    "22"
+   ],
+   "archivo_hoy": [
+    "3",
+    "0",
+    "22"
+   ],
+   "archivo_15oct": [
+    "3",
+    "0",
+    "22"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-09",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-09",
+   "manana": [
+    "32",
+    "21",
+    "20"
+   ],
+   "archivo_hoy": [
+    "32",
+    "21",
+    "20"
+   ],
+   "archivo_15oct": [
+    "32",
+    "21",
+    "20"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-09",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-09",
+   "manana": [
+    "8",
+    "30",
+    "31",
+    "14",
+    "17",
+    "33"
+   ],
+   "archivo_hoy": [
+    "8",
+    "30",
+    "31",
+    "14",
+    "17",
+    "33"
+   ],
+   "archivo_15oct": [
+    "8",
+    "30",
+    "31",
+    "14",
+    "17",
+    "33"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-09",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-09",
+   "manana": [
+    "11",
+    "21",
+    "4",
+    "15",
+    "34",
+    "12"
+   ],
+   "archivo_hoy": [
+    "11",
+    "21",
+    "4",
+    "15",
+    "34",
+    "12"
+   ],
+   "archivo_15oct": [
+    "11",
+    "21",
+    "4",
+    "15",
+    "34",
+    "12"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-10",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-10",
+   "manana": [
+    "21",
+    "23",
+    "35"
+   ],
+   "archivo_hoy": [
+    "21",
+    "23",
+    "35"
+   ],
+   "archivo_15oct": [
+    "21",
+    "23",
+    "35"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-10",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-10",
+   "manana": [
+    "18",
+    "6",
+    "35"
+   ],
+   "archivo_hoy": [
+    "18",
+    "6",
+    "35"
+   ],
+   "archivo_15oct": [
+    "18",
+    "6",
+    "35"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-10",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-10",
+   "manana": [
+    "30",
+    "17",
+    "23",
+    "13",
+    "19",
+    "32"
+   ],
+   "archivo_hoy": [
+    "30",
+    "17",
+    "23",
+    "13",
+    "19",
+    "32"
+   ],
+   "archivo_15oct": [
+    "30",
+    "17",
+    "23",
+    "13",
+    "19",
+    "32"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-10",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-10",
+   "manana": [
+    "19",
+    "12",
+    "10",
+    "3",
+    "33",
+    "9"
+   ],
+   "archivo_hoy": [
+    "19",
+    "12",
+    "10",
+    "3",
+    "33",
+    "9"
+   ],
+   "archivo_15oct": [
+    "19",
+    "12",
+    "10",
+    "3",
+    "33",
+    "9"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-11",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-11",
+   "manana": [
+    "15",
+    "6",
+    "32"
+   ],
+   "archivo_hoy": [
+    "15",
+    "6",
+    "32"
+   ],
+   "archivo_15oct": [
+    "15",
+    "6",
+    "32"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-11",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-11",
+   "manana": [
+    "24",
+    "28",
+    "13"
+   ],
+   "archivo_hoy": [
+    "24",
+    "28",
+    "13"
+   ],
+   "archivo_15oct": [
+    "24",
+    "28",
+    "13"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-11",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-11",
+   "manana": [
+    "26",
+    "23",
+    "19",
+    "4",
+    "18",
+    "32"
+   ],
+   "archivo_hoy": [
+    "26",
+    "23",
+    "19",
+    "4",
+    "18",
+    "32"
+   ],
+   "archivo_15oct": [
+    "26",
+    "23",
+    "19",
+    "4",
+    "18",
+    "32"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-11",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-11",
+   "manana": [
+    "32",
+    "27",
+    "10",
+    "2",
+    "9",
+    "0"
+   ],
+   "archivo_hoy": [
+    "32",
+    "27",
+    "10",
+    "2",
+    "9",
+    "0"
+   ],
+   "archivo_15oct": [
+    "32",
+    "27",
+    "10",
+    "2",
+    "9",
+    "0"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-12",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-12",
+   "manana": [
+    "34",
+    "1",
+    "16"
+   ],
+   "archivo_hoy": [
+    "34",
+    "1",
+    "16"
+   ],
+   "archivo_15oct": [
+    "34",
+    "1",
+    "16"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-12",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-12",
+   "manana": [
+    "3",
+    "0",
+    "28"
+   ],
+   "archivo_hoy": [
+    "3",
+    "0",
+    "28"
+   ],
+   "archivo_15oct": [
+    "3",
+    "0",
+    "28"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-12",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-12",
+   "manana": [
+    "23",
+    "8",
+    "22",
+    "19",
+    "21",
+    "29"
+   ],
+   "archivo_hoy": [
+    "23",
+    "8",
+    "22",
+    "19",
+    "21",
+    "29"
+   ],
+   "archivo_15oct": [
+    "23",
+    "8",
+    "22",
+    "19",
+    "21",
+    "29"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-12",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-12",
+   "manana": [
+    "7",
+    "6",
+    "25",
+    "29",
+    "10",
+    "8"
+   ],
+   "archivo_hoy": [
+    "7",
+    "6",
+    "25",
+    "29",
+    "10",
+    "8"
+   ],
+   "archivo_15oct": [
+    "7",
+    "6",
+    "25",
+    "29",
+    "10",
+    "8"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-13",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-13",
+   "manana": [
+    "17",
+    "8",
+    "29"
+   ],
+   "archivo_hoy": [
+    "17",
+    "8",
+    "29"
+   ],
+   "archivo_15oct": [
+    "17",
+    "8",
+    "29"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-13",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-13",
+   "manana": [
+    "17",
+    "5",
+    "18"
+   ],
+   "archivo_hoy": [
+    "17",
+    "5",
+    "18"
+   ],
+   "archivo_15oct": [
+    "17",
+    "5",
+    "18"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-13",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-13",
+   "manana": [
+    "12",
+    "1",
+    "5",
+    "22",
+    "0",
+    "23"
+   ],
+   "archivo_hoy": [
+    "12",
+    "1",
+    "5",
+    "22",
+    "0",
+    "23"
+   ],
+   "archivo_15oct": [
+    "12",
+    "1",
+    "5",
+    "22",
+    "0",
+    "23"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-13",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-13",
+   "manana": [
+    "30",
+    "19",
+    "13",
+    "24",
+    "17",
+    "12"
+   ],
+   "archivo_hoy": [
+    "30",
+    "19",
+    "13",
+    "24",
+    "17",
+    "12"
+   ],
+   "archivo_15oct": [
+    "30",
+    "19",
+    "13",
+    "24",
+    "17",
+    "12"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-14",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-14",
+   "manana": [
+    "32",
+    "34",
+    "00"
+   ],
+   "archivo_hoy": [
+    "32",
+    "34",
+    "00"
+   ],
+   "archivo_15oct": [
+    "32",
+    "34",
+    "00"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-14",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-14",
+   "manana": [
+    "20",
+    "2",
+    "6"
+   ],
+   "archivo_hoy": [
+    "20",
+    "2",
+    "6"
+   ],
+   "archivo_15oct": [
+    "20",
+    "2",
+    "6"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-14",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-14",
+   "manana": [
+    "1",
+    "0",
+    "32",
+    "10",
+    "00",
+    "6"
+   ],
+   "archivo_hoy": [
+    "1",
+    "0",
+    "32",
+    "10",
+    "00",
+    "6"
+   ],
+   "archivo_15oct": [
+    "1",
+    "0",
+    "32",
+    "10",
+    "00",
+    "6"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-14",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-14",
+   "manana": [
+    "23",
+    "15",
+    "26",
+    "28",
+    "4",
+    "19"
+   ],
+   "archivo_hoy": [
+    "23",
+    "15",
+    "26",
+    "28",
+    "4",
+    "19"
+   ],
+   "archivo_15oct": [
+    "23",
+    "15",
+    "26",
+    "28",
+    "4",
+    "19"
+   ],
+   "igual_hoy": true,
+   "igual_15oct": true,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-15",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-15",
+   "manana": [
+    "29",
+    "32",
+    "7"
+   ],
+   "archivo_hoy": [
+    "29",
+    "32",
+    "7"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-15",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-15",
+   "manana": [
+    "24",
+    "27",
+    "33"
+   ],
+   "archivo_hoy": [
+    "24",
+    "27",
+    "33"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-15",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-15",
+   "manana": [
+    "6",
+    "36",
+    "18",
+    "35",
+    "26",
+    "34"
+   ],
+   "archivo_hoy": [
+    "6",
+    "36",
+    "18",
+    "35",
+    "26",
+    "34"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-15",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-15",
+   "manana": [
+    "26",
+    "4",
+    "12",
+    "2",
+    "35",
+    "0"
+   ],
+   "archivo_hoy": [
+    "26",
+    "4",
+    "12",
+    "2",
+    "35",
+    "0"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-16",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-16",
+   "manana": [
+    "32",
+    "9",
+    "10"
+   ],
+   "archivo_hoy": [
+    "32",
+    "9",
+    "10"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-16",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-16",
+   "manana": [
+    "36",
+    "33",
+    "9"
+   ],
+   "archivo_hoy": [
+    "36",
+    "33",
+    "9"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-16",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-16",
+   "manana": [
+    "00",
+    "16",
+    "32",
+    "14",
+    "28",
+    "18"
+   ],
+   "archivo_hoy": [
+    "00",
+    "16",
+    "32",
+    "14",
+    "28",
+    "18"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-16",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-16",
+   "manana": [
+    "20",
+    "15",
+    "13",
+    "34",
+    "16",
+    "00"
+   ],
+   "archivo_hoy": [
+    "20",
+    "15",
+    "13",
+    "34",
+    "16",
+    "00"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-17",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-17",
+   "manana": [
+    "8",
+    "1",
+    "26"
+   ],
+   "archivo_hoy": [
+    "8",
+    "1",
+    "26"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-17",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-17",
+   "manana": [
+    "19",
+    "9",
+    "27"
+   ],
+   "archivo_hoy": [
+    "19",
+    "9",
+    "27"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-17",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-17",
+   "manana": [
+    "32",
+    "16",
+    "11",
+    "35",
+    "27",
+    "5"
+   ],
+   "archivo_hoy": [
+    "32",
+    "16",
+    "11",
+    "35",
+    "27",
+    "5"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-17",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-17",
+   "manana": [
+    "25",
+    "20",
+    "10",
+    "22",
+    "14",
+    "34"
+   ],
+   "archivo_hoy": [
+    "25",
+    "20",
+    "10",
+    "22",
+    "14",
+    "34"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-18",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-18",
+   "manana": [
+    "26",
+    "15",
+    "24"
+   ],
+   "archivo_hoy": [
+    "26",
+    "15",
+    "24"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-18",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-18",
+   "manana": [
+    "12",
+    "22",
+    "27"
+   ],
+   "archivo_hoy": [
+    "12",
+    "22",
+    "22",
+    "27"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": false,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-18",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-18",
+   "manana": [
+    "27",
+    "35",
+    "18",
+    "5",
+    "24",
+    "13"
+   ],
+   "archivo_hoy": [
+    "27",
+    "35",
+    "18",
+    "5",
+    "24",
+    "13"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-18",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-18",
+   "manana": [
+    "3",
+    "4",
+    "21",
+    "27",
+    "24",
+    "34"
+   ],
+   "archivo_hoy": [
+    "3",
+    "4",
+    "21",
+    "27",
+    "24",
+    "34"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-19",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-19",
+   "manana": [
+    "4",
+    "35",
+    "24"
+   ],
+   "archivo_hoy": [
+    "4",
+    "35",
+    "24"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-19",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-19",
+   "manana": [
+    "1",
+    "13",
+    "6"
+   ],
+   "archivo_hoy": [
+    "1",
+    "13",
+    "6"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-19",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-19",
+   "manana": [
+    "11",
+    "21",
+    "20",
+    "33",
+    "15",
+    "24"
+   ],
+   "archivo_hoy": [
+    "11",
+    "21",
+    "20",
+    "33",
+    "15",
+    "24"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-19",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-19",
+   "manana": [
+    "31",
+    "30",
+    "2",
+    "4",
+    "5",
+    "36"
+   ],
+   "archivo_hoy": [
+    "31",
+    "30",
+    "2",
+    "4",
+    "5",
+    "36"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-20",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-20",
+   "manana": [
+    "14",
+    "35",
+    "15"
+   ],
+   "archivo_hoy": [
+    "14",
+    "35",
+    "15"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-20",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-20",
+   "manana": [
+    "00",
+    "10",
+    "18"
+   ],
+   "archivo_hoy": [
+    "00",
+    "10",
+    "18"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-20",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-20",
+   "manana": [
+    "33",
+    "9",
+    "23",
+    "11",
+    "20",
+    "22"
+   ],
+   "archivo_hoy": [
+    "33",
+    "9",
+    "23",
+    "11",
+    "20",
+    "22"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-20",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-20",
+   "manana": [
+    "1",
+    "24",
+    "8",
+    "19",
+    "5",
+    "4"
+   ],
+   "archivo_hoy": [
+    "1",
+    "24",
+    "8",
+    "19",
+    "5",
+    "4"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-21",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-21",
+   "manana": [
+    "6",
+    "19",
+    "7"
+   ],
+   "archivo_hoy": [
+    "6",
+    "19",
+    "7"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-21",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-21",
+   "manana": [
+    "20",
+    "5",
+    "21"
+   ],
+   "archivo_hoy": [
+    "20",
+    "5",
+    "21"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-21",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-21",
+   "manana": [
+    "23",
+    "25",
+    "19",
+    "1",
+    "33",
+    "20"
+   ],
+   "archivo_hoy": [
+    "23",
+    "25",
+    "19",
+    "1",
+    "33",
+    "20"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-21",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-21",
+   "manana": [
+    "22",
+    "15",
+    "23",
+    "1",
+    "17",
+    "21"
+   ],
+   "archivo_hoy": [
+    "22",
+    "15",
+    "23",
+    "1",
+    "17",
+    "21"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-22",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-22",
+   "manana": [
+    "12",
+    "19",
+    "15"
+   ],
+   "archivo_hoy": [
+    "12",
+    "19",
+    "15"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-22",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-22",
+   "manana": [
+    "36",
+    "3",
+    "19"
+   ],
+   "archivo_hoy": [
+    "36",
+    "3",
+    "19"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-22",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-22",
+   "manana": [
+    "4",
+    "14",
+    "19",
+    "2",
+    "21",
+    "20"
+   ],
+   "archivo_hoy": [
+    "4",
+    "14",
+    "19",
+    "2",
+    "21",
+    "20"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-22",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-22",
+   "manana": [
+    "19",
+    "5",
+    "23",
+    "22",
+    "18",
+    "14"
+   ],
+   "archivo_hoy": [
+    "19",
+    "5",
+    "23",
+    "22",
+    "18",
+    "14"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-23",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-23",
+   "manana": [
+    "34",
+    "28",
+    "29"
+   ],
+   "archivo_hoy": [
+    "34",
+    "28",
+    "29"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-23",
+   "fuente": "lotoven",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-23",
+   "manana": [
+    "10",
+    "17",
+    "34"
+   ],
+   "archivo_hoy": [
+    "10",
+    "17",
+    "34"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-23",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo",
+   "fecha_pag_manana": "2026-10-23",
+   "manana": [
+    "29",
+    "24",
+    "18",
+    "12",
+    "3",
+    "6"
+   ],
+   "archivo_hoy": [
+    "29",
+    "24",
+    "18",
+    "12",
+    "3",
+    "6"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  },
+  {
+   "fecha": "2026-10-23",
+   "fuente": "loteriadehoy",
+   "juego": "Lotto Activo RD Int",
+   "fecha_pag_manana": "2026-10-23",
+   "manana": [
+    "11",
+    "0",
+    "10",
+    "21",
+    "14",
+    "23"
+   ],
+   "archivo_hoy": [
+    "11",
+    "0",
+    "10",
+    "21",
+    "14",
+    "23"
+   ],
+   "archivo_15oct": null,
+   "igual_hoy": true,
+   "igual_15oct": null,
+   "quitados_que_salieron": [],
+   "agregados_que_salieron": []
+  }
+ ],
+ "resumen": {
+  "lotoven|Lotto Activo|igual": 21,
+  "lotoven|Lotto Activo RD Int|igual": 21,
+  "loteriadehoy|Lotto Activo|igual": 22,
+  "loteriadehoy|Lotto Activo RD Int|igual": 22,
+  "lotoven|Lotto Activo|distinto": 1,
+  "lotoven|Lotto Activo RD Int|distinto": 1
+ }
+}
