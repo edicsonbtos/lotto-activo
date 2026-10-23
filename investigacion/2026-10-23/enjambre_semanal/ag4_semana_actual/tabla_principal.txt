@@ -1,0 +1,70 @@
+=== modelo=principal  n=329 desde 2026-09-26 9h hasta 2026-10-23 16h
+
+principal Top-5  (global 20.4%; uniforme 13.2%)  chi2=3.9 gl=6 p=0.690
+   lun:  13/ 48 =  27.1%  IC95[15.3;41.8]  modelo 21.2%
+   mar:   8/ 48 =  16.7%  IC95[ 7.5;30.2]  modelo 21.1%
+   mie:   7/ 46 =  15.2%  IC95[ 6.3;28.9]  modelo 20.9%
+   jue:   9/ 48 =  18.8%  IC95[ 8.9;32.6]  modelo 20.7%
+   vie:  10/ 44 =  22.7%  IC95[11.5;37.8]  modelo 20.4%
+   sab:  12/ 47 =  25.5%  IC95[13.9;40.3]  modelo 20.6%
+   dom:   8/ 48 =  16.7%  IC95[ 7.5;30.2]  modelo 20.8%
+
+principal Top-15  (global 52.3%; uniforme 39.5%)  chi2=11.0 gl=6 p=0.087
+   lun:  32/ 48 =  66.7%  IC95[51.6;79.6]  modelo 54.0%
+   mar:  22/ 48 =  45.8%  IC95[31.4;60.8]  modelo 54.0%
+   mie:  19/ 46 =  41.3%  IC95[27.0;56.8]  modelo 53.5%
+   jue:  21/ 48 =  43.8%  IC95[29.5;58.8]  modelo 52.8%
+   vie:  21/ 44 =  47.7%  IC95[32.5;63.3]  modelo 52.8%
+   sab:  28/ 47 =  59.6%  IC95[44.3;73.6]  modelo 53.2%
+   dom:  29/ 48 =  60.4%  IC95[45.3;74.2]  modelo 53.4%
+
+principal Top-5  (global 20.4%; uniforme 13.2%)  chi2=6.7 gl=11 p=0.822
+     8:   8/ 27 =  29.6%  IC95[13.8;50.2]  modelo 23.5%
+     9:   4/ 28 =  14.3%  IC95[ 4.0;32.7]  modelo 20.3%
+    10:   4/ 28 =  14.3%  IC95[ 4.0;32.7]  modelo 20.5%
+    11:   4/ 27 =  14.8%  IC95[ 4.2;33.7]  modelo 21.1%
+    12:   7/ 28 =  25.0%  IC95[10.7;44.9]  modelo 19.8%
+    13:   4/ 26 =  15.4%  IC95[ 4.4;34.9]  modelo 20.1%
+    14:   5/ 28 =  17.9%  IC95[ 6.1;36.9]  modelo 20.5%
+    15:   7/ 28 =  25.0%  IC95[10.7;44.9]  modelo 20.6%
+    16:   8/ 28 =  28.6%  IC95[13.2;48.7]  modelo 22.2%
+    17:   5/ 27 =  18.5%  IC95[ 6.3;38.1]  modelo 21.6%
+    18:   4/ 27 =  14.8%  IC95[ 4.2;33.7]  modelo 19.0%
+    19:   7/ 27 =  25.9%  IC95[11.1;46.3]  modelo 20.5%
+
+principal Top-15  (global 52.3%; uniforme 39.5%)  chi2=10.6 gl=11 p=0.473
+     8:  16/ 27 =  59.3%  IC95[38.8;77.6]  modelo 55.0%
+     9:  12/ 28 =  42.9%  IC95[24.5;62.8]  modelo 52.0%
+    10:  12/ 28 =  42.9%  IC95[24.5;62.8]  modelo 52.0%
+    11:  17/ 27 =  63.0%  IC95[42.4;80.6]  modelo 53.3%
+    12:  15/ 28 =  53.6%  IC95[33.9;72.5]  modelo 51.6%
+    13:  11/ 26 =  42.3%  IC95[23.4;63.1]  modelo 52.4%
+    14:  12/ 28 =  42.9%  IC95[24.5;62.8]  modelo 54.3%
+    15:  18/ 28 =  64.3%  IC95[44.1;81.4]  modelo 55.1%
+    16:  15/ 28 =  53.6%  IC95[33.9;72.5]  modelo 57.2%
+    17:  17/ 27 =  63.0%  IC95[42.4;80.6]  modelo 55.8%
+    18:  11/ 27 =  40.7%  IC95[22.4;61.2]  modelo 49.7%
+    19:  16/ 27 =  59.3%  IC95[38.8;77.6]  modelo 52.1%
+
+principal retorno por ficha (paga 30x; neto/apostado)
+  Top5 esc 2-2-2-1-1
+      lun: n= 48 retorno  +79.7%  IC95[  -7.8;+167.2]
+      mar: n= 48 retorno  -21.9%  IC95[ -75.3; +31.5]
+      mie: n= 46 retorno   +6.0%  IC95[ -68.6; +80.6]
+      jue: n= 48 retorno  +25.0%  IC95[ -51.9;+101.9]
+      vie: n= 44 retorno  +61.9%  IC95[ -28.7;+152.6]
+      sab: n= 47 retorno  +51.6%  IC95[ -27.9;+131.1]
+      dom: n= 48 retorno   +9.4%  IC95[ -63.1; +81.8]
+    TOTAL: n=329 retorno  +29.9%  IC95[  +0.9; +59.0]
+  Top3 plano
+      lun: n= 48 retorno +108.3%  IC95[  -7.8;+224.4]
+      mar: n= 48 retorno  -58.3%  IC95[-115.5;  -1.2]
+      mie: n= 46 retorno  +30.4%  IC95[ -68.0;+128.8]
+      jue: n= 48 retorno  +45.8%  IC95[ -55.1;+146.7]
+      vie: n= 44 retorno +104.5%  IC95[ -16.0;+225.1]
+      sab: n= 47 retorno  +48.9%  IC95[ -54.0;+151.8]
+      dom: n= 48 retorno  +25.0%  IC95[ -69.6;+119.6]
+    TOTAL: n=329 retorno  +42.9%  IC95[  +5.0; +80.7]
+semana 16-23oct principal: Top-5 19/91  esperado modelo 18.7
+semana 16-23oct principal: Top-15 48/91  esperado modelo 48.2
+semana 16-23oct principal: Top-3 14/91  esperado modelo 11.8
