@@ -1,0 +1,30 @@
+RD sin mapear: 0  RD sorteos: 13031
+oficial LA/RD 2025-07..12-17: 1896 1896
+
+== Objetivo LA, base ensamble ==
+C1 vecinos rueda de RD(h-1):30     n= 6922 obs   379 esp   364.5 O/E 1.040 [0.94;1.14] z +0.78 | A 0.974 (-0.36) B 1.105 (+1.46) no 
+C1 sens (RD anim=0 en base)        n= 6922 obs   379 esp   374.5 O/E 1.012 [0.91;1.11] z +0.24 | A 0.948 (-0.73) B 1.075 (+1.07) no 
+C4 numero (h-1) 12h                n= 6922 obs   178 esp   182.9 O/E 0.973 [0.83;1.12] z -0.37 | A 0.886 (-1.10) B 1.060 (+0.58) no 
+  placebo numero h+1               n= 6922 obs   181 esp   180.9 O/E 1.001 [0.86;1.15] z +0.01 | A 1.047 (+0.45) B 0.954 (-0.45) no 
+  ref: numero propia hora          n= 6922 obs   141 esp   182.2 O/E 0.774 [0.65;0.90] z -3.10 | A 0.934 (-0.64) B 0.614 (-3.74) no 
+C5 opuesto d19 de RD(h-1):30       n= 6922 obs   161 esp   181.0 O/E 0.889 [0.76;1.03] z -1.51 | A 0.929 (-0.69) B 0.850 (-1.45) no 
+C5 sens (RD anim=0)                n= 6922 obs   161 esp   186.0 O/E 0.866 [0.73;1.00] z -1.86 | A 0.904 (-0.94) B 0.827 (-1.69) no 
+
+== C3 LA ==
+C3 LA dia-mes | RD ya lo saco hoy  G1: n=816 obs 10 esp(base G0 r0=0.642) 14.6 (sinAjuste 22.7) O/E_G1 0.441 z -1.21 | A 6/7.7 z-0.61 B 4/6.9 z-1.12 potencia(e1>=30) False no
+
+== Objetivo RD (desarrollo 2024-03-01..2025-06-30), base uniforme ==
+C2 vecinos rueda de LA h:00        n= 5229 obs   274 esp   281.0 O/E 0.975 [0.86;1.08] z -0.43 | A 1.002 (+0.02) B 0.950 (-0.62) no 
+C4r numero (h-1) 12h (RD h:30)     n= 5020 obs   120 esp   133.1 O/E 0.902 [0.75;1.08] z -1.15 | A 0.992 (-0.07) B 0.809 (-1.57) no 
+  ref: numero hora propia          n= 5229 obs   119 esp   138.5 O/E 0.860 [0.71;1.01] z -1.68 | A 0.795 (-1.70) B 0.919 (-0.70) no 
+C5r opuesto d19 de LA h:00         n= 5229 obs   142 esp   143.4 O/E 0.990 [0.84;1.15] z -0.12 | A 0.929 (-0.60) B 1.046 (+0.40) no 
+desc: RD dia del mes               n= 5229 obs   106 esp   144.4 O/E 0.734 [0.60;0.88] z -3.25 | A 0.693 (-2.60) B 0.772 (-2.01) PASA 
+C3r RD dia-mes | LA ya lo saco     G1: n=402 obs 13 esp(base G0 r0=0.710) 9.6 (sinAjuste 13.5) O/E_G1 0.962 z +1.12 | A 5/4.9 z+0.04 B 8/4.7 z+1.55 potencia(e1>=30) False no
+
+== Objetivo RD (oficial 2025-07-01..2025-12-17), base uniforme ==
+C2 vecinos rueda de LA h:00        n= 1866 obs    95 esp   100.1 O/E 0.949 [0.78;1.12] z -0.52 | A 1.005 (+0.04) B 0.894 (-0.77) no 
+C4r numero (h-1) 12h (RD h:30)     n= 1708 obs    48 esp    45.1 O/E 1.064 [0.78;1.37] z +0.44 | A 1.010 (+0.05) B 1.119 (+0.57) no 
+  ref: numero hora propia          n= 1866 obs    47 esp    49.9 O/E 0.942 [0.69;1.23] z -0.41 | A 0.763 (-1.20) B 1.122 (+0.62) no 
+C5r opuesto d19 de LA h:00         n= 1866 obs    62 esp    51.1 O/E 1.213 [0.94;1.51] z +1.55 | A 1.056 (+0.29) B 1.372 (+1.91) no 
+desc: RD dia del mes               n= 1866 obs    36 esp    52.1 O/E 0.690 [0.48;0.93] z -2.27 | A 0.606 (-2.06) B 0.777 (-1.15) no 
+C3r RD dia-mes | LA ya lo saco     G1: n=105 obs 4 esp(base G0 r0=0.700) 2.5 (sinAjuste 3.6) O/E_G1 1.103 z +0.93 | A 1/1.3 z-0.23 B 3/1.3 z+1.54 potencia(e1>=30) False no
