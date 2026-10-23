@@ -61,8 +61,8 @@ def test_registrar_numero_invalido_redirige_y_avisa(web):
 def test_tablas_de_rutas():
     assert set(servidor.RUTAS_JSON) == {"/tareas.json", "/listo.json", "/api/mesa", "/api/mesa_stats",
                                         "/api/rdint", "/api/cambio_rd", "/api/cambio_rd15", "/api/sombra_decision", "/api/sombra", "/api/salud",
-                                        "/api/datos_publicados"}
-    assert set(servidor.ACCIONES_POST) == {"/auto", "/deshacer", "/registrar", "/", "/tripleta/registrar"}
+                                        "/api/datos_publicados", "/api/topes"}
+    assert set(servidor.ACCIONES_POST) == {"/auto", "/deshacer", "/registrar", "/", "/tripleta/registrar", "/topes/anotar"}
     for fn, tipo in servidor.RUTAS_JSON.values():
         assert callable(fn) and tipo.startswith("application/json")
 
@@ -112,3 +112,14 @@ def test_respaldo_cerrado_sin_clave_y_zip_con_clave(web, monkeypatch):
     monkeypatch.setenv("RESPALDO_CLAVE", "secreta")
     assert pedir(web, "GET", "/respaldo.zip")[0] == 404
     assert pedir(web, "GET", "/respaldo.zip?clave=mala")[0] == 404
+
+
+def test_dato_publicado_se_sirve_como_texto_y_sin_salirse_de_la_carpeta(web, tmp_path, monkeypatch):
+    monkeypatch.setattr(servidor, "DATOS", str(tmp_path))
+    c = tmp_path / "datos_publicados" / "2026-10-02"; c.mkdir(parents=True)
+    (c / "lotoven_datos.html").write_text("<script>alert(1)</script>", encoding="utf-8")
+    st, tipo, _, cuerpo = pedir(web, "GET", "/datos_publicados/2026-10-02/lotoven_datos.html")
+    assert (st, tipo, cuerpo) == (200, "text/plain; charset=utf-8", "<script>alert(1)</script>")
+    for mala in ("/datos_publicados/2026-10-02/../../topes.json", "/datos_publicados/x/lotoven_datos.html",
+                 "/datos_publicados/2026-10-02/Lotoven.html", "/datos_publicados/2026-10-03/lotoven_datos.html"):
+        assert pedir(web, "GET", mala)[0] == 404, mala

@@ -12,6 +12,7 @@ Sin numpy/scipy funciona con el modelo antiguo (solo librería estándar).
 """
 import hashlib, hmac, os, sys, json, math, webbrowser, threading, subprocess, time, html
 import io
+import re
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from http.cookies import SimpleCookie, CookieError
@@ -32,6 +33,7 @@ RUTA = os.path.dirname(os.path.abspath(__file__))
 DATOS = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH") or RUTA
 HIST = os.path.join(DATOS, "historial.txt")
 LOG  = os.path.join(DATOS, "predicciones.json")
+TOPES = os.path.join(DATOS, "topes.json")       # topes de la taquilla (topes.py)
 HERR = os.path.join(RUTA, "herramientas")
 PUERTO = 8000  # local; en Railway se usa PORT
 VENTANA = 12
@@ -40,6 +42,7 @@ from comun import (PAGO, POS, IDX, K, esc, fx as _fx, fila as fila_jugada, COLS 
                    nav as html_nav_hist, sec, guardar_json)
 import comun
 import experimentos
+import topes
 P0 = 1.0 / K
 ANIM = {"0":"DELFÍN","00":"BALLENA","1":"CARNERO","2":"TORO","3":"CIEMPIÉS","4":"ALACRÁN",
  "5":"LEÓN","6":"RANA","7":"PERICO","8":"RATÓN","9":"ÁGUILA","10":"TIGRE","11":"GATO",
@@ -1325,8 +1328,8 @@ def render(banca=None, tab="la", atras=0, autorizado=True):
     if MOTOR_PRINCIPAL == "ag12_rd" and not principal_ag12 and not calculando:
         aviso += ('<div class="tip">El motor ag12 + RD no tiene pronóstico para este sorteo: '
                   'se muestra el del ensamble (modelo anterior).</div>')
-    herramientas = sec("herramientas", "Herramientas", "scripts largos en Railway, sin gastar tu PC",
-                       html_herramientas())
+    herramientas = (html_topes(e) + sec("herramientas", "Herramientas", "scripts largos en Railway, sin gastar tu PC",
+                                        html_herramientas()))
     panel_ens = (
         f'{aviso if not principal_ag12 else ""}{html_animales_hoy(d, filas, e)}'
         + (f'{jugada}' if principal_ag12 else f'<div class="duo">{jugada}{html_registro(e, autorizado)}</div>')
@@ -1764,6 +1767,50 @@ def _ruta_rdint(q):
     except Exception as ex:  # noqa: BLE001
         return {"error": f"{type(ex).__name__}: {ex}"}
 
+def topes_resumen():
+    """O/E de los animales con tope de la taquilla contra el pronóstico congelado (LA) o 1/38 (RD)."""
+    import rdint_vivo
+    la = {(f, h): POS[v] for f, h, v in cargar()}
+    rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
+    regs = {(r["fecha"], r["hora"]): r.get("scores") for r in log_cargar()["registros"] if vigente(r)}
+    resultado = lambda j, f, h: (la if j == "la" else rd).get((f, h))
+    prob = lambda j, f, h: regs.get((f, h)) if j == "la" else None
+    hora = lambda j, f, h: experimentos.hora_sorteo(f, h) + timedelta(minutes=30 if j == "rd" else 0)
+    return topes.resumen(topes.cargar(TOPES), resultado, prob, hora)
+
+def html_topes(e):
+    """Anotar los animales que la taquilla limitó (una línea por sorteo) y el conteo acumulado."""
+    try:
+        r = topes_resumen()
+    except Exception as ex:  # noqa: BLE001  (nunca tumbar la página por esto)
+        print(f"[topes] resumen falló: {ex!r}", file=sys.stderr, flush=True)
+        r = {"anotaciones": 0}
+    opciones = "".join(f'<option value="{i}"{" selected" if i == e["ph"] else ""}>{esc(h)}</option>'
+                       for i, h in enumerate(HORAS))
+    if r.get("resueltas"):
+        estado_t = (f'{r["resueltas"]} sorteos con resultado · {r["animal_sorteos"]} animales limitados · '
+                    f'salieron <b>{r["salieron"]}</b> contra {num(r["esperado"], 1)} esperados'
+                    + (f' (O/E {num(r["oe"], 2)})' if r.get("oe") is not None else '')
+                    + '. Hacen falta unos 330 animal-sorteos para ver un efecto doble y unos 3.700 para uno de −30 %.')
+    else:
+        estado_t = "Aún no hay topes con resultado."
+    cuerpo = ('<form class="anotar topes" method="post" action="/topes/anotar">'
+              f'<input type="hidden" name="fecha" value="{esc(e["pf"])}">'
+              '<label class="sr" for="tp-juego">Juego</label>'
+              '<select id="tp-juego" name="juego"><option value="la">Lotto Activo (h:00)</option>'
+              '<option value="rd">RD Internacional (h:30)</option></select>'
+              f'<label class="sr" for="tp-hora">Hora</label><select id="tp-hora" name="hora">{opciones}</select>'
+              '<label class="sr" for="tp-an">Animales limitados</label>'
+              '<input type="text" id="tp-an" name="animales" placeholder="Limitados: 5, 12, 00" autocomplete="off" '
+              'inputmode="numeric">'
+              '<label class="sr" for="tp-ag">Agencia (opcional)</label>'
+              '<input type="text" id="tp-ag" name="agencia" placeholder="Agencia (opcional)" autocomplete="off" '
+              'maxlength="60"><button type="submit">Anotar tope</button></form>'
+              f'<p class="note">Fecha: {esc(fecha_corta(e["pf"]))}. Anótalo <b>antes</b> del sorteo: los anotados '
+              f'después se guardan pero no cuentan. {estado_t} Detalle en <a href="/api/topes">/api/topes</a>.</p>')
+    return sec("topes", "Topes de la taquilla",
+               f'{r.get("anotaciones", 0)} anotados · ¿salen más o menos los animales limitados?', cuerpo)
+
 def _ruta_datos_publicados(q):
     try:
         import datos_publicados
@@ -1784,6 +1831,7 @@ RUTAS_JSON = {
     "/api/salud": (lambda q: _api(lambda: salud_modelo(log_cargar())), JSON_UTF8),
     "/api/sombra": (lambda q: _api(lambda: marcador_sombra(log_cargar())), JSON_UTF8),
     "/api/datos_publicados": (_ruta_datos_publicados, JSON_UTF8),
+    "/api/topes": (lambda q: _api(topes_resumen), JSON_UTF8),
 }
 
 def _parametros_pagina(q):
@@ -1858,12 +1906,20 @@ def _accion_tripleta(datos):
     AVISO.update(texto=esc(texto), clase=clase)
     return "#tripleta"
 
+def _accion_topes(datos):
+    q = parse_qs(datos)
+    texto, clase = topes.anotar(TOPES, (q.get("fecha", [""])[0]).strip(), (q.get("juego", [""])[0]).strip(),
+                                _entero(q, "hora"), q.get("animales", [""])[0], q.get("agencia", [""])[0])
+    AVISO.update(texto=esc(texto), clase=clase)
+    return "#topes"
+
 ACCIONES_POST = {
     "/auto": _accion_auto,
     "/deshacer": _accion_deshacer,
     "/registrar": _accion_registrar,
     "/": _accion_registrar,
     "/tripleta/registrar": _accion_tripleta,
+    "/topes/anotar": _accion_topes,
 }
 
 def _accion_herramienta(ruta):
@@ -1965,6 +2021,8 @@ class H(BaseHTTPRequestHandler):
             self._historial_txt()
         elif ruta in ("/historial.zip", "/respaldo.zip"):
             self._respaldo(q)
+        elif ruta.startswith("/datos_publicados/"):
+            self._dato_publicado(ruta)
         else:
             self._send("No encontrado", "text/plain; charset=utf-8", 404)
 
@@ -1978,6 +2036,30 @@ class H(BaseHTTPRequestHandler):
                              'attachment; filename="lotto_historial_%s.txt"' % date.today().isoformat())
             self.send_header("Content-Length", str(len(datos)))
             self.send_header("Cache-Control", "no-store")
+            self.end_headers(); self.wfile.write(datos)
+        except OSError:
+            pass
+
+    def _dato_publicado(self, ruta):
+        """/datos_publicados/AAAA-MM-DD/<fuente>.html: la página que guardó datos_publicados.py esa mañana, para auditar
+        el archivo de los pronosticadores. Se sirve como texto plano adjunto: su HTML/JS nunca corre en esta web."""
+        partes = ruta.strip("/").split("/")
+        fuente = partes[2][:-5] if len(partes) == 3 and partes[2].endswith(".html") else ""
+        if (len(partes) != 3 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", partes[1])
+                or not re.fullmatch(r"[a-z_]{1,40}", fuente)):
+            return self._send("No encontrado", "text/plain; charset=utf-8", 404)
+        archivo = os.path.join(DATOS, "datos_publicados", partes[1], fuente + ".html")
+        try:
+            with open(archivo, "rb") as f:
+                datos = f.read()
+        except OSError:
+            return self._send("No encontrado", "text/plain; charset=utf-8", 404)
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Disposition", 'attachment; filename="%s_%s.html.txt"' % (partes[1], fuente))
+            self.send_header("Content-Length", str(len(datos)))
             self.end_headers(); self.wfile.write(datos)
         except OSError:
             pass

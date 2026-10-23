@@ -114,6 +114,10 @@ details.mas[open]>summary{border-bottom:1px solid var(--line-soft)}
 .compartir select{padding:0 10px;font:inherit;font-size:15px;color:var(--ink);background:var(--bg-2);
   border:1px solid var(--line);border-radius:var(--r1)}
 .compartir input[type=text]{font-size:16px;padding:10px 12px}
+.topes{flex-wrap:wrap}
+.topes select{min-height:44px;padding:0 10px;font:inherit;font-size:15px;color:var(--ink);background:var(--bg-2);
+  border:1px solid var(--line);border-radius:var(--r1)}
+.topes input[type=text]{font-size:16px;padding:10px 12px;flex-basis:140px}
 
 /* ---------- chevron (dibujado, no un glifo) ---------- */
 .chev{flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
