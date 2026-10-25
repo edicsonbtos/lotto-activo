@@ -84,7 +84,19 @@ def cargar():
     filas.sort(key=lambda r: (r[0], r[1]))
     return filas
 
+_HZ_CACHE = {}
+
 def hazard(seq):
+    """Tasa de acierto por tramo de retraso. Memoizada por contenido de la secuencia:
+    es O(n·38) y se llamaba en cada render y cada tick de 60 s con el mismo historial."""
+    clave = (len(seq), hash(tuple(seq)))
+    if _HZ_CACHE.get("clave") == clave:
+        return list(_HZ_CACHE["val"])
+    val = _hazard_calcular(seq)
+    _HZ_CACHE["clave"] = clave; _HZ_CACHE["val"] = val
+    return list(val)
+
+def _hazard_calcular(seq):
     nb = len(BINS); hit = [0.0]*nb; tot = [0.0]*nb; last = {}
     for t, v in enumerate(seq):
         if t > 0:
@@ -541,8 +553,10 @@ HERRAMIENTAS = {
         "cmd": ["tripleta_ventana.py"],
         "que": "Mide en el histórico cuántas veces habrían ganado las tripletas sugeridas.",
         "mirar": "En la línea A_123_456: el % de aciertos debe superar 2,22% (umbral de 45x) y al «azar». "
-                 "Si el primer número del intervalo [a-b] supera 2,22% y z(bloques) es mayor que +2, hay evidencia "
-                 "real. Si «EV 45x» tiene el límite inferior negativo, todavía puede haber pérdida.",
+                 "Si el primer número del intervalo [a-b] supera 2,22% y z(bloques) es mayor que +2, es una "
+                 "CANDIDATURA (esto es solo desarrollo, no evidencia): la confirmación sale de la prueba ciega "
+                 "(tramo desde 9357) y del marcador en vivo. Si «EV 45x» tiene el límite inferior negativo, "
+                 "todavía puede haber pérdida.",
     },
     "simulacion": {
         "titulo": "Simular ganancias del Top-5 escalonado", "dura": "30 a 60 s",
