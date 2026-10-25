@@ -92,16 +92,27 @@ def _escribir(filas):
     os.replace(tmp, RD_HIST)
 
 
+_RD_CACHE = {}
+
+
 def cargar_rd():
+    """Filas RD; se relee solo si el archivo cambió (mtime/tamaño), no en cada llamada."""
     _sembrar()
+    try:
+        st = os.stat(RD_HIST)
+        clave = (RD_HIST, st.st_mtime_ns, st.st_size)
+    except OSError:
+        return []
+    if _RD_CACHE.get("clave") == clave:
+        return list(_RD_CACHE["filas"])
     filas = []
-    if os.path.exists(RD_HIST):
-        with io.open(RD_HIST, encoding="utf-8") as f:
-            for ln in f:
-                p = ln.split()
-                if len(p) == 3 and p[2] in IDX:
-                    filas.append((p[0], int(p[1]), p[2]))
-    return filas
+    with io.open(RD_HIST, encoding="utf-8") as f:
+        for ln in f:
+            p = ln.split()
+            if len(p) == 3 and p[2] in IDX:
+                filas.append((p[0], int(p[1]), p[2]))
+    _RD_CACHE["clave"] = clave; _RD_CACHE["filas"] = filas
+    return list(filas)
 
 
 def la_del_dia(fecha):

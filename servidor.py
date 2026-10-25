@@ -75,16 +75,37 @@ def bidx(g):
         else: break
     return i
 
+_CARGAR_CACHE = {}
+
 def cargar():
+    """Filas (fecha, hora, índice) del historial; se reparsea solo si el archivo cambió."""
+    st = os.stat(HIST)
+    clave = (HIST, st.st_mtime_ns, st.st_size)
+    if _CARGAR_CACHE.get("clave") == clave:
+        return list(_CARGAR_CACHE["filas"])
     filas = []
-    for ln in open(HIST, encoding="utf-8"):
-        p = ln.split()
-        if len(p) == 3 and p[2] in IDX:
-            filas.append((p[0], int(p[1]), IDX[p[2]]))
+    with open(HIST, encoding="utf-8") as f:
+        for ln in f:
+            p = ln.split()
+            if len(p) == 3 and p[2] in IDX:
+                filas.append((p[0], int(p[1]), IDX[p[2]]))
     filas.sort(key=lambda r: (r[0], r[1]))
-    return filas
+    _CARGAR_CACHE["clave"] = clave; _CARGAR_CACHE["filas"] = filas
+    return list(filas)
+
+_HZ_CACHE = {}
 
 def hazard(seq):
+    """Tasa de acierto por tramo de retraso. Memoizada por contenido de la secuencia:
+    es O(n·38) y se llamaba en cada render y cada tick de 60 s con el mismo historial."""
+    clave = (len(seq), hash(tuple(seq)))
+    if _HZ_CACHE.get("clave") == clave:
+        return list(_HZ_CACHE["val"])
+    val = _hazard_calcular(seq)
+    _HZ_CACHE["clave"] = clave; _HZ_CACHE["val"] = val
+    return list(val)
+
+def _hazard_calcular(seq):
     nb = len(BINS); hit = [0.0]*nb; tot = [0.0]*nb; last = {}
     for t, v in enumerate(seq):
         if t > 0:
@@ -541,8 +562,10 @@ HERRAMIENTAS = {
         "cmd": ["tripleta_ventana.py"],
         "que": "Mide en el histórico cuántas veces habrían ganado las tripletas sugeridas.",
         "mirar": "En la línea A_123_456: el % de aciertos debe superar 2,22% (umbral de 45x) y al «azar». "
-                 "Si el primer número del intervalo [a-b] supera 2,22% y z(bloques) es mayor que +2, hay evidencia "
-                 "real. Si «EV 45x» tiene el límite inferior negativo, todavía puede haber pérdida.",
+                 "Si el primer número del intervalo [a-b] supera 2,22% y z(bloques) es mayor que +2, es una "
+                 "CANDIDATURA (esto es solo desarrollo, no evidencia): la confirmación sale de la prueba ciega "
+                 "(tramo desde 9357) y del marcador en vivo. Si «EV 45x» tiene el límite inferior negativo, "
+                 "todavía puede haber pérdida.",
     },
     "simulacion": {
         "titulo": "Simular ganancias del Top-5 escalonado", "dura": "30 a 60 s",
@@ -605,6 +628,8 @@ def iniciar_tarea(clave):
     if clave not in HERRAMIENTAS: return
     t = TAREAS.get(clave)
     if t and t["proc"].poll() is None: return
+    # Tope global: un solo intérprete pesado a la vez (el contenedor tiene 1 vCPU compartido con la web).
+    if any(o["proc"].poll() is None for o in TAREAS.values()): return
     os.makedirs(os.path.join(HERR, "resultados"), exist_ok=True)
     out = open(salida_tarea(clave), "w", encoding="utf-8")
     env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUNBUFFERED="1")
@@ -901,7 +926,9 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0, tab="la"
                '<p><i class="a"></i><b>Top-5 escalonado</b> (recomendada): 8 fichas, cobra ~1 de cada 5 '
                '(60 si sale del 1º al 3º, 30 si sale 4º o 5º).</p>'
                '<p><i class="b"></i><b>Top-15 ponderado</b> (alternativa): 23 fichas, cobra ~1 de cada 2 '
-               '(+67, +37 o +7).</p></div>')
+               '(+67, +37 o +7).</p>'
+               '<p class="note">La jugada formal probada (gestion_banca) es Top-3 plano a ¼-Kelly; '
+               'los puestos 4º y 5º van a media ficha porque su z es solo 1,27 (refuerzo no probado).</p></div>')
     return (f'<section class="card jugada" id="sorteo" aria-labelledby="jug-t">'
             f'{html_nav_hist(tab, 0, n_pasados)}{cab}'
             f'<ol class="jug">{COLS_JUGADA}{top5}</ol>{nota_cambio_rd(info_rd)}{mas}{anti}'
@@ -1069,7 +1096,7 @@ def html_herramientas():
                    f'<details{" open" if corriendo else ""}><summary>Ver resultado</summary>'
                    f'<pre id="out-{k}">{esc(e["salida"] or "Todavía no se ha ejecutado.")}</pre></details></div>')
     return (f'<p class="note">Corren en el servidor (en Railway no gastan tu PC) y no tocan tus datos. '
-            f'Ejecutar pide la clave, como anotar.</p>{cuerpo}')
+            f'Ejecutar pide la clave, como anotar. Solo corre una herramienta a la vez para no saturar el servidor.</p>{cuerpo}')
 
 def preparar():
     """Congela el pronóstico del próximo sorteo (y la tripleta si toca).
@@ -1264,7 +1291,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
         tabla = (f'<table class="tabla"><thead><tr><th></th><th>Top-3</th><th>Top-5</th><th>Top-15</th><th>Señal</th>'
                  f'<th>Neto Top-5</th></tr></thead><tbody>'
                  + (fila_m("Ensamble (anterior)", "ensamble") + fila_m("ag12 sin RD", "ag12") + fila_m("ag12 + RD", "ag12_rd")
-                    + fila_m("Principal (+ fecha + rueda)", "principal")
+                    + fila_m("Principal (+ fecha + rueda; sombra que se juega)", "principal")
                     + fila_m("ag12 + RD en esos mismos sorteos", "ag12_rd_mismos")
                     if principal else
                     fila_m("Modelo actual", "ensamble") + fila_m("En sombra", "ag12") + fila_m("En sombra + RD", "ag12_rd"))
