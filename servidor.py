@@ -675,6 +675,11 @@ def auto_pasada():
     try:
         from scraping import auto_resultado
         with CERROJO:
+            # Otra vez aquí, ya con el cerrojo: un «deshacer» pudo terminar mientras esta pasada esperaba
+            # el cerrojo, y anotar ahora volvería a escribir el número recién deshecho.
+            if auto_pausado():
+                AUTO["mensaje"] = "en pausa tras deshacer"
+                return 0
             n = auto_resultado.una_pasada()
             try:                          # reintento si al arrancar quedó pospuesto
                 agregar_faltantes()
@@ -1328,7 +1333,7 @@ def render(banca=None, tab="la", atras=0, autorizado=True):
     if MOTOR_PRINCIPAL == "ag12_rd" and not principal_ag12 and not calculando:
         aviso += ('<div class="tip">El motor ag12 + RD no tiene pronóstico para este sorteo: '
                   'se muestra el del ensamble (modelo anterior).</div>')
-    herramientas = (html_topes(e) + sec("herramientas", "Herramientas", "scripts largos en Railway, sin gastar tu PC",
+    herramientas = (html_topes(e, filas, d) + sec("herramientas", "Herramientas", "scripts largos en Railway, sin gastar tu PC",
                                         html_herramientas()))
     panel_ens = (
         f'{aviso if not principal_ag12 else ""}{html_animales_hoy(d, filas, e)}'
@@ -1709,33 +1714,34 @@ def permiso_escritura(cabecera_cookie, clave=""):
     return hmac.compare_digest(_cookie_de(cabecera_cookie).encode("utf-8"), _firma_clave().encode("utf-8")), False
 
 def historial_txt():
+    """El .txt de «Descargar historial». Bajo CERROJO solo se copian los cuatro archivos (rápido); armar el texto
+    va fuera, así una descarga (sin clave, cualquiera la pide) no retiene el cerrojo de los datos."""
     import rdint_vivo, historial_txt as ht
-    return ht.exportar(HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)
+    with CERROJO:
+        crudo = ht.leer(HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)
+    return ht.armar(*crudo)
 
 def respaldo_historial():
     """Zip con todo lo que hace falta para analizar fuera: historiales, pronósticos congelados (con sombra),
     pesos, el resumen de las páginas publicadas guardadas y un LEEME con conteos."""
-    import rdint_vivo
+    import rdint_vivo, historial_txt as ht
     nombres = [os.path.basename(x) for x in (HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)] + ["pesos_ensamble.json"]
     raiz = os.path.join(DATOS, "datos_publicados")
     if os.path.isdir(raiz):
         nombres += sorted(os.path.join("datos_publicados", d, "meta.json") for d in os.listdir(raiz)
                           if os.path.isfile(os.path.join(raiz, d, "meta.json")))
     lineas = [f"Respaldo de Lotto Activo generado {datetime.now().isoformat(timespec='seconds')} (hora de Caracas)", ""]
-    for n in nombres[:5]:
-        ruta = os.path.join(DATOS, n)
-        if not os.path.isfile(ruta):
-            lineas.append(f"{n}: no existe"); continue
-        if n.endswith(".txt"):
-            with open(ruta, encoding="utf-8", errors="replace") as f:
-                lineas.append(f"{n}: {sum(1 for x in f if x.strip())} sorteos")
-        else:
-            try:
-                with open(ruta, encoding="utf-8") as f:
-                    reg = json.load(f).get("registros")
-                lineas.append(f"{n}: {len(reg)} pronósticos congelados" if isinstance(reg, list) else f"{n}: pesos del ensamble")
-            except (ValueError, AttributeError):
-                lineas.append(f"{n}: no se pudo leer")
+    for ruta, leer, que in ((HIST, ht._lineas, "sorteos"), (LOG, ht._registros, "pronósticos congelados"),
+                            (rdint_vivo.RD_HIST, ht._lineas, "sorteos"),
+                            (rdint_vivo.RD_LOG, ht._registros, "pronósticos congelados")):
+        try:
+            x = leer(ruta)
+        except OSError:
+            x = False
+        n = os.path.basename(ruta)
+        lineas.append(f"{n}: no existe" if x is None else f"{n}: no se pudo leer" if x is False else f"{n}: {len(x)} {que}")
+    lineas.append("pesos_ensamble.json: " + ("pesos del ensamble" if os.path.isfile(os.path.join(DATOS, "pesos_ensamble.json"))
+                                              else "no existe"))
     lineas += ["", "historial.txt / rdint_historial.txt: un sorteo por línea (Lotto Activo h:00 / RD Internacional h:30).",
                "predicciones.json / rdint_predicciones.json: el orden congelado antes de cada sorteo, con lo que salió.",
                "datos_publicados/*/meta.json: qué páginas de pronosticadores se guardaron cada mañana."]
@@ -1767,21 +1773,34 @@ def _ruta_rdint(q):
     except Exception as ex:  # noqa: BLE001
         return {"error": f"{type(ex).__name__}: {ex}"}
 
-def topes_resumen():
-    """O/E de los animales con tope de la taquilla contra el pronóstico congelado (LA) o 1/38 (RD)."""
-    import rdint_vivo
-    la = {(f, h): POS[v] for f, h, v in cargar()}
-    rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
-    regs = {(r["fecha"], r["hora"]): r.get("scores") for r in log_cargar()["registros"] if vigente(r)}
-    resultado = lambda j, f, h: (la if j == "la" else rd).get((f, h))
-    prob = lambda j, f, h: regs.get((f, h)) if j == "la" else None
-    hora = lambda j, f, h: experimentos.hora_sorteo(f, h) + timedelta(minutes=30 if j == "rd" else 0)
-    return topes.resumen(topes.cargar(TOPES), resultado, prob, hora)
+def _prob_jugada(r, rd):
+    """Las 38 probabilidades del motor que se mostró para jugar en r: ag12+RD+capas si manda, si no el ensamble."""
+    if MOTOR_PRINCIPAL == "ag12_rd" and ((r.get("sombra") or {}).get("ag12")):
+        try:
+            return experimentos.principal(r, rd)[0]
+        except Exception as ex:  # noqa: BLE001
+            print(f"[topes] ag12+RD de {r.get('fecha')} {r.get('hora')} falló: {ex!r}", file=sys.stderr, flush=True)
+    return r.get("scores")
 
-def html_topes(e):
+def topes_resumen(filas=None, d=None):
+    """O/E de los animales con tope de la taquilla contra el pronóstico congelado (LA) o 1/38 (RD).
+    filas y d: el historial y las predicciones ya cargados por render (si no, se leen)."""
+    entradas = topes.cargar(TOPES)
+    if not entradas:
+        return topes.resumen([], None)
+    import rdint_vivo
+    la = {(f, h): POS[v] for f, h, v in (cargar() if filas is None else filas)}
+    rd = {(f, h): c for f, h, c in rdint_vivo.cargar_rd()}
+    regs = {(r["fecha"], r["hora"]): r for r in (log_cargar() if d is None else d)["registros"] if vigente(r)}
+    resultado = lambda j, f, h: (la if j == "la" else rd).get((f, h))
+    prob = lambda j, f, h: _prob_jugada(regs[(f, h)], rd) if j == "la" and (f, h) in regs else None
+    hora = lambda j, f, h: experimentos.hora_sorteo(f, h) + timedelta(minutes=30 if j == "rd" else 0)
+    return topes.resumen(entradas, resultado, prob, hora)
+
+def html_topes(e, filas=None, d=None):
     """Anotar los animales que la taquilla limitó (una línea por sorteo) y el conteo acumulado."""
     try:
-        r = topes_resumen()
+        r = topes_resumen(filas, d)
     except Exception as ex:  # noqa: BLE001  (nunca tumbar la página por esto)
         print(f"[topes] resumen falló: {ex!r}", file=sys.stderr, flush=True)
         r = {"anotaciones": 0}
@@ -1795,7 +1814,8 @@ def html_topes(e):
     else:
         estado_t = "Aún no hay topes con resultado."
     cuerpo = ('<form class="anotar topes" method="post" action="/topes/anotar">'
-              f'<input type="hidden" name="fecha" value="{esc(e["pf"])}">'
+              '<label class="sr" for="tp-fecha">Fecha del sorteo</label>'
+              f'<input type="date" id="tp-fecha" name="fecha" value="{esc(date.today().isoformat())}" required>'
               '<label class="sr" for="tp-juego">Juego</label>'
               '<select id="tp-juego" name="juego"><option value="la">Lotto Activo (h:00)</option>'
               '<option value="rd">RD Internacional (h:30)</option></select>'
@@ -1806,7 +1826,7 @@ def html_topes(e):
               '<label class="sr" for="tp-ag">Agencia (opcional)</label>'
               '<input type="text" id="tp-ag" name="agencia" placeholder="Agencia (opcional)" autocomplete="off" '
               'maxlength="60"><button type="submit">Anotar tope</button></form>'
-              f'<p class="note">Fecha: {esc(fecha_corta(e["pf"]))}. Anótalo <b>antes</b> del sorteo: los anotados '
+              f'<p class="note">Revisa la fecha (hoy por defecto). Anótalo <b>antes</b> del sorteo: los anotados '
               f'después se guardan pero no cuentan. {estado_t} Detalle en <a href="/api/topes">/api/topes</a>.</p>')
     return sec("topes", "Topes de la taquilla",
                f'{r.get("anotaciones", 0)} anotados · ¿salen más o menos los animales limitados?', cuerpo)
@@ -1982,6 +2002,8 @@ class H(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path.partition("?")[0] == "/vivo":
             return self._vivo()
+        if self.path.partition("?")[0] == "/historial.txt":
+            return self._historial_txt()      # toma el cerrojo solo para copiar los archivos
         self._bajo_cerrojo(self._get)
 
     def do_POST(self):
@@ -2017,8 +2039,6 @@ class H(BaseHTTPRequestHandler):
         elif ruta in RUTAS_JSON:
             fn, tipo = RUTAS_JSON[ruta]
             self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
-        elif ruta == "/historial.txt":
-            self._historial_txt()
         elif ruta in ("/historial.zip", "/respaldo.zip"):
             self._respaldo(q)
         elif ruta.startswith("/datos_publicados/"):

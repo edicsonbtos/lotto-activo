@@ -1,6 +1,7 @@
 """Baja /historial.txt de la web de Railway y lo separa en sus cuatro archivos. Uso: python bajar.py [carpeta]"""
 import os, sys, tempfile, urllib.request
 
+NOMBRES = ("historial.txt", "rdint_historial.txt", "predicciones.jsonl", "rdint_predicciones.jsonl")
 URL = os.environ.get("LOTTO_URL", "https://lotto-activo-production.up.railway.app") + "/historial.txt"
 
 
@@ -10,6 +11,9 @@ def separar(texto, carpeta):
         f.write(texto)
     for trozo in texto.split("\n===== ")[1:]:
         nombre, _, cuerpo = trozo.partition(" =====\n")
+        if nombre not in NOMBRES:         # nunca escribir fuera de la carpeta con un nombre que venga de la red
+            print(f"Sección desconocida ignorada: {nombre[:60]!r}")
+            continue
         with open(os.path.join(carpeta, nombre), "w", encoding="utf-8") as f:
             f.write(cuerpo.strip("\n") + "\n" if cuerpo.strip() != "(vacío)" else "")
     print(texto.split("\n=====")[0])

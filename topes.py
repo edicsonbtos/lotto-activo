@@ -20,12 +20,23 @@ JUEGOS = ("la", "rd")
 MAX_ANIMALES = 10
 
 
-def cargar(ruta):
+class Ilegible(ValueError):
+    """topes.json existe pero no se puede leer: anotar encima borraría lo acumulado."""
+
+
+def cargar(ruta, estricto=False):
+    """Lista de anotaciones; [] si el archivo no existe. Si existe y está dañado: [] o, con estricto, Ilegible."""
+    if not os.path.exists(ruta):
+        return []
     try:
         with open(ruta, encoding="utf-8") as f:
             d = json.load(f)
-        return d if isinstance(d, list) else []
-    except (OSError, ValueError):
+        if not isinstance(d, list):
+            raise ValueError("no es una lista")
+        return d
+    except (OSError, ValueError) as ex:
+        if estricto:
+            raise Ilegible(f"{type(ex).__name__}: {ex}") from ex
         return []
 
 
@@ -61,10 +72,21 @@ def anotar(ruta, fecha, juego, hora, texto, agencia="", ahora=None):
         return "Escribe al menos un animal limitado.", "bad"
     if len(animales) > MAX_ANIMALES:
         return f"Máximo {MAX_ANIMALES} animales por anotación.", "bad"
-    d = cargar(ruta)
+    try:
+        d = cargar(ruta, estricto=True)
+    except Ilegible:
+        return ("No se pudo leer topes.json (está dañado); NO se anotó para no borrar los topes anteriores. "
+                "Revísalo en el volumen de Railway."), "bad"
     d.append({"creado": (ahora or datetime.now()).isoformat(timespec="seconds"), "fecha": fecha, "juego": juego,
               "hora": hora, "animales": animales, "agencia": (agencia or "").strip()[:60]})
-    guardar_json(ruta, d, indent=1)
+    try:
+        guardar_json(ruta, d, indent=1)
+    except OSError as ex:
+        try:
+            os.remove(ruta + ".tmp")
+        except OSError:
+            pass
+        return f"No se pudo guardar el tope ({type(ex).__name__}); inténtalo de nuevo.", "bad"
     return f"Tope anotado: {', '.join(animales)} ({len(d)} anotaciones en total).", "ok"
 
 
@@ -75,7 +97,8 @@ def resumen(entradas, resultado, prob=None, hora_sorteo=None):
     prob(juego, fecha, hora) -> lista de 38 probabilidades del pronóstico congelado, o None (se usa 1/38).
     hora_sorteo(juego, fecha, hora) -> datetime del sorteo; si se da, las anotaciones creadas después no cuentan.
     """
-    filas, obs, esp, var, tarde, pend = [], 0, 0.0, 0.0, 0, 0
+    filas, tarde, pend = [], 0, 0
+    sorteos = {}          # (juego, fecha, hora) -> [ganador, p normalizada, animales con tope que cuentan]
     for e in entradas:
         try:
             juego, fecha, hora, animales = e["juego"], e["fecha"], int(e["hora"]), list(e["animales"])
@@ -102,10 +125,16 @@ def resumen(entradas, resultado, prob=None, hora_sorteo=None):
         elif not cuenta:
             tarde += 1
         else:
-            obs += int(salio); esp += masa; var += masa * (1 - masa)
-    out = {"anotaciones": len(filas), "resueltas": sum(f["cuenta"] for f in filas), "pendientes": pend,
+            # El mismo animal en el mismo sorteo (dos agencias, doble envío) cuenta una sola vez.
+            sorteos.setdefault((juego, fecha, hora), [gano, [x / s for x in p], set()])[2].update(
+                a for a in animales if a in IDX)
+    obs, esp, var = 0, 0.0, 0.0
+    for gano, p, animales in sorteos.values():
+        masa = sum(p[IDX[a]] for a in animales)
+        obs += int(gano in animales); esp += masa; var += masa * (1 - masa)
+    out = {"anotaciones": len(filas), "resueltas": len(sorteos), "pendientes": pend,
            "anotadas_tarde": tarde,
-           "animal_sorteos": sum(len(f["animales"]) for f in filas if f["cuenta"]),
+           "animal_sorteos": sum(len(a) for _, _, a in sorteos.values()),
            "salieron": obs, "esperado": round(esp, 2), "oe": round(obs / esp, 3) if esp > 0 else None,
            "z": round((obs - esp) / var ** 0.5, 2) if var > 0 else None, "filas": filas[-50:][::-1]}
     return out
