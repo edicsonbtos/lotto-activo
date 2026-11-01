@@ -19,6 +19,17 @@ with open(os.path.join(AQUI, "oro_experimentos.json"), encoding="utf-8") as f:
     ORO = json.load(f)
 
 
+# Claves añadidas después del oro (aditivas): ag13/ag14 y, en ventana_8am, la prueba contra la base de la
+# auditoría 8:00 del 2026-10-31. Todo lo demás tiene que seguir idéntico.
+NUEVAS_8AM = ("p_obs_o_menos", "mbits_esperado_si_base", "lectura")
+
+
+def sin_claves_nuevas(m):
+    out = {k: v for k, v in m.items() if k not in ("ag13", "ag14")}
+    out["ventana_8am"] = {k: v for k, v in out["ventana_8am"].items() if k not in NUEVAS_8AM}
+    return out
+
+
 @pytest.fixture
 def datos(monkeypatch):
     d, rd = log_sintetico()
@@ -48,8 +59,7 @@ def test_marcadores_reproducen_lo_de_antes(datos):
     res, fichas = servidor.resueltas(d), servidor.fichas_por_puesto()
     assert experimentos.marcador_cambio_rd(res, fichas) == ORO["marcador_cambio_rd"]
     # Los marcadores candidatos son claves nuevas; el resultado previo debe seguir idéntico al oro.
-    assert {k: v for k, v in experimentos.marcador_sombra(res, fichas).items()
-            if k not in ("ag13", "ag14")} == ORO["marcador_sombra"]
+    assert sin_claves_nuevas(experimentos.marcador_sombra(res, fichas)) == ORO["marcador_sombra"]
 
 
 def test_el_oro_cubre_exposicion_y_cambios():
@@ -71,8 +81,7 @@ def test_con_rd_y_ic90_reproducen_lo_de_antes(datos):
 def test_servidor_conserva_sus_nombres_y_da_lo_mismo(datos):
     d, _ = datos
     assert servidor.marcador_cambio_rd(d) == ORO["marcador_cambio_rd"]
-    assert {k: v for k, v in servidor.marcador_sombra(d).items()
-            if k not in ("ag13", "ag14")} == ORO["marcador_sombra"]
+    assert sin_claves_nuevas(servidor.marcador_sombra(d)) == ORO["marcador_sombra"]
     assert servidor.cambio_rd(list(range(38)), "2031-01-01", 2)[1] == ORO["cambio_rd"]["sin_rd"]
 
 

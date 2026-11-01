@@ -312,6 +312,25 @@ def ventana_8am(fecha):
     return [IDX[str(n)] for n in (d - 1, d, d + 1) if 1 <= n <= 36]
 
 
+def prob_a_lo_sumo(ps, k):
+    """P(X <= k) con X = suma de Bernoulli independientes de probabilidades ps (Poisson-binomial exacta)."""
+    dist = [1.0]
+    for p in ps:
+        nueva = [0.0] * (len(dist) + 1)
+        for j, q in enumerate(dist):
+            nueva[j] += q * (1 - p); nueva[j + 1] += q * p
+        dist = nueva
+    return sum(dist[:k + 1])
+
+
+LECTURA_8AM = ("p_obs_o_menos: probabilidad de ver tan pocos ganadores en la ventana si la ventana no hiciera nada "
+               "(probabilidades base fijas e independientes). mbits_esperado_si_base: lo que daría de media la "
+               "ventana si la base fuera la verdad (negativo: cuando sale un castigado se pierde mucho). El IC90 de "
+               "mbits solo usa lo observado y, con pocos eventos, no incluye esa pérdida: no sirve para encender. "
+               f"Se decide con la regla fijada: freno desde {SOMBRA_8AM_N_FRENO} mañanas y decisión a "
+               f"{SOMBRA_8AM_N_FINAL}.")
+
+
 def ic90_jornadas(pares, escala=1):
     """Media de la diferencia por sorteo con IC 90 % agrupando por jornada (fecha). pares = [(fecha, dif)].
 
@@ -638,7 +657,8 @@ def marcador_sombra(res, fichas):
     n_rd_vacio = 0                          # RD (h−1):30 congelado vacío: RD iba atrasado al sorteo
     dif = {"ensamble": ([], []), "ag12_rd": ([], [])}      # (dif mbits, dif Top-5 en 0/1) por sorteo y jornada
     fallos_exp = 0
-    v8 = dict(n=0, O=0, E=0.0, top5_exp=0, top5_exp8=0, mbits_dif=[])   # solo 8:00, exp8 contra exp
+    v8 = dict(n=0, O=0, E=0.0, top5_exp=0, top5_exp8=0, mbits_dif=[],    # solo 8:00, exp8 contra exp
+              p_ven=[], kl=0.0)   # prob. de la ventana por mañana y mbits esperados si la base es la verdad
     for r in res:
         sc_base = r.get("scores_sin_8am") or r.get("scores")   # sin la corrección de las 8:00 ya encendida
         if r["fecha"] >= SOMBRA_8AM_DESDE and int(r["hora"]) == 0 and sc_base:
@@ -646,7 +666,10 @@ def marcador_sombra(res, fichas):
                 pe = exposicion(sc_base, r["fecha"], 0)
                 p8 = exposicion(sc_base, r["fecha"], 0, "aplicar_8am")
                 w = r["salio"]; ven = ventana_8am(r["fecha"])
+                te, t8 = sum(pe), sum(p8)
                 v8["n"] += 1; v8["O"] += w in ven; v8["E"] += sum(pe[i] for i in ven)
+                v8["p_ven"].append(sum(pe[i] for i in ven) / te)
+                v8["kl"] += 1000 * sum(pe[i] / te * math.log2((p8[i] / t8) / (pe[i] / te)) for i in range(K) if pe[i] > 0)
                 for k, p in (("top5_exp", pe), ("top5_exp8", p8)):
                     v8[k] += sum(1 for i in range(K) if (-p[i], i) < (-p[w], w)) < 5
                 v8["mbits_dif"].append((r["fecha"], 1000 * math.log2(p8[w] / pe[w])))
@@ -710,4 +733,7 @@ def marcador_sombra(res, fichas):
                             "n": v8["n"], "ventana_obs": v8["O"], "ventana_esp": round(v8["E"], 2),
                             "oe": round(v8["O"] / v8["E"], 3) if v8["E"] else None,
                             "top5_exp": v8["top5_exp"], "top5_exp8": v8["top5_exp8"],
-                            "mbits_exp8_vs_exp": ic90_jornadas(v8["mbits_dif"])}}
+                            "mbits_exp8_vs_exp": ic90_jornadas(v8["mbits_dif"]),
+                            "p_obs_o_menos": (round(prob_a_lo_sumo(v8["p_ven"], v8["O"]), 4) if v8["n"] else None),
+                            "mbits_esperado_si_base": (round(v8["kl"] / v8["n"], 1) if v8["n"] else None),
+                            "lectura": LECTURA_8AM}}
