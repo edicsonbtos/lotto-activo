@@ -323,8 +323,7 @@ P_AZAR_T15 = TOP_N / K          # 39,47%: un Top-15 al azar ya acierta 2 de cada
 
 def resueltas(d):
     """Pronósticos del modelo en uso, con resultado y sin anular."""
-    return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None
-            and r.get("modelo") == MODELO_MARCADOR and not creado_tarde(r)]
+    return [r for r in d["registros"] if resuelto_previo(r) and r.get("modelo") == MODELO_MARCADOR]
 
 # Antes del 21-sep la hora del servidor no era fiable (problema de zona horaria): esos `creado` no se
 # clasifican y siguen contando tal como estaban. Desde entonces un pronóstico creado a la hora del sorteo o
@@ -339,6 +338,10 @@ def creado_tarde(r):
     except ValueError:
         return False
     return creado >= experimentos.hora_sorteo(r["fecha"], r["hora"])
+
+def resuelto_previo(r):
+    """Vigente, con resultado y guardado antes del sorteo: lo que pueden mostrar las vistas (de cualquier modelo)."""
+    return vigente(r) and r.get("salio") is not None and not creado_tarde(r)
 
 def puesto_ganador(r):
     """Puesto (1..38) en que quedó el ganador dentro del orden congelado.
@@ -803,7 +806,8 @@ def sombra_registros(d):
         orden = sorted(range(K), key=lambda i: (-q[i], i))
         capas = isinstance(r["sombra"].get("capas"), dict)
         out.append({"fecha": r["fecha"], "hora": r["hora"], "salio": r.get("salio"), "scores": q,
-                    "orden_completo": orden, "top3": orden[:3], "modelo": "ag12+RD+capas" if capas else "ag12+RD"})
+                    "orden_completo": orden, "top3": orden[:3], "modelo": "ag12+RD+capas" if capas else "ag12+RD",
+                    "creado": r.get("creado")})
     out.sort(key=lambda r: (r["fecha"], r["hora"]))
     return out
 
@@ -914,7 +918,7 @@ def html_jugada(e, calculando, pend, aviso_modelo, modelo, n_pasados=0, tab="la"
             f'{leyenda}{aviso_modelo}</section>')
 
 def la_pasados(d):
-    return [r for r in d["registros"] if vigente(r) and r.get("salio") is not None and r.get("orden_completo")]
+    return [r for r in d["registros"] if resuelto_previo(r) and r.get("orden_completo")]
 
 def html_pasado_la(d, atras, vistos=None, tab="la"):
     """Top-15 congelado de un sorteo ya jugado, con el ganador marcado."""
@@ -949,7 +953,7 @@ def html_animales_hoy(d, filas, e, regs=None, nota=None):
     """Los 2 animales del día: Top-2 del pronóstico congelado de las 8:00 de ese día."""
     fecha = e["pf"]
     r = next((x for x in (d["registros"] if regs is None else regs) if vigente(x) and x["fecha"] == fecha
-              and x["hora"] == 0 and x.get("orden_completo")), None)
+              and x["hora"] == 0 and x.get("orden_completo") and not creado_tarde(x)), None)
     if r is None:
         return ""
     salidos = {v: h for f, h, v in filas if f == fecha}
@@ -973,7 +977,7 @@ def _clase_puesto(p):
 
 def resumen_resultados(d, ultimos=48, regs=None):
     """Línea corta para el desplegable: último puesto y Top-15 reciente."""
-    vistos = [r for r in (d["registros"] if regs is None else regs) if vigente(r) and r.get("salio") is not None]
+    vistos = [r for r in (d["registros"] if regs is None else regs) if resuelto_previo(r)]
     if not vistos:
         return "aún no hay resultados con pronóstico"
     p = puesto_ganador(vistos[-1])
@@ -989,7 +993,7 @@ def html_resultados(d, limite=100, regs=None):
 
     Sustituye en la página al histórico en tabla y a «Últimas 48» (que era
     un resumen del mismo dato); el resumen corto va en la línea del desplegable."""
-    vistos = [r for r in (d["registros"] if regs is None else regs) if vigente(r) and r.get("salio") is not None]
+    vistos = [r for r in (d["registros"] if regs is None else regs) if resuelto_previo(r)]
     if not vistos:
         return '<p class="note">Todavía no hay resultados con pronóstico guardado antes del sorteo.</p>'
     cuerpo = ""; dia = None
@@ -1202,7 +1206,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
     la pestaña lo dice y el resto de la web sigue."""
     try:
         regs = sombra_registros(d)
-        pasados = [r for r in regs if r.get("salio") is not None]
+        pasados = [r for r in regs if resuelto_previo(r)]
         hora, fecha = HORAS[e["ph"]], fecha_corta(e["pf"])
         if atras > 0 and pasados:
             jugada = html_pasado_la(d, atras, pasados, tab)
@@ -1603,7 +1607,7 @@ def mesa_stats(modelo="la"):
     modelo = modelo_api(modelo)
     filas = cargar(); d = log_cargar()
     res = [r for r in (sombra_registros(d) if modelo == "sombra" else d["registros"])
-           if vigente(r) and r.get("salio") is not None]
+           if resuelto_previo(r)]
     quiero = {(r["fecha"], r["hora"]) for r in res}
     snap = {}; ult = {}
     for f, h, v in filas:
