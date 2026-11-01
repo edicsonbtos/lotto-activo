@@ -16,7 +16,7 @@ import re
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from http.cookies import SimpleCookie, CookieError
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from math import comb
 
 # Jornada y etiquetas deben correr en hora de Caracas (UTC-4, sin DST),
@@ -334,9 +334,11 @@ def creado_tarde(r):
     if r["fecha"] < CREADO_FIABLE_DESDE or not r.get("creado"):
         return False
     try:
-        creado = datetime.fromisoformat(r["creado"]).replace(tzinfo=None)
+        creado = datetime.fromisoformat(r["creado"])
     except ValueError:
         return False
+    if creado.tzinfo is not None:   # con zona: se pasa a Caracas (UTC−4 fijo desde 2016) antes de compararla
+        creado = creado.astimezone(timezone(timedelta(hours=-4))).replace(tzinfo=None)
     return creado >= experimentos.hora_sorteo(r["fecha"], r["hora"])
 
 def resuelto_previo(r):
@@ -1528,6 +1530,7 @@ def mesa_datos(offset=0, modelo="la"):
     except (TypeError, ValueError): offset = 0
     offset = max(0, min(offset, total - 1))
 
+    tardio = False
     if offset == 0:
         fecha, hora = actual
         winner = None
@@ -1552,6 +1555,7 @@ def mesa_datos(offset=0, modelo="la"):
         r = hist[offset - 1]
         fecha, hora = r["fecha"], r["hora"]
         winner = r.get("salio")
+        tardio = creado_tarde(r)   # guardado a la hora del sorteo o después: no fue jugable ni cuenta en el marcador
         modelo = r.get("modelo", "—")
         scores = r.get("scores")
         orden = r.get("orden_completo")
@@ -1590,7 +1594,7 @@ def mesa_datos(offset=0, modelo="la"):
     return {
         "offset": offset, "total": total, "fecha": fecha, "hora": hora,
         "hora_txt": HORAS[hora], "fecha_txt": fecha_corta(fecha),
-        "modelo": modelo, "vista": vista,
+        "modelo": modelo, "vista": vista, "tardio": tardio,
         "winner": winner,
         "winner_num": (POS[winner] if winner is not None else None),
         "winner_nombre": (ANIM[POS[winner]].title() if winner is not None else None),
@@ -1723,7 +1727,7 @@ def historial_txt():
     import rdint_vivo, historial_txt as ht
     with CERROJO:
         crudo = ht.leer(HIST, LOG, rdint_vivo.RD_HIST, rdint_vivo.RD_LOG)
-    return ht.armar(*crudo)
+    return ht.armar(*crudo, tardio=creado_tarde)
 
 def respaldo_historial():
     """Zip con todo lo que hace falta para analizar fuera: historiales, pronósticos congelados (con sombra),

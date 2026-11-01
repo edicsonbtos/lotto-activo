@@ -82,3 +82,34 @@ def test_navegacion_atras_de_ag12(sin_rd, creado, se_ve):
     d = {"registros": [_reg(creado)]}
     html = s.html_sombra({"pf": "2026-10-23", "ph": 1}, d, None, [], atras=1)
     assert (NOTA_PREVIO in html) is se_ve
+
+
+# Pendientes menores de la misma revisión.
+import json
+import historial_txt as ht
+
+
+def test_creado_con_zona_horaria_se_convierte_a_caracas():
+    # 11:30 UTC = 07:30 en Caracas (UTC−4): fue antes del sorteo de las 8:00.
+    assert not s.creado_tarde(_reg("2026-10-23T11:30:00+00:00"))
+    assert s.creado_tarde(_reg("2026-10-23T12:10:00+00:00"))
+    assert not s.creado_tarde(_reg(PREVIO)) and s.creado_tarde(_reg(TARDE))
+
+
+def test_mesa_marca_el_tardio(monkeypatch):
+    d = {"registros": [_reg(TARDE), dict(_reg(PREVIO), hora=1, creado="2026-10-23T08:50:00")]}
+    monkeypatch.setattr(s, "cargar", lambda: [])
+    monkeypatch.setattr(s, "log_cargar", lambda: d)
+    monkeypatch.setattr(s, "estado", lambda filas: {"pf": "2026-10-23", "ph": 5, "sc": [1 / 38] * 38})
+    monkeypatch.setattr(s, "mesa_huecos", lambda filas, f, h: [None] * 38)
+    assert s.mesa_datos(1, "la")["tardio"] is False     # 09:00, guardado 08:50
+    assert s.mesa_datos(2, "la")["tardio"] is True      # 08:00, guardado 08:10
+
+
+def test_historial_txt_marca_el_tardio():
+    log = json.dumps({"registros": [_reg(TARDE), dict(_reg(PREVIO), hora=1, creado="2026-10-23T08:50:00")]})
+    texto = ht.armar(None, log, None, None, tardio=s.creado_tarde)
+    seccion = texto.split("===== predicciones.jsonl =====\n")[1].split("\n\n")[0]
+    regs = [json.loads(x) for x in seccion.splitlines()]
+    assert [r.get("tardio", False) for r in regs] == [True, False]
+    assert '"tardio":true' in texto.split("=====")[0]

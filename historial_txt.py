@@ -60,8 +60,16 @@ def exportar(hist, log, rd_hist, rd_log):
     return armar(*leer(hist, log, rd_hist, rd_log))
 
 
-def armar(hist, log, rd_hist, rd_log):
-    """Lo mismo que exportar(), a partir de los textos que devolvió leer()."""
+def _fila(r, tardio):
+    out = {k: v for k, v in r.items() if k not in QUITAR}
+    if tardio is not None and tardio(r):
+        out["tardio"] = True
+    return json.dumps(out, ensure_ascii=False, separators=(",", ":"))
+
+
+def armar(hist, log, rd_hist, rd_log, tardio=None):
+    """Lo mismo que exportar(), a partir de los textos que devolvió leer(). `tardio(r)` (servidor.creado_tarde) marca
+    con "tardio":true los pronósticos de Lotto Activo guardados a la hora del sorteo o después."""
     hl, rl = _filas(hist), _filas(rd_hist)
     pl, pr = _regs(log), _regs(rd_log)
 
@@ -77,12 +85,12 @@ def armar(hist, log, rd_hist, rd_log):
               "Predicciones: un registro JSON por línea con el orden congelado ANTES del sorteo (orden_completo, "
               "índices 0-37) y lo que salió (salio).\nSe omiten los puntajes del ensamble (scores, scores_sin_8am, "
               "scores_base) para que pese menos; se deja «sombra» (ag12 y el RD congelado) para rehacer el motor "
-              "principal. El zip completo sigue en /historial.zip con la clave.\n"]
+              "principal. El zip completo sigue en /historial.zip con la clave.\n"
+              "Los de Lotto Activo con \"tardio\":true se guardaron a la hora del sorteo o después: no fueron "
+              "jugables y no cuentan en el marcador.\n"]
     for nombre, filas in (("historial.txt", hl), ("rdint_historial.txt", rl)):
         partes.append(f"===== {nombre} =====\n" + ("\n".join(filas) if filas else "(vacío)"))
-    for nombre, regs in (("predicciones.jsonl", pl), ("rdint_predicciones.jsonl", pr)):
-        cuerpo = "\n".join(json.dumps({k: v for k, v in r.items() if k not in QUITAR},
-                                      ensure_ascii=False, separators=(",", ":"))
-                           for r in regs or [] if isinstance(r, dict))
+    for nombre, regs, marca in (("predicciones.jsonl", pl, tardio), ("rdint_predicciones.jsonl", pr, None)):
+        cuerpo = "\n".join(_fila(r, marca) for r in regs or [] if isinstance(r, dict))
         partes.append(f"===== {nombre} =====\n" + (cuerpo or "(vacío)"))
     return "\n\n".join(partes) + "\n"
