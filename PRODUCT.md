@@ -92,8 +92,15 @@ Real, medido y ya escrito en el repositorio:
 - Prueba ciega sobre 3.122 sorteos: Top-1 **4,00 %** (IC 95 % 3,37–4,75) y Top-3
   **12,27 %**, contra 2,63 % de azar puro; el umbral de rentabilidad con pago 30x
   es 3,33 %.
-- Tripleta: umbral 2,22 % con pago 45x; la estrategia preelegida dio 3,07 %
-  (p = 0,064, **no significativa**).
+- Tripleta **diaria** (`herramientas/tripleta.py`, único `--final` en
+  `registro_final.jsonl`, 2026-09-14): umbral 2,22 % con pago 45x; la estrategia
+  preelegida B dio 3,07 % (p = 0,064, **no significativa**).
+- Tripleta de **ventana de 12 sorteos** (`herramientas/tripleta_ventana.py`, la que
+  el producto juega automáticamente): evidencia **solo de desarrollo**
+  (z(bloques) ≈ +6 a +7, EV 45x ≈ +80 % a +100 %). **Nunca pasó por la prueba ciega
+  ni tiene entrada en `registro_final.jsonl`: no está validada.** Es una candidatura
+  hasta que su marcador en vivo o la prueba ciega la confirmen (auditoría
+  2026-10-25, §6.1).
 - Informes reproducibles en `herramientas/resultados/` y
   `REPORTE_OPERACION_TURING.md` (barrido de 308 hipótesis sin señal).
 
