@@ -1025,7 +1025,7 @@ def html_resultados(d, limite=360, regs=None):
             '<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p>')
 
 def html_calendario_8am(d, mes=None):
-    """Calendario mensual de aciertos Top-5 de Lotto Activo a las 8:00 AM."""
+    """Vista mensual del puesto guardado para Lotto Activo a las 8:00 AM."""
     hoy = date.today()
     try:
         anio, numero_mes = (int(x) for x in (mes or hoy.strftime("%Y-%m")).split("-"))
@@ -1042,8 +1042,9 @@ def html_calendario_8am(d, mes=None):
             continue
         p = puesto_ganador(r)
         if p is None and r.get("salio") in r.get("top3", []):
-            p = 3
-        resultados[r["fecha"]] = p is not None and p <= 5
+            p = r["top3"].index(r["salio"]) + 1
+        if p is not None:
+            resultados[r["fecha"]] = p
 
     semanas = calendar.Calendar(firstweekday=0).monthdayscalendar(anio, numero_mes)
     celdas = []
@@ -1054,20 +1055,26 @@ def html_calendario_8am(d, mes=None):
                 continue
             fecha = f"{anio:04d}-{numero_mes:02d}-{dia:02d}"
             tuvo_resultado = fecha in resultados
-            acierto = resultados.get(fecha, False)
-            clase = "cal-dia cal-acierto" if acierto else "cal-dia cal-fallo" if tuvo_resultado else "cal-dia"
-            titulo = 'Top-5 acertado en Lotto Activo 8:00 AM' if acierto else 'Sin acierto Top-5 en Lotto Activo 8:00 AM' if tuvo_resultado else 'Sorteo de Lotto Activo 8:00 AM pendiente'
-            celdas.append(f'<span class="{clase}" title="{titulo}" aria-label="Día {dia}: {titulo}">{dia}</span>')
+            puesto = resultados.get(fecha)
+            clase, detalle = "cal-dia", "Sin datos"
+            if tuvo_resultado:
+                clase += " cal-acierto" if puesto <= 5 else " cal-top15" if puesto <= 15 else " cal-fallo"
+                detalle = f"{puesto}º puesto"
+            titulo = f'{fecha} · {detalle} · Lotto Activo 8:00 AM'
+            actual = ' aria-current="date"' if fecha == hoy.isoformat() else ''
+            celdas.append(f'<span class="{clase}" title="{titulo}" aria-label="{titulo}"{actual}>'
+                          f'<b>{dia}</b><small>{detalle}</small></span>')
     semanas_html = "".join(f'<div class="cal-semana">{"".join(celdas[i:i+7])}</div>' for i in range(0, len(celdas), 7))
     etiquetas = ''.join(f'<span>{d}</span>' for d in ("L", "M", "X", "J", "V", "S", "D"))
     nombre_mes = f'{MESES[numero_mes - 1].capitalize()} {anio}'
     return (f'<section class="card calendario" id="calendario" aria-labelledby="cal-t">'
-            f'<div class="jh"><h2 id="cal-t">Top-5 · Lotto Activo · 8:00 AM</h2></div>'
+            f'<div class="jh"><div><h2 id="cal-t">Calendario de aciertos</h2>'
+            '<p class="cal-sub">Lotto Activo · 8:00 AM · Top-15</p></div></div>'
             f'<nav class="cal-nav" aria-label="Cambiar mes"><a href="/?mes={anterior}#calendario" aria-label="Mes anterior">‹</a>'
             f'<b>{nombre_mes}</b><a href="/?mes={siguiente_mes}#calendario" aria-label="Mes siguiente">›</a></nav>'
-            f'<div class="cal-grid" role="grid" aria-label="{nombre_mes}"><div class="cal-semana cal-cab">{etiquetas}</div>'
-            f'{semanas_html}</div><p class="cal-leyenda"><span><i class="cal-ref"></i>día del mes</span>'
-            '<span><i class="cal-ref intenso"></i>acertó Top-5</span><span><i class="cal-ref gris"></i>sin acierto Top-5</span></p>'
+            f'<div class="cal-grid" aria-label="{nombre_mes}"><div class="cal-semana cal-cab">{etiquetas}</div>'
+            f'{semanas_html}</div><p class="cal-leyenda"><span><i class="cal-ref intenso"></i>Top-5</span>'
+            '<span><i class="cal-ref"></i>puestos 6–15</span><span><i class="cal-ref gris"></i>fuera del Top-15</span></p>'
             '<p class="note">Solo se evalúa el pronóstico guardado antes del sorteo de las 8:00 AM.</p></section>')
 
 # Salud del modelo (2026-10-04, investigacion/2026-10-04/rondas_top_n/r6.py).
@@ -1398,12 +1405,14 @@ def render(banca=None, tab="la", atras=0, autorizado=True, mes=None):
         + sec("historico", "Resultados y puestos en el Top", esc(resumen_resultados(d)), html_resultados(d)))
     if principal_ag12:
         panel_la = (aviso + html_sombra(e, d, pend, filas, atras_la, tab="la", principal=True,
-                                        registro=html_registro(e, autorizado)) + herramientas
-                    + html_calendario_8am(d, mes))
+                                        registro=html_registro(e, autorizado)) + herramientas)
         panel_s = panel_ens
     else:
-        panel_la = panel_ens + herramientas + html_calendario_8am(d, mes)
+        panel_la = panel_ens + herramientas
         panel_s = html_sombra(e, d, pend, filas, atras_s)
+
+    datos_calendario = {"registros": sombra_registros(d)} if principal_ag12 else d
+    panel_la = html_calendario_8am(datos_calendario, mes) + panel_la
 
     def pestana(clave, nombre, sub):
         on = clave == tab
