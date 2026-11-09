@@ -91,7 +91,8 @@ def test_cliente_lento_no_bloquea_otra_peticion(servidor_local):
     lento.sendall(b"POST /audit-inexistente HTTP/1.0\r\nContent-Length: 4\r\n\r\na")
     rapido = http.client.HTTPConnection(*servidor_local.server_address, timeout=.4)
     try:
-        rapido.request("GET", "/audit-inexistente")
+        rapido.request("GET", "/audit-inexistente",
+                       headers={"Cookie": f"{S.COOKIE_CLAVE}={S._firma_clave()}"})
         assert rapido.getresponse().status == 404
     finally:
         lento.close()

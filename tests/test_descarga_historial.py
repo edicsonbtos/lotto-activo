@@ -54,10 +54,8 @@ def _cookie():
 def test_sin_cookie_ni_clave_no_hay_descarga(datos, web):
     for cookie in (None, f"{s.COOKIE_CLAVE}=falsa"):
         st, tipo, _, cuerpo = pedir(web, "/historial.zip", cookie=cookie)
-        assert st == 303 and tipo != "application/zip"                       # vuelve a la página y pide la clave
-    assert "clave" in s.AVISO["texto"]
-    s.AVISO["texto"] = ""
-    assert pedir(web, "/respaldo.zip")[0] == 404                               # la ruta sin botón sigue muda
+        assert st == 401 and tipo == "text/html; charset=utf-8" and "Código" in cuerpo.decode("utf-8")
+    assert pedir(web, "/respaldo.zip")[0] == 401
 
 
 def test_con_cookie_baja_el_zip_con_todo_y_leeme(datos, web):
@@ -78,7 +76,7 @@ def test_con_cookie_baja_el_zip_con_todo_y_leeme(datos, web):
 
 def test_respaldo_por_clave_sigue_funcionando(datos, web, monkeypatch):
     monkeypatch.setenv("RESPALDO_CLAVE", "secreta")
-    assert pedir(web, "/respaldo.zip?clave=mala")[0] == 404
+    assert pedir(web, "/respaldo.zip?clave=mala")[0] == 401
     assert pedir(web, "/respaldo.zip?clave=secreta")[0] == 200
     assert pedir(web, "/historial.zip?clave=secreta")[0] == 200
 
@@ -86,7 +84,7 @@ def test_respaldo_por_clave_sigue_funcionando(datos, web, monkeypatch):
 def test_boton_arriba_baja_un_txt_sin_clave(datos, web):
     reg = {"fecha": "2026-10-20", "hora": 0, "salio": 12, "orden_completo": [12, 0], "scores": [0.1] * 38}
     (datos / "predicciones.json").write_text(json.dumps({"registros": [reg]}), encoding="utf-8")
-    st, tipo, disp, cuerpo = pedir(web, "/historial.txt?")                    # sin cookie ni clave
+    st, tipo, disp, cuerpo = pedir(web, "/historial.txt?", cookie=_cookie())  # sesión iniciada
     assert (st, tipo) == (200, "text/plain; charset=utf-8")
     assert disp.startswith("attachment;") and ".txt" in disp
     texto = cuerpo.decode("utf-8")

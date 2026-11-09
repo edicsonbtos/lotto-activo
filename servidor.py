@@ -13,6 +13,7 @@ Sin numpy/scipy funciona con el modelo antiguo (solo librería estándar).
 import hashlib, hmac, os, sys, json, math, webbrowser, threading, subprocess, time, html
 import io
 import re
+import calendar
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from http.cookies import SimpleCookie, CookieError
@@ -977,7 +978,7 @@ def _clase_puesto(p):
     if p is None: return "fuera"
     return "p5" if p <= 5 else "p15" if p <= TOP_N else "fuera"
 
-def resumen_resultados(d, ultimos=48, regs=None):
+def resumen_resultados(d, ultimos=360, regs=None):
     """Línea corta para el desplegable: último puesto y Top-15 reciente."""
     vistos = [r for r in (d["registros"] if regs is None else regs) if resuelto_previo(r)]
     if not vistos:
@@ -990,7 +991,7 @@ def resumen_resultados(d, ultimos=48, regs=None):
                       f"{sum(1 for x in puestos if x <= TOP_N)} de los últimos {len(puestos)}")
     return " · ".join(partes)
 
-def html_resultados(d, limite=100, regs=None):
+def html_resultados(d, limite=360, regs=None):
     """Una sola lista: cada resultado y en qué puesto del Top quedó el ganador.
 
     Sustituye en la página al histórico en tabla y a «Últimas 48» (que era
@@ -1022,6 +1023,52 @@ def html_resultados(d, limite=100, regs=None):
     return (f'{clave}<table class="lista"><thead><tr><th scope="col">Hora</th><th scope="col">Salió</th>'
             f'<th scope="col" style="text-align:right">Puesto</th></tr></thead><tbody>{cuerpo}</tbody></table>{nota}'
             '<p class="note">Solo cuentan pronósticos guardados antes de conocer el resultado.</p>')
+
+def html_calendario_8am(d, mes=None):
+    """Calendario mensual de aciertos Top-5 de Lotto Activo a las 8:00 AM."""
+    hoy = date.today()
+    try:
+        anio, numero_mes = (int(x) for x in (mes or hoy.strftime("%Y-%m")).split("-"))
+        if not 1 <= numero_mes <= 12 or not 2000 <= anio <= 2100:
+            raise ValueError
+    except (TypeError, ValueError):
+        anio, numero_mes = hoy.year, hoy.month
+    primer_dia = date(anio, numero_mes, 1)
+    anterior = (primer_dia - timedelta(days=1)).strftime("%Y-%m")
+    siguiente_mes = (primer_dia.replace(day=28) + timedelta(days=4)).replace(day=1).strftime("%Y-%m")
+    resultados = {}
+    for r in d.get("registros", []):
+        if r.get("hora") != 0 or not resuelto_previo(r) or not r.get("fecha", "").startswith(f"{anio:04d}-{numero_mes:02d}-"):
+            continue
+        p = puesto_ganador(r)
+        if p is None and r.get("salio") in r.get("top3", []):
+            p = 3
+        resultados[r["fecha"]] = p is not None and p <= 5
+
+    semanas = calendar.Calendar(firstweekday=0).monthdayscalendar(anio, numero_mes)
+    celdas = []
+    for semana in semanas:
+        for dia in semana:
+            if not dia:
+                celdas.append('<span class="cal-vacio" aria-hidden="true"></span>')
+                continue
+            fecha = f"{anio:04d}-{numero_mes:02d}-{dia:02d}"
+            tuvo_resultado = fecha in resultados
+            acierto = resultados.get(fecha, False)
+            clase = "cal-dia cal-acierto" if acierto else "cal-dia cal-fallo" if tuvo_resultado else "cal-dia"
+            titulo = 'Top-5 acertado en Lotto Activo 8:00 AM' if acierto else 'Sin acierto Top-5 en Lotto Activo 8:00 AM' if tuvo_resultado else 'Sorteo de Lotto Activo 8:00 AM pendiente'
+            celdas.append(f'<span class="{clase}" title="{titulo}" aria-label="Día {dia}: {titulo}">{dia}</span>')
+    semanas_html = "".join(f'<div class="cal-semana">{"".join(celdas[i:i+7])}</div>' for i in range(0, len(celdas), 7))
+    etiquetas = ''.join(f'<span>{d}</span>' for d in ("L", "M", "X", "J", "V", "S", "D"))
+    nombre_mes = f'{MESES[numero_mes - 1].capitalize()} {anio}'
+    return (f'<section class="card calendario" id="calendario" aria-labelledby="cal-t">'
+            f'<div class="jh"><h2 id="cal-t">Top-5 · Lotto Activo · 8:00 AM</h2></div>'
+            f'<nav class="cal-nav" aria-label="Cambiar mes"><a href="/?mes={anterior}#calendario" aria-label="Mes anterior">‹</a>'
+            f'<b>{nombre_mes}</b><a href="/?mes={siguiente_mes}#calendario" aria-label="Mes siguiente">›</a></nav>'
+            f'<div class="cal-grid" role="grid" aria-label="{nombre_mes}"><div class="cal-semana cal-cab">{etiquetas}</div>'
+            f'{semanas_html}</div><p class="cal-leyenda"><span><i class="cal-ref"></i>día del mes</span>'
+            '<span><i class="cal-ref intenso"></i>acertó Top-5</span><span><i class="cal-ref gris"></i>sin acierto Top-5</span></p>'
+            '<p class="note">Solo se evalúa el pronóstico guardado antes del sorteo de las 8:00 AM.</p></section>')
 
 # Salud del modelo (2026-10-04, investigacion/2026-10-04/rondas_top_n/r6.py).
 # Tasas de referencia = lo que cada jugada acertó en el tramo de prueba
@@ -1311,7 +1358,7 @@ def html_sombra(e, d, pend, filas=None, atras=0, tab="sombra", principal=False, 
         return '<div class="card"><p>El motor en sombra se está preparando…</p></div>'
 
 
-def render(banca=None, tab="la", atras=0, autorizado=True):
+def render(banca=None, tab="la", atras=0, autorizado=True, mes=None):
     x = preparar()
     filas, e, d = x["filas"], x["e"], x["d"]
     calculando, aviso_modelo, modelo = x["calculando"], x["aviso_modelo"], x["modelo"]
@@ -1351,10 +1398,11 @@ def render(banca=None, tab="la", atras=0, autorizado=True):
         + sec("historico", "Resultados y puestos en el Top", esc(resumen_resultados(d)), html_resultados(d)))
     if principal_ag12:
         panel_la = (aviso + html_sombra(e, d, pend, filas, atras_la, tab="la", principal=True,
-                                        registro=html_registro(e, autorizado)) + herramientas)
+                                        registro=html_registro(e, autorizado)) + herramientas
+                    + html_calendario_8am(d, mes))
         panel_s = panel_ens
     else:
-        panel_la = panel_ens + herramientas
+        panel_la = panel_ens + herramientas + html_calendario_8am(d, mes)
         panel_s = html_sombra(e, d, pend, filas, atras_s)
 
     def pestana(clave, nombre, sub):
@@ -1697,7 +1745,7 @@ MAX_POST = 64 * 1024        # los formularios son diminutos; más que esto es ba
 # Anotar, deshacer, buscar, tripleta y herramientas cambian el historial o gastan la máquina, y el enlace de
 # Railway es público. Con CLAVE_ESCRITURA (variable de Railway, nunca en el repo) se escribe una vez en la página
 # y queda una cookie con su FIRMA, no la clave. En Railway sin la variable no se escribe nada; en local, sí.
-CLAVE_ESCRITURA = os.environ.get("CLAVE_ESCRITURA", "").strip()
+CLAVE_ESCRITURA = "110593"
 COOKIE_CLAVE = "la_escritura"
 
 def _en_railway():
@@ -1758,6 +1806,25 @@ def respaldo_historial():
 def cookie_escritura():
     return (f"{COOKIE_CLAVE}={_firma_clave()}; Max-Age=31536000; Path=/; HttpOnly; SameSite=Strict"
             + ("; Secure" if _en_railway() else ""))
+
+def html_login(mensaje=""):
+    aviso = f'<p class="error" role="alert">{esc(mensaje)}</p>' if mensaje else ""
+    return ('<!doctype html><html lang="es"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            '<meta name="theme-color" content="#f4f2ed"><title>Entrar · Lotto Activo</title>'
+            '<style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;'
+            'background:#f4f2ed;color:#17191d;font:16px/1.5 "Segoe UI",Arial,sans-serif}.login{width:min(100%,380px);'
+            'padding:28px;background:#fff;border:1px solid #e3dfd6;border-radius:16px;box-shadow:0 8px 28px #17191d12}'
+            'h1{margin:0 0 4px;font-size:23px}.login p{margin:0 0 18px;color:#5b5e64}.login label{display:block;margin-bottom:6px;'
+            'font-size:14px;font-weight:600}input,button{width:100%;min-height:48px;border-radius:8px;font:inherit}input{padding:10px 12px;'
+            'border:1px solid #c9c5bd;background:#fff;color:#17191d;font-size:20px;letter-spacing:.18em}button{margin-top:12px;'
+            'border:0;background:#b5621b;color:#fff;font-weight:700;cursor:pointer}.error{padding:10px;background:#f8e9e5;color:#96382a;'
+            'border-radius:8px}</style></head><body><main class="login"><h1>Lotto Activo</h1>'
+            f'<p>Ingresa el código para continuar.</p>{aviso}'
+            '<form method="post" action="/entrar"><label for="codigo">Código</label>'
+            '<input id="codigo" name="clave" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" '
+            'autocomplete="current-password" required autofocus><button type="submit">Entrar</button></form>'
+            '</main></body></html>')
 JSON_UTF8 = "application/json; charset=utf-8"
 
 # ---------------------------------------------------------------- rutas GET (JSON)
@@ -2008,9 +2075,17 @@ class H(BaseHTTPRequestHandler):
             pass
 
     def do_GET(self):
-        if self.path.partition("?")[0] == "/vivo":
+        ruta = self.path.partition("?")[0]
+        if ruta == "/vivo":
             return self._vivo()
-        if self.path.partition("?")[0] == "/historial.txt":
+        consulta = parse_qs(self.path.partition("?")[2])
+        clave_respaldo = os.environ.get("RESPALDO_CLAVE", "")
+        acceso_respaldo = (ruta in ("/historial.zip", "/respaldo.zip") and bool(clave_respaldo)
+                           and hmac.compare_digest(clave_respaldo.encode("utf-8"),
+                                                   (consulta.get("clave") or [""])[0].encode("utf-8")))
+        if not (permiso_escritura(self.headers.get("Cookie"))[0] or acceso_respaldo):
+            return self._send(html_login(), codigo=401)
+        if ruta == "/historial.txt":
             return self._historial_txt()      # toma el cerrojo solo para copiar los archivos
         self._bajo_cerrojo(self._get)
 
@@ -2043,7 +2118,8 @@ class H(BaseHTTPRequestHandler):
         q = parse_qs(consulta)
         if ruta in ("/", "/index.html"):
             self._send(render(*_parametros_pagina(q),
-                              autorizado=permiso_escritura(self.headers.get("Cookie"))[0]))
+                              autorizado=permiso_escritura(self.headers.get("Cookie"))[0],
+                              mes=(q.get("mes") or [None])[0]))
         elif ruta in RUTAS_JSON:
             fn, tipo = RUTAS_JSON[ruta]
             self._send(json.dumps(fn(q), ensure_ascii=False), tipo)
@@ -2122,9 +2198,10 @@ class H(BaseHTTPRequestHandler):
         puede, dejar = permiso_escritura(self.headers.get("Cookie"), clave)
         cookie = cookie_escritura() if dejar else None
         if ruta == "/entrar":
-            AVISO.update(texto="Clave correcta: ya puedes anotar y deshacer desde este navegador." if puede
-                         else "Clave incorrecta.", clase="ok" if puede else "bad")
-            return self._volver("#registrar", cookie)
+            if puede:
+                AVISO.update(texto="Sesión iniciada.", clase="ok")
+                return self._volver(cookie=cookie)
+            return self._send(html_login("Código incorrecto."), codigo=401)
         if not puede:
             AVISO.update(texto="Hace falta la clave para modificar: escríbela en «¿Qué salió?».", clase="bad")
             return self._volver("#registrar")

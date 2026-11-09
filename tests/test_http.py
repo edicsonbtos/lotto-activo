@@ -26,7 +26,9 @@ def web():
 
 def pedir(puerto, metodo, ruta, cuerpo=None, cabeceras=None):
     c = http.client.HTTPConnection("127.0.0.1", puerto, timeout=60)
-    c.request(metodo, ruta, body=cuerpo, headers=cabeceras or {})
+    if cabeceras is None:
+        cabeceras = {"Cookie": f"{servidor.COOKIE_CLAVE}={servidor._firma_clave()}"}
+    c.request(metodo, ruta, body=cuerpo, headers=cabeceras)
     r = c.getresponse()
     out = (r.status, r.getheader("Content-Type"), r.getheader("Location"), r.read().decode("utf-8", "replace"))
     c.close()
@@ -36,6 +38,18 @@ def pedir(puerto, metodo, ruta, cuerpo=None, cabeceras=None):
 def test_ruta_desconocida_da_404_en_texto(web):
     st, tipo, _, cuerpo = pedir(web, "GET", "/no-existe")
     assert (st, tipo, cuerpo) == (404, "text/plain; charset=utf-8", "No encontrado")
+
+
+def test_login_solo_codigo_protege_la_pagina(web):
+    st, tipo, _, cuerpo = pedir(web, "GET", "/", cabeceras={})
+    assert (st, tipo) == (401, "text/html; charset=utf-8")
+    assert 'name="clave"' in cuerpo and "usuario" not in cuerpo.lower()
+    st, _, ubicacion, _ = pedir(web, "POST", "/entrar", "clave=110593",
+                                {"Content-Type": "application/x-www-form-urlencoded"})
+    assert st == 303 and ubicacion == "/"
+    cookie = f"{servidor.COOKIE_CLAVE}={servidor._firma_clave()}"
+    assert pedir(web, "GET", "/", cabeceras={"Cookie": cookie})[0] == 200
+    assert pedir(web, "GET", "/", cabeceras={"Cookie": f"{servidor.COOKIE_CLAVE}=falsa"})[0] == 401
 
 
 def test_post_desconocido_da_404(web):
@@ -52,7 +66,9 @@ def test_post_con_content_length_basura_o_enorme_da_400(web):
 
 
 def test_registrar_numero_invalido_redirige_y_avisa(web):
-    st, _, loc, _ = pedir(web, "POST", "/registrar", "num=99", {"Content-Type": "application/x-www-form-urlencoded"})
+    st, _, loc, _ = pedir(web, "POST", "/registrar", "num=99", {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": f"{servidor.COOKIE_CLAVE}={servidor._firma_clave()}"})
     assert (st, loc) == (303, "/")
     assert servidor.AVISO["clase"] == "bad" and "no es válido" in servidor.AVISO["texto"]
     servidor.AVISO.update(texto="", clase="")
@@ -108,10 +124,10 @@ def test_respaldo_cerrado_sin_clave_y_zip_con_clave(web, monkeypatch):
     import io, zipfile
     monkeypatch.setattr(servidor, "CLAVE_ESCRITURA", "110593")   # sin ella, en local cualquiera puede escribir (y bajar)
     monkeypatch.delenv("RESPALDO_CLAVE", raising=False)
-    assert pedir(web, "GET", "/respaldo.zip?clave=x")[0] == 404
+    assert pedir(web, "GET", "/respaldo.zip?clave=x", cabeceras={})[0] == 401
     monkeypatch.setenv("RESPALDO_CLAVE", "secreta")
-    assert pedir(web, "GET", "/respaldo.zip")[0] == 404
-    assert pedir(web, "GET", "/respaldo.zip?clave=mala")[0] == 404
+    assert pedir(web, "GET", "/respaldo.zip", cabeceras={})[0] == 401
+    assert pedir(web, "GET", "/respaldo.zip?clave=mala", cabeceras={})[0] == 401
 
 
 def test_dato_publicado_se_sirve_como_texto_y_sin_salirse_de_la_carpeta(web, tmp_path, monkeypatch):
